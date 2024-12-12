@@ -1,8 +1,8 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Home } from './pages/Home';
 import { Account } from './pages/Account';
-import { CreateEvent } from './pages/CreateEvent';
-import { EventDetails } from './pages/EventDetails';
+import { CreateEvent } from './components/CreateEvent';
+import { EventDetail } from './components/EventDetail';
 import { useAuth } from './hooks/useAuth';
 import { AuthProvider } from './contexts/AuthContext';
 import { Toaster } from 'react-hot-toast';
@@ -65,7 +65,7 @@ function App() {
               />
               <Route 
                 path="/event/:id" 
-                element={<EventDetails />} 
+                element={<EventDetail />} 
               />
               <Route 
                 path="/event/edit/:id" 
