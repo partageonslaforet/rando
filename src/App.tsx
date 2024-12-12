@@ -11,7 +11,7 @@ import { Header } from './components/Header';
 import { Footer } from './components/Footer';
 import { EditEvent } from './pages/EditEvent';
 import { Register } from './pages/Register';
-import { Login } from './pages/Login';
+import LoginPage from './components/LoginPage';
 import type { Event } from './types/event';
 import VerifyEmailSent from './pages/verify-email-sent';
 import ResendVerification from './pages/resend-verification';
@@ -76,7 +76,7 @@ function App() {
                 } 
               />
               <Route path="/register" element={<Register />} />
-              <Route path="/login" element={<Login />} />
+              <Route path="/login" element={<LoginPage />} />
               <Route path="/verify-email-sent" element={<VerifyEmailSent />} />
               <Route path="/resend-verification" element={<ResendVerification />} />
               <Route 
