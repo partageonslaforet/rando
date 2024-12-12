@@ -1,0 +1,85 @@
+.range-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: 3px;
+  background: #e5e7eb;
+  outline: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Style du track pour Firefox */
+.range-slider::-moz-range-track {
+  width: 100%;
+  height: 6px;
+  border-radius: 3px;
+  background: #e5e7eb;
+  border: none;
+}
+
+/* Style du thumb pour Chrome/Safari/Edge */
+.range-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--color-primary, #4f46e5);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+/* Style du thumb pour Firefox */
+.range-slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border: none;
+  border-radius: 50%;
+  background: var(--color-primary, #4f46e5);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+/* Style pour le mode désactivé */
+.range-slider:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.range-slider:disabled::-webkit-slider-thumb {
+  background: #9ca3af;
+  cursor: not-allowed;
+}
+
+.range-slider:disabled::-moz-range-thumb {
+  background: #9ca3af;
+  cursor: not-allowed;
+}
+
+/* Style pour le mode sombre */
+:root[class~="dark"] .range-slider {
+  background: #374151;
+}
+
+:root[class~="dark"] .range-slider::-moz-range-track {
+  background: #374151;
+}
+
+/* Style pour la progression */
+.range-slider-progress {
+  background: linear-gradient(
+    to right,
+    var(--color-primary, #4f46e5) var(--range-progress),
+    #e5e7eb var(--range-progress)
+  );
+}
+
+:root[class~="dark"] .range-slider-progress {
+  background: linear-gradient(
+    to right,
+    var(--color-primary, #4f46e5) var(--range-progress),
+    #374151 var(--range-progress)
+  );
+}

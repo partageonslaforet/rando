@@ -1,0 +1,139 @@
+.container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  background-image: url('../assets/images/map-hero.jpg');
+  background-size: cover;
+  background-position: center;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+.content {
+  max-width: 28rem;
+  width: 100%;
+  position: relative;
+  z-index: 10;
+  padding: 0 1rem;
+}
+
+.card {
+  background-color: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(4px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  border-radius: 1rem;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.iconContainer {
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 4rem;
+  width: 4rem;
+  border-radius: 9999px;
+  background-color: rgb(220, 252, 231);
+  ring: 8px rgb(240, 253, 244);
+}
+
+.icon {
+  height: 2rem;
+  width: 2rem;
+  color: rgb(22, 163, 74);
+}
+
+.textContainer {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.title {
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+  font-weight: 700;
+  color: rgb(17, 24, 39);
+}
+
+.text {
+  font-size: 1rem;
+  line-height: 1.5rem;
+  color: rgb(75, 85, 99);
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.resendContainer {
+  text-align: center;
+}
+
+.resendText {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: rgb(75, 85, 99);
+  margin-bottom: 0.5rem;
+}
+
+.resendButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  font-weight: 500;
+  color: white;
+  background-color: var(--color-primary);
+  transition: background-color 200ms;
+}
+
+.resendButton:hover {
+  background-color: var(--color-primary-dark);
+}
+
+.backContainer {
+  padding-top: 1rem;
+  border-top: 1px solid rgb(229, 231, 235);
+}
+
+.backButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  font-weight: 500;
+  color: rgb(55, 65, 81);
+  background-color: rgb(243, 244, 246);
+  border-radius: 0.5rem;
+  transition: background-color 200ms;
+}
+
+.backButton:hover {
+  background-color: rgb(229, 231, 235);
+}
+
+.backIcon {
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-right: 0.5rem;
+}

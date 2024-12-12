@@ -1,0 +1,48 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: 'Roboto', sans-serif;
+}
+
+/* Leaflet Map Styles */
+.leaflet-container {
+  width: 100%;
+  height: 100%;
+}
+
+/* Fix dark mode for map */
+.dark .leaflet-container {
+  background-color: #1f2937;
+}
+
+.dark .leaflet-tile {
+  filter: brightness(0.6) invert(1) contrast(3) hue-rotate(200deg) saturate(0.3) brightness(0.7);
+}
+
+.dark .leaflet-marker-icon {
+  filter: none;
+}
+
+.rbc-calendar.dark {
+  background-color: #1f2937;
+  color: white;
+}
+
+.dark .rbc-toolbar button {
+  color: white;
+}
+
+.dark .rbc-header {
+  background-color: #374151;
+  color: white;
+}
+
+.dark .rbc-today {
+  background-color: #374151;
+}
+
+.dark .rbc-event {
+  background-color: #4f46e5;
+}

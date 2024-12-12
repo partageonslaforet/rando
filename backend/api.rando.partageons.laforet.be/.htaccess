@@ -1,0 +1,48 @@
+Options +FollowSymLinks
+RewriteEngine On
+RewriteBase /
+
+# Augmenter les timeouts
+<IfModule mod_reqtimeout.c>
+    RequestReadTimeout header=60,MinRate=500 body=60,MinRate=500
+</IfModule>
+
+# Headers CORS
+Header always set Access-Control-Allow-Origin "https://rando.partageonslaforet.be"
+Header always set Access-Control-Allow-Methods "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+Header always set Access-Control-Allow-Headers "Content-Type, Authorization, X-Requested-With"
+Header always set Access-Control-Allow-Credentials "true"
+
+# Augmenter le timeout pour PHP
+<IfModule mod_php.c>
+    php_value max_execution_time 300
+    php_value max_input_time 300
+    php_value memory_limit 256M
+    php_value post_max_size 20M
+    php_value upload_max_filesize 20M
+</IfModule>
+
+# Gérer OPTIONS
+RewriteCond %{REQUEST_METHOD} OPTIONS
+RewriteRule .* - [R=200,END]
+
+# Redirection API
+RewriteCond %{HTTP_HOST} ^api\.rando\.partageonslaforet\.be$ [NC]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.php [QSA,L]
+
+# Redirection Frontend
+RewriteCond %{HTTP_HOST} !^api\.rando\.partageonslaforet\.be$ [NC]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.html [L]
+
+# Gestion spécifique pour PATCH
+<IfModule mod_headers.c>
+    SetEnvIf Request_Method "PATCH" REQUEST_IS_PATCH
+    Header always set Connection "close" env=REQUEST_IS_PATCH
+</IfModule>
+
+# Désactiver la compression pour PATCH
+SetEnvIf Request_Method PATCH no-gzip dont-vary
