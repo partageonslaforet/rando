@@ -1,18 +1,62 @@
 /* Styles des pages d'authentification */
 
+body {
+    overflow: hidden;
+}
+
 .auth-page {
-    min-height: 100vh;
+    height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding-top: 90px;
-    padding-bottom: 2rem;
+    padding-top: 70px;
+    padding-bottom: 0;
     background: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)), url('/assets/images/main-hero.jpg') no-repeat center center;
     background-size: cover;
     background-attachment: fixed;
 }
 
+.auth-page .navbar {
+    background-color: transparent !important;
+    box-shadow: none !important;
+}
+
+.auth-page .navbar .nav-link,
+.auth-page .navbar .navbar-brand,
+.auth-page .navbar .publish-text {
+    color: #fff !important;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+}
+
+.auth-page .container {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+
 .auth-page .card {
     background-color: rgba(255, 255, 255, 0.95);
     border: none;
+}
+
+.auth-page .card-body {
+    padding: 1.5rem;
+}
+
+.auth-page .footer {
+    margin-top: auto;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    background-color: rgba(248, 249, 250, 0.95) !important;
+}
+
+.auth-page .footer h5 {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.auth-page .footer p,
+.auth-page .footer a,
+.auth-page .footer small {
+    font-size: 0.8rem;
+    margin-bottom: 0.25rem;
 }
