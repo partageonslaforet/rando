@@ -33,7 +33,7 @@ render_header();
                             </div>
                             <input type="hidden" name="csrf_token" id="csrf_token" value="<?php echo htmlspecialchars(csrfToken(), ENT_QUOTES, 'UTF-8'); ?>">
                             <div class="d-grid">
-                                <button type="submit" class="btn btn-primary w-100">Enregistrer</button>
+                                <button type="submit" class="btn btn-connexion w-100">Enregistrer</button>
                             </div>
                         </form>
                     </div>
