@@ -1,9 +1,6 @@
 /* Liquid Glass — mode clair */
 
-body.lq-light .navbar,
-body.lq-light .card,
-body.lq-light .modal-content,
-body.lq-light .footer {
+body.lq-light {
     --lq-blur: blur(22px) saturate(180%);
     --lq-radius: 22px;
     --lq-border: rgba(255, 255, 255, 0.22);
@@ -152,6 +149,59 @@ body.lq-light .footer {
 
 body.lq-light .footer .container {
     position: relative;
+    z-index: 1;
+}
+
+/* Tuiles de la home et hero */
+body.lq-light .hero::before {
+    background: rgba(0, 0, 0, 0.3) !important;
+}
+
+body.lq-light .hero-search-container .form-control,
+body.lq-light .hero-search-container .btn {
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+    border: 1px solid rgba(255, 255, 255, 0.25) !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255,255,255,0.2) !important;
+}
+
+body.lq-light .hero-search-container .form-control {
+    background: rgba(255, 255, 255, 0.15) !important;
+    color: #fff !important;
+}
+
+body.lq-light .hero-search-container .form-control::placeholder {
+    color: rgba(255, 255, 255, 0.75);
+}
+
+body.lq-light .filters,
+body.lq-light .filters-container,
+body.lq-light .event-filters,
+body.lq-light .calendar-container {
+    position: relative;
+    background: rgba(255, 255, 255, 0.5) !important;
+    background-image: var(--lq-surface) !important;
+    -webkit-backdrop-filter: var(--lq-blur);
+    backdrop-filter: var(--lq-blur);
+    border: 1px solid var(--lq-border) !important;
+    border-radius: var(--lq-radius) !important;
+    box-shadow: var(--lq-shadow), inset 0 1px 0 rgba(255,255,255,0.2) !important;
+    color: #222;
+    overflow: hidden;
+    z-index: 1;
+}
+
+body.lq-light .event-card {
+    position: relative;
+    background: rgba(255, 255, 255, 0.58) !important;
+    background-image: var(--lq-surface) !important;
+    -webkit-backdrop-filter: var(--lq-blur);
+    backdrop-filter: var(--lq-blur);
+    border: 1px solid var(--lq-border) !important;
+    border-radius: var(--lq-radius) !important;
+    box-shadow: var(--lq-shadow), inset 0 1px 0 rgba(255,255,255,0.2) !important;
+    color: #222;
+    overflow: hidden;
     z-index: 1;
 }
 

@@ -1,9 +1,6 @@
 /* Liquid Glass — mode sombre */
 
-body.lq-dark .navbar,
-body.lq-dark .card,
-body.lq-dark .modal-content,
-body.lq-dark .footer {
+body.lq-dark {
     --lq-blur: blur(22px) saturate(160%);
     --lq-radius: 22px;
     --lq-border: rgba(255, 255, 255, 0.12);
@@ -159,6 +156,59 @@ body.lq-dark .footer .container {
 
 body.lq-dark .footer a {
     color: #e0e0e0;
+}
+
+/* Tuiles de la home et hero */
+body.lq-dark .hero::before {
+    background: rgba(0, 0, 0, 0.45) !important;
+}
+
+body.lq-dark .hero-search-container .form-control,
+body.lq-dark .hero-search-container .btn {
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255,255,255,0.1) !important;
+}
+
+body.lq-dark .hero-search-container .form-control {
+    background: rgba(255, 255, 255, 0.08) !important;
+    color: #fff !important;
+}
+
+body.lq-dark .hero-search-container .form-control::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+body.lq-dark .filters,
+body.lq-dark .filters-container,
+body.lq-dark .event-filters,
+body.lq-dark .calendar-container {
+    position: relative;
+    background: rgba(20, 20, 24, 0.55) !important;
+    background-image: var(--lq-surface) !important;
+    -webkit-backdrop-filter: var(--lq-blur);
+    backdrop-filter: var(--lq-blur);
+    border: 1px solid var(--lq-border) !important;
+    border-radius: var(--lq-radius) !important;
+    box-shadow: var(--lq-shadow), inset 0 1px 0 rgba(255,255,255,0.08) !important;
+    color: #f0f0f0;
+    overflow: hidden;
+    z-index: 1;
+}
+
+body.lq-dark .event-card {
+    position: relative;
+    background: rgba(25, 25, 30, 0.58) !important;
+    background-image: var(--lq-surface) !important;
+    -webkit-backdrop-filter: var(--lq-blur);
+    backdrop-filter: var(--lq-blur);
+    border: 1px solid var(--lq-border) !important;
+    border-radius: var(--lq-radius) !important;
+    box-shadow: var(--lq-shadow), inset 0 1px 0 rgba(255,255,255,0.08) !important;
+    color: #f0f0f0;
+    overflow: hidden;
+    z-index: 1;
 }
 
 /* Mobile */
