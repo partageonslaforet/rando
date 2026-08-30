@@ -1,6 +1,9 @@
 <?php
 // Chargement des variables d'environnement
 $dotenvPath = __DIR__ . '/../.env';
+
+// Timezone par défaut pour aligner PHP et MySQL (peut être surchargée via .env)
+date_default_timezone_set($_ENV['APP_TIMEZONE'] ?? 'Europe/Brussels');
 if (file_exists($dotenvPath)) {
     if (file_exists(__DIR__ . '/../vendor/autoload.php')) {
         require_once __DIR__ . '/../vendor/autoload.php';

@@ -1,9 +1,11 @@
 <?php
 
-// Configuration SMTP
-define('SMTP_HOST', 'chat.o2switch.net');  // À remplacer par votre serveur SMTP
-define('SMTP_USERNAME', 'rando@partageonslaforet.be');  // À remplacer par votre nom d'utilisateur SMTP
-define('SMTP_PASSWORD', 'Armand010cnr');  // À remplacer par votre mot de passe SMTP
-define('SMTP_PORT', 587);  // Port SMTP standard pour TLS
-define('SMTP_FROM_EMAIL', 'rando@partageonslaforet.be');  // Email d'envoi
-define('SMTP_FROM_NAME', 'Partageons la Forêt');  // Nom d'affichage
+// Configuration e-mail depuis l'environnement
+// Aucun secret ne doit être stocké ici.
+define('MAIL_HOST', $_ENV['MAIL_HOST'] ?? 'localhost');
+define('MAIL_PORT', (int)($_ENV['MAIL_PORT'] ?? 1025));
+define('MAIL_USERNAME', $_ENV['MAIL_USERNAME'] ?? '');
+define('MAIL_PASSWORD', $_ENV['MAIL_PASSWORD'] ?? '');
+define('MAIL_ENCRYPTION', $_ENV['MAIL_ENCRYPTION'] ?? '');
+define('MAIL_FROM_EMAIL', $_ENV['MAIL_FROM_EMAIL'] ?? 'noreply@partageonslaforet.be');
+define('MAIL_FROM_NAME', $_ENV['MAIL_FROM_NAME'] ?? 'Partageons la Forêt');
