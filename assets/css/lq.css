@@ -1,154 +1,170 @@
-/* Liquid Glass — mode clair et base commune */
+/* Liquid Glass — mode clair */
 
-:root {
-    --lq-blur: blur(18px) saturate(160%);
-    --lq-radius: 18px;
-    --lq-border-light: rgba(255, 255, 255, 0.35);
-    --lq-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.12);
-    --lq-reflect: rgba(255, 255, 255, 0.55);
+body.lq-light .navbar,
+body.lq-light .card,
+body.lq-light .modal-content,
+body.lq-light .footer {
+    --lq-blur: blur(22px) saturate(180%);
+    --lq-radius: 22px;
+    --lq-border: rgba(255, 255, 255, 0.22);
+    --lq-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
+    --lq-surface: linear-gradient(135deg, rgba(255, 255, 255, 0.28) 0%, rgba(255, 255, 255, 0.08) 100%);
+    --lq-shine: linear-gradient(180deg, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0) 55%);
 }
 
-/* Reflet fixe simulé par un pseudo-élément subtil */
-.lq-shine::before,
+/* Reflet fixe en haut */
 body.lq-light .navbar::before,
 body.lq-light .card::before,
-body.lq-light .modal-content::before {
+body.lq-light .modal-content::before,
+body.lq-light .footer::before {
     content: "";
     position: absolute;
-    inset: 0;
-    border-radius: var(--lq-radius);
-    padding: 1px;
-    background: linear-gradient(
-        135deg,
-        var(--lq-reflect) 0%,
-        rgba(255, 255, 255, 0) 35%,
-        rgba(255, 255, 255, 0) 65%,
-        var(--lq-reflect) 100%
-    );
-    -webkit-mask:
-        linear-gradient(#fff 0 0) content-box,
-        linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 55%;
+    background: var(--lq-shine);
+    border-radius: var(--lq-radius) var(--lq-radius) 0 0;
     pointer-events: none;
+    opacity: 0.7;
     z-index: 0;
 }
 
 /* Navbar */
 body.lq-light .navbar.navbar-expand-lg {
-    background: rgba(255, 255, 255, 0.12) !important;
-    -webkit-backdrop-filter: var(--lq-blur);
-    backdrop-filter: var(--lq-blur);
-    border-bottom: 1px solid var(--lq-border-light) !important;
-    box-shadow: var(--lq-shadow) !important;
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     z-index: 1030;
-    transition: background 0.3s ease, box-shadow 0.3s ease;
+    background: rgba(255, 255, 255, 0.08) !important;
+    background-image: var(--lq-surface) !important;
+    -webkit-backdrop-filter: var(--lq-blur);
+    backdrop-filter: var(--lq-blur);
+    border-bottom: 1px solid var(--lq-border) !important;
+    box-shadow: var(--lq-shadow), inset 0 1px 0 rgba(255,255,255,0.18) !important;
+    border-radius: 0 0 var(--lq-radius) var(--lq-radius);
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+    overflow: hidden;
 }
 
 body.lq-light .navbar.navbar-expand-lg .navbar-brand,
 body.lq-light .navbar.navbar-expand-lg .nav-link:not(.btn-connexion),
 body.lq-light .navbar.navbar-expand-lg .publish-text {
     color: #fff !important;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
-}
-
-body.lq-light .navbar.navbar-expand-lg .nav-link.btn-connexion {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
 }
 
 /* Cartes */
 body.lq-light .card {
     position: relative;
-    background: rgba(255, 255, 255, 0.72) !important;
+    background: rgba(255, 255, 255, 0.55) !important;
+    background-image: var(--lq-surface) !important;
     -webkit-backdrop-filter: var(--lq-blur);
     backdrop-filter: var(--lq-blur);
-    border: 1px solid var(--lq-border-light) !important;
+    border: 1px solid var(--lq-border) !important;
     border-radius: var(--lq-radius) !important;
-    box-shadow: var(--lq-shadow) !important;
-    color: #333;
+    box-shadow: var(--lq-shadow), inset 0 1px 0 rgba(255,255,255,0.25) !important;
+    color: #222;
     overflow: hidden;
+    z-index: 1;
+}
+
+body.lq-light .card .card-body {
+    position: relative;
     z-index: 1;
 }
 
 body.lq-light .card h2,
 body.lq-light .card h3,
 body.lq-light .card h4 {
-    color: #1a1a1a;
+    color: #111;
 }
 
 body.lq-light .card .form-label {
-    color: #444;
-}
-
-body.lq-light .card .form-control {
-    background: rgba(255, 255, 255, 0.55);
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    border-radius: 12px;
     color: #333;
 }
 
+body.lq-light .card .form-control {
+    background: rgba(255, 255, 255, 0.42);
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    border-radius: 12px;
+    color: #222;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
 body.lq-light .card .form-control:focus {
-    background: rgba(255, 255, 255, 0.85);
+    background: rgba(255, 255, 255, 0.75);
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.25);
+    box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.35), inset 0 1px 2px rgba(0,0,0,0.05);
 }
 
 /* Boutons */
 body.lq-light .btn-connexion,
 body.lq-light .btn-primary {
-    -webkit-backdrop-filter: blur(8px);
-    backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.4) !important;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    background-image: var(--lq-surface) !important;
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--lq-border) !important;
+    box-shadow: var(--lq-shadow), inset 0 1px 0 rgba(255,255,255,0.25) !important;
+    transition: all 0.2s ease;
 }
 
 body.lq-light .btn-connexion:hover,
 body.lq-light .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15) !important;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18), inset 0 1px 0 rgba(255,255,255,0.3) !important;
 }
 
 /* Modales */
 body.lq-light .modal-content {
     position: relative;
-    background: rgba(255, 255, 255, 0.78) !important;
+    background: rgba(255, 255, 255, 0.6) !important;
+    background-image: var(--lq-surface) !important;
     -webkit-backdrop-filter: var(--lq-blur);
     backdrop-filter: var(--lq-blur);
-    border: 1px solid var(--lq-border-light) !important;
+    border: 1px solid var(--lq-border) !important;
     border-radius: var(--lq-radius) !important;
-    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.18) !important;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255,255,255,0.25) !important;
     overflow: hidden;
     z-index: 1;
 }
 
 body.lq-light .modal-backdrop {
-    -webkit-backdrop-filter: blur(6px);
-    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
 }
 
 /* Footer */
 body.lq-light .footer {
-    background: rgba(248, 249, 250, 0.65) !important;
-    -webkit-backdrop-filter: blur(12px);
-    backdrop-filter: blur(12px);
-    border-top: 1px solid var(--lq-border-light) !important;
-    color: #333;
+    position: relative;
+    background: rgba(255, 255, 255, 0.45) !important;
+    background-image: var(--lq-surface) !important;
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+    border-top: 1px solid var(--lq-border) !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.2) !important;
+    color: #222;
+    overflow: hidden;
+    z-index: 1;
 }
 
-/* Responsive : ajustements mobiles */
+body.lq-light .footer .container {
+    position: relative;
+    z-index: 1;
+}
+
+/* Mobile */
 @media (max-width: 992px) {
     body.lq-light .navbar.navbar-expand-lg {
-        padding-top: 0.75rem;
-        padding-bottom: 0.75rem;
+        border-radius: 0;
+        padding: 0.5rem 0.75rem;
     }
 
-    body.lq-light .card {
-        border-radius: 14px !important;
+    body.lq-light .card,
+    body.lq-light .modal-content {
+        border-radius: 18px !important;
         margin-left: 0.5rem;
         margin-right: 0.5rem;
     }

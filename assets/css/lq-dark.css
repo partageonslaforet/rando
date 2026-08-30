@@ -1,44 +1,52 @@
 /* Liquid Glass — mode sombre */
 
-:root {
-    --lq-dark-bg: rgba(20, 20, 25, 0.65);
-    --lq-dark-border: rgba(255, 255, 255, 0.12);
-    --lq-dark-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.35);
-    --lq-dark-reflect: rgba(255, 255, 255, 0.2);
+body.lq-dark .navbar,
+body.lq-dark .card,
+body.lq-dark .modal-content,
+body.lq-dark .footer {
+    --lq-blur: blur(22px) saturate(160%);
+    --lq-radius: 22px;
+    --lq-border: rgba(255, 255, 255, 0.12);
+    --lq-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+    --lq-surface: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(0, 0, 0, 0.08) 100%);
+    --lq-shine: linear-gradient(180deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0) 55%);
 }
 
-/* Reflet fixe sombre */
+/* Reflet fixe en haut */
 body.lq-dark .navbar::before,
 body.lq-dark .card::before,
-body.lq-dark .modal-content::before {
+body.lq-dark .modal-content::before,
+body.lq-dark .footer::before {
     content: "";
     position: absolute;
-    inset: 0;
-    border-radius: 18px;
-    padding: 1px;
-    background: linear-gradient(
-        135deg,
-        var(--lq-dark-reflect) 0%,
-        rgba(255, 255, 255, 0) 35%,
-        rgba(255, 255, 255, 0) 65%,
-        var(--lq-dark-reflect) 100%
-    );
-    -webkit-mask:
-        linear-gradient(#fff 0 0) content-box,
-        linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 55%;
+    background: var(--lq-shine);
+    border-radius: var(--lq-radius) var(--lq-radius) 0 0;
     pointer-events: none;
+    opacity: 0.8;
     z-index: 0;
 }
 
 /* Navbar sombre */
 body.lq-dark .navbar.navbar-expand-lg {
-    background: var(--lq-dark-bg) !important;
-    -webkit-backdrop-filter: blur(18px) saturate(160%);
-    backdrop-filter: blur(18px) saturate(160%);
-    border-bottom: 1px solid var(--lq-dark-border) !important;
-    box-shadow: var(--lq-dark-shadow) !important;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1030;
+    background: rgba(18, 18, 22, 0.62) !important;
+    background-image: var(--lq-surface) !important;
+    -webkit-backdrop-filter: var(--lq-blur);
+    backdrop-filter: var(--lq-blur);
+    border-bottom: 1px solid var(--lq-border) !important;
+    box-shadow: var(--lq-shadow), inset 0 1px 0 rgba(255,255,255,0.1) !important;
+    border-radius: 0 0 var(--lq-radius) var(--lq-radius);
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+    overflow: hidden;
 }
 
 body.lq-dark .navbar.navbar-expand-lg .navbar-brand,
@@ -51,14 +59,20 @@ body.lq-dark .navbar.navbar-expand-lg .publish-text {
 /* Cartes sombres */
 body.lq-dark .card {
     position: relative;
-    background: rgba(30, 30, 35, 0.72) !important;
-    -webkit-backdrop-filter: blur(18px) saturate(160%);
-    backdrop-filter: blur(18px) saturate(160%);
-    border: 1px solid var(--lq-dark-border) !important;
-    border-radius: 18px !important;
-    box-shadow: var(--lq-dark-shadow) !important;
+    background: rgba(20, 20, 24, 0.58) !important;
+    background-image: var(--lq-surface) !important;
+    -webkit-backdrop-filter: var(--lq-blur);
+    backdrop-filter: var(--lq-blur);
+    border: 1px solid var(--lq-border) !important;
+    border-radius: var(--lq-radius) !important;
+    box-shadow: var(--lq-shadow), inset 0 1px 0 rgba(255,255,255,0.08) !important;
     color: #f0f0f0;
     overflow: hidden;
+    z-index: 1;
+}
+
+body.lq-dark .card .card-body {
+    position: relative;
     z-index: 1;
 }
 
@@ -77,25 +91,45 @@ body.lq-dark .card .form-control {
     border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 12px;
     color: #f0f0f0;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 body.lq-dark .card .form-control:focus {
     background: rgba(255, 255, 255, 0.18);
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.15);
+    box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.15), inset 0 1px 2px rgba(0,0,0,0.2);
     color: #fff;
+}
+
+/* Boutons sombres */
+body.lq-dark .btn-connexion,
+body.lq-dark .btn-primary {
+    background-image: var(--lq-surface) !important;
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--lq-border) !important;
+    box-shadow: var(--lq-shadow), inset 0 1px 0 rgba(255,255,255,0.1) !important;
+    transition: all 0.2s ease;
+}
+
+body.lq-dark .btn-connexion:hover,
+body.lq-dark .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255,255,255,0.15) !important;
 }
 
 /* Modales sombres */
 body.lq-dark .modal-content {
     position: relative;
-    background: rgba(25, 25, 30, 0.78) !important;
-    -webkit-backdrop-filter: blur(18px) saturate(160%);
-    backdrop-filter: blur(18px) saturate(160%);
-    border: 1px solid var(--lq-dark-border) !important;
-    border-radius: 18px !important;
-    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4) !important;
+    background: rgba(20, 20, 24, 0.65) !important;
+    background-image: var(--lq-surface) !important;
+    -webkit-backdrop-filter: var(--lq-blur);
+    backdrop-filter: var(--lq-blur);
+    border: 1px solid var(--lq-border) !important;
+    border-radius: var(--lq-radius) !important;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255,255,255,0.08) !important;
     color: #f0f0f0;
+    overflow: hidden;
     z-index: 1;
 }
 
@@ -106,13 +140,38 @@ body.lq-dark .modal-backdrop {
 
 /* Footer sombre */
 body.lq-dark .footer {
-    background: rgba(15, 15, 20, 0.65) !important;
-    -webkit-backdrop-filter: blur(12px);
-    backdrop-filter: blur(12px);
-    border-top: 1px solid var(--lq-dark-border) !important;
+    position: relative;
+    background: rgba(12, 12, 15, 0.55) !important;
+    background-image: var(--lq-surface) !important;
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+    border-top: 1px solid var(--lq-border) !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.06) !important;
     color: #d0d0d0;
+    overflow: hidden;
+    z-index: 1;
+}
+
+body.lq-dark .footer .container {
+    position: relative;
+    z-index: 1;
 }
 
 body.lq-dark .footer a {
     color: #e0e0e0;
+}
+
+/* Mobile */
+@media (max-width: 992px) {
+    body.lq-dark .navbar.navbar-expand-lg {
+        border-radius: 0;
+        padding: 0.5rem 0.75rem;
+    }
+
+    body.lq-dark .card,
+    body.lq-dark .modal-content {
+        border-radius: 18px !important;
+        margin-left: 0.5rem;
+        margin-right: 0.5rem;
+    }
 }
