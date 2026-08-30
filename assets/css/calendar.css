@@ -1,0 +1,559 @@
+/* Styles du calendrier */
+.calendar-container {
+    background-color: white;
+    border-radius: 10px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.calendar-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.calendar-nav button {
+    background: none;
+    border: none;
+    color: var(--primary-color);
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.calendar-nav button:hover {
+    background-color: var(--filter-hover);
+}
+
+.calendar-nav h2 {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: var(--primary-color);
+}
+
+.calendar-body {
+    flex: 1;
+}
+
+.calendar {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 3px;
+}
+
+.calendar th {
+    padding: 0.5rem;
+    text-align: center;
+    font-weight: 500;
+    color: var(--text-color);
+}
+
+.calendar td {
+    text-align: center;
+    padding: 0.5rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    position: relative;
+    height: 40px;
+}
+
+.calendar td:not(.empty):hover {
+    background-color: var(--filter-hover);
+}
+
+.calendar td.empty {
+    background-color: #f8f9fa;
+    cursor: default;
+}
+
+.calendar td.has-events {
+    background-color: var(--secondary-color);
+    color: white;
+}
+
+.calendar td.has-events:hover {
+    background-color: var(--secondary-color);
+}
+
+.calendar td.has-events .day-number{
+    position: absolute;
+    bottom: 5px;
+    left: 5px;
+    font-size: 0.95rem;
+    color: white;
+    border-color: var(--primary-color);
+    border-radius: 10px;
+}
+
+.calendar td.has-events .event-badge {
+    background-color: white;
+    color: var(--secondary-color);
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    font-size: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    top: 5px;
+    position: absolute;
+    right: 5px;
+}
+
+.calendar td.today {
+    border: 2px solid var(--secondary-color);
+}
+
+.calendar td.other-month {
+    color: #adb5bd;
+}
+
+.event-count {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    background-color: white;
+    color: var(--secondary-color);
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    font-size: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+.calendar td.has-events .event-count {
+    background-color: white;
+    color: var(--secondary-color);
+}
+
+.calendar td.today.has-events {
+    background-color: var(--primary-color);
+    border: none;
+}
+
+.calendar td.today.has-events .event-count {
+    color: var(--primary-color);
+}
+
+#currentMonth, #prevMonth, #nextMonth {
+    color: var(--primary-color);
+    font-weight: bold;
+}
+
+.calendar-day.selected {
+    
+    border: 2px solid var(--primary-color);
+}
+
+.calendar-day.selected .day-number {
+    color: var(--bs-primary);
+    font-weight: bold;
+}
+
+/* Style du calendrier */
+.calendar-container {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    z-index: 1;
+}
+
+.calendar-nav {
+    padding: 1rem;
+    text-align: center;
+    border-bottom: 1px solid #e9ecef;
+    font-weight: bold;
+}
+
+.calendar-nav button {
+    color: var(--primary-color);
+    background: none;
+    border: none;
+    padding: 0.5rem 1rem;
+}
+
+.calendar-nav button:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+    border-radius: 4px;
+}
+
+.calendar-nav h2 {
+    display: inline-block;
+    margin: 0;
+    font-size: 1.2rem;
+    color: var(--primary-color);
+}
+
+.calendar-body {
+    flex: 1;
+    padding: 1rem;
+    position: relative;
+    z-index: 1;
+}
+
+.calendar {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 3px;
+}
+
+.calendar th {
+    padding: 5px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.calendar td {
+    text-align: center;
+    padding: 5px;
+    position: relative;
+    height: 32px;
+}
+
+.calendar td.empty {
+    background-color: #f8f9fa;
+}
+
+
+.calendar td.has-events .event-count {
+    background-color: white;
+    color: var(--secondary-color);
+}
+
+.calendar td.past-events {
+    background-color: #f5f5f5;
+    color: #999;
+}
+
+.calendar td.past-events .event-count {
+    background-color: white ;
+    color: #999;
+}
+
+.calendar td.today {
+    border: 2px solid var(--primary-color);
+}
+
+.calendar td.today.has-events {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+}
+
+.calendar td.today.has-events .event-count {
+    background-color: white;
+    color: var(--primary-color);
+}
+
+.calendar td.other-month {
+    color: #adb5bd;
+}
+
+.calendar-nav .current-month {
+    font-weight: 500;
+    font-size: 1.1rem;
+    color: var(--primary-color);
+}
+
+/* Style pour les pastilles de nombre d'événements */
+.event-count {
+    background-color: var(--secondary-color);
+    color: white;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: bold;
+    border: 1px solid white;
+}
+
+/* Styles des boutons avec pastilles */
+.event-filters .btn-light,
+.event-filters .btn-primary {
+    position: relative;
+    padding-right: 2.5rem;
+}
+
+.event-filters .btn-light::after,
+.event-filters .btn-primary::after {
+    content: attr(data-count);
+    position: absolute;
+    right: 0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    min-width: 24px;
+    height: 24px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+/* Pastille pour bouton inactif */
+.event-filters .btn-light::after {
+    background: var(--primary-color);
+    color: white;
+}
+
+/* Pastille pour bouton actif 
+.event-filters .btn-primary::after {
+    background: white;
+    color: var(--primary-color);
+}*/
+
+/* Styles des boutons du calendrier */
+.calendar-container .btn {
+    padding: 0.5rem;
+    background: none;
+    border: none;
+}
+
+.calendar-container .btn:hover {
+    background-color: var(--filter-hover);
+}
+
+.calendar-container .btn i {
+    font-size: 1.2rem;
+}
+
+/* Styles pour les boutons du calendrier */
+.calendar-container .btn {
+    padding: 0.5rem;
+    background: none;
+    border: none;
+}
+
+.calendar-container .btn:hover {
+    background-color: var(--filter-hover);
+}
+
+.calendar-container .btn i {
+    font-size: 1.2rem;
+}
+
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .calendar-container {
+        padding: 1rem;
+    }
+
+    .calendar th,
+    .calendar td {
+        padding: 0.25rem;
+        font-size: 0.9rem;
+    }
+
+    .event-count {
+        width: 16px;
+        height: 16px;
+        font-size: 0.7rem;
+    }
+}
+
+/* Styles du calendrier */
+.calendar-container {
+    padding: 0;
+    overflow: hidden;
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 1px;
+    background-color: #dee2e6;
+}
+
+.calendar-header {
+    background-color: #f8f9fa;
+    padding: 0.5rem;
+    text-align: center;
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.calendar-day {
+    background-color: white;
+    padding: 5px;
+    min-height: 2.5rem;
+    position: relative;
+}
+
+.calendar-day.empty {
+    background-color: #f8f9fa;
+}
+
+.calendar-day .day-number {
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+.calendar-day.current-day {
+    background-color: #e8f5e9;
+}
+
+.calendar-day.current-day .day-number {
+    color:var(--primary-color); 
+    font-weight: bold;
+    border-color: var(--primary-color);
+    border-radius: 10px;
+}
+
+.calendar-day.has-events {
+    cursor: pointer;
+}
+
+.calendar-day .event-dot {
+    position: absolute;
+    bottom: 4px;
+    right: 4px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: #2e7d32;
+}
+
+/* Calendrier */
+
+.calendar td.has-events .event-count {
+    background-color: white;
+    color: var(--secondary-color);
+}
+
+.calendar td.past-events {
+    background-color: #f5f5f5;
+    color: #999;
+}
+
+.calendar td.past-events .event-count {
+    background-color: white ;
+    color: #999;
+}
+
+.calendar td.today {
+    border: 2px solid var(--primary-color);
+}
+
+.calendar td.today.has-events {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+}
+
+.calendar td.today.has-events .event-count {
+    background-color: white;
+    color: var(--primary-color);
+}
+
+.calendar td.other-month {
+    color: #adb5bd;
+}
+
+/* Styles du calendrier */
+.calendar {
+    background-color: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.calendar-header {
+    color: white;
+    padding: 1rem;
+    text-align: center;
+    position: relative;
+}
+
+.calendar-title {
+    margin: 0;
+    font-size: 1.2rem;
+}
+
+#prevMonth {
+    left: 1rem;
+}
+
+#nextMonth {
+    right: 1rem;
+}
+
+.calendar-body {
+    padding: 1rem;
+}
+
+.calendar-body table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 3px;
+}
+
+.calendar-body th {
+    padding: 5px;
+    text-align: center;
+    font-weight: 500;
+    color: var(--bs-gray);
+}
+
+.calendar-day {
+    padding: 5px;
+    text-align: center;
+    position: relative;
+    height: 32px;
+}
+
+.calendar-day.today {
+    background-color: var(--bs-primary);
+    color: white;
+    border-radius: 50%;
+}
+
+.calendar-day.has-events {
+    font-weight: bold;
+}
+
+.calendar-day.past-events {
+    background-color: #999;
+    color: white;
+}
+
+.day-number {
+    position: relative;
+    z-index: 1;
+}
+
+.event-indicator {
+    display: block;
+    width: 6px;
+    height: 6px;
+    background-color: currentColor;
+    border-radius: 50%;
+    position: absolute;
+    bottom: 4px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.calendar-day.today .event-indicator {
+    background-color: white;
+}

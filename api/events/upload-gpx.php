@@ -1,0 +1,72 @@
+<?php
+require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/init.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/auth_check.php';
+
+header('Content-Type: application/json');
+
+try {
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        throw new Exception('Méthode non autorisée');
+    }
+
+    if (!isset($_FILES['gpx_file'])) {
+        throw new Exception('Aucun fichier GPX fourni');
+    }
+
+    $file = $_FILES['gpx_file'];
+    $route_index = $_POST['route_index'] ?? 'default';
+
+    // Vérifier les erreurs d'upload
+    if ($file['error'] !== UPLOAD_ERR_OK) {
+        throw new Exception('Erreur lors de l\'upload: ' . $file['error']);
+    }
+
+    // Vérifier le type de fichier
+    $finfo = finfo_open(FILEINFO_MIME_TYPE);
+    $mime_type = finfo_file($finfo, $file['tmp_name']);
+    finfo_close($finfo);
+
+    $allowed_types = ['application/xml', 'text/xml', 'text/plain'];
+    if (!in_array($mime_type, $allowed_types)) {
+        throw new Exception('Type de fichier non autorisé');
+    }
+
+    // Créer le dossier de destination s'il n'existe pas
+    $upload_dir = $_SERVER['DOCUMENT_ROOT'] . '/uploads/gpx/temp';
+    if (!file_exists($upload_dir)) {
+        mkdir($upload_dir, 0755, true);
+    }
+
+    // Générer un nom de fichier unique
+    $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
+    $filename = uniqid('gpx_') . '_' . $route_index . '.' . $extension;
+    $filepath = $upload_dir . '/' . $filename;
+
+    // Déplacer le fichier
+    if (!move_uploaded_file($file['tmp_name'], $filepath)) {
+        throw new Exception('Erreur lors du déplacement du fichier');
+    }
+
+    // Déterminer l'URL de base selon l'environnement
+    $isProduction = strpos($_SERVER['HTTP_HOST'], 'rando.partageonslaforet.be') !== false;
+    $baseUrl = $isProduction 
+        ? 'https://rando.partageonslaforet.be'
+        : 'http://' . $_SERVER['HTTP_HOST'];
+
+    // Construire l'URL complète
+    $relativePath = '/uploads/gpx/temp/' . $filename;
+    $fullUrl = $baseUrl . $relativePath;
+
+    echo json_encode([
+        'success' => true,
+        'gpx_path' => $relativePath,
+        'gpx_url' => $fullUrl
+    ]);
+
+} catch (Exception $e) {
+    http_response_code(500);
+    echo json_encode([
+        'success' => false,
+        'error' => $e->getMessage()
+    ]);
+}

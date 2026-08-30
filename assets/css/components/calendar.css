@@ -1,0 +1,217 @@
+/* Container du calendrier */
+.calendar-container {
+    width: 100%;
+    max-width: 550px;
+    margin: 0 auto;
+    padding: 1rem;
+    background: white;
+    border-radius: 8px;
+}
+
+/* Styles généraux */
+.fc {
+    font-size: 0.9em;
+}
+
+/* En-tête du calendrier */
+.fc .fc-toolbar-title {
+    color: var(--primary-color);
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+/* Boutons de navigation */
+.fc .fc-button {
+    background: white !important;
+    border: 1px solid var(--primary-color) !important;
+    color: var(--primary-color) !important;
+    padding: 6px 12px !important;
+}
+
+.fc .fc-button:hover {
+    background: var(--primary-color) !important;
+    color: white !important;
+}
+
+/* En-têtes des jours */
+.fc-theme-standard th {
+    text-transform: uppercase;
+    font-size: 0.9em;
+    font-weight: 600;
+    padding: 10px 0 !important;
+}
+
+/* Suppression forcée des bordures */
+.fc-theme-standard .fc-scrollgrid,
+.fc .fc-scrollgrid,
+.fc-scrollgrid,
+.fc-theme-standard .fc-scrollgrid tbody tr:last-child td {
+    border: none !important;
+}
+
+.no-border,
+.no-border > * {
+    border: none !important;
+}
+
+/* Forcer la structure table */
+.fc .fc-scrollgrid table {
+    border-collapse: separate !important;
+    border-spacing: 1px !important;
+}
+/* Forcer le style des cellules */
+.fc .fc-col-header-cell-cushion {
+    color: #444;
+}
+
+.fc td,
+.fc th {
+    background: none !important;
+    position: relative !important;
+    border: none;
+}
+
+/* Supprimer spécifiquement les bordures bottom */
+.fc .fc-scrollgrid-section-liquid > td,
+.fc .fc-scrollgrid-section > *,
+.fc-theme-standard .fc-scrollgrid {
+    border-bottom: 0 !important;
+}
+
+/* Cellules des jours */
+
+.fc-daygrid-day {
+    position: relative !important;
+}
+
+.fc .fc-daygrid-day-frame {
+    height: 50px !important;
+    width: 50px !important;
+    position: relative !important;
+}
+
+.fc .fc-daygrid-day-number {
+    color: #444;
+}
+
+.fc-event-main{
+    background-color: white;
+    border: white;
+}
+
+/* Jour actuel */
+.fc .fc-day-today {
+    background: none !important;
+}
+
+.fc .fc-day-today .fc-daygrid-day-number {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+/* Style du badge */
+
+.fc .fc-daygrid-day:has(.event-badge) .event-badge {
+    position: absolute !important;
+    top: 5px !important;
+    right: 5px !important;
+    margin: 0 !important;
+    transform: none !important;
+}
+
+
+.event-badge {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: white;
+    color: var(--secondary-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+/* Conteneur parent */
+.fc .fc-daygrid-day:has(.event-badge) .fc-daygrid-day-frame {
+    position: relative !important;
+}
+
+/* Badge */
+.fc .fc-daygrid-day:has(.event-badge) .fc-daygrid-day-events .event-badge {
+    position: absolute !important;
+    top: 5px !important;
+    right: 5px !important;
+    margin: 0 !important;
+    transform: none !important;
+    left: auto !important;
+}
+
+/* Événements passés */
+.fc .fc-day-past:has(.event-badge) {
+    background-color: var(--secondary-color) !important;
+    border-radius: 5px
+}
+
+.fc .fc-day-past:has(.event-badge) .fc-daygrid-day-number {
+    color: white !important;
+}
+
+/* Événements du jour */
+.fc .fc-day-today:has(.event-badge) {
+    background-color: var(--secondary-color) !important;
+    border-radius: 5px
+}
+
+.fc .fc-day-today:has(.event-badge) .fc-daygrid-day-number {
+    color: white !important;
+}
+
+/* Événements futurs */
+.fc .fc-day-future:has(.event-badge) {
+    background-color: var(--secondary-color) !important;
+    border-radius: 5px
+}
+
+.fc .fc-day-future:has(.event-badge) .fc-daygrid-day-number {
+    color: white !important;
+}
+
+/* Style pour les jours avec événements */
+.fc .fc-daygrid-day:has(.event-badge) {
+    position: relative !important;
+}
+
+/* Position de la date */
+.fc .fc-daygrid-day:has(.event-badge) .fc-daygrid-day-number {
+    position: absolute !important;
+    bottom: 5px !important;
+    left: 5px !important;
+}
+
+/* Position du badge */
+.fc .fc-daygrid-day:has(.event-badge) .event-badge {
+    position: absolute !important;
+    top: 5px !important;
+    right: 5px !important;
+}
+
+/* Ajuster le conteneur des événements */
+.fc .fc-daygrid-day:has(.event-badge) .fc-daygrid-day-events {
+    position: static !important;
+    margin: 0 !important;
+}
+
+/* S'assurer que le conteneur du jour peut gérer le positionnement absolu */
+
+
+/* Espacement */
+.fc-daygrid-day-events {
+    margin-top: 4px !important;
+}
+
+.fc-daygrid-event-harness {
+    margin: 0 !important;
+}

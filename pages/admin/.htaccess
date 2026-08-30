@@ -1,0 +1,12 @@
+Options -Indexes
+
+# Protéger le répertoire
+<Files *>
+    Order Allow,Deny
+    Allow from all
+</Files>
+
+# Rediriger uniquement si on accède directement au dossier
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^$ dashboard.php [L]

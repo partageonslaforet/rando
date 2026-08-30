@@ -1,0 +1,209 @@
+/* Styles du header */
+.navbar {
+    transition: all 0.3s ease;
+    background-color: transparent !important;
+    padding: 0.5rem 0;
+    height: 100px;
+}
+
+.navbar.scrolled {
+    background-color: white !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.navbar-brand-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+}
+
+.navbar-brand {
+    font-size: 2rem !important;
+    font-weight: 700;
+    color: var(--primary-color) !important;
+    padding: 0;
+    margin: 0;
+    line-height: 1;
+}
+
+/* Navigation items */
+#navbarNav .navbar-nav .nav-item .nav-link:not(.btn-connexion) {
+    color: #333 !important;
+    transition: color 0.3s ease;
+}
+
+.navbar-transparent #navbarNav .navbar-nav .nav-item .nav-link:not(.btn-connexion) {
+    color: white !important;
+}
+
+/* Publish text */
+.publish-text {
+    font-size: 1.2rem;
+    color: #333 !important;
+    transition: color 0.3s ease;
+    margin-top: -5px;
+    line-height: 1;
+}
+
+.navbar-transparent .publish-text {
+    color: white !important;
+}
+
+/* Connexion et Mon Compte buttons */
+.btn-connexion,
+#navbarNav .navbar-nav .nav-item .nav-link.btn-connexion {
+    background-color: var(--secondary-color) !important;
+    color: white !important;
+    padding: 0.5rem 1rem !important;
+    border-radius: 10px;
+    border: none !important;
+}
+
+.btn-connexion:hover,
+#navbarNav .navbar-nav .nav-item .nav-link.btn-connexion:hover {
+    background-color: var(--secondary-hover) !important;
+    color: white !important;
+}
+
+/* S'assurer que le style reste en mode transparent */
+.navbar-transparent #navbarNav .navbar-nav .nav-item .nav-link.btn-connexion {
+    background-color: var(--secondary-color) !important;
+    color: white !important;
+}
+
+/* Dropdown styles */
+.dropdown-menu {
+    border: none;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-radius: 10px;
+    margin-top: 0.5rem;
+}
+
+.dropdown-item {
+    padding: 0.5rem 1rem;
+    color: var(--text-color);
+    transition: all 0.3s ease;
+}
+
+.dropdown-item:hover {
+    background-color: rgba(58, 138, 61, 0.1);
+    color: var(--secondary-color);
+}
+
+.dropdown-divider {
+    margin: 0.5rem 0;
+    border-color: rgba(0,0,0,0.1);
+}
+
+/* Ajuster la position de la flèche du dropdown */
+.btn-connexion.dropdown-toggle::after {
+    margin-left: 0.5rem;
+    vertical-align: middle;
+}
+
+/* Responsive styles */
+@media (max-width: 992px) {
+    .navbar-brand-container {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.25rem;
+    }
+
+    .publish-text {
+        font-size: 1rem;
+    }
+
+    .navbar-collapse {
+        background-color: white;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        margin-top: 1rem;
+    }
+
+    /* Force les liens à rester en noir dans le menu mobile même quand transparent */
+    .navbar-transparent .navbar-collapse .nav-link:not(.btn-connexion) {
+        color: #333 !important;
+    }
+}
+
+#loginButton {
+    background-color: var(--secondary-color) !important;
+    color: white !important;
+    border-radius: 10px;
+}
+
+#loginButton:hover {
+    background-color: var(--secondary-hover) !important;
+}
+
+.navbar-brand {
+    font-size: 2rem !important;
+    font-weight: 700;
+    color: var(--primary-color) !important;
+    transition: color 0.3s ease;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    height: 60px;
+}
+
+.navbar-brand-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.navbar-scrolled .navbar-brand {
+    color: var(--primary-color)!important;
+}
+
+.navbar-scrolled .publish-text,
+.navbar-scrolled .modal-link {
+    color: var(--text-color) !important;
+}
+
+/* Navigation items */
+#navbarNav {
+    font-size: 1.1rem;
+}
+
+/* Login/Account buttons in navbar */
+#loginButton {
+    background-color: var(--secondary-color) !important;
+    border-radius: 10px;
+    padding: 0.5rem 1rem;
+    color: white !important;
+}
+
+#loginButton:hover {
+    background-color: var(--secondary-hover) !important;
+}
+
+/* Réinitialiser le style pour les autres boutons de la navbar */
+.navbar .nav-link:not(#loginButton) {
+    background-color: transparent !important;
+}
+
+/* Style pour les filtres temporels */
+.filter-temporal .btn.active {
+    background-color: var(--primary-color) !important;
+    color: white !important;
+}
+
+/* Login button */
+.navbar .nav-item a[href="#"][data-bs-target="#loginModal"] {
+    /*background-color: var(--secondary-color);*/
+    border-radius: 10px;
+    padding: 0.5rem 1rem;
+    color: white !important;
+}
+
+.navbar .nav-item a[href="#"][data-bs-target="#loginModal"]:hover {
+    /*background-color: var(--secondary-hover);*/
+}
+
+/* Icons in navbar */
+.navbar .nav-item .bi {
+    font-size: 1.1rem;
+}
