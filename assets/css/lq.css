@@ -7,6 +7,7 @@ body.lq-light {
     --lq-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
     --lq-surface: linear-gradient(135deg, rgba(255, 255, 255, 0.28) 0%, rgba(255, 255, 255, 0.08) 100%);
     --lq-shine: linear-gradient(180deg, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0) 55%);
+    background: linear-gradient(180deg, #eef2f6 0%, #e1e7ec 100%) fixed;
 }
 
 /* Reflet fixe en haut */

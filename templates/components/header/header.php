@@ -42,10 +42,13 @@ function render_header() {
         <!-- Additional Styles -->
         <?= isset($additionalStyles) ? $additionalStyles : '' ?>
         
-       
+        <script>
+            console.log('[header.php] body class on load:', document.body ? document.body.className : 'no body yet');
+        </script>
         
     </head>
     <body class="lq-light">
+        <?php error_log('[header.php] render_header execute'); ?>
         <!-- Navigation -->
         <nav class="navbar navbar-expand-lg fixed-top">
             <div class="container">
