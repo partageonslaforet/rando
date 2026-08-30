@@ -104,7 +104,7 @@ function render_header() {
             </div>
         </nav>
 
-        <?php require_once __DIR__ . '/../../modals/login.php';
+        <?php require_once __DIR__ . '/../../../includes/modals.php';
      
 }
 ?>

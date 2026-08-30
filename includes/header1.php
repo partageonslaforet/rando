@@ -123,5 +123,5 @@ displayFlashMessages();
         </div>
     </nav>
 
-    <?php require_once __DIR__ . '/../templates/modals/login.php'; ?>
+    <?php require_once __DIR__ . '/modals.php'; ?>
     <div class="flex-grow-1">
