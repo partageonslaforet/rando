@@ -3,11 +3,11 @@
 body.lq-dark {
     --lq-blur: blur(22px) saturate(160%);
     --lq-radius: 22px;
-    --lq-border: rgba(255, 255, 255, 0.12);
-    --lq-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
-    --lq-surface: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(0, 0, 0, 0.08) 100%);
-    --lq-shine: linear-gradient(180deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0) 55%);
-    background: linear-gradient(180deg, #1a1d21 0%, #121417 100%) fixed;
+    --lq-border: rgba(255, 255, 255, 0.2);
+    --lq-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+    --lq-surface: linear-gradient(135deg, rgba(255, 255, 255, 0.18) 0%, rgba(0, 0, 0, 0.1) 100%);
+    --lq-shine: linear-gradient(180deg, rgba(255, 255, 255, 0.28) 0%, rgba(255, 255, 255, 0) 55%);
+    background: linear-gradient(180deg, #1b1f24 0%, #111418 100%) fixed !important;
 }
 
 /* Reflet fixe en haut */
