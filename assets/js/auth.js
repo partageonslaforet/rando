@@ -170,6 +170,69 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+
+    // Gestion du formulaire de réinitialisation de mot de passe
+    const resetPasswordForm = document.getElementById('resetPasswordForm');
+    if (resetPasswordForm) {
+        resetPasswordForm.addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const submitBtn = event.target.querySelector('button[type="submit"]');
+            const msg = document.getElementById('resetMessage');
+
+            try {
+                submitBtn.disabled = true;
+
+                const form = event.target;
+                const password = form.querySelector('#password').value;
+                const passwordConfirm = form.querySelector('#password_confirm').value;
+
+                if (password.length < 8) {
+                    throw new Error('Le mot de passe doit contenir au moins 8 caractères');
+                }
+
+                if (password !== passwordConfirm) {
+                    throw new Error('Les mots de passe ne correspondent pas');
+                }
+
+                const response = await fetch('/api/auth/reset-password.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        token: form.dataset.token,
+                        email: form.dataset.email,
+                        password: password,
+                        password_confirm: passwordConfirm,
+                        csrf_token: form.querySelector('[name="csrf_token"]').value
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!data.success) {
+                    throw new Error(data.message || 'Erreur');
+                }
+
+                if (msg) {
+                    msg.className = 'alert alert-success';
+                    msg.textContent = data.message;
+                    msg.classList.remove('d-none');
+                }
+
+                setTimeout(() => window.location.href = '/', 2000);
+
+            } catch (error) {
+                if (msg) {
+                    msg.className = 'alert alert-danger';
+                    msg.textContent = error.message;
+                    msg.classList.remove('d-none');
+                }
+            } finally {
+                submitBtn.disabled = false;
+            }
+        });
+    }
 });
 
 // Fonction de déconnexion
