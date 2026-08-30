@@ -1,86 +1,74 @@
 <?php
-require_once '../includes/config.php';
+/**
+ * Demande de réinitialisation de mot de passe.
+ * Réponse neutre quelle que soit l'existence du compte.
+ */
 
-// Rediriger si déjà connecté
-if (isLoggedIn()) {
-    header('Location: /');
+require_once '../../config/database.php';
+require_once '../../includes/csrf.php';
+require_once '../../includes/rate_limit.php';
+require_once '../../logs/error.log.php';
+
+header('Content-Type: application/json');
+
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    http_response_code(405);
+    echo json_encode(['success' => false, 'message' => 'Méthode non autorisée']);
     exit;
 }
 
-require_once '../includes/header.php';
-?>
+$input = json_decode(file_get_contents('php://input'), true);
 
-<div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card shadow">
-                <div class="card-body p-4">
-                    <h2 class="text-center mb-4">Mot de passe oublié</h2>
+$csrfToken = $input['csrf_token'] ?? ($_SERVER['HTTP_X_CSRF_TOKEN'] ?? '');
+if (!verifyCsrf($csrfToken)) {
+    http_response_code(403);
+    echo json_encode(['success' => false, 'message' => 'Token CSRF invalide']);
+    exit;
+}
 
-                    <!-- Messages d'erreur/succès -->
-                    <div id="resetMessage" class="alert d-none"></div>
+if (!checkRateLimit('forgot_password', 5, 3600)) {
+    http_response_code(429);
+    echo json_encode(['success' => false, 'message' => rateLimitMessage('forgot_password')]);
+    exit;
+}
 
-                    <form id="resetForm" method="POST">
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="email" name="email" required>
-                            <div class="form-text">
-                                Nous vous enverrons un lien pour réinitialiser votre mot de passe.
-                            </div>
-                        </div>
+try {
+    $email = $input['email'] ?? '';
 
-                        <div class="d-grid gap-2 mt-3">
-                            <button type="submit" class="btn btn-primary">Réinitialiser le mot de passe</button>
-                            <a href="/" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#loginModal">
-                                Retour à la connexion
-                            </a>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        throw new Exception('Adresse e-mail invalide');
+    }
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const resetForm = document.querySelector('#resetForm');
-    const resetMessage = document.querySelector('#resetMessage');
+    $db = getConnection();
+    $stmt = $db->prepare('SELECT id, name FROM users WHERE email = ? AND is_active = 1');
+    $stmt->execute([$email]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    resetForm.addEventListener('submit', async function(e) {
-        e.preventDefault();
+    if ($user) {
+        $token = bin2hex(random_bytes(32));
+        $tokenHash = hash('sha256', $token);
+        $expiresAt = date('Y-m-d H:i:s', strtotime('+1 hour'));
 
-        try {
-            const response = await fetch('/api/auth.php/reset-password', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    email: document.querySelector('#email').value
-                })
-            });
+        // Invalider les anciens jetons non utilisés
+        $stmt = $db->prepare('UPDATE password_reset_tokens SET used_at = NOW() WHERE user_id = ? AND used_at IS NULL');
+        $stmt->execute([$user['id']]);
 
-            const data = await response.json();
+        $stmt = $db->prepare('INSERT INTO password_reset_tokens (user_id, token_hash, expires_at) VALUES (?, ?, ?)');
+        $stmt->execute([$user['id'], $tokenHash, $expiresAt]);
 
-            if (response.ok) {
-                resetMessage.className = 'alert alert-success';
-                resetMessage.textContent = 'Si cette adresse email existe dans notre base de données, ' +
-                                        'vous recevrez un email avec les instructions pour réinitialiser ' +
-                                        'votre mot de passe.';
-                resetForm.reset();
-            } else {
-                resetMessage.className = 'alert alert-danger';
-                resetMessage.textContent = data.message || 'Une erreur est survenue';
-            }
-        } catch (error) {
-            resetMessage.className = 'alert alert-danger';
-            resetMessage.textContent = 'Erreur de connexion au serveur';
-        }
+        require_once '../../includes/mailer.php';
+        $mailer = new Mailer();
+        $mailer->sendPasswordResetEmail($email, $user['name'], $token);
+    }
 
-        resetMessage.classList.remove('d-none');
-    });
-});
-</script>
+    // Réponse neutre
+    echo json_encode([
+        'success' => true,
+        'message' => 'Si cette adresse email correspond à un compte, vous recevrez un email avec les instructions.'
+    ]);
 
-<?php require_once '../includes/footer.php'; ?>
+} catch (Exception $e) {
+    logError('api/auth/forgot-password.php', 'Erreur forgot password', ['exception' => $e->getMessage()]);
+    http_response_code(400);
+    echo json_encode(['success' => false, 'message' => 'Une erreur est survenue']);
+}
