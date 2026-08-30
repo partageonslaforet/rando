@@ -1,3 +1,4 @@
+<?php require_once __DIR__ . '/../../includes/csrf.php'; ?>
 <!-- Modal d'inscription -->
 <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -40,6 +41,7 @@
                         <input type="checkbox" class="form-check-input" id="terms" name="terms" required>
                         <label class="form-check-label" for="terms">J'accepte les <a href="#" target="_blank">conditions d'utilisation</a></label>
                     </div>-->
+                    <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(csrfToken(), ENT_QUOTES, 'UTF-8'); ?>">
                     <button type="submit" class="btn btn-secondary w-100">S'inscrire</button>
                 </form>
             </div>

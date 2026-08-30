@@ -1,35 +1,25 @@
-console.log(' Début du chargement de auth.js');
 
 // Initialisation au chargement de la page
 document.addEventListener('DOMContentLoaded', function() {
-    console.log(' Auth.js chargé');
-    
     // Gestion du formulaire de connexion
     const loginForm = document.getElementById('loginForm');
-    console.log(' Recherche du formulaire de connexion:', loginForm ? 'trouvé' : 'non trouvé');
-    
     if (loginForm) {
-        console.log(' Formulaire de connexion trouvé');
         loginForm.addEventListener('submit', async function(event) {
             event.preventDefault();
-            console.log(' Formulaire soumis');
-            
             const submitBtn = event.target.querySelector('button[type="submit"]');
             const errorDiv = document.getElementById('loginError');
             const formData = new FormData(event.target);
-            
-            console.log(' Email utilisé:', formData.get('email'));
-            
+
             try {
                 submitBtn.disabled = true;
-                console.log(' Préparation de la requête...');
-                
+
                 const requestData = {
                     email: formData.get('email'),
-                    password: formData.get('password')
+                    password: formData.get('password'),
+                    remember_me: formData.get('remember_me') === 'on',
+                    csrf_token: formData.get('csrf_token')
                 };
-                console.log(' Données à envoyer:', requestData);
-                
+
                 const response = await fetch('/api/auth/login.php', {
                     method: 'POST',
                     headers: {
@@ -38,32 +28,20 @@ document.addEventListener('DOMContentLoaded', function() {
                     body: JSON.stringify(requestData)
                 });
 
-                console.log(' Réponse reçue, status:', response.status);
-                console.log(' Headers:', Object.fromEntries(response.headers));
-                
                 const data = await response.json();
-                console.log(' Données reçues:', data);
-                
+
                 if (!data.success) {
-                    console.log(' Erreur:', data.message);
                     throw new Error(data.message || 'Erreur de connexion');
                 }
 
-                console.log('✅ Connexion réussie');
-                console.log('📦 Session:', data.user);
-                
-                // Fermer le modal de connexion
                 const loginModal = bootstrap.Modal.getInstance(document.getElementById('loginModal'));
                 if (loginModal) {
                     loginModal.hide();
                 }
-                
-                // Recharger la page pour mettre à jour le header
-                console.log('🔄 Rechargement de la page...');
+
                 window.location.reload();
-                
+
             } catch (error) {
-                console.error(' Erreur attrapée:', error.message);
                 if (errorDiv) {
                     errorDiv.textContent = error.message;
                     errorDiv.style.display = 'block';
@@ -72,23 +50,20 @@ document.addEventListener('DOMContentLoaded', function() {
                 submitBtn.disabled = false;
             }
         });
-    } else {
-        console.log(' Formulaire de connexion non trouvé');
     }
-    
+
     // Gestion du formulaire d'inscription
     const registerForm = document.getElementById('registerForm');
     if (registerForm) {
-        console.log(' Formulaire d\'inscription trouvé');
         registerForm.addEventListener('submit', async function(event) {
             event.preventDefault();
             const submitBtn = event.target.querySelector('button[type="submit"]');
             const errorDiv = document.getElementById('registerError');
-            
+
             try {
                 submitBtn.disabled = true;
                 const formData = new FormData(event.target);
-                
+
                 if (formData.get('password') !== formData.get('password_confirm')) {
                     throw new Error('Les mots de passe ne correspondent pas');
                 }
@@ -96,7 +71,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (formData.get('password').length < 8) {
                     throw new Error('Le mot de passe doit contenir au moins 8 caractères');
                 }
-                
+
                 const response = await fetch('/api/auth/register.php', {
                     method: 'POST',
                     headers: {
@@ -105,19 +80,33 @@ document.addEventListener('DOMContentLoaded', function() {
                     body: JSON.stringify({
                         name: formData.get('name'),
                         email: formData.get('email'),
-                        password: formData.get('password')
+                        password: formData.get('password'),
+                        password_confirm: formData.get('password_confirm'),
+                        csrf_token: formData.get('csrf_token')
                     })
                 });
 
                 const data = await response.json();
-                
+
                 if (!data.success) {
                     throw new Error(data.message || 'Une erreur est survenue lors de l\'inscription');
                 }
 
-                alert(data.message);
-                window.location.href = '/';
-                
+                const registerModal = bootstrap.Modal.getInstance(document.getElementById('registerModal'));
+                if (registerModal) {
+                    registerModal.hide();
+                }
+
+                const successDiv = document.getElementById('registerSuccess') || document.createElement('div');
+                if (successDiv && successDiv.id === 'registerSuccess') {
+                    successDiv.textContent = data.message;
+                    successDiv.className = 'alert alert-success';
+                    successDiv.style.display = 'block';
+                } else {
+                    alert(data.message);
+                }
+                registerForm.reset();
+
             } catch (error) {
                 if (errorDiv) {
                     errorDiv.textContent = error.message;
@@ -127,8 +116,59 @@ document.addEventListener('DOMContentLoaded', function() {
                 submitBtn.disabled = false;
             }
         });
-    } else {
-        console.log(' Formulaire d\'inscription non trouvé');
+    }
+
+    // Gestion du formulaire de mot de passe oublié
+    const forgotPasswordForm = document.getElementById('forgotPasswordForm');
+    if (forgotPasswordForm) {
+        forgotPasswordForm.addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const submitBtn = event.target.querySelector('button[type="submit"]');
+            const formData = new FormData(event.target);
+
+            try {
+                submitBtn.disabled = true;
+
+                const response = await fetch('/api/auth/forgot-password.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: formData.get('email'),
+                        csrf_token: formData.get('csrf_token')
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    const successDiv = document.getElementById('forgotSuccess') || document.createElement('div');
+                    if (successDiv && successDiv.id === 'forgotSuccess') {
+                        successDiv.textContent = data.message;
+                        successDiv.className = 'alert alert-success';
+                        successDiv.style.display = 'block';
+                    } else {
+                        alert(data.message);
+                    }
+                    forgotPasswordForm.reset();
+                } else {
+                    throw new Error(data.message || 'Une erreur est survenue');
+                }
+
+            } catch (error) {
+                const errorDiv = document.getElementById('forgotError') || document.createElement('div');
+                if (errorDiv && errorDiv.id === 'forgotError') {
+                    errorDiv.textContent = error.message;
+                    errorDiv.className = 'alert alert-danger';
+                    errorDiv.style.display = 'block';
+                } else {
+                    alert(error.message);
+                }
+            } finally {
+                submitBtn.disabled = false;
+            }
+        });
     }
 });
 

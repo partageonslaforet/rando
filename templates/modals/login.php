@@ -1,3 +1,4 @@
+<?php require_once __DIR__ . '/../../includes/csrf.php'; ?>
 <!-- Modal de connexion -->
 <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -19,6 +20,7 @@
                     <div class="mb-3 form-check">
                         <input type="checkbox" class="form-check-input" id="remember_me" name="remember_me">
                         <label class="form-check-label" for="remember_me">Se souvenir de moi</label>
+                    <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(csrfToken(), ENT_QUOTES, 'UTF-8'); ?>">
                     </div>
                     <div class="d-grid">
                         <button type="submit" class="btn btn-secondary">Se connecter</button>

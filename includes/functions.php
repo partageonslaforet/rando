@@ -17,12 +17,12 @@ function initSession() {
         error_log('Initialisation de la session');
         
         // Configurer les paramètres de cookie de session
-        $secure = true; // Utiliser HTTPS
+        $secure = !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off'; // HTTPS seulement en production
         $httponly = true; // Empêcher l'accès JavaScript
         $samesite = 'Strict'; // Protection CSRF
         
-        // Définir le domaine du cookie en fonction de l'environnement
-        $domain = $_SERVER['HTTP_HOST'];
+        // Définir le domaine du cookie sans le port (interdit pour les cookies)
+        $domain = preg_replace('/:\d+$/', '', $_SERVER['HTTP_HOST'] ?? 'localhost');
         
         // Configurer la session
         ini_set('session.cookie_secure', $secure);
