@@ -30,6 +30,8 @@ function render_header() {
         
         <!-- Custom CSS -->
         <link rel="stylesheet" href="/assets/css/style.css">
+        <link rel="stylesheet" href="/assets/css/lq.css">
+        <link rel="stylesheet" href="/assets/css/lq-dark.css">
         <link rel="stylesheet" href="/assets/css/components/home.css">
         <link rel="stylesheet" href="/assets/css/components/filtres.css">
         <link rel="stylesheet" href="/assets/css/components/calendar.css">
@@ -43,7 +45,7 @@ function render_header() {
        
         
     </head>
-    <body>
+    <body class="lq-light">
         <!-- Navigation -->
         <nav class="navbar navbar-expand-lg fixed-top">
             <div class="container">

@@ -1,0 +1,118 @@
+/* Liquid Glass — mode sombre */
+
+:root {
+    --lq-dark-bg: rgba(20, 20, 25, 0.65);
+    --lq-dark-border: rgba(255, 255, 255, 0.12);
+    --lq-dark-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.35);
+    --lq-dark-reflect: rgba(255, 255, 255, 0.2);
+}
+
+/* Reflet fixe sombre */
+body.lq-dark .navbar::before,
+body.lq-dark .card::before,
+body.lq-dark .modal-content::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 18px;
+    padding: 1px;
+    background: linear-gradient(
+        135deg,
+        var(--lq-dark-reflect) 0%,
+        rgba(255, 255, 255, 0) 35%,
+        rgba(255, 255, 255, 0) 65%,
+        var(--lq-dark-reflect) 100%
+    );
+    -webkit-mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Navbar sombre */
+body.lq-dark .navbar.navbar-expand-lg {
+    background: var(--lq-dark-bg) !important;
+    -webkit-backdrop-filter: blur(18px) saturate(160%);
+    backdrop-filter: blur(18px) saturate(160%);
+    border-bottom: 1px solid var(--lq-dark-border) !important;
+    box-shadow: var(--lq-dark-shadow) !important;
+}
+
+body.lq-dark .navbar.navbar-expand-lg .navbar-brand,
+body.lq-dark .navbar.navbar-expand-lg .nav-link:not(.btn-connexion),
+body.lq-dark .navbar.navbar-expand-lg .publish-text {
+    color: #f0f0f0 !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+/* Cartes sombres */
+body.lq-dark .card {
+    position: relative;
+    background: rgba(30, 30, 35, 0.72) !important;
+    -webkit-backdrop-filter: blur(18px) saturate(160%);
+    backdrop-filter: blur(18px) saturate(160%);
+    border: 1px solid var(--lq-dark-border) !important;
+    border-radius: 18px !important;
+    box-shadow: var(--lq-dark-shadow) !important;
+    color: #f0f0f0;
+    overflow: hidden;
+    z-index: 1;
+}
+
+body.lq-dark .card h2,
+body.lq-dark .card h3,
+body.lq-dark .card h4 {
+    color: #fff;
+}
+
+body.lq-dark .card .form-label {
+    color: #e0e0e0;
+}
+
+body.lq-dark .card .form-control {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+    color: #f0f0f0;
+}
+
+body.lq-dark .card .form-control:focus {
+    background: rgba(255, 255, 255, 0.18);
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.15);
+    color: #fff;
+}
+
+/* Modales sombres */
+body.lq-dark .modal-content {
+    position: relative;
+    background: rgba(25, 25, 30, 0.78) !important;
+    -webkit-backdrop-filter: blur(18px) saturate(160%);
+    backdrop-filter: blur(18px) saturate(160%);
+    border: 1px solid var(--lq-dark-border) !important;
+    border-radius: 18px !important;
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4) !important;
+    color: #f0f0f0;
+    z-index: 1;
+}
+
+body.lq-dark .modal-backdrop {
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+}
+
+/* Footer sombre */
+body.lq-dark .footer {
+    background: rgba(15, 15, 20, 0.65) !important;
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    border-top: 1px solid var(--lq-dark-border) !important;
+    color: #d0d0d0;
+}
+
+body.lq-dark .footer a {
+    color: #e0e0e0;
+}
