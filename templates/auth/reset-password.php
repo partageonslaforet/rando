@@ -3,8 +3,10 @@ require_once '../../includes/csrf.php';
 $pageTitle = 'Réinitialisation du mot de passe';
 require_once '../../templates/components/header/header.php';
 require_once '../../templates/components/footer/footer.php';
+$additionalStyles = '<link rel="stylesheet" href="/assets/css/auth.css">';
 render_header();
 ?>
+<div class="auth-page">
     <div class="container py-5">
         <div class="row justify-content-center">
             <div class="col-md-6">
@@ -43,5 +45,8 @@ render_header();
     </div>
 <?php
 render_footer();
-require_once '../../includes/scripts.php';
+?>
+</div>
+<?php
+require_once '../../includes/footer.php';
 ?>

@@ -1,5 +1,7 @@
 <?php
 function render_header() {
+    global $pageTitle, $additionalStyles;
+
     if (session_status() === PHP_SESSION_NONE) {
         session_start();
     }

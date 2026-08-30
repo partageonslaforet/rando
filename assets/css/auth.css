@@ -1,0 +1,18 @@
+/* Styles des pages d'authentification */
+
+.auth-page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-top: 90px;
+    padding-bottom: 2rem;
+    background: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)), url('/assets/images/main-hero.jpg') no-repeat center center;
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+.auth-page .card {
+    background-color: rgba(255, 255, 255, 0.95);
+    border: none;
+}
