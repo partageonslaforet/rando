@@ -1,7 +1,9 @@
 <?php
 require_once '../../includes/csrf.php';
 $pageTitle = 'Réinitialisation du mot de passe';
-include '../../includes/header.php';
+require_once '../../templates/components/header/header.php';
+require_once '../../templates/components/footer/footer.php';
+render_header();
 ?>
     <div class="container py-5">
         <div class="row justify-content-center">
@@ -39,4 +41,7 @@ include '../../includes/header.php';
             </div>
         </div>
     </div>
-<?php include '../../includes/footer.php'; ?>
+<?php
+render_footer();
+require_once '../../includes/scripts.php';
+?>
