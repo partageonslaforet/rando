@@ -30,8 +30,8 @@ function render_header() {
         
         <!-- Custom CSS -->
         <link rel="stylesheet" href="/assets/css/style.css">
-        <link rel="stylesheet" href="/assets/css/lq.css">
-        <link rel="stylesheet" href="/assets/css/lq-dark.css">
+        <!-- <link rel="stylesheet" href="/assets/css/lq.css">
+        <link rel="stylesheet" href="/assets/css/lq-dark.css"> -->
         <link rel="stylesheet" href="/assets/css/components/home.css">
         <link rel="stylesheet" href="/assets/css/components/filtres.css">
         <link rel="stylesheet" href="/assets/css/components/calendar.css">
@@ -42,13 +42,8 @@ function render_header() {
         <!-- Additional Styles -->
         <?= isset($additionalStyles) ? $additionalStyles : '' ?>
         
-        <script>
-            console.log('[header.php] body class on load:', document.body ? document.body.className : 'no body yet');
-        </script>
-        
     </head>
     <body class="lq-light">
-        <?php error_log('[header.php] render_header execute'); ?>
         <!-- Navigation -->
         <nav class="navbar navbar-expand-lg fixed-top">
             <div class="container">
@@ -110,6 +105,19 @@ function render_header() {
                 </div>
             </div>
         </nav>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const toggler = document.querySelector('.navbar-toggler');
+                const navCollapse = document.getElementById('navbarNav');
+                if (toggler && navCollapse && typeof bootstrap !== 'undefined' && bootstrap.Collapse) {
+                    const bsCollapse = bootstrap.Collapse.getInstance(navCollapse) || new bootstrap.Collapse(navCollapse, { toggle: false });
+                    toggler.addEventListener('click', function () {
+                        bsCollapse.toggle();
+                    });
+                }
+            });
+        </script>
 
         <?php require_once __DIR__ . '/../../../includes/modals.php';
      

@@ -1,56 +1,27 @@
-
-$(document).ready(function() {
+document.addEventListener('DOMContentLoaded', function() {
     // Retirer la classe js-loading une fois que tout est chargé
-    $('body').removeClass('js-loading');
-    console.log('=== DÉBUT INITIALISATION DROPDOWN HEADER ===');
-    
+    document.body.classList.remove('js-loading');
+
     // Navbar transparent
     const navbar = document.querySelector('.navbar');
-    console.log('Navbar trouvé:', navbar);
-    navbar.classList.add('navbar-transparent');
-    
-    // Gestion du scroll
-    window.addEventListener('scroll', function() {
-        if (window.scrollY > 50) {
-            navbar.classList.add('scrolled');
-            navbar.classList.remove('navbar-transparent');
-        } else {
-            navbar.classList.remove('scrolled');
-            navbar.classList.add('navbar-transparent');
-        }
-    });
+    if (navbar) {
+        navbar.classList.add('navbar-transparent');
+
+        // Gestion du scroll
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+                navbar.classList.remove('navbar-transparent');
+            } else {
+                navbar.classList.remove('scrolled');
+                navbar.classList.add('navbar-transparent');
+            }
+        });
+    }
 
     // Initialisation du dropdown avec Bootstrap 5
     const dropdownElementList = document.querySelectorAll('.dropdown-toggle');
-    const dropdownList = [...dropdownElementList].map(dropdownToggleEl => {
-        return new bootstrap.Dropdown(dropdownToggleEl, {
-            autoClose: true
-        });
+    dropdownElementList.forEach(dropdownToggleEl => {
+        new bootstrap.Dropdown(dropdownToggleEl, { autoClose: true });
     });
-
-    // Logging des événements dropdown
-    $('.dropdown').on('show.bs.dropdown', function () {
-        console.log('Menu en cours d\'ouverture');
-    }).on('shown.bs.dropdown', function () {
-        console.log('Menu ouvert');
-    }).on('hide.bs.dropdown', function () {
-        console.log('Menu en cours de fermeture');
-    }).on('hidden.bs.dropdown', function () {
-        console.log('Menu fermé');
-    });
-
-    console.log('=== FIN INITIALISATION DROPDOWN HEADER ===');
-
-    // Diagnostic hamburger mobile
-    const toggler = document.querySelector('.navbar-toggler');
-    const navCollapse = document.getElementById('navbarNav');
-    if (toggler && navCollapse) {
-        console.log('[header] hamburger trouvé, cible:', navCollapse.id);
-        toggler.addEventListener('click', function () {
-            console.log('[header] hamburger cliqué');
-            console.log('[header] menu show:', navCollapse.classList.contains('show'));
-        });
-    } else {
-        console.warn('[header] hamburger ou menu non trouvé');
-    }
 });

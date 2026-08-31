@@ -269,28 +269,7 @@ class Event {
             $stmt->execute();
             $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-            // Log détaillé des événements récupérés
-            foreach ($events as $event) {
-                echo "<script>console.log('=== ÉVÉNEMENT ID: " . $event['id'] . " ===');</script>";
-                echo "<script>console.log('Titre:', " . json_encode($event['title']) . ");</script>";
-                echo "<script>console.log('Description:', " . json_encode($event['description']) . ");</script>";
-                echo "<script>console.log('Catégorie:', " . json_encode($event['category']) . ");</script>";
-                echo "<script>console.log('Catégorie ID:', " . json_encode($event['category_id']) . ");</script>";
-                echo "<script>console.log('Catégorie Nom:', " . json_encode($event['category_name']) . ");</script>";
-                echo "<script>console.log('Date:', " . json_encode($event['date']) . ");</script>";
-                echo "<script>console.log('Heure début:', " . json_encode($event['start_time']) . ");</script>";
-                echo "<script>console.log('Heure fin:', " . json_encode($event['end_time']) . ");</script>";
-                echo "<script>console.log('Lieu:', " . json_encode($event['location']) . ");</script>";
-                echo "<script>console.log('Salle:', " . json_encode($event['venue']) . ");</script>";
-                echo "<script>console.log('Coordonnées:', " . json_encode($event['coordinates']) . ");</script>";
-                echo "<script>console.log('Difficulté:', " . json_encode($event['difficulty']) . ");</script>";
-                echo "<script>console.log('Max participants:', " . json_encode($event['max_participants']) . ");</script>";
-                echo "<script>console.log('Image principale:', " . json_encode($event['main_image_path']) . ");</script>";
-                echo "<script>console.log('Image fallback:', " . json_encode($event['fallback_image']) . ");</script>";
-                echo "<script>console.log('Statut:', " . json_encode($event['status']) . ");</script>";
-                echo "<script>console.log('Créateur:', " . json_encode($event['creator_name']) . ");</script>";
-                echo "<script>console.log('------------------------');</script>";
-            }
+            // (logs de debug supprimés)
 
             $this->debug_log("Nombre d'événements récupérés: " . count($events));
             $this->debug_log("=== FIN GET ALL ===");

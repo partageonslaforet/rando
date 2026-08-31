@@ -10,8 +10,6 @@ if (typeof window.geocodeCache === 'undefined') {
 }
 
 // Initialisation de la carte
-console.log(' map.js chargé.');
-
 document.addEventListener('DOMContentLoaded', function() {
     // Vérifier si le conteneur de carte existe
     const mapContainer = document.getElementById('map');
@@ -263,7 +261,6 @@ function getCategoryLabel(category) {
 }
 
 // Exporter les fonctions pour les rendre accessibles depuis main.js
-console.log(' Préparation de l\'export des fonctions...');
 window.mapFunctions = {
     updateMapMarkers,
     getCategoryBadgeClass,
@@ -272,7 +269,3 @@ window.mapFunctions = {
     geocodeAddress,
     getCoordinates
 };
-console.log(' Fonctions exportées dans window.mapFunctions:', Object.keys(window.mapFunctions));
-
-// Indiquer que le fichier est chargé
-console.log(' map.js chargé.');

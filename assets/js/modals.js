@@ -1,8 +1,5 @@
-console.log('🔄 Chargement de modals.js');
-
 // Définition directe des fonctions globales
 window.showLoginModal = function() {
-    console.log('🎯 showLoginModal appelé');
     const modalElement = document.getElementById('loginModal');
     
     if (!modalElement) {
@@ -13,7 +10,6 @@ window.showLoginModal = function() {
     try {
         const modal = new bootstrap.Modal(modalElement);
         modal.show();
-        console.log('✅ Modal affiché avec succès');
     } catch (error) {
         console.error('❌ Erreur lors de l\'affichage du modal:', error);
         console.error('Bootstrap disponible?', typeof bootstrap);
@@ -59,11 +55,5 @@ window.showForgotPasswordModal = function() {
 
 // Initialisation au chargement du DOM
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('🌟 modals.js - DOMContentLoaded');
-    console.log('📌 Vérification des éléments:', {
-        'showLoginModal': typeof window.showLoginModal,
-        'loginModal': document.getElementById('loginModal'),
-        'bootstrap': typeof bootstrap,
-        'bootstrap.Modal': typeof bootstrap?.Modal
-    });
+    // Initialisation silencieuse
 });

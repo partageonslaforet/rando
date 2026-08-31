@@ -21,7 +21,7 @@
 .navbar-brand {
     font-size: 2rem !important;
     font-weight: 700;
-    color: var(--primary-color) !important;
+    color: var(--secondary-color) !important;
     padding: 0;
     margin: 0;
     line-height: 1;
@@ -29,7 +29,7 @@
 
 /* Navigation items */
 #navbarNav .navbar-nav .nav-item .nav-link:not(.btn-connexion) {
-    color: #333 !important;
+    color: white !important;
     transition: color 0.3s ease;
 }
 
@@ -40,7 +40,7 @@
 /* Publish text */
 .publish-text {
     font-size: 1.2rem;
-    color: #333 !important;
+    color: white !important;
     transition: color 0.3s ease;
     margin-top: -5px;
     line-height: 1;
@@ -140,7 +140,7 @@
 .navbar-brand {
     font-size: 2rem !important;
     font-weight: 700;
-    color: var(--primary-color) !important;
+    color: var(--secondary-color) !important;
     transition: color 0.3s ease;
     padding: 0;
     display: flex;
@@ -155,7 +155,7 @@
 }
 
 .navbar-scrolled .navbar-brand {
-    color: var(--primary-color)!important;
+    color: var(--secondary-color)!important;
 }
 
 .navbar-scrolled .publish-text,
@@ -187,7 +187,7 @@
 
 /* Style pour les filtres temporels */
 .filter-temporal .btn.active {
-    background-color: var(--primary-color) !important;
+    background-color: var(--secondary-color) !important;
     color: white !important;
 }
 

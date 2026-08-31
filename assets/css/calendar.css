@@ -19,7 +19,7 @@
 .calendar-nav button {
     background: none;
     border: none;
-    color: var(--primary-color);
+    color: var(--secondary-color);
     font-size: 1.2rem;
     cursor: pointer;
     padding: 0.5rem;
@@ -35,7 +35,7 @@
     margin: 0;
     font-size: 1.2rem;
     font-weight: 500;
-    color: var(--primary-color);
+    color: var(--secondary-color);
 }
 
 .calendar-body {
@@ -89,7 +89,7 @@
     left: 5px;
     font-size: 0.95rem;
     color: white;
-    border-color: var(--primary-color);
+    border-color: var(--secondary-color);
     border-radius: 10px;
 }
 
@@ -139,26 +139,26 @@
 }
 
 .calendar td.today.has-events {
-    background-color: var(--primary-color);
+    background-color: var(--secondary-color);
     border: none;
 }
 
 .calendar td.today.has-events .event-count {
-    color: var(--primary-color);
+    color: var(--secondary-color);
 }
 
 #currentMonth, #prevMonth, #nextMonth {
-    color: var(--primary-color);
+    color: var(--secondary-color);
     font-weight: bold;
 }
 
 .calendar-day.selected {
     
-    border: 2px solid var(--primary-color);
+    border: 2px solid var(--secondary-color);
 }
 
 .calendar-day.selected .day-number {
-    color: var(--bs-primary);
+    color: var(--bs-secondary);
     font-weight: bold;
 }
 
@@ -182,7 +182,7 @@
 }
 
 .calendar-nav button {
-    color: var(--primary-color);
+    color: var(--secondary-color);
     background: none;
     border: none;
     padding: 0.5rem 1rem;
@@ -197,7 +197,7 @@
     display: inline-block;
     margin: 0;
     font-size: 1.2rem;
-    color: var(--primary-color);
+    color: var(--secondary-color);
 }
 
 .calendar-body {
@@ -248,18 +248,18 @@
 }
 
 .calendar td.today {
-    border: 2px solid var(--primary-color);
+    border: 2px solid var(--secondary-color);
 }
 
 .calendar td.today.has-events {
-    background-color: var(--primary-color);
+    background-color: var(--secondary-color);
     color: white;
     border: none;
 }
 
 .calendar td.today.has-events .event-count {
     background-color: white;
-    color: var(--primary-color);
+    color: var(--secondary-color);
 }
 
 .calendar td.other-month {
@@ -269,7 +269,7 @@
 .calendar-nav .current-month {
     font-weight: 500;
     font-size: 1.1rem;
-    color: var(--primary-color);
+    color: var(--secondary-color);
 }
 
 /* Style pour les pastilles de nombre d'événements */
@@ -289,13 +289,13 @@
 
 /* Styles des boutons avec pastilles */
 .event-filters .btn-light,
-.event-filters .btn-primary {
+.event-filters .btn-secondary {
     position: relative;
     padding-right: 2.5rem;
 }
 
 .event-filters .btn-light::after,
-.event-filters .btn-primary::after {
+.event-filters .btn-secondary::after {
     content: attr(data-count);
     position: absolute;
     right: 0.5rem;
@@ -313,14 +313,14 @@
 
 /* Pastille pour bouton inactif */
 .event-filters .btn-light::after {
-    background: var(--primary-color);
+    background: var(--secondary-color);
     color: white;
 }
 
 /* Pastille pour bouton actif 
-.event-filters .btn-primary::after {
+.event-filters .btn-secondary::after {
     background: white;
-    color: var(--primary-color);
+    color: var(--secondary-color);
 }*/
 
 /* Styles des boutons du calendrier */
@@ -415,9 +415,9 @@
 }
 
 .calendar-day.current-day .day-number {
-    color:var(--primary-color); 
+    color:var(--secondary-color); 
     font-weight: bold;
-    border-color: var(--primary-color);
+    border-color: var(--secondary-color);
     border-radius: 10px;
 }
 
@@ -453,18 +453,18 @@
 }
 
 .calendar td.today {
-    border: 2px solid var(--primary-color);
+    border: 2px solid var(--secondary-color);
 }
 
 .calendar td.today.has-events {
-    background-color: var(--primary-color);
+    background-color: var(--secondary-color);
     color: white;
     border: none;
 }
 
 .calendar td.today.has-events .event-count {
     background-color: white;
-    color: var(--primary-color);
+    color: var(--secondary-color);
 }
 
 .calendar td.other-month {
@@ -523,7 +523,7 @@
 }
 
 .calendar-day.today {
-    background-color: var(--bs-primary);
+    background-color: var(--bs-secondary);
     color: white;
     border-radius: 50%;
 }

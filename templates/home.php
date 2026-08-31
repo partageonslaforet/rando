@@ -55,18 +55,3 @@ include __DIR__ . '/components/events/events-list.php';
         <!-- Liste d'événements -->
         <?php render_events_list(); ?>
     </div>
-
-<?php
-error_log('[home.php] URI=' . ($_SERVER['REQUEST_URI'] ?? 'none') . ' | body class devrait etre lq-light');
-?>
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        console.log('[home.php] body class:', document.body.className);
-        const calendar = document.querySelector('.calendar-container');
-        const filters  = document.querySelector('.filters');
-        const navbar   = document.querySelector('.navbar');
-        if (calendar) console.log('[home.php] calendar bg:', getComputedStyle(calendar).backgroundColor, 'border:', getComputedStyle(calendar).border);
-        if (filters)  console.log('[home.php] filters bg:', getComputedStyle(filters).backgroundColor, 'border:', getComputedStyle(filters).border);
-        if (navbar)   console.log('[home.php] navbar bg:', getComputedStyle(navbar).backgroundColor);
-    });
-</script>

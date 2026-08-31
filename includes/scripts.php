@@ -24,36 +24,5 @@
 <script src="/assets/js/filters.js"></script>
 <script src="/assets/js/modals.js"></script>
 <script src="/assets/js/auth.js"></script>
-<script src="/assets/js/header.js"></script>
+<script src="/assets/js/header.js?v=2"></script>
 <script src="/assets/js/init.js"></script>
-
-<!-- Analyse des dépendances -->
-<script>
-console.log('=== DÉBUT ANALYSE DÉPENDANCES ===');
-console.log('Vérification de jQuery:', {
-    'jQuery chargé': typeof $ !== 'undefined',
-    'Version jQuery': typeof $ !== 'undefined' ? $.fn.jquery : 'non chargé'
-});
-
-console.log('Vérification de Bootstrap:', {
-    'Bootstrap chargé': typeof bootstrap !== 'undefined',
-    'Version Bootstrap': typeof bootstrap !== 'undefined' ? bootstrap.VERSION : 'non chargé',
-    'Dropdown disponible': typeof bootstrap !== 'undefined' ? typeof bootstrap.Dropdown : 'non chargé'
-});
-
-console.log('État de la session:', {
-    'user_id': <?php echo isset($_SESSION['user_id']) ? $_SESSION['user_id'] : 'null' ?>,
-    'user_role': <?php echo isset($_SESSION['user_role']) ? "'" . $_SESSION['user_role'] . "'" : 'null' ?>
-});
-
-// Vérifier l'ordre de chargement
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('Scripts chargés dans l\'ordre:', {
-        'jQuery': typeof $ !== 'undefined',
-        'Bootstrap': typeof bootstrap !== 'undefined',
-        'Bootstrap Dropdown': typeof bootstrap !== 'undefined' ? typeof bootstrap.Dropdown : 'non chargé'
-    });
-});
-
-console.log('=== FIN ANALYSE DÉPENDANCES ===');
-</script>
