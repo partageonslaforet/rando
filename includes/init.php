@@ -22,7 +22,7 @@ $configFiles = [
 ];
 
 foreach ($configFiles as $file) {
-    $fullPath = $_SERVER['DOCUMENT_ROOT'] . $file;
+    $fullPath = dirname(__DIR__) . $file;
     if (!file_exists($fullPath)) {
         error_log("❌ Fichier de configuration manquant: " . $file);
         http_response_code(500);
