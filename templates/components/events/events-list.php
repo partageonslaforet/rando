@@ -10,7 +10,7 @@ if (!function_exists('render_events_list')) {
                 <h2 class="events-list-title"></h2>
                 <span class="events-list-count"></span>
             </header>
-            <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4 events-list-grid">
+            <div class="row row-cols-1 g-3 events-list-grid">
                 <!-- Les événements seront chargés dynamiquement -->
             </div>
         </div>
@@ -117,20 +117,28 @@ if (!function_exists('render_events_list')) {
 
                     // Image
                     const img = eventElement.querySelector('.summary-card-image img');
-                    img.src = event.event_image
-                        ? `/uploads/events/${event.event_image}`
-                        : '/assets/images/events/default-event.jpg';
+                    const placeholderSvg = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%23a8d5a2'/%3E%3Cstop offset='100%25' stop-color='%235d8c5f'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='400' height='300' fill='url(%23g)'/%3E%3C/svg%3E";
+                    img.src = event.main_image_path || event.main_image || (event.event_image ? `/uploads/events/${event.event_image}` : placeholderSvg);
+                    img.onerror = function() { this.onerror = null; this.src = placeholderSvg; };
                     img.alt = event.title ? `Image de ${event.title}` : 'Image de l\'événement';
 
                     // Badge catégorie
+                    const categoryIcons = {
+                        'hiking': 'bi-person-walking',
+                        'running': 'bi-person-walking',
+                        'cycling': 'bi-bicycle'
+                    };
+                    const badge = eventElement.querySelector('.summary-card-badge');
                     if (event.category_name) {
-                        const badge = eventElement.querySelector('.summary-card-badge');
                         const badgeIcon = badge.querySelector('i');
                         const badgeText = badge.querySelector('.badge-text');
-                        badgeIcon.className = `bi ${event.category_icon || 'bi-tree'}`;
+                        const iconClass = (event.category_icon && event.category_icon.startsWith('bi-'))
+                            ? event.category_icon
+                            : (categoryIcons[event.category] || 'bi-tree');
+                        badgeIcon.className = `bi ${iconClass}`;
                         badgeText.textContent = event.category_name;
                     } else {
-                        eventElement.querySelector('.summary-card-badge').style.display = 'none';
+                        badge.style.display = 'none';
                     }
 
                     // Titre
