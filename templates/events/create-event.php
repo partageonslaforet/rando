@@ -6,24 +6,31 @@ error_reporting(E_ALL);
 
 error_log("🚀 Début create-event.php");
 
+// Charger le logger avant les dépendances critiques
+require_once __DIR__ . '/../../logs/error.log.php';
+
 // Inclure les dépendances dans le bon ordre
 try {
-    require_once $_SERVER['DOCUMENT_ROOT'] . '/config/database.php';
+    require_once __DIR__ . '/../../config/database.php';
     error_log("✅ database.php chargé");
-    
-    require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/functions.php';
+
+    require_once __DIR__ . '/../../includes/functions.php';
     error_log("✅ functions.php chargé");
-    
-    require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/auth_check.php';
+
+    require_once __DIR__ . '/../../includes/auth_check.php';
     error_log("✅ auth_check.php chargé");
-    
-    require_once $_SERVER['DOCUMENT_ROOT'] . '/src/Models/EventCategory.php';
+
+    require_once __DIR__ . '/../../src/Models/EventCategory.php';
     error_log("✅ EventCategory.php chargé");
-    
-    require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/organizer_profile.php';
+
+    require_once __DIR__ . '/../../includes/organizer_profile.php';
     error_log("✅ organizer_profile.php chargé");
-} catch (Exception $e) {
+} catch (Throwable $e) {
     error_log("❌ Erreur lors du chargement des dépendances : " . $e->getMessage());
+    logError('create-event.php', 'Échec du chargement des dépendances', [
+        'error' => $e->getMessage(),
+        'trace' => $e->getTraceAsString(),
+    ]);
     header('Location: /?error=configuration_error');
     exit;
 }
@@ -98,7 +105,7 @@ try {
 }
 
 // Inclure le header après toutes les vérifications et redirections potentielles
-require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php';
+require_once __DIR__ . '/../../includes/header.php';
 error_log("✅ Header inclus");
 
 ?>
@@ -792,7 +799,7 @@ document.getElementById('secondaryImages').addEventListener('change', handleSeco
     </div>
 </div>
 
-<?php require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>
+<?php require_once __DIR__ . '/../../includes/footer.php'; ?>
 
 <!-- Scripts -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-gpx/1.7.0/gpx.min.js"></script>
