@@ -124,6 +124,15 @@ function getCoordinates(event) {
 // Fonction pour mettre à jour les marqueurs sur la carte
 async function updateMapMarkers(events) {
     try {
+        // S'assurer que la carte est initialisée avant d'ajouter des marqueurs
+        if (!window.mainMap) {
+            initMap();
+        }
+        if (!window.mainMap) {
+            console.warn('Carte non initialisée, mise à jour des marqueurs annulée');
+            return;
+        }
+
         if (!window.markersLayer) {
             window.markersLayer = L.layerGroup().addTo(window.mainMap);
         }
