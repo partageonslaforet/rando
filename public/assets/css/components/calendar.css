@@ -519,18 +519,9 @@
     color: #adb5bd !important;
 }
 
-/* Supprimer la barre/bordure bleue des jours avec événements */
-.fc .fc-daygrid-event,
-.fc .fc-h-event,
-.fc .fc-v-event,
-.fc .fc-daygrid-more-link {
+/* Supprimer la barre bleue des jours avec événements */
+.fc .fc-daygrid-event {
     background-color: transparent !important;
     border: none !important;
     box-shadow: none !important;
-}
-
-.fc .fc-daygrid-event-harness,
-.fc .fc-daygrid-event-harness-abs {
-    height: auto !important;
-    min-height: 0 !important;
 }
