@@ -135,7 +135,8 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    color: var(--secondary-color);
+    color: white;
+    border-color: var(--secondary-color) !important;
     font-weight: 500;
 }
 
@@ -1767,7 +1768,13 @@ h3 {
 }
 
 
-
+/* Styles Leaflet */
+.leaflet-control-zoom-in,
+.leaflet-control-zoom-out,
+.leaflet-control-zoom-in span,
+.leaflet-control-zoom-out span {
+    color: var(--secondary-color) !important;
+}
 
 
 
