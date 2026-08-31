@@ -469,3 +469,44 @@
 .fc .fc-day-today:has(.event-badge) .event-badge {
     background-color: #ffffff !important;
 }
+
+/* ================================================================
+   Ajustements maquette
+   ================================================================ */
+
+.fc .fc-header-toolbar {
+    gap: 0.5rem !important;
+}
+
+.fc .fc-toolbar-chunk:has(.fc-toolbar-title) {
+    order: -1 !important;
+    margin-right: auto !important;
+}
+
+.fc .fc-toolbar-title {
+    text-transform: capitalize !important;
+}
+
+.fc .fc-col-header-cell-cushion {
+    width: 2.1em !important;
+    border: none !important;
+    text-decoration: none !important;
+}
+
+.fc .fc-daygrid-day-frame {
+    padding: 0 !important;
+}
+
+.fc .fc-daygrid-day-number {
+    min-width: 44px !important;
+    min-height: 44px !important;
+}
+
+.fc .fc-day-today .fc-daygrid-day-number {
+    min-width: 48px !important;
+    min-height: 48px !important;
+}
+
+.fc .fc-day-other .fc-daygrid-day-number {
+    color: #adb5bd !important;
+}
