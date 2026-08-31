@@ -7,7 +7,18 @@ function render_calendar($pdo) {
 
     <!-- Conteneur du calendrier -->
     <div class="calendar-container">
+        <p class="calendar-label">AGENDA DES RANDONNÉES</p>
         <div id="calendar"></div>
+        <div class="calendar-legend">
+            <span class="legend-item">
+                <span class="legend-dot" aria-hidden="true"></span>
+                Événement disponible
+            </span>
+            <span class="legend-item">
+                <span class="legend-square" aria-hidden="true"></span>
+                Jour sélectionné
+            </span>
+        </div>
     </div>
 
     <!-- Styles et Scripts -->

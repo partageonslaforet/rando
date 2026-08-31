@@ -342,3 +342,130 @@
         font-size: 0.7rem !important;
     }
 }
+
+/* ================================================================
+   Maquette calendrier
+   ================================================================ */
+
+.calendar-container {
+    padding: 1.5rem !important;
+    border-radius: 16px !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06) !important;
+    background: #ffffff !important;
+}
+
+.calendar-label {
+    margin: 0 0 0.25rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #6b7a6e;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+}
+
+.calendar-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.25rem;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e9ecef;
+    font-size: 0.85rem;
+    color: #5a6a5d;
+}
+
+.legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.legend-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background-color: var(--secondary-color);
+}
+
+.legend-square {
+    width: 14px;
+    height: 14px;
+    border-radius: 4px;
+    background-color: #2E8338;
+}
+
+.fc .fc-header-toolbar {
+    display: flex;
+    align-items: center;
+    padding-bottom: 0.75rem;
+    margin-bottom: 0.75rem;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.fc .fc-toolbar-chunk:has(.fc-toolbar-title) {
+    margin-right: auto;
+}
+
+.fc .fc-toolbar-chunk:has(.fc-button) {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.fc .fc-toolbar-title {
+    font-size: 1.6rem !important;
+    font-weight: 600 !important;
+    color: #2f3e2f !important;
+    text-transform: none !important;
+    letter-spacing: 0 !important;
+}
+
+.fc .fc-button {
+    width: 40px !important;
+    height: 40px !important;
+    padding: 0 !important;
+    border-radius: 12px !important;
+    border: 1px solid var(--secondary-color) !important;
+    background-color: #ffffff !important;
+    color: var(--secondary-color) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.fc .fc-button:hover {
+    background-color: var(--secondary-color) !important;
+    color: #ffffff !important;
+}
+
+.fc .fc-button .fc-icon {
+    font-size: 1.1rem !important;
+}
+
+.fc .fc-col-header-cell-cushion {
+    display: inline-block !important;
+    width: 2.5em !important;
+    overflow: hidden !important;
+    white-space: nowrap !important;
+    text-align: center !important;
+    text-decoration: none !important;
+    text-transform: uppercase !important;
+    font-size: 0.7rem !important;
+    font-weight: 700 !important;
+    color: #888 !important;
+    padding: 0.25rem 0 !important;
+}
+
+.fc .fc-daygrid-day-number {
+    border-radius: 12px !important;
+    font-weight: 500 !important;
+}
+
+.fc .fc-day-today .fc-daygrid-day-number {
+    background-color: #2E8338 !important;
+    color: #ffffff !important;
+    border-radius: 12px !important;
+}
+
+.fc .fc-day-today:has(.event-badge) .event-badge {
+    background-color: #ffffff !important;
+}
