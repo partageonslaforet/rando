@@ -413,13 +413,14 @@
 }
 
 .input-group .btn {
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-    background: #fff;
-    border-color: var(--profile-border);
-    color: var(--profile-muted);
+    border-radius: 0 10px 10px 0;
+    background: #fff !important;
+    border: 1px solid var(--profile-border) !important;
+    border-left-color: transparent !important;
+    color: var(--profile-muted) !important;
     min-width: 48px;
     min-height: 48px;
+    width: auto !important;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -427,9 +428,9 @@
 
 .input-group .btn:hover,
 .input-group .btn:focus {
-    background: var(--profile-bg);
-    color: var(--profile-green);
-    border-color: var(--profile-green);
+    background: var(--profile-bg) !important;
+    color: var(--profile-green) !important;
+    border-color: var(--profile-green) !important;
 }
 
 .form-actions {
