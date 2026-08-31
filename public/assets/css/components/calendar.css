@@ -501,20 +501,36 @@
 
 .fc .fc-daygrid-day-frame {
     padding: 0 !important;
-    min-height: 36px !important;
+    min-height: 24px !important;
 }
 
 .fc .fc-daygrid-day-number {
-    min-width: 36px !important;
-    min-height: 36px !important;
-    font-size: 0.85rem !important;
+    min-width: 24px !important;
+    min-height: 24px !important;
+    font-size: 1rem !important;
 }
 
 .fc .fc-day-today .fc-daygrid-day-number {
-    min-width: 40px !important;
-    min-height: 40px !important;
+    min-width: 24px !important;
+    min-height: 24px !important;
 }
 
 .fc .fc-day-other .fc-daygrid-day-number {
     color: #adb5bd !important;
+}
+
+/* Supprimer la barre/bordure bleue des jours avec événements */
+.fc .fc-daygrid-event,
+.fc .fc-h-event,
+.fc .fc-v-event,
+.fc .fc-daygrid-more-link {
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.fc .fc-daygrid-event-harness,
+.fc .fc-daygrid-event-harness-abs {
+    height: auto !important;
+    min-height: 0 !important;
 }
