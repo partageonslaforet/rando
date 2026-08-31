@@ -85,19 +85,19 @@ require_once __DIR__ . '/../../includes/header-solid.php';
         <div class="profile-layout">
             <!-- Menu du compte -->
             <aside class="profile-sidebar" aria-label="Menu du compte">
-                <h2 class="visually-hidden">Mon compte</h2>
+                <h2 class="profile-sidebar-title">Mon compte</h2>
                 <nav class="profile-menu" role="tablist">
                     <a class="profile-menu-item <?= $activeTab === 'personal' ? 'active' : '' ?>" href="?tab=personal" <?= $activeTab === 'personal' ? 'aria-current="page"' : '' ?>>
                         <i class="bi bi-person-fill" aria-hidden="true"></i>
-                        <span>Informations personnelles</span>
+                        <span>Informations</span>
                     </a>
                     <a class="profile-menu-item <?= $activeTab === 'organizer' ? 'active' : '' ?>" href="?tab=organizer" <?= $activeTab === 'organizer' ? 'aria-current="page"' : '' ?>>
                         <i class="bi bi-building" aria-hidden="true"></i>
-                        <span>Profil organisateur</span>
+                        <span>Organisateur</span>
                     </a>
                     <a class="profile-menu-item <?= $activeTab === 'password' ? 'active' : '' ?>" href="?tab=password" <?= $activeTab === 'password' ? 'aria-current="page"' : '' ?>>
                         <i class="bi bi-shield-lock-fill" aria-hidden="true"></i>
-                        <span>Sécurité / Changer le mot de passe</span>
+                        <span>Sécurité</span>
                     </a>
                 </nav>
             </aside>
@@ -108,7 +108,7 @@ require_once __DIR__ . '/../../includes/header-solid.php';
                 <section class="profile-section <?= $activeTab === 'personal' ? 'active' : '' ?>" id="personal" aria-labelledby="personal-heading">
                     <header class="section-header">
                         <h2 id="personal-heading">Informations personnelles</h2>
-                        <p>Modifiez vos informations de base pour personnaliser votre compte.</p>
+                        <p>Mettez à jour les informations visibles dans votre compte.</p>
                     </header>
 
                     <?php if (isset($_SESSION['profile_message'])): ?>
@@ -132,12 +132,14 @@ require_once __DIR__ . '/../../includes/header-solid.php';
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="email" class="form-label">Email</label>
+                                    <label for="email" class="form-label">Adresse e-mail</label>
                                     <input type="email" class="form-control" id="email" name="email"
                                            value="<?= htmlspecialchars($user['email']) ?>" required>
                                 </div>
                             </div>
                         </div>
+
+                        <p class="form-note">Votre adresse e-mail est utilisée pour les confirmations et les notifications.</p>
 
                         <div class="form-actions">
                             <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
@@ -150,8 +152,8 @@ require_once __DIR__ . '/../../includes/header-solid.php';
                     <header class="section-header">
                         <div class="d-flex flex-column flex-md-row justify-content-md-between align-items-md-center gap-2">
                             <div>
-                                <h2 id="organizer-heading">Profil organisateur</h2>
-                                <p>Gérez les profils d'organisateur que vous présentez aux participants.</p>
+                                <h2 id="organizer-heading">Organisateur</h2>
+                                <p>Gérez les profils que vous présentez aux participants.</p>
                             </div>
                             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#organizerModal">
                                 <i class="bi bi-plus-circle" aria-hidden="true"></i> Nouveau profil
@@ -219,7 +221,7 @@ require_once __DIR__ . '/../../includes/header-solid.php';
                 <section class="profile-section <?= $activeTab === 'password' ? 'active' : '' ?>" id="password" aria-labelledby="password-heading">
                     <header class="section-header">
                         <h2 id="password-heading">Sécurité</h2>
-                        <p>Changez votre mot de passe pour sécuriser votre compte.</p>
+                        <p>Modifiez votre mot de passe pour sécuriser votre compte.</p>
                     </header>
 
                     <form id="passwordForm" class="needs-validation" novalidate>
