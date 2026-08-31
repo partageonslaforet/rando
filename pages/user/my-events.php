@@ -34,6 +34,16 @@ try {
         exit();
     }
 
+    // Initialisation des listes (sécurise l'affichage en cas d'erreur)
+    $events = [];
+    $totalEvents = 0;
+    $approvedEvents = [];
+    $pendingEvents = [];
+    $draftEvents = [];
+    $rejectedEvents = [];
+    $currentTab = 'all';
+    $filteredEvents = [];
+
     // Récupérer les événements de l'utilisateur
     $stmt = $db->prepare('
         SELECT * FROM events 
@@ -51,6 +61,25 @@ try {
     $pendingEvents = array_filter($events, function($event) {
         return $event['status'] === 'pending';
     });
+    $draftEvents = array_filter($events, function($event) {
+        return $event['status'] === 'draft';
+    });
+    $rejectedEvents = array_filter($events, function($event) {
+        return $event['status'] === 'rejected';
+    });
+
+    // Filtrer selon l'onglet actif
+    $currentTab = $_GET['status'] ?? 'all';
+    $allowedTabs = ['all', 'draft', 'pending', 'approved', 'rejected'];
+    if (!in_array($currentTab, $allowedTabs, true)) {
+        $currentTab = 'all';
+    }
+    $filteredEvents = $events;
+    if ($currentTab !== 'all') {
+        $filteredEvents = array_filter($events, function($event) use ($currentTab) {
+            return $event['status'] === $currentTab;
+        });
+    }
 
 } catch (Exception $e) {
     error_log('Erreur my-events.php: ' . $e->getMessage());
@@ -94,96 +123,115 @@ require_once __DIR__ . '/../../includes/header-solid.php';
 
 <link rel="stylesheet" href="/assets/css/my-events.css">
 
-<div class="events-container mt-5 pt-5">
-    <!-- En-tête -->
-    <div class="events-header text-center">
-        <div class="container">
-            <h1>Mes Événements</h1>
-            <p>Gérez vos événements et suivez leur statut</p>
-        </div>
-    </div>
+<main class="my-events-container">
+    <nav class="my-events-breadcrumb" aria-label="Breadcrumb">
+        <ol>
+            <li><a href="/pages/user/profile.php">Mon compte</a></li>
+            <li><span aria-current="page">Mes événements</span></li>
+        </ol>
+    </nav>
 
-    <!-- Statistiques -->
-    <div class="events-stats">
-        <div class="stat-card">
-            <h3><?= count($events) ?></h3>
-            <p>Total des événements</p>
+    <section class="my-events-hero" aria-labelledby="events-hero-title">
+        <div class="my-events-hero-text">
+            <h1 id="events-hero-title">Mes événements</h1>
+            <p>Créez, suivez et gérez les événements que vous proposez.</p>
         </div>
-        <div class="stat-card">
-            <h3><?= count($approvedEvents) ?></h3>
-            <p>Événements approuvés</p>
-        </div>
-        <div class="stat-card">
-            <h3><?= count($pendingEvents) ?></h3>
-            <p>En attente d'approbation</p>
-        </div>
-    </div>
+        <a href="/templates/events/create-event.php" class="btn btn-create">
+            <i class="bi bi-plus" aria-hidden="true"></i>
+            Créer un événement
+        </a>
+    </section>
 
-    <?php if (empty($events)): ?>
-        <div class="empty-state">
-            <i class="bi bi-calendar-plus"></i>
-            <h3>Aucun événement créé</h3>
-            <p>Commencez à organiser des événements dès maintenant !</p>
-            <a href="/templates/events/create-event.php" class="btn btn-primary create-event-btn">
-                <i class="bi bi-plus-circle"></i> Créer mon premier événement
-            </a>
-        </div>
-    <?php else: ?>
-        <div class="events-table">
-            <div class="table-responsive">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Titre</th>
-                            <th>Date</th>
-                            <th>Heure</th>
-                            <th>Catégorie</th>
-                            <th>Statut</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($events as $event): ?>
-                            <tr>
-                                <td>
-                                    <strong><?= htmlspecialchars($event['title']) ?></strong>
-                                </td>
-                                <td><?= formatEventDate($event['date']) ?></td>
-                                <td><?= formatTime($event['start_time']) ?></td>
-                                <td>
-                                    <span class="badge bg-primary">
-                                        <?= ucfirst($event['category']) ?>
-                                    </span>
-                                </td>
-                                <td><?= getStatusBadge($event['status']) ?></td>
-                                <td>
-                                    <div class="btn-group">
-                                        <a href="/templates/events/event-detail.php?id=<?= $event['id'] ?>" 
-                                            onclick="console.log('Clicking view button for event ID: <?= $event['id'] ?>')"
-                                            class="btn btn-sm btn-outline-primary btn-action">
-                                            <i class="bi bi-eye"></i> Voir
-                                        </a>
-                                        <?php if ($event['status'] === 'approved'): ?>
-                                            <a href="/templates/events/edit-event.php?id=<?= $event['id'] ?>" 
-                                               class="btn btn-sm btn-outline-secondary btn-action">
-                                                <i class="bi bi-pencil"></i> Modifier
-                                            </a>
-                                        <?php endif; ?>
-                                    </div>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
+    <section class="my-events-card" aria-labelledby="events-section-title">
+        <div class="my-events-card-header">
+            <h2 id="events-section-title">Mes événements</h2>
+            <div class="my-events-counts">
+                <span><?= count($approvedEvents) ?> publiés</span>
+                <span class="dot" aria-hidden="true"></span>
+                <span><?= count($pendingEvents) ?> en validation</span>
             </div>
         </div>
-        
-        <div class="mt-4 text-center">
-            <a href="/templates/events/create-event.php" class="btn btn-primary create-event-btn">
-                <i class="bi bi-plus-circle"></i> Créer un nouvel événement
-            </a>
+
+        <nav class="my-events-tabs" aria-label="Filtrer les événements">
+            <?php
+            $tabs = [
+                'all'   => ['Tous', $totalEvents],
+                'draft' => ['Brouillons', count($draftEvents)],
+                'pending'  => ['En validation', count($pendingEvents)],
+                'approved' => ['Publiés', count($approvedEvents)],
+                'rejected' => ['Refusés', count($rejectedEvents)],
+            ];
+            foreach ($tabs as $status => $tab):
+                $isActive = $currentTab === $status;
+            ?>
+                <a class="my-events-tab <?= $isActive ? 'active' : '' ?>"
+                   href="?status=<?= $status ?>"
+                   <?= $isActive ? 'aria-current="page"' : '' ?>>
+                    <?= $tab[0] ?> (<?= $tab[1] ?>)
+                </a>
+            <?php endforeach; ?>
+        </nav>
+
+        <div class="my-events-content">
+            <?php if (empty($filteredEvents)): ?>
+                <div class="my-events-empty">
+                    <span class="my-events-empty-icon" aria-hidden="true">+</span>
+                    <h3>Créez votre premier événement</h3>
+                    <p>Proposez une randonnée, un parcours VTT ou une activité nature. Vous pourrez l’enregistrer en brouillon avant de le soumettre.</p>
+                    <a href="/templates/events/create-event.php" class="btn btn-create">Créer un événement</a>
+                </div>
+            <?php else: ?>
+                <div class="events-table">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Titre</th>
+                                    <th>Date</th>
+                                    <th>Heure</th>
+                                    <th>Catégorie</th>
+                                    <th>Statut</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($filteredEvents as $event): ?>
+                                    <tr>
+                                        <td>
+                                            <strong><?= htmlspecialchars($event['title']) ?></strong>
+                                        </td>
+                                        <td><?= formatEventDate($event['date']) ?></td>
+                                        <td><?= formatTime($event['start_time']) ?></td>
+                                        <td>
+                                            <span class="badge bg-primary">
+                                                <?= ucfirst($event['category']) ?>
+                                            </span>
+                                        </td>
+                                        <td><?= getStatusBadge($event['status']) ?></td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <a href="/templates/events/event-detail.php?id=<?= $event['id'] ?>"
+                                                   onclick="console.log('Clicking view button for event ID: <?= $event['id'] ?>')"
+                                                   class="btn btn-sm btn-outline-primary btn-action">
+                                                    <i class="bi bi-eye"></i> Voir
+                                                </a>
+                                                <?php if ($event['status'] === 'approved'): ?>
+                                                    <a href="/templates/events/edit-event.php?id=<?= $event['id'] ?>"
+                                                       class="btn btn-sm btn-outline-secondary btn-action">
+                                                        <i class="bi bi-pencil"></i> Modifier
+                                                    </a>
+                                                <?php endif; ?>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            <?php endif; ?>
         </div>
-    <?php endif; ?>
-</div>
+    </section>
+</main>
 
 <?php require_once __DIR__ . '/../../includes/footer.php'; ?>
