@@ -31,14 +31,38 @@ document.addEventListener('DOMContentLoaded', function() {
             return { 
                 html: `<div class="event-badge">${dayEvents}</div>`
             };
+        },
+        dateClick: function(info) {
+            selectDate(info.dateStr);
+        },
+        eventClick: function(info) {
+            const date = info.event.startStr ? info.event.startStr.split('T')[0] : '';
+            if (date) selectDate(date);
+            info.jsEvent.preventDefault();
         }
     });
     
     window.calendar.render();
 
+    // Fonction pour filtrer les événements d'une date et mettre à jour la carte/liste
+    function selectDate(date) {
+        if (!window.allEvents || !window.mapFunctions || !window.eventListFunctions) return;
+
+        const selectedEvents = window.allEvents.filter(event => {
+            if (!event.date) return false;
+            return event.date.split(' ')[0] === date;
+        });
+
+        if (selectedEvents.length > 0) {
+            window.mapFunctions.updateMapMarkers(selectedEvents);
+            window.eventListFunctions.updateEventsList(selectedEvents);
+        }
+    }
+
     // Charger les événements
     if (typeof EventsAPI !== 'undefined') {
         EventsAPI.getAllEvents().then(events => {
+            window.allEvents = events;
             console.log('Events reçus:', events); // Debug
     
             // Grouper les événements par date
