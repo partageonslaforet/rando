@@ -191,16 +191,9 @@ class OrganizerProfile {
         try {
             $stmt = $this->db->prepare("SELECT * FROM organizer_profiles WHERE user_id = ? ORDER BY created_at DESC");
             $stmt->execute([$this->user_id]);
-            $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            
-            // Ajouter un commentaire HTML pour le débogage
-            echo "<!-- DEBUG getAll: " . count($results) . " résultats trouvés -->";
-            echo "<!-- DEBUG SQL: " . json_encode($results) . " -->";
-            
-            return $results;
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
-            // Ajouter un commentaire HTML pour le débogage
-            echo "<!-- DEBUG Error: " . $e->getMessage() . " -->";
+            error_log("Erreur getAll organizer_profiles: " . $e->getMessage());
             return [];
         }
     }
