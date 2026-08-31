@@ -2,18 +2,7 @@
    Page profil — mobile-first, sobre, vert d'action
    ================================================================ */
 
-:root {
-    --profile-bg: #f6f9f7;
-    --profile-card: #ffffff;
-    --profile-text: #2f3e2f;
-    --profile-muted: #5a6a5d;
-    --profile-border: #e1ebe3;
-    --profile-hero-bg: rgba(58, 138, 61, 0.06);
-    --profile-green: var(--secondary-color, #3A8A3D);
-    --profile-green-hover: var(--secondary-hover, #2d6c2f);
-    --profile-radius: 16px;
-    --profile-gutter: 18px;
-}
+/* Les variables --profile-* sont déclarées dans style.css (:root) */
 
 /* ----------------------------------------------------------------
    Conteneur
@@ -63,7 +52,7 @@
 }
 
 .profile-breadcrumb a {
-    color: var(--profile-green);
+    color: var(--profile-muted);
     text-decoration: none;
     font-weight: 500;
 }

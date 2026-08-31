@@ -16,6 +16,16 @@
     --background-color: #dfe2e6;
     --light-gray: #f8f9fa;
     --border-color: #dee2e6;
+    --profile-muted: #5a6a5d;
+    --profile-text: #2f3e2f;
+    --profile-bg: #f6f9f7;
+    --profile-card: #ffffff;
+    --profile-border: #e1ebe3;
+    --profile-hero-bg: rgba(58, 138, 61, 0.06);
+    --profile-green: var(--secondary-color, #3A8A3D);
+    --profile-green-hover: var(--secondary-hover, #2d6c2f);
+    --profile-radius: 16px;
+    --profile-gutter: 18px;
 }
 
 [data-theme="dark"] {
@@ -121,6 +131,8 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    color: white;
+    font-weight: 500;
 }
 
 /* Styles généraux */
@@ -129,7 +141,7 @@ body {
     line-height: 1.6;
     color: var(--text-color);
     padding-top: 80px;
-    background-color: var(--background-color);
+    background-color: #F7FAF7;
     min-height: 100vh;
 }
 
