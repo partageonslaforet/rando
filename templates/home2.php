@@ -315,6 +315,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (modernEventCards.length > 0) {
         const firstCard = modernEventCards[0];
         const computedStyle = window.getComputedStyle(firstCard);
+        console.log({
             display: computedStyle.display,
             flexDirection: computedStyle.flexDirection,
             backgroundColor: computedStyle.backgroundColor,
@@ -325,6 +326,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Vérifier si le bouton est présent
     const detailsButtons = document.querySelectorAll('.btn-voir-details');
+
 });
 </script>
 
