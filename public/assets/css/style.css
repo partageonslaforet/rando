@@ -37,6 +37,10 @@
     --shadow-color: rgba(0, 0, 0, 0.3);
 }
 
+.map-container {
+    border-radius: 16px !important;
+    overflow: hidden;
+}
 
 
 /* Navigation */
@@ -131,7 +135,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    color: white;
+    color: var(--secondary-color);
     font-weight: 500;
 }
 
@@ -333,7 +337,7 @@ body {
 
     .map-container {
         height: 300px;
-        border-radius: 16px;
+        border-radius: 16px !important;
         overflow: hidden;
     }
     /* Ajustement des marges */
