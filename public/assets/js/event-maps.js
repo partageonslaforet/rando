@@ -26,9 +26,15 @@ function initMap() {
     if (window.mainMap) {
         return;
     }
+
+    const mapContainer = document.getElementById('map');
+    if (!mapContainer || mapContainer.clientWidth === 0 || mapContainer.clientHeight === 0) {
+        return;
+    }
+
     try {
         // Création de la carte centrée sur la Belgique
-        window.mainMap = L.map('map').setView([50.5039, 4.4699], 8);
+        window.mainMap = L.map(mapContainer).setView([50.5039, 4.4699], 8);
 
         // Ajout de la couche OpenStreetMap
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
