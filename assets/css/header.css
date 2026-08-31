@@ -37,6 +37,10 @@
     color: white !important;
 }
 
+.navbar.scrolled #navbarNav .navbar-nav .nav-item .nav-link:not(.btn-connexion) {
+    color: var(--text-color) !important;
+}
+
 /* Publish text */
 .publish-text {
     font-size: 1.2rem;
@@ -48,6 +52,10 @@
 
 .navbar-transparent .publish-text {
     color: white !important;
+}
+
+.navbar.scrolled .publish-text {
+    color: var(--text-color) !important;
 }
 
 /* Connexion et Mon Compte buttons */
@@ -102,6 +110,10 @@
     vertical-align: middle;
 }
 
+.navbar-toggler-icon {
+    color: white !important;
+}
+
 /* Responsive styles */
 @media (max-width: 992px) {
     .navbar-brand-container {
@@ -124,6 +136,10 @@
     /* Force les liens à rester en noir dans le menu mobile même quand transparent */
     .navbar-transparent .navbar-collapse .nav-link:not(.btn-connexion) {
         color: #333 !important;
+    }
+
+    .navbar-transparent #navbarNav .navbar-nav .nav-item .nav-link:not(.btn-connexion) {
+    color: #333 !important;
     }
 }
 
@@ -154,14 +170,14 @@
     align-items: flex-start;
 }
 
-.navbar-scrolled .navbar-brand {
+/* .navbar-scrolled .navbar-brand {
     color: var(--secondary-color)!important;
 }
 
 .navbar-scrolled .publish-text,
 .navbar-scrolled .modal-link {
     color: var(--text-color) !important;
-}
+} */
 
 /* Navigation items */
 #navbarNav {
