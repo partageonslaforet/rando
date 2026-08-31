@@ -33,6 +33,14 @@ try {
         exit();
     }
 
+    // Prénom et initiales pour l'en-tête
+    $nameParts = explode(' ', trim($user['name'] ?? ''));
+    $firstName = !empty($nameParts[0]) ? $nameParts[0] : 'Vous';
+    $initials = strtoupper(substr($nameParts[0], 0, 1));
+    if (isset($nameParts[1])) {
+        $initials .= strtoupper(substr($nameParts[1], 0, 1));
+    }
+
     // Récupérer le profil organisateur
     require_once __DIR__ . '/../../includes/organizer_profile.php';
     $organizerProfile = new OrganizerProfile($db, getCurrentUserId());
@@ -50,197 +58,204 @@ require_once __DIR__ . '/../../includes/header-solid.php';
 
 <link rel="stylesheet" href="/assets/css/profile.css">
 
-<div class="profile-container mt-5 pt-5">
-    <!-- En-tête du profil -->
-    <div class="profile-header text-center">
-        <?php if (!empty($profiles)): ?>
-            <?php $firstProfile = $profiles[0]; ?>
-            <div class="profile-header-image">
-                <img src="<?= !empty($firstProfile['logo_path']) ? htmlspecialchars($firstProfile['logo_path']) : '/assets/images/events/default-event.jpg' ?>" 
-                     alt="Logo <?= htmlspecialchars($firstProfile['name']) ?>" 
-                     class="img-fluid">
-            </div>
-            <div class="profile-header-content">
-                <h1><?= htmlspecialchars($firstProfile['name']) ?></h1>
-                <?php if (!empty($firstProfile['description'])): ?>
-                    <p><?= nl2br(htmlspecialchars($firstProfile['description'])) ?></p>
-                <?php endif; ?>
-            </div>
-        <?php else: ?>
-            <div class="profile-header-image">
-                <img src="/assets/images/events/default-event.jpg" alt="Image par défaut" class="img-fluid">
-            </div>
-            <div class="profile-header-content">
-                <h1></h1>
-            </div>
-        <?php endif; ?>
-    </div>
-
     <?php
     $allowedTabs = ['personal', 'organizer', 'password'];
     $activeTab = in_array($_GET['tab'] ?? 'personal', $allowedTabs) ? ($_GET['tab'] ?? 'personal') : 'personal';
     ?>
 
-    <div class="profile-layout">
-        <!-- Sidebar -->
-        <aside class="profile-sidebar">
-            <div class="sidebar-title">Mon Profil</div>
-            <nav class="nav flex-column" role="tablist">
-                <a class="nav-link <?= $activeTab === 'personal' ? 'active' : '' ?>" href="?tab=personal">
-                    <i class="bi bi-person-fill"></i> Informations personnelles
-                </a>
-                <a class="nav-link <?= $activeTab === 'organizer' ? 'active' : '' ?>" href="?tab=organizer">
-                    <i class="bi bi-building"></i> Profil organisateur
-                </a>
-                <a class="nav-link <?= $activeTab === 'password' ? 'active' : '' ?>" href="?tab=password">
-                    <i class="bi bi-shield-lock-fill"></i> Changer le mot de passe
-                </a>
-            </nav>
-        </aside>
+    <main class="profile-container" role="main">
+        <nav class="profile-breadcrumb" aria-label="Fil d'Ariane">
+            <ol>
+                <li><a href="/pages/user/profile.php">Mon compte</a></li>
+                <li aria-current="page">Profil</li>
+            </ol>
+        </nav>
 
-        <!-- Main content -->
-        <main class="profile-main">
-            <!-- Informations personnelles -->
-            <div class="profile-section <?= $activeTab === 'personal' ? 'active' : '' ?>" id="personal">
-                <h2>Informations personnelles</h2>
-                <?php if (isset($_SESSION['profile_message'])): ?>
-                    <div class="alert alert-<?= $_SESSION['profile_message_type'] ?? 'info' ?>">
-                        <?= $_SESSION['profile_message'] ?>
-                    </div>
-                    <?php
-                    unset($_SESSION['profile_message']);
-                    unset($_SESSION['profile_message_type']);
-                    ?>
-                <?php endif; ?>
-
-                <form id="profileForm" class="needs-validation" novalidate>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="name" class="form-label">Nom d'utilisateur</label>
-                                <input type="text" class="form-control" id="name" name="name"
-                                       value="<?= htmlspecialchars($user['name']) ?>" required>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="email" class="form-label">Email</label>
-                                <input type="email" class="form-control" id="email" name="email"
-                                       value="<?= htmlspecialchars($user['email']) ?>" required>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="mt-4">
-                        <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
-                    </div>
-                </form>
+        <!-- En-tête de profil -->
+        <header class="profile-hero">
+            <div class="profile-avatar" aria-hidden="true">
+                <?= htmlspecialchars($initials) ?>
             </div>
+            <div class="profile-hero-text">
+                <h1>Bonjour, <?= htmlspecialchars($firstName) ?></h1>
+                <p>Gérez vos informations et vos activités sur Partageons la Forêt.</p>
+            </div>
+        </header>
 
-            <!-- Profils Organisateur -->
-            <div class="profile-section <?= $activeTab === 'organizer' ? 'active' : '' ?>" id="organizer">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h2>Profils Organisateur</h2>
-                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#organizerModal">
-                        <i class="bi bi-plus-circle"></i> Nouveau profil
-                    </button>
-                </div>
+        <div class="profile-layout">
+            <!-- Menu du compte -->
+            <aside class="profile-sidebar" aria-label="Menu du compte">
+                <h2 class="visually-hidden">Mon compte</h2>
+                <nav class="profile-menu" role="tablist">
+                    <a class="profile-menu-item <?= $activeTab === 'personal' ? 'active' : '' ?>" href="?tab=personal" <?= $activeTab === 'personal' ? 'aria-current="page"' : '' ?>>
+                        <i class="bi bi-person-fill" aria-hidden="true"></i>
+                        <span>Informations personnelles</span>
+                    </a>
+                    <a class="profile-menu-item <?= $activeTab === 'organizer' ? 'active' : '' ?>" href="?tab=organizer" <?= $activeTab === 'organizer' ? 'aria-current="page"' : '' ?>>
+                        <i class="bi bi-building" aria-hidden="true"></i>
+                        <span>Profil organisateur</span>
+                    </a>
+                    <a class="profile-menu-item <?= $activeTab === 'password' ? 'active' : '' ?>" href="?tab=password" <?= $activeTab === 'password' ? 'aria-current="page"' : '' ?>>
+                        <i class="bi bi-shield-lock-fill" aria-hidden="true"></i>
+                        <span>Sécurité / Changer le mot de passe</span>
+                    </a>
+                </nav>
+            </aside>
 
-                <!-- Liste des profils -->
-                <div class="organizer-profiles">
-                    <?php if (empty($profiles)): ?>
-                        <div class="alert alert-info">
-                            Vous n'avez pas encore de profil organisateur. Créez-en un pour pouvoir organiser des événements.
+            <!-- Panneau principal -->
+            <div class="profile-main">
+                <!-- Informations personnelles -->
+                <section class="profile-section <?= $activeTab === 'personal' ? 'active' : '' ?>" id="personal" aria-labelledby="personal-heading">
+                    <header class="section-header">
+                        <h2 id="personal-heading">Informations personnelles</h2>
+                        <p>Modifiez vos informations de base pour personnaliser votre compte.</p>
+                    </header>
+
+                    <?php if (isset($_SESSION['profile_message'])): ?>
+                        <div class="alert alert-<?= $_SESSION['profile_message_type'] ?? 'info' ?>">
+                            <?= $_SESSION['profile_message'] ?>
                         </div>
-                    <?php else: ?>
-                        <?php foreach ($profiles as $profile): ?>
-                            <div class="card mb-3" data-profile-id="<?= $profile['id'] ?>">
-                                <div class="card-body">
-                                    <div class="d-flex justify-content-between align-items-start">
-                                        <div class="d-flex align-items-center">
-                                            <div class="profile-logo-container me-3">
-                                                <img src="<?= !empty($profile['logo_path']) ? htmlspecialchars($profile['logo_path']) : '/assets/images/events/default-event.jpg' ?>"
-                                                     alt="Logo <?= htmlspecialchars($profile['name']) ?>"
-                                                     class="profile-logo">
-                                            </div>
-                                            <div>
-                                                <h3 class="card-title mb-0"><?= htmlspecialchars($profile['name']) ?></h3>
-                                                <small class="text-muted">Créé le <?= (new DateTime($profile['created_at']))->format('d/m/Y') ?></small>
-                                            </div>
-                                        </div>
-                                        <div class="btn-group">
-                                            <button type="button" class="btn btn-sm btn-outline-primary edit-profile"
-                                                    data-profile-id="<?= $profile['id'] ?>">
-                                                <i class="bi bi-pencil"></i>
-                                            </button>
-                                            <button type="button" class="btn btn-sm btn-outline-danger delete-profile"
-                                                    data-profile-id="<?= $profile['id'] ?>">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <?php if (!empty($profile['description'])): ?>
-                                        <p class="card-text"><?= nl2br(htmlspecialchars($profile['description'])) ?></p>
-                                    <?php endif; ?>
-                                    <div class="profile-details">
-                                        <?php if (!empty($profile['email'])): ?>
-                                            <p><i class="bi bi-envelope"></i> <?= htmlspecialchars($profile['email']) ?></p>
-                                        <?php endif; ?>
-                                        <?php if (!empty($profile['phone'])): ?>
-                                            <p><i class="bi bi-telephone"></i> <?= htmlspecialchars($profile['phone']) ?></p>
-                                        <?php endif; ?>
-                                        <?php if (!empty($profile['website'])): ?>
-                                            <p><i class="bi bi-globe"></i> <a href="<?= htmlspecialchars($profile['website']) ?>" target="_blank"><?= htmlspecialchars($profile['website']) ?></a></p>
-                                        <?php endif; ?>
-                                        <?php if (!empty($profile['address'])): ?>
-                                            <p><i class="bi bi-geo-alt"></i> <?= htmlspecialchars($profile['address']) ?></p>
-                                        <?php endif; ?>
-                                    </div>
-                                </div>
-                            </div>
-                        <?php endforeach; ?>
+                        <?php
+                        unset($_SESSION['profile_message']);
+                        unset($_SESSION['profile_message_type']);
+                        ?>
                     <?php endif; ?>
-                </div>
-            </div>
 
-            <!-- Changer le mot de passe -->
-            <div class="profile-section <?= $activeTab === 'password' ? 'active' : '' ?>" id="password">
-                <h2>Changer le mot de passe</h2>
-                <p class="text-muted">Un email de confirmation vous sera envoyé pour valider le changement.</p>
-                <form id="passwordForm" class="needs-validation" novalidate>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="currentPassword" class="form-label">Mot de passe actuel</label>
-                                <div class="input-group">
-                                    <input type="password" class="form-control" id="currentPassword" name="currentPassword" required>
-                                    <button class="btn btn-outline-secondary toggle-password" type="button" data-target="currentPassword">
-                                        <i class="bi bi-eye"></i>
-                                    </button>
+                    <form id="profileForm" class="needs-validation" novalidate>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="name" class="form-label">Nom d'utilisateur</label>
+                                    <input type="text" class="form-control" id="name" name="name"
+                                           value="<?= htmlspecialchars($user['name']) ?>" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="email" class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="email" name="email"
+                                           value="<?= htmlspecialchars($user['email']) ?>" required>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="newPassword" class="form-label">Nouveau mot de passe</label>
-                                <div class="input-group">
-                                    <input type="password" class="form-control" id="newPassword" name="newPassword" required>
-                                    <button class="btn btn-outline-secondary toggle-password" type="button" data-target="newPassword">
-                                        <i class="bi bi-eye"></i>
-                                    </button>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
+                        </div>
+                    </form>
+                </section>
+
+                <!-- Profil organisateur -->
+                <section class="profile-section <?= $activeTab === 'organizer' ? 'active' : '' ?>" id="organizer" aria-labelledby="organizer-heading">
+                    <header class="section-header">
+                        <div class="d-flex flex-column flex-md-row justify-content-md-between align-items-md-center gap-2">
+                            <div>
+                                <h2 id="organizer-heading">Profil organisateur</h2>
+                                <p>Gérez les profils d'organisateur que vous présentez aux participants.</p>
+                            </div>
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#organizerModal">
+                                <i class="bi bi-plus-circle" aria-hidden="true"></i> Nouveau profil
+                            </button>
+                        </div>
+                    </header>
+
+                    <div class="organizer-profiles">
+                        <?php if (empty($profiles)): ?>
+                            <div class="alert alert-info">
+                                Vous n'avez pas encore de profil organisateur. Créez-en un pour pouvoir organiser des événements.
+                            </div>
+                        <?php else: ?>
+                            <?php foreach ($profiles as $profile): ?>
+                                <div class="card mb-3" data-profile-id="<?= $profile['id'] ?>">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-start">
+                                            <div class="d-flex align-items-center">
+                                                <div class="profile-logo-container me-3">
+                                                    <img src="<?= !empty($profile['logo_path']) ? htmlspecialchars($profile['logo_path']) : '/assets/images/events/default-event.jpg' ?>"
+                                                         alt="Logo <?= htmlspecialchars($profile['name']) ?>"
+                                                         class="profile-logo">
+                                                </div>
+                                                <div>
+                                                    <h3 class="card-title mb-0"><?= htmlspecialchars($profile['name']) ?></h3>
+                                                    <small class="text-muted">Créé le <?= (new DateTime($profile['created_at']))->format('d/m/Y') ?></small>
+                                                </div>
+                                            </div>
+                                            <div class="btn-group">
+                                                <button type="button" class="btn btn-sm btn-outline-primary edit-profile"
+                                                        data-profile-id="<?= $profile['id'] ?>">
+                                                    <i class="bi bi-pencil" aria-hidden="true"></i>
+                                                </button>
+                                                <button type="button" class="btn btn-sm btn-outline-danger delete-profile"
+                                                        data-profile-id="<?= $profile['id'] ?>">
+                                                    <i class="bi bi-trash" aria-hidden="true"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <?php if (!empty($profile['description'])): ?>
+                                            <p class="card-text"><?= nl2br(htmlspecialchars($profile['description'])) ?></p>
+                                        <?php endif; ?>
+                                        <div class="profile-details">
+                                            <?php if (!empty($profile['email'])): ?>
+                                                <p><i class="bi bi-envelope" aria-hidden="true"></i> <?= htmlspecialchars($profile['email']) ?></p>
+                                            <?php endif; ?>
+                                            <?php if (!empty($profile['phone'])): ?>
+                                                <p><i class="bi bi-telephone" aria-hidden="true"></i> <?= htmlspecialchars($profile['phone']) ?></p>
+                                            <?php endif; ?>
+                                            <?php if (!empty($profile['website'])): ?>
+                                                <p><i class="bi bi-globe" aria-hidden="true"></i> <a href="<?= htmlspecialchars($profile['website']) ?>" target="_blank"><?= htmlspecialchars($profile['website']) ?></a></p>
+                                            <?php endif; ?>
+                                            <?php if (!empty($profile['address'])): ?>
+                                                <p><i class="bi bi-geo-alt" aria-hidden="true"></i> <?= htmlspecialchars($profile['address']) ?></p>
+                                            <?php endif; ?>
+                                        </div>
+                                    </div>
                                 </div>
-                                <small class="form-text text-muted">Minimum 8 caractères</small>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </div>
+                </section>
+
+                <!-- Sécurité / Changer le mot de passe -->
+                <section class="profile-section <?= $activeTab === 'password' ? 'active' : '' ?>" id="password" aria-labelledby="password-heading">
+                    <header class="section-header">
+                        <h2 id="password-heading">Sécurité</h2>
+                        <p>Changez votre mot de passe pour sécuriser votre compte.</p>
+                    </header>
+
+                    <form id="passwordForm" class="needs-validation" novalidate>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="currentPassword" class="form-label">Mot de passe actuel</label>
+                                    <div class="input-group">
+                                        <input type="password" class="form-control" id="currentPassword" name="currentPassword" required>
+                                        <button class="btn btn-outline-secondary toggle-password" type="button" data-target="currentPassword" aria-label="Afficher le mot de passe">
+                                            <i class="bi bi-eye" aria-hidden="true"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="newPassword" class="form-label">Nouveau mot de passe</label>
+                                    <div class="input-group">
+                                        <input type="password" class="form-control" id="newPassword" name="newPassword" required>
+                                        <button class="btn btn-outline-secondary toggle-password" type="button" data-target="newPassword" aria-label="Afficher le mot de passe">
+                                            <i class="bi bi-eye" aria-hidden="true"></i>
+                                        </button>
+                                    </div>
+                                    <small class="form-text text-muted">Minimum 8 caractères</small>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="mt-3">
-                        <button type="submit" class="btn btn-warning">Demander le changement de mot de passe</button>
-                    </div>
-                </form>
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">Demander le changement de mot de passe</button>
+                        </div>
+                    </form>
+                </section>
             </div>
-        </main>
-    </div>
-</div>
+        </div>
+    </main>
 
 <!-- Modal pour le profil organisateur -->
 <div class="modal fade" id="organizerModal" tabindex="-1" aria-hidden="true">
