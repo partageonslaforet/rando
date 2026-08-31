@@ -1,182 +1,215 @@
-// Gestion des formulaires AJAX
-$(document).ready(function() {
-    // Formulaire de connexion
-    $('#loginForm').on('submit', function(e) {
-        e.preventDefault();
-        
-        // Cacher le message d'erreur précédent
-        $('#loginError').addClass('d-none').html('');
-        
-        // Récupérer les données du formulaire
-        const formData = {
-            email: $('#email').val(),
-            password: $('#password').val()
-        };
+// Variables globales
+window.currentFilters = {
+    period: 'upcoming',
+    type: 'all',
+    search: '',
+    proximity: null
+};
 
-        // Désactiver le bouton pendant la requête
-        const submitButton = $(this).find('button[type="submit"]');
-        const originalText = submitButton.text();
-        submitButton.prop('disabled', true).text('Connexion...');
+window.defaultImage = '/assets/images/events/default-event.jpg';
 
-        $.ajax({
-            url: 'https://rando.partageonslaforet.be/api/auth.php',
-            type: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify(formData),
-            success: function(response) {
-                console.log('Login response:', response);
-                if (response.status === 'success' && response.data) {
-                    // Stocker le token
-                    localStorage.setItem('auth_token', response.data.token);
-                    
-                    // Stocker les infos utilisateur
-                    localStorage.setItem('user', JSON.stringify(response.data.user));
-                    
-                    // Fermer le modal
-                    $('#loginModal').modal('hide');
-                    
-                    // Rediriger vers /admin si l'utilisateur est admin
-                    if (response.data.user.role === 'admin') {
-                        window.location.href = '/admin';
-                    } else {
-                        // Sinon recharger la page
-                        window.location.reload();
-                    }
-                } else {
-                    // Afficher l'erreur
-                    $('#loginError').removeClass('d-none').html(response.message || 'Erreur de connexion');
-                }
-            },
-            error: function(xhr, status, error) {
-                console.error('Login error:', {xhr, status, error});
-                console.log('Response Text:', xhr.responseText);
-                try {
-                    const response = JSON.parse(xhr.responseText);
-                    $('#loginError').removeClass('d-none').html(response.message || 'Erreur lors de la connexion');
-                } catch (e) {
-                    $('#loginError').removeClass('d-none').html('Erreur lors de la connexion. Veuillez réessayer.');
-                }
-            },
-            complete: function() {
-                // Réactiver le bouton
-                submitButton.prop('disabled', false).text(originalText);
-            }
-        });
-    });
+// Fonction pour formater une date
+window.formatDate = function(dateString) {
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    return new Date(dateString).toLocaleDateString('fr-FR', options);
+};
 
-    // Formulaire de modification du profil
-    $('#editProfileForm').on('submit', function(e) {
-        e.preventDefault();
-        
-        const formData = {
-            name: $('#editName').val(),
-            email: $('#editEmail').val(),
-            password: $('#editPassword').val() || undefined
-        };
+// Fonction pour obtenir la classe du badge en fonction de la catégorie
+window.getCategoryBadgeClass = function(category) {
+    return 'badge-category';
+};
 
-        $.ajax({
-            url: 'https://rando.partageonslaforet.be/api/profile.php',
-            type: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify(formData),
-            success: function(response) {
-                if (response.status === 'success') {
-                    // Mettre à jour les données utilisateur stockées
-                    localStorage.setItem('user', JSON.stringify(response.data.user));
-                    
-                    // Fermer le modal
-                    $('#editProfileModal').modal('hide');
-                    
-                    // Recharger la page pour afficher les nouvelles informations
-                    window.location.reload();
-                } else {
-                    alert(response.message || 'Erreur lors de la mise à jour du profil');
-                }
-            },
-            error: function(xhr, status, error) {
-                console.error('Profile update error:', error);
-                try {
-                    const response = JSON.parse(xhr.responseText);
-                    alert(response.message || 'Erreur lors de la mise à jour du profil');
-                } catch (e) {
-                    alert('Erreur lors de la mise à jour du profil');
-                }
-            }
-        });
-    });
-
-    // Gestion des alertes
-    $('.alert').each(function() {
-        const alert = $(this);
-        setTimeout(function() {
-            alert.fadeOut();
-        }, 5000);
-    });
-
-    // Confirmation des suppressions
-    $('[data-confirm]').on('click', function(e) {
-        if (!confirm($(this).data('confirm'))) {
-            e.preventDefault();
-        }
-    });
-
-    // Gestion des filtres d'événements
-    $('.filter-form input, .filter-form select').on('change', function() {
-        $(this).closest('form').submit();
-    });
-});
-
-// Fonction pour vérifier si l'utilisateur est connecté
-function isLoggedIn() {
-    return localStorage.getItem('auth_token') !== null;
-}
-
-// Fonction pour déconnecter l'utilisateur
-function logout() {
-    $.ajax({
-        url: 'https://rando.partageonslaforet.be/api/logout.php',
-        type: 'GET',
-        success: function() {
-            // Supprimer les données stockées
-            localStorage.removeItem('auth_token');
-            localStorage.removeItem('user');
-            
-            // Recharger la page
-            window.location.reload();
-        },
-        error: function(xhr, status, error) {
-            console.error('Logout error:', error);
-            // Même en cas d'erreur, on supprime les données locales
-            localStorage.removeItem('auth_token');
-            localStorage.removeItem('user');
-            window.location.reload();
-        }
-    });
-}
-
-// Ajouter le token d'authentification à toutes les requêtes AJAX
-$.ajaxSetup({
-    beforeSend: function(xhr) {
-        const token = localStorage.getItem('auth_token');
-        if (token) {
-            xhr.setRequestHeader('Authorization', 'Bearer ' + token);
-        }
+// Fonction pour obtenir le libellé de la catégorie
+window.getCategoryLabel = function(category) {
+    switch (category) {
+        case 'running':
+            return 'Course à pied';
+        case 'hiking':
+            return 'Randonnée';
+        case 'cycling':
+            return 'Vélo';
+        default:
+            return category;
     }
-});
+};
 
-// Initialisation
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('DOM Content Loaded');
+// Fonction pour mettre à jour les boutons de filtre
+window.updateFilterButtons = function(filteredEvents) {
+    const now = new Date();
+    now.setHours(0, 0, 0, 0);
     
-    // Initialize tooltips
-    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl);
+    const today = new Date(now.getTime() - (now.getTimezoneOffset() * 60000))
+        .toISOString()
+        .split('T')[0];
+    
+    // Calculer les compteurs pour chaque période
+    const periodCounts = {
+        upcoming: 0,
+        today: 0,
+        past: 0
+    };
+    
+    // Calculer les compteurs pour chaque type
+    const typeCounts = {
+        all: 0,
+        running: 0,
+        hiking: 0,
+        cycling: 0
+    };
+    
+    window.allEvents?.forEach(event => {
+        const eventDate = new Date(event.date);
+        eventDate.setHours(0, 0, 0, 0);
+        
+        // Incrémenter les compteurs de période
+        if (event.date === today) {
+            periodCounts.today++;
+        } else if (eventDate > now) {
+            periodCounts.upcoming++;
+        } else {
+            periodCounts.past++;
+        }
+        
+        // Incrémenter les compteurs de type
+        typeCounts.all++;
+        if (event.category) {
+            typeCounts[event.category]++;
+        }
     });
+    
+    // Mettre à jour les boutons de période
+    const periodButtons = {
+        upcoming: document.getElementById('upcomingEventsBtn'),
+        today: document.getElementById('todayEventsBtn'),
+        past: document.getElementById('pastEventsBtn')
+    };
+    
+    Object.entries(periodButtons).forEach(([period, button]) => {
+        if (button) {
+            const count = periodCounts[period];
+            const badge = button.querySelector('.badge');
+            if (badge) {
+                badge.textContent = count;
+                
+                if (count === 0) {
+                    badge.classList.add('badge-light');
+                    badge.classList.remove('badge-primary');
+                } else {
+                    badge.classList.add('badge-primary');
+                    badge.classList.remove('badge-light');
+                }
+            }
+            
+            if (window.currentFilters.period === period) {
+                button.classList.add('active');
+            } else {
+                button.classList.remove('active');
+            }
+            
+            button.disabled = count === 0;
+        }
+    });
+    
+    // Mettre à jour les boutons de type
+    const typeButtons = document.querySelectorAll('[data-type]');
+    typeButtons.forEach(button => {
+        const type = button.dataset.type;
+        const count = type === 'all' ? window.allEvents?.length : (typeCounts[type] || 0);
+        
+        const badge = button.querySelector('.badge');
+        if (badge) {
+            badge.textContent = count;
+            
+            if (count === 0) {
+                badge.classList.add('badge-light');
+                badge.classList.remove('badge-primary');
+            } else {
+                badge.classList.add('badge-primary');
+                badge.classList.remove('badge-light');
+            }
+        }
+        
+        if (window.currentFilters.type === type) {
+            button.classList.add('active');
+        } else {
+            button.classList.remove('active');
+        }
+        
+        button.disabled = count === 0;
+    });
+};
 
-    // Initialize popovers
-    var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
-    var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
-        return new bootstrap.Popover(popoverTriggerEl);
+// Fonction pour générer le calendrier
+window.generateCalendar = function(year, month, events) {
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+    const daysInMonth = lastDay.getDate();
+    const startingDay = firstDay.getDay() || 7; // Convertir 0 (dimanche) en 7
+    
+    const calendarBody = document.getElementById('calendar-body');
+    if (!calendarBody) return;
+    
+    // Mettre à jour l'affichage du mois courant
+    const monthDisplay = document.getElementById('currentMonth');
+    if (monthDisplay) {
+        const monthNames = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
+        monthDisplay.textContent = `${monthNames[month]} ${year}`;
+    }
+    
+    let html = '';
+    let day = 1;
+    let dayCount = 1;
+    
+    // Créer les semaines
+    while (day <= daysInMonth) {
+        html += '<tr>';
+        
+        // Créer les jours de la semaine
+        for (let i = 1; i <= 7; i++) {
+            if (dayCount < startingDay || day > daysInMonth) {
+                html += '<td></td>';
+            } else {
+                // Vérifier si des événements existent pour ce jour
+                const currentDate = new Date(year, month, day);
+                const eventsToday = events?.filter(event => {
+                    const eventDate = new Date(event.date);
+                    return eventDate.getDate() === day && 
+                           eventDate.getMonth() === month && 
+                           eventDate.getFullYear() === year;
+                }) || [];
+                
+                const hasEvents = eventsToday.length > 0;
+                const isToday = new Date().toDateString() === currentDate.toDateString();
+                
+                html += `
+                    <td class="${hasEvents ? 'has-events' : ''} ${isToday ? 'today' : ''}"
+                        data-date="${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}">
+                        ${day}
+                        ${hasEvents ? `<span class="event-indicator">${eventsToday.length}</span>` : ''}
+                    </td>
+                `;
+                day++;
+            }
+            dayCount++;
+        }
+        html += '</tr>';
+    }
+    
+    calendarBody.innerHTML = html;
+    
+    // Ajouter les écouteurs d'événements pour les cellules du calendrier
+    const dateCells = calendarBody.querySelectorAll('td[data-date]');
+    dateCells.forEach(cell => {
+        cell.addEventListener('click', function() {
+            const date = this.dataset.date;
+            if (date) {
+                // Filtrer les événements pour cette date
+                const selectedEvents = events?.filter(event => event.date === date) || [];
+                // Mettre à jour la liste des événements (la carte sera mise à jour automatiquement)
+                if (typeof window.updateEventsList === 'function') {
+                    window.updateEventsList(selectedEvents);
+                }
+            }
+        });
     });
-});
+};

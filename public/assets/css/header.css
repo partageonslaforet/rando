@@ -170,15 +170,6 @@
     align-items: flex-start;
 }
 
-/* .navbar-scrolled .navbar-brand {
-    color: var(--secondary-color)!important;
-}
-
-.navbar-scrolled .publish-text,
-.navbar-scrolled .modal-link {
-    color: var(--text-color) !important;
-} */
-
 /* Navigation items */
 #navbarNav {
     font-size: 1.1rem;
