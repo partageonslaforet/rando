@@ -19,6 +19,12 @@ function render_map() {
         height: 600px;
         width: 100%;
     }
+
+    /* Couleur des boutons zoom Leaflet */
+    .leaflet-bar a.leaflet-control-zoom-in,
+    .leaflet-bar a.leaflet-control-zoom-out {
+        color: var(--secondary-color, #3A8A3D) !important;
+    }
     </style>
     <div id="map" class="map-container mb-4"></div>
     
@@ -27,8 +33,6 @@ function render_map() {
     window.allEvents = <?= json_encode($locations) ?>;
     window.currentFilters = {};  // Filtres par défaut
     </script>
-    <!-- Leaflet overrides -->
-    <link rel="stylesheet" href="<?= APP_URL ?>/assets/css/components/leaflet-overrides.css">
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <!-- Notre script de carte -->

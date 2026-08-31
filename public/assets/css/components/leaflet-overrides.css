@@ -1,6 +1,0 @@
-/* Overrides des contrôles Leaflet */
-
-.leaflet-control-zoom-in,
-.leaflet-control-zoom-out {
-    color: var(--secondary-color) !important;
-}
