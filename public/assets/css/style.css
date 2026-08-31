@@ -333,7 +333,7 @@ body {
 
     .map-container {
         height: 300px;
-        border-radius: 12px;
+        border-radius: 16px;
         overflow: hidden;
     }
     /* Ajustement des marges */
@@ -364,7 +364,7 @@ body {
 
     .map-container {
         height: 400px;
-        border-radius: 12px;
+        border-radius: 16px;
         overflow: hidden;
     }
 }
