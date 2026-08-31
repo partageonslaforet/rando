@@ -3,7 +3,7 @@
 // Configuration du stockage des fichiers
 return [
     // Chemin physique de base pour le stockage (dans l'espace web)
-    'storage_base_path' => '/home/cool5792/rando.partageonslaforet.be/uploads',
+    'storage_base_path' => $_ENV['STORAGE_BASE_PATH'] ?? __DIR__ . '/../public/uploads',
     
     // URL de base pour l'accès public
     'public_base_url' => '/uploads',
