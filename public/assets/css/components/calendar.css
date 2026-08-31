@@ -378,6 +378,7 @@
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
+    color: #6b7a6e !important;
 }
 
 .legend-dot {
