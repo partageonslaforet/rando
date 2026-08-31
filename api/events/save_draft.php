@@ -400,6 +400,12 @@ try {
     }
     customLog(" Exception globale: " . $e->getMessage(), true);
     
+    require_once __DIR__ . '/../../logs/error.log.php';
+    logError('api/events/save_draft.php', 'Erreur enregistrement brouillon', [
+        'exception' => $e->getMessage(),
+        'trace' => $e->getTraceAsString(),
+    ]);
+    
     header('Content-Type: application/json');
     http_response_code(500);
     echo json_encode([
