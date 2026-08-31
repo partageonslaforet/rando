@@ -71,48 +71,43 @@ require_once __DIR__ . '/../../includes/header-solid.php';
                 <img src="/assets/images/events/default-event.jpg" alt="Image par défaut" class="img-fluid">
             </div>
             <div class="profile-header-content">
-                <h1>Mon Profil</h1>
+                <h1></h1>
             </div>
         <?php endif; ?>
     </div>
 
-    <!-- Navigation -->
-    <div class="profile-nav">
-        <ul class="nav nav-tabs" id="profileTabs" role="tablist">
-            <li class="nav-item">
-                <a class="nav-link <?= empty($_GET['tab']) || $_GET['tab'] === 'personal' ? 'active' : '' ?>" 
-                   id="personal-tab" 
-                   data-bs-toggle="tab" 
-                   href="#personal" 
-                   role="tab">
+    <?php
+    $allowedTabs = ['personal', 'organizer', 'password'];
+    $activeTab = in_array($_GET['tab'] ?? 'personal', $allowedTabs) ? ($_GET['tab'] ?? 'personal') : 'personal';
+    ?>
+
+    <div class="profile-layout">
+        <!-- Sidebar -->
+        <aside class="profile-sidebar">
+            <div class="sidebar-title">Mon Profil</div>
+            <nav class="nav flex-column" role="tablist">
+                <a class="nav-link <?= $activeTab === 'personal' ? 'active' : '' ?>" href="?tab=personal">
                     <i class="bi bi-person-fill"></i> Informations personnelles
                 </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link <?= isset($_GET['tab']) && $_GET['tab'] === 'organizer' ? 'active' : '' ?>" 
-                   id="organizer-tab" 
-                   data-bs-toggle="tab" 
-                   href="#organizer" 
-                   role="tab">
-                    <i class="bi bi-building"></i> Profils Organisateur
+                <a class="nav-link <?= $activeTab === 'organizer' ? 'active' : '' ?>" href="?tab=organizer">
+                    <i class="bi bi-building"></i> Profil organisateur
                 </a>
-            </li>
-        </ul>
-    </div>
+                <a class="nav-link <?= $activeTab === 'password' ? 'active' : '' ?>" href="?tab=password">
+                    <i class="bi bi-shield-lock-fill"></i> Changer le mot de passe
+                </a>
+            </nav>
+        </aside>
 
-    <!-- Contenu des onglets -->
-    <div class="tab-content" id="profileTabsContent">
-        <!-- Informations personnelles -->
-        <div class="tab-pane fade <?= empty($_GET['tab']) || $_GET['tab'] === 'personal' ? 'show active' : '' ?>" 
-             id="personal" 
-             role="tabpanel">
-            <div class="profile-section">
+        <!-- Main content -->
+        <main class="profile-main">
+            <!-- Informations personnelles -->
+            <div class="profile-section <?= $activeTab === 'personal' ? 'active' : '' ?>" id="personal">
                 <h2>Informations personnelles</h2>
                 <?php if (isset($_SESSION['profile_message'])): ?>
                     <div class="alert alert-<?= $_SESSION['profile_message_type'] ?? 'info' ?>">
                         <?= $_SESSION['profile_message'] ?>
                     </div>
-                    <?php 
+                    <?php
                     unset($_SESSION['profile_message']);
                     unset($_SESSION['profile_message_type']);
                     ?>
@@ -123,67 +118,27 @@ require_once __DIR__ . '/../../includes/header-solid.php';
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="name" class="form-label">Nom d'utilisateur</label>
-                                <input type="text" class="form-control" id="name" name="name" 
+                                <input type="text" class="form-control" id="name" name="name"
                                        value="<?= htmlspecialchars($user['name']) ?>" required>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="email" class="form-label">Email</label>
-                                <input type="email" class="form-control" id="email" name="email" 
+                                <input type="email" class="form-control" id="email" name="email"
                                        value="<?= htmlspecialchars($user['email']) ?>" required>
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="mt-4">
                         <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
                     </div>
                 </form>
-
-                <!-- Section changement de mot de passe -->
-                <div class="mt-5">
-                    <h3>Changer le mot de passe</h3>
-                    <p class="text-muted">Un email de confirmation vous sera envoyé pour valider le changement.</p>
-                    <form id="passwordForm" class="needs-validation" novalidate>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="currentPassword" class="form-label">Mot de passe actuel</label>
-                                    <div class="input-group">
-                                        <input type="password" class="form-control" id="currentPassword" name="currentPassword" required>
-                                        <button class="btn btn-outline-secondary toggle-password" type="button" data-target="currentPassword">
-                                            <i class="bi bi-eye"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="newPassword" class="form-label">Nouveau mot de passe</label>
-                                    <div class="input-group">
-                                        <input type="password" class="form-control" id="newPassword" name="newPassword" required>
-                                        <button class="btn btn-outline-secondary toggle-password" type="button" data-target="newPassword">
-                                            <i class="bi bi-eye"></i>
-                                        </button>
-                                    </div>
-                                    <small class="form-text text-muted">Minimum 8 caractères</small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="mt-3">
-                            <button type="submit" class="btn btn-warning">Demander le changement de mot de passe</button>
-                        </div>
-                    </form>
-                </div>
             </div>
-        </div>
 
-        <!-- Profils Organisateur -->
-        <div class="tab-pane fade <?= isset($_GET['tab']) && $_GET['tab'] === 'organizer' ? 'show active' : '' ?>" 
-             id="organizer" 
-             role="tabpanel">
-            <div class="profile-section">
+            <!-- Profils Organisateur -->
+            <div class="profile-section <?= $activeTab === 'organizer' ? 'active' : '' ?>" id="organizer">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h2>Profils Organisateur</h2>
                     <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#organizerModal">
@@ -193,8 +148,7 @@ require_once __DIR__ . '/../../includes/header-solid.php';
 
                 <!-- Liste des profils -->
                 <div class="organizer-profiles">
-                    <?php
-                    if (empty($profiles)): ?>
+                    <?php if (empty($profiles)): ?>
                         <div class="alert alert-info">
                             Vous n'avez pas encore de profil organisateur. Créez-en un pour pouvoir organiser des événements.
                         </div>
@@ -205,8 +159,8 @@ require_once __DIR__ . '/../../includes/header-solid.php';
                                     <div class="d-flex justify-content-between align-items-start">
                                         <div class="d-flex align-items-center">
                                             <div class="profile-logo-container me-3">
-                                                <img src="<?= !empty($profile['logo_path']) ? htmlspecialchars($profile['logo_path']) : '/assets/images/events/default-event.jpg' ?>" 
-                                                     alt="Logo <?= htmlspecialchars($profile['name']) ?>" 
+                                                <img src="<?= !empty($profile['logo_path']) ? htmlspecialchars($profile['logo_path']) : '/assets/images/events/default-event.jpg' ?>"
+                                                     alt="Logo <?= htmlspecialchars($profile['name']) ?>"
                                                      class="profile-logo">
                                             </div>
                                             <div>
@@ -215,11 +169,11 @@ require_once __DIR__ . '/../../includes/header-solid.php';
                                             </div>
                                         </div>
                                         <div class="btn-group">
-                                            <button type="button" class="btn btn-sm btn-outline-primary edit-profile" 
+                                            <button type="button" class="btn btn-sm btn-outline-primary edit-profile"
                                                     data-profile-id="<?= $profile['id'] ?>">
                                                 <i class="bi bi-pencil"></i>
                                             </button>
-                                            <button type="button" class="btn btn-sm btn-outline-danger delete-profile" 
+                                            <button type="button" class="btn btn-sm btn-outline-danger delete-profile"
                                                     data-profile-id="<?= $profile['id'] ?>">
                                                 <i class="bi bi-trash"></i>
                                             </button>
@@ -248,7 +202,43 @@ require_once __DIR__ . '/../../includes/header-solid.php';
                     <?php endif; ?>
                 </div>
             </div>
-        </div>
+
+            <!-- Changer le mot de passe -->
+            <div class="profile-section <?= $activeTab === 'password' ? 'active' : '' ?>" id="password">
+                <h2>Changer le mot de passe</h2>
+                <p class="text-muted">Un email de confirmation vous sera envoyé pour valider le changement.</p>
+                <form id="passwordForm" class="needs-validation" novalidate>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="currentPassword" class="form-label">Mot de passe actuel</label>
+                                <div class="input-group">
+                                    <input type="password" class="form-control" id="currentPassword" name="currentPassword" required>
+                                    <button class="btn btn-outline-secondary toggle-password" type="button" data-target="currentPassword">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="newPassword" class="form-label">Nouveau mot de passe</label>
+                                <div class="input-group">
+                                    <input type="password" class="form-control" id="newPassword" name="newPassword" required>
+                                    <button class="btn btn-outline-secondary toggle-password" type="button" data-target="newPassword">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                </div>
+                                <small class="form-text text-muted">Minimum 8 caractères</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <button type="submit" class="btn btn-warning">Demander le changement de mot de passe</button>
+                    </div>
+                </form>
+            </div>
+        </main>
     </div>
 </div>
 
@@ -324,4 +314,5 @@ require_once __DIR__ . '/../../includes/header-solid.php';
     </div>
 </div>
 
+<script src="/assets/js/profile.js"></script>
 <?php require_once __DIR__ . '/../../includes/footer.php'; ?>
