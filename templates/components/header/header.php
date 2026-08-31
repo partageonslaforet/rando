@@ -110,11 +110,21 @@ function render_header() {
             document.addEventListener('DOMContentLoaded', function () {
                 const toggler = document.querySelector('.navbar-toggler');
                 const navCollapse = document.getElementById('navbarNav');
+                console.log('[hamburger] toggler:', toggler);
+                console.log('[hamburger] navCollapse:', navCollapse);
+                console.log('[hamburger] bootstrap.Collapse:', typeof bootstrap !== 'undefined' ? typeof bootstrap.Collapse : 'no bootstrap');
                 if (toggler && navCollapse && typeof bootstrap !== 'undefined' && bootstrap.Collapse) {
-                    const bsCollapse = bootstrap.Collapse.getInstance(navCollapse) || new bootstrap.Collapse(navCollapse, { toggle: false });
+                    // On retire les attributs data-bs pour ne pas avoir 2 toggles en concurrence
+                    toggler.removeAttribute('data-bs-toggle');
+                    toggler.removeAttribute('data-bs-target');
+                    const bsCollapse = bootstrap.Collapse.getOrCreateInstance(navCollapse, { toggle: false });
                     toggler.addEventListener('click', function () {
+                        console.log('[hamburger] click');
                         bsCollapse.toggle();
+                        console.log('[hamburger] show after toggle:', navCollapse.classList.contains('show'));
                     });
+                } else {
+                    console.warn('[hamburger] élément manquant');
                 }
             });
         </script>
