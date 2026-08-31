@@ -218,8 +218,6 @@ input[type="time"] {
 }
 </style>
 
-<script src="/assets/js/event-validation.js"></script>
-
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // Configuration du sélecteur de date
@@ -257,6 +255,12 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialisation des sélecteurs d'heure
     flatpickr("#registration_start_time", timeConfig);
     flatpickr("#registration_end_time", timeConfig);
+
+    // Écouteur pour l'upload d'images secondaires
+    const secondaryImages = document.getElementById('secondaryImages');
+    if (secondaryImages) {
+        secondaryImages.addEventListener('change', handleSecondaryImagesUpload);
+    }
 });
 
 // Tableau pour stocker les images secondaires
@@ -410,8 +414,6 @@ async function removeSecondaryImage(event, imageId) {
     }
 }
 
-// Ajouter l'écouteur d'événements pour l'upload d'image secondaire
-document.getElementById('secondaryImages').addEventListener('change', handleSecondaryImagesUpload);
 </script>
 
 <div id="loading-overlay" style="display: none;">

@@ -29,7 +29,7 @@ function initPreviewModal() {
     const previewModal = document.getElementById('previewModal');
     
     if (!previewModal) {
-        console.error(" Élément #previewModal non trouvé dans le DOM");
+        console.warn(" Élément #previewModal non trouvé dans le DOM");
         return null;
     }
 
