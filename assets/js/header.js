@@ -40,4 +40,17 @@ $(document).ready(function() {
     });
 
     console.log('=== FIN INITIALISATION DROPDOWN HEADER ===');
+
+    // Diagnostic hamburger mobile
+    const toggler = document.querySelector('.navbar-toggler');
+    const navCollapse = document.getElementById('navbarNav');
+    if (toggler && navCollapse) {
+        console.log('[header] hamburger trouvé, cible:', navCollapse.id);
+        toggler.addEventListener('click', function () {
+            console.log('[header] hamburger cliqué');
+            console.log('[header] menu show:', navCollapse.classList.contains('show'));
+        });
+    } else {
+        console.warn('[header] hamburger ou menu non trouvé');
+    }
 });
