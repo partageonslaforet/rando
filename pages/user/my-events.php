@@ -233,7 +233,6 @@ require_once __DIR__ . '/../../includes/header-solid.php';
                                 <tr>
                                     <th>Titre</th>
                                     <th>Date</th>
-                                    <th>Heure</th>
                                     <th>Statut</th>
                                     <th>Actions</th>
                                 </tr>
@@ -250,18 +249,19 @@ require_once __DIR__ . '/../../includes/header-solid.php';
                                                 <strong><?= htmlspecialchars($event['title'] ?? '') ?></strong>
                                             <?php endif; ?>
                                         </td>
-                                        <td><?= formatEventDate($event['date']) ?></td>
-                                        <td><?= formatTime($event['start_time'] ?? $event['registration_opens'] ?? null) ?></td>
+                                        <td>
+                                            <?php if ($event['status'] === 'draft'): ?>
+                                                <?= formatEventDate($event['created_at'] ?? $event['date']) ?>
+                                            <?php else: ?>
+                                                <?= formatEventDate($event['date']) ?>
+                                            <?php endif; ?>
+                                        </td>
                                         <td><?= getStatusBadge($event['status']) ?></td>
                                         <td>
                                             <?php if ($event['status'] === 'draft'): ?>
-                                                <form method="POST" action="/pages/user/my-events.php<?= $currentTab !== 'all' ? '?status=' . $currentTab : '' ?>" class="d-inline" onsubmit="return confirm('Supprimer ce brouillon ?');">
-                                                    <?= csrfField() ?>
-                                                    <input type="hidden" name="delete_draft_id" value="<?= (int)$event['id'] ?>">
-                                                    <button type="submit" class="btn btn-sm btn-outline-danger btn-action" title="Supprimer">
-                                                        <i class="bi bi-trash"></i>
-                                                    </button>
-                                                </form>
+                                                <button type="button" class="btn btn-sm btn-outline-danger btn-action" data-bs-toggle="modal" data-bs-target="#deleteConfirmModal" data-draft-id="<?= (int)$event['id'] ?>" title="Supprimer">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
                                             <?php else: ?>
                                                 <div class="btn-group">
                                                     <a href="/templates/events/event-detail.php?id=<?= $event['id'] ?>"
@@ -288,5 +288,30 @@ require_once __DIR__ . '/../../includes/header-solid.php';
         </div>
     </section>
 </main>
+
+<!-- Modal de confirmation de suppression -->
+<div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteConfirmModalLabel">Supprimer le brouillon</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+            </div>
+            <div class="modal-body">
+                <p>Es-tu sûr de vouloir supprimer ce brouillon ? Cette action est irréversible.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <form method="POST" action="/pages/user/my-events.php<?= $currentTab !== 'all' ? '?status=' . $currentTab : '' ?>" class="d-inline">
+                    <?= csrfField() ?>
+                    <input type="hidden" id="deleteDraftId" name="delete_draft_id" value="">
+                    <button type="submit" class="btn btn-danger">Supprimer</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/assets/js/my-events.js"></script>
 
 <?php require_once __DIR__ . '/../../includes/footer.php'; ?>
