@@ -4,8 +4,9 @@
 //     session_start();
 // }
 
-// Fonction pour ajouter un message flash
-function addFlashMessage($type, $message) {
+if (!function_exists('addFlashMessage')) {
+    // Fonction pour ajouter un message flash
+    function addFlashMessage($type, $message) {
     if (!isset($_SESSION['flash_messages'])) {
         $_SESSION['flash_messages'] = [];
     }
@@ -13,17 +14,21 @@ function addFlashMessage($type, $message) {
         $_SESSION['flash_messages'][$type] = [];
     }
     $_SESSION['flash_messages'][$type][] = $message;
+    }
 }
 
-// Fonction pour récupérer et effacer les messages
-function getFlashMessages() {
+if (!function_exists('getFlashMessages')) {
+    // Fonction pour récupérer et effacer les messages
+    function getFlashMessages() {
     $messages = $_SESSION['flash_messages'] ?? [];
     unset($_SESSION['flash_messages']);
-    return $messages;
+        return $messages;
+    }
 }
 
-// Fonction pour afficher les messages
-function displayFlashMessages() {
+if (!function_exists('displayFlashMessages')) {
+    // Fonction pour afficher les messages
+    function displayFlashMessages() {
     if (!isset($_SESSION['flash_messages'])) {
         return;
     }
@@ -37,6 +42,7 @@ function displayFlashMessages() {
         }
     }
 
-    // Clear flash messages after displaying them
-    unset($_SESSION['flash_messages']);
+        // Clear flash messages after displaying them
+        unset($_SESSION['flash_messages']);
+    }
 }

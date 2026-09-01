@@ -109,10 +109,6 @@ try {
     exit;
 }
 
-// Inclure le header après toutes les vérifications et redirections potentielles
-require_once __DIR__ . '/../../includes/header.php';
-error_log("✅ Header inclus");
-
 ?>
 
 <!-- Dépendances CSS -->

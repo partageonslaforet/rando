@@ -20,13 +20,17 @@
     align-items: center;
     gap: 0.5rem;
     font-size: 0.9rem;
-    color: #5a6a5d;
+    color: #5a6a5d !important;
 }
 
 .my-events-breadcrumb li:not(:last-child)::after {
     content: '/';
     margin-left: 0.5rem;
     color: #5a6a5d;
+}
+
+.my-events-breadcrumb span {
+    color: #5a6a5d !important;
 }
 
 .my-events-breadcrumb a {
