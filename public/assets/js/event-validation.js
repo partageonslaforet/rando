@@ -1257,6 +1257,7 @@ function showToast(message, type = 'success') {
         </div>
     `;
     document.body.appendChild(toastEl);
+    toastEl.style.zIndex = '9999';
     
     // Initialiser et afficher le toast
     const toast = new bootstrap.Toast(toastEl, {
