@@ -488,7 +488,7 @@ async function removeSecondaryImage(event, imageId) {
                                 </div>
 
                                 <div class="form-group mb-3">
-                                    <label class="form-label required-field">Adresse</label>
+                                    <label class="form-label">Adresse</label>
                                     <div class="input-group">
                                         <input type="text" 
                                                class="form-control" 
