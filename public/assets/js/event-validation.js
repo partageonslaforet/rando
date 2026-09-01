@@ -7,7 +7,7 @@ window.handleGpxUpload = handleGpxUpload;
 
 // Variables globales
 let currentStep = 1;
-let totalSteps = 5; 
+let totalSteps = 3; 
 let mapInitialized = false;
 window.currentGpxLayers = window.currentGpxLayers || {}; 
 
@@ -911,8 +911,11 @@ function validateForm() {
     // Liste des champs requis avec leurs messages d'erreur
     const requiredFields = {
         'title': 'Titre de l\'événement',
+        'description': 'Description',
         'date': 'Date',
-        'startTime': 'Heure de début',
+        'startTime': 'Heure de départ',
+        'registrationOpens': 'Ouverture des inscriptions',
+        'registrationCloses': 'Fermeture des inscriptions',
         'location_name': 'Nom du local',
         'categories': 'Tags d\'activité',
         'organizerName': 'Nom de l\'organisation',
@@ -953,8 +956,8 @@ function validateStep(stepNumber) {
     let isValid = true;
     let errors = [];
 
-    // Validation spéciale pour les champs de parcours à l'étape 1
-    if (stepNumber === 1) {
+    // Validation spéciale pour les champs de parcours à l'étape 2
+    if (stepNumber === 2) {
         // Vérifier l'adresse
         const addressInput = document.getElementById('address');
         const latitudeInput = document.getElementById('latitude');
@@ -1073,22 +1076,16 @@ function updateProgress() {
     const progressBar = document.getElementById('progressBar');
     if (!progressBar) return;
 
-    // Calculer le pourcentage de progression basé sur les 5 étapes
+    // Calculer le pourcentage de progression basé sur les 3 étapes
     let progressPercentage;
     switch (currentStep) {
-        case 1: // Informations de base
-            progressPercentage = 20;
+        case 1: // L'événement
+            progressPercentage = 33;
             break;
-        case 2: // Informations organisateur
-            progressPercentage = 40;
+        case 2: // Lieu et parcours
+            progressPercentage = 66;
             break;
-        case 3: // Parcours
-            progressPercentage = 60;
-            break;
-        case 4: // Photos
-            progressPercentage = 80;
-            break;
-        case 5: // Validation
+        case 3: // Photos et aperçu
             progressPercentage = 100;
             break;
         default:
@@ -1117,6 +1114,22 @@ function updateProgress() {
     });
 }
 
+// Navigation directe vers une étape
+function setStep(step) {
+    if (step < 1 || step > totalSteps || step === currentStep) return;
+    
+    const currentStepElement = document.getElementById(`step${currentStep}`);
+    const nextStepElement = document.getElementById(`step${step}`);
+    
+    if (currentStepElement) currentStepElement.classList.add('d-none');
+    if (nextStepElement) nextStepElement.classList.remove('d-none');
+    
+    currentStep = step;
+    updateProgress();
+    updateButtons();
+    hideGlobalErrors();
+}
+
 // Fonction pour mettre à jour l'affichage des boutons
 function updateButtons() {
     console.log(" Mise à jour des boutons. Étape actuelle:", currentStep);
@@ -1137,6 +1150,11 @@ function updateButtons() {
             nextButton.classList.add('d-none');
         } else {
             nextButton.classList.remove('d-none');
+            if (currentStep === 1) {
+                nextButton.innerHTML = 'Continuer : lieu et parcours <i class="bi bi-arrow-right"></i>';
+            } else if (currentStep === 2) {
+                nextButton.innerHTML = 'Continuer : photos et aperçu <i class="bi bi-arrow-right"></i>';
+            }
         }
     }
 

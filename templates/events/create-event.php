@@ -446,21 +446,15 @@ async function removeSecondaryImage(event, imageId) {
         <div class="row justify-content-center">
             <div class="col-lg-8">
                 <!-- Steps -->
-                <div class="steps mb-5">
-                    <div class="step active" data-step="1" data-title="Informations de l'événement">
+                <div class="steps mb-5 three-steps">
+                    <div class="step active" data-step="1" data-title="L'événement">
                         <button class="step-button" onclick="setStep(1)">1</button>
                     </div>
-                    <div class="step" data-step="2" data-title="Informations de l'organisateur">
+                    <div class="step" data-step="2" data-title="Lieu et parcours">
                         <button class="step-button" onclick="setStep(2)">2</button>
                     </div>
-                    <div class="step" data-step="3" data-title="Prévisualisation">
+                    <div class="step" data-step="3" data-title="Photos et aperçu">
                         <button class="step-button" onclick="setStep(3)">3</button>
-                    </div>
-                    <div class="step" data-step="4" data-title="Enregistrement">
-                        <button class="step-button" onclick="setStep(4)">4</button>
-                    </div>
-                    <div class="step" data-step="5" data-title="Notification">
-                        <button class="step-button" disabled>5</button>
                     </div>
                 </div>
 
@@ -486,104 +480,140 @@ async function removeSecondaryImage(event, imageId) {
 
                     <!-- Step 1 -->
                     <div class="step-content" id="step1">
-                        <!-- Images Upload -->
-                        <div class="card mb-4">
-                            <div class="card-body">
-                                <h3 class="card-title">Photos de l'événement</h3>
-                                
-                                <!-- Image principale -->
-                                <div class="mb-4">
-                                    <label class="form-label">
-                                        <i class="bi bi-star-fill text-warning"></i> Image principale
-                                    </label>
-                                    <div class="main-image-container">
-                                        <img id="mainImagePreview" class="main-image-preview" style="display: none;">
-                                        <label class="image-upload-button">
-                                            <i class="bi bi-upload"></i>
-                                            <span>Choisir l'image principale</span>
-                                            <input type="file" 
-                                                   id="mainImage"
-                                                   name="mainImage"
-                                                   accept="image/*" 
-                                                   class="hidden">
-                                        </label>
-                                    </div>
-                                    <div class="form-text">Cette image sera affichée en couverture de votre événement. Format recommandé: carré. Poids maximum: 5 Mo</div>
-                                </div>
-
-                                <!-- Images secondaires -->
-                                <div class="mb-3">
-                                    <label class="form-label">Images secondaires</label>
-                                    <div class="secondary-images-container">
-                                        <div id="secondaryImagesPreview" style="display: none;"></div>
-                                        <div class="secondary-images-input">
-                                            <label class="image-upload-button">
-                                                <i class="bi bi-upload"></i>
-                                                <span>Choisir des images</span>
-                                                <input type="file" 
-                                                       id="secondaryImages"
-                                                       name="secondaryImages[]"
-                                                       accept="image/*"
-                                                       multiple
-                                                       class="hidden">
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div class="form-text">Format recommandé: 1920x1080px. Poids maximum: 2 Mo par image</div>
-                                </div>
-                            </div>
-                        </div>
-
                         <!-- Basic Information -->
                         <div class="card mb-4">
                             <div class="card-body">
-                                <h3 class="card-title">Informations générales</h3>
+                                <p class="form-intro">Décrivez votre activité afin que les participants puissent facilement la trouver.</p>
+                                <h3 class="card-title">L'événement</h3>
+
                                 <div class="mb-3">
                                     <label for="title" class="form-label required-field">Titre de l'événement</label>
-                                    <input type="text" class="form-control" id="title" name="title" required>
+                                    <input type="text" class="form-control" id="title" name="title" placeholder="Ex. Randonnée familiale en forêt de Soignes" required>
                                     <div class="invalid-feedback">
                                         Veuillez saisir un titre pour l'événement
                                     </div>
                                 </div>
+
                                 <div class="mb-3">
-                                    <label class="form-label">Description</label>
-                                    <textarea class="form-control" name="description" rows="4" required></textarea>
+                                    <label for="description" class="form-label required-field">Description</label>
+                                    <textarea class="form-control" id="description" name="description" rows="4" placeholder="Présentez brièvement l'activité, le public visé et les informations importantes..." required></textarea>
                                 </div>
-                                <div class="row mb-3">
+
+                                <div class="row g-3 mb-3">
                                     <div class="col-md-4">
-                                        <label class="form-label required-field">Date</label>
-                                        <input type="text" class="form-control flatpickr-date" name="date" required>
+                                        <label class="form-label required-field">Catégorie</label>
+                                        <div class="activity-tags" id="activityTags" role="group" aria-label="Tags d'activité">
+                                            <?php foreach ($categories as $category): ?>
+                                                <button type="button" 
+                                                        class="activity-tag<?= in_array($category['id'], $draftTagIds) ? ' selected' : '' ?>" 
+                                                        data-value="<?= htmlspecialchars($category['id']) ?>"
+                                                        data-code="<?= htmlspecialchars($category['code'] ?? '') ?>"
+                                                        aria-pressed="<?= in_array($category['id'], $draftTagIds) ? 'true' : 'false' ?>">
+                                                    <?= htmlspecialchars($category['name']) ?>
+                                                </button>
+                                            <?php endforeach; ?>
+                                        </div>
+                                        <input type="hidden" id="categories" name="categories" value="<?= htmlspecialchars(json_encode(array_map('intval', $draftTagIds))) ?>" required>
+                                        <div class="invalid-feedback">Veuillez sélectionner au moins un tag</div>
                                     </div>
                                     <div class="col-md-4">
-                                        <label class="form-label required-field">Inscriptions de</label>
+                                        <label for="date" class="form-label required-field">Date</label>
+                                        <input type="text" class="form-control flatpickr-date" id="date" name="date" placeholder="jj/mm/aaaa" required>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="startTime" class="form-label required-field">Heure de départ</label>
                                         <input type="text" class="form-control time-picker-input" id="startTime" name="startTime" placeholder="HH:MM" required>
                                     </div>
-                                    <div class="col-md-4">
-                                        <label class="form-label required-field">à</label>
-                                        <input type="text" class="form-control time-picker-input" id="endTime" name="endTime" placeholder="HH:MM" required>
-                                    </div>
                                 </div>
-                                <div class="mb-3">
-                                    <label class="form-label required-field">Tags d'activité</label>
-                                    <div class="activity-tags" id="activityTags" role="group" aria-label="Tags d'activité">
-                                        <?php foreach ($categories as $category): ?>
-                                            <button type="button" 
-                                                    class="activity-tag<?= in_array($category['id'], $draftTagIds) ? ' selected' : '' ?>" 
-                                                    data-value="<?= htmlspecialchars($category['id']) ?>"
-                                                    data-code="<?= htmlspecialchars($category['code'] ?? '') ?>"
-                                                    aria-pressed="<?= in_array($category['id'], $draftTagIds) ? 'true' : 'false' ?>">
-                                                <?= htmlspecialchars($category['name']) ?>
-                                            </button>
-                                        <?php endforeach; ?>
+
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label for="registrationOpens" class="form-label required-field">Ouverture des inscriptions</label>
+                                        <input type="text" class="form-control flatpickr-date" id="registrationOpens" name="registrationOpens" placeholder="jj/mm/aaaa" required>
                                     </div>
-                                    <input type="hidden" id="categories" name="categories" value="<?= htmlspecialchars(json_encode(array_map('intval', $draftTagIds))) ?>" required>
-                                    <div class="invalid-feedback">
-                                        Veuillez sélectionner au moins un tag
+                                    <div class="col-md-6">
+                                        <label for="registrationCloses" class="form-label required-field">Fermeture des inscriptions</label>
+                                        <input type="text" class="form-control flatpickr-date" id="registrationCloses" name="registrationCloses" placeholder="jj/mm/aaaa" required>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
+                        <!-- Organizer Information -->
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <h3 class="card-title">Organisateur</h3>
+                                
+                                <div class="mb-4">
+                                    <?php if (!empty($organizers)): ?>
+                                    <div class="mb-3">
+                                        <label for="organizerSelect" class="form-label">Sélectionner un organisateur existant</label>
+                                        <select class="form-select" id="organizerSelect" name="organizerId">
+                                            <option value="">Nouvel organisateur</option>
+                                            <?php foreach ($organizers as $organizer): ?>
+                                                <option value="<?= htmlspecialchars($organizer['id']) ?>">
+                                                    <?= htmlspecialchars($organizer['name']) ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </div>
+                                    <?php endif; ?>
+
+                                    <div id="newOrganizerToggle" class="form-check mb-3">
+                                        <input class="form-check-input" type="checkbox" id="useProfileInfo" name="useProfileInfo">
+                                        <label class="form-check-label" for="useProfileInfo">
+                                            Utiliser mes informations de profil
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div id="organizerFields">
+                                    <div class="mb-3">
+                                        <label for="organizerName" class="form-label required-field">Nom de l'organisation</label>
+                                        <input type="text" class="form-control" id="organizerName" name="organizerName" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="organizerAddress" class="form-label">Adresse</label>
+                                        <input type="text" class="form-control" id="organizerAddress" name="organizerAddress">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="organizerDescription" class="form-label">Description</label>
+                                        <textarea class="form-control" id="organizerDescription" name="organizerDescription" rows="3"></textarea>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="organizerWebsite" class="form-label">Site web</label>
+                                        <input type="url" class="form-control" id="organizerWebsite" name="organizerWebsite">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="organizerPhone" class="form-label">Téléphone</label>
+                                        <input type="tel" class="form-control" id="organizerPhone" name="organizerPhone">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="organizerEmail" class="form-label required-field">Email</label>
+                                        <input type="email" class="form-control" id="organizerEmail" name="organizerEmail" required>
+                                    </div>
+                                    
+                                    <!-- Logo Upload -->
+                                    <div class="mb-3">
+                                        <label for="organizerLogo" class="form-label">Logo</label>
+                                        <div class="logo-upload-container">
+                                            <img id="logoPreview" class="logo-preview" src="" alt="Logo preview" style="display: none; max-width: 200px; margin-bottom: 10px;">
+                                            <input type="file" 
+                                                   class="form-control" 
+                                                   id="organizerLogo" 
+                                                   name="organizerLogo" 
+                                                   accept="image/*"
+                                                   onchange="handleLogoUpload(this)">
+                                        </div>
+                                        <div class="form-text">Format recommandé: PNG ou JPG. Taille maximale: 2 Mo</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 2 -->
+                    <div class="step-content d-none" id="step2">
                         <!-- Location -->
                         <div class="card mb-4">
                             <div class="card-body">
@@ -664,7 +694,7 @@ async function removeSecondaryImage(event, imageId) {
                                         </div>
                                     </div>
                                 </div>
-                                <button type="button" id="addBtn"class="btn btn-outline-primary" onclick="addRoute()">
+                                <button type="button" id="addBtn" class="btn btn-outline-primary" onclick="addRoute()">
                                     <i class="bi bi-plus-circle"></i> Ajouter un parcours
                                 </button>
                             </div>
@@ -677,85 +707,6 @@ async function removeSecondaryImage(event, imageId) {
                                 <div class="mb-2">
                                     <div id="gpxMap" style="height: 400px; margin-bottom: 1rem; border-radius: 0.5rem;"></div>
                                 </div>   
-                                <!-- <div id="gpx-legend" class="mt-3">
-                                    <h5 class="mb-2">Légende</h5>
-                                    <div id="gpx-legend-content" class="d-flex flex-wrap gap-3"></div>
-                                </div> -->
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Step 2 -->
-                    <div class="step-content d-none" id="step2">
-                        <!-- Organizer Information -->
-                        <div class="card mb-4">
-                            <div class="card-body">
-                                <h3 class="card-title">Informations de l'organisateur</h3>
-                                
-                                <div class="mb-4">
-                                    <?php if (!empty($organizers)): ?>
-                                    <div class="mb-3">
-                                        <label for="organizerSelect" class="form-label">Sélectionner un organisateur existant</label>
-                                        <select class="form-select" id="organizerSelect" name="organizerId">
-                                            <option value="">Nouvel organisateur</option>
-                                            <?php foreach ($organizers as $organizer): ?>
-                                                <option value="<?= htmlspecialchars($organizer['id']) ?>">
-                                                    <?= htmlspecialchars($organizer['name']) ?>
-                                                </option>
-                                            <?php endforeach; ?>
-                                        </select>
-                                    </div>
-                                    <?php endif; ?>
-
-                                    <div id="newOrganizerToggle" class="form-check mb-3">
-                                        <input class="form-check-input" type="checkbox" id="useProfileInfo" name="useProfileInfo">
-                                        <label class="form-check-label" for="useProfileInfo">
-                                            Utiliser mes informations de profil
-                                        </label>
-                                    </div>
-                                </div>
-
-                                <div id="organizerFields">
-                                    <div class="mb-3">
-                                        <label for="organizerName" class="form-label required-field">Nom de l'organisation</label>
-                                        <input type="text" class="form-control" id="organizerName" name="organizerName" required>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="organizerAddress" class="form-label">Adresse</label>
-                                        <input type="text" class="form-control" id="organizerAddress" name="organizerAddress">
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="organizerDescription" class="form-label">Description</label>
-                                        <textarea class="form-control" id="organizerDescription" name="organizerDescription" rows="3"></textarea>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="organizerWebsite" class="form-label">Site web</label>
-                                        <input type="url" class="form-control" id="organizerWebsite" name="organizerWebsite">
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="organizerPhone" class="form-label">Téléphone</label>
-                                        <input type="tel" class="form-control" id="organizerPhone" name="organizerPhone">
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="organizerEmail" class="form-label required-field">Email</label>
-                                        <input type="email" class="form-control" id="organizerEmail" name="organizerEmail" required>
-                                    </div>
-                                    
-                                    <!-- Logo Upload -->
-                                    <div class="mb-3">
-                                        <label for="organizerLogo" class="form-label">Logo</label>
-                                        <div class="logo-upload-container">
-                                            <img id="logoPreview" class="logo-preview" src="" alt="Logo preview" style="display: none; max-width: 200px; margin-bottom: 10px;">
-                                            <input type="file" 
-                                                   class="form-control" 
-                                                   id="organizerLogo" 
-                                                   name="organizerLogo" 
-                                                   accept="image/*"
-                                                   onchange="handleLogoUpload(this)">
-                                        </div>
-                                        <div class="form-text">Format recommandé: PNG ou JPG. Taille maximale: 2 Mo</div>
-                                    </div>
-                                </div>
                             </div>
                         </div>
 
@@ -775,6 +726,54 @@ async function removeSecondaryImage(event, imageId) {
 
                     <!-- Step 3 -->
                     <div class="step-content d-none" id="step3">
+                        <!-- Images Upload -->
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <h3 class="card-title">Photos de l'événement</h3>
+                                
+                                <!-- Image principale -->
+                                <div class="mb-4">
+                                    <label class="form-label">
+                                        <i class="bi bi-star-fill text-warning"></i> Image principale
+                                    </label>
+                                    <div class="main-image-container">
+                                        <img id="mainImagePreview" class="main-image-preview" style="display: none;">
+                                        <label class="image-upload-button">
+                                            <i class="bi bi-upload"></i>
+                                            <span>Choisir l'image principale</span>
+                                            <input type="file" 
+                                                   id="mainImage"
+                                                   name="mainImage"
+                                                   accept="image/*" 
+                                                   class="hidden">
+                                        </label>
+                                    </div>
+                                    <div class="form-text">Cette image sera affichée en couverture de votre événement. Format recommandé: carré. Poids maximum: 5 Mo</div>
+                                </div>
+
+                                <!-- Images secondaires -->
+                                <div class="mb-3">
+                                    <label class="form-label">Images secondaires</label>
+                                    <div class="secondary-images-container">
+                                        <div id="secondaryImagesPreview" style="display: none;"></div>
+                                        <div class="secondary-images-input">
+                                            <label class="image-upload-button">
+                                                <i class="bi bi-upload"></i>
+                                                <span>Choisir des images</span>
+                                                <input type="file" 
+                                                       id="secondaryImages"
+                                                       name="secondaryImages[]"
+                                                       accept="image/*"
+                                                       multiple
+                                                       class="hidden">
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-text">Format recommandé: 1920x1080px. Poids maximum: 2 Mo par image</div>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="card mb-4">
                             <div class="card-body">
                                 <h3 class="card-title">Prévisualisation de l'événement</h3>
@@ -839,6 +838,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Initialisation des champs d'heure
     flatpickr("#startTime", timeConfig);
-    flatpickr("#endTime", timeConfig);
+
+    // Configuration des champs de date
+    const dateConfig = {
+        dateFormat: "d/m/Y",
+        allowInput: true,
+        locale: "fr",
+        minDate: "today"
+    };
+
+    // Initialisation des champs de date
+    flatpickr(".flatpickr-date", dateConfig);
 });
 </script>

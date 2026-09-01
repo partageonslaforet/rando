@@ -104,13 +104,22 @@ try {
         }
     }
 
+    // Helper pour parser les dates du formulaire jj/mm/aaaa
+    function parseFormDate($value) {
+        if (empty($value)) return null;
+        $dt = DateTime::createFromFormat('d/m/Y', $value);
+        return $dt ? $dt->format('Y-m-d') : null;
+    }
+
     // Traiter les informations principales de l'événement
     $eventFields = [
         'title' => $_POST['title'] ?? null,
         'description' => $_POST['description'] ?? null,
-        'date' => isset($_POST['date']) ? DateTime::createFromFormat('d/m/Y', $_POST['date'])->format('Y-m-d') : null,
+        'date' => parseFormDate($_POST['date'] ?? null),
         'start_time' => $_POST['startTime'] ?? null,
         'end_time' => $_POST['endTime'] ?? null,
+        'registration_opens' => parseFormDate($_POST['registrationOpens'] ?? null),
+        'registration_closes' => parseFormDate($_POST['registrationCloses'] ?? null),
         'location' => $_POST['location_name'] ?? null,
         'venue' => $_POST['address'] ?? null,
         'coordinates' => $_POST['coordinates'] ?? null,

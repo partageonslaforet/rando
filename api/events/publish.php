@@ -77,11 +77,13 @@ try {
         $stmt = $pdo->prepare("
             INSERT INTO events (
                 user_id, title, description, date, start_time, end_time,
+                registration_opens, registration_closes,
                 location, venue, coordinates, category, status,
                 organisation
             ) 
             SELECT 
                 user_id, title, description, date, start_time, end_time,
+                registration_opens, registration_closes,
                 location, venue, coordinates, category, 'pending',
                 organisation
             FROM draft_events WHERE id = ?

@@ -1051,3 +1051,16 @@ input[type="time"]:focus {
     color: #ffffff;
     box-shadow: none;
 }
+
+/* Texte d'introduction du formulaire */
+.form-intro {
+    color: #666;
+    font-size: 0.95rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Ajustements pour 3 étapes */
+.steps.three-steps::before {
+    left: 120px;
+    right: 120px;
+}
