@@ -88,13 +88,14 @@ try {
     $categories = $categoryManager->getAllActive();
     error_log("✅ Catégories récupérées : " . count($categories));
 
-    // Récupérer les tags déjà associés au brouillon en mode édition
-    $draftTagIds = [];
+    // Récupérer la catégorie du brouillon en mode édition
+    $draftCategory = null;
     if ($isEditMode && $draft_id) {
-        $stmt = $db->prepare("SELECT category_id FROM draft_event_category_links WHERE draft_event_id = ?");
-        $stmt->execute([$draft_id]);
-        $draftTagIds = $stmt->fetchAll(PDO::FETCH_COLUMN);
-        error_log("✅ Tags du brouillon récupérés : " . implode(',', $draftTagIds));
+        $stmt = $db->prepare("SELECT category FROM draft_events WHERE id = ? AND user_id = ?");
+        $stmt->execute([$draft_id, $_SESSION['user_id']]);
+        $draftRow = $stmt->fetch(PDO::FETCH_ASSOC);
+        $draftCategory = $draftRow['category'] ?? null;
+        error_log("✅ Catégorie du brouillon récupérée : " . ($draftCategory ?: 'aucune'));
     }
 
     // Récupérer les profils organisateurs de l'utilisateur
@@ -484,55 +485,47 @@ async function removeSecondaryImage(event, imageId) {
                         <div class="card mb-4">
                             <div class="card-body">
                                 <p class="form-intro">Décrivez votre activité afin que les participants puissent facilement la trouver.</p>
-                                <h3 class="card-title">L'événement</h3>
 
                                 <div class="mb-3">
-                                    <label for="title" class="form-label required-field">Titre de l'événement</label>
+                                    <label for="title" class="form-label">Titre de l'événement</label>
                                     <input type="text" class="form-control" id="title" name="title" placeholder="Ex. Randonnée familiale en forêt de Soignes" required>
-                                    <div class="invalid-feedback">
-                                        Veuillez saisir un titre pour l'événement
-                                    </div>
                                 </div>
 
                                 <div class="mb-3">
-                                    <label for="description" class="form-label required-field">Description</label>
+                                    <label for="description" class="form-label">Description</label>
                                     <textarea class="form-control" id="description" name="description" rows="4" placeholder="Présentez brièvement l'activité, le public visé et les informations importantes..." required></textarea>
                                 </div>
 
                                 <div class="row g-3 mb-3">
                                     <div class="col-md-4">
-                                        <label class="form-label required-field">Catégorie</label>
-                                        <div class="activity-tags" id="activityTags" role="group" aria-label="Tags d'activité">
-                                            <?php foreach ($categories as $category): ?>
-                                                <button type="button" 
-                                                        class="activity-tag<?= in_array($category['id'], $draftTagIds) ? ' selected' : '' ?>" 
-                                                        data-value="<?= htmlspecialchars($category['id']) ?>"
-                                                        data-code="<?= htmlspecialchars($category['code'] ?? '') ?>"
-                                                        aria-pressed="<?= in_array($category['id'], $draftTagIds) ? 'true' : 'false' ?>">
-                                                    <?= htmlspecialchars($category['name']) ?>
-                                                </button>
+                                        <label for="category" class="form-label">Catégorie</label>
+                                        <select class="form-select" id="category" name="category" required>
+                                            <option value="" disabled selected>Choisir une catégorie</option>
+                                            <?php foreach ($categories as $cat): ?>
+                                                <option value="<?= htmlspecialchars($cat['code'] ?? '') ?>" <?= ($draftCategory === $cat['code']) ? 'selected' : '' ?>>
+                                                    <?= htmlspecialchars($cat['name']) ?>
+                                                </option>
                                             <?php endforeach; ?>
-                                        </div>
-                                        <input type="hidden" id="categories" name="categories" value="<?= htmlspecialchars(json_encode(array_map('intval', $draftTagIds))) ?>" required>
-                                        <div class="invalid-feedback">Veuillez sélectionner au moins un tag</div>
+                                        </select>
+                                        <div class="invalid-feedback">Veuillez choisir une catégorie</div>
                                     </div>
                                     <div class="col-md-4">
-                                        <label for="date" class="form-label required-field">Date</label>
+                                        <label for="date" class="form-label">Date</label>
                                         <input type="text" class="form-control flatpickr-date" id="date" name="date" placeholder="jj/mm/aaaa" required>
                                     </div>
                                     <div class="col-md-4">
-                                        <label for="startTime" class="form-label required-field">Heure de départ</label>
-                                        <input type="text" class="form-control time-picker-input" id="startTime" name="startTime" placeholder="HH:MM" required>
+                                        <label for="startTime" class="form-label">Heure de départ</label>
+                                        <input type="text" class="form-control time-picker-input" id="startTime" name="startTime" placeholder="09:00" required>
                                     </div>
                                 </div>
 
                                 <div class="row g-3">
                                     <div class="col-md-6">
-                                        <label for="registrationOpens" class="form-label required-field">Ouverture des inscriptions</label>
+                                        <label for="registrationOpens" class="form-label">Ouverture des inscriptions</label>
                                         <input type="text" class="form-control flatpickr-date" id="registrationOpens" name="registrationOpens" placeholder="jj/mm/aaaa" required>
                                     </div>
                                     <div class="col-md-6">
-                                        <label for="registrationCloses" class="form-label required-field">Fermeture des inscriptions</label>
+                                        <label for="registrationCloses" class="form-label">Fermeture des inscriptions</label>
                                         <input type="text" class="form-control flatpickr-date" id="registrationCloses" name="registrationCloses" placeholder="jj/mm/aaaa" required>
                                     </div>
                                 </div>
@@ -790,15 +783,18 @@ async function removeSecondaryImage(event, imageId) {
                     </div>
 
                     <!-- Navigation Buttons -->
-                    <div class="mt-4 d-flex justify-content-between">
+                    <div class="mt-4 d-flex justify-content-between form-navigation">
                         <div>
                             <button type="button" id="prevButton" class="btn btn-secondary" onclick="prevStep()">
                                 <i class="bi bi-arrow-left"></i> Précédent
                             </button>
+                            <button type="button" id="saveDraftButton" class="btn btn-outline-success" onclick="saveDraft()">
+                                <i class="bi bi-save"></i> Enregistrer en brouillon
+                            </button>
                         </div>
                         <div>
                             <button type="button" id="nextButton" class="btn btn-primary" onclick="nextStep()">
-                                Suivant <i class="bi bi-arrow-right"></i>
+                                Continuer : lieu et parcours <i class="bi bi-arrow-right"></i>
                             </button>
                             <button type="button" id="publishButton" class="btn btn-success d-none" onclick="event.preventDefault(); submitEvent();">
                                 Publier <i class="bi bi-check-lg"></i>

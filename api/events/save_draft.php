@@ -80,27 +80,15 @@ try {
         customLog(" Nouveau brouillon créé avec ID: " . $draftId);
     }
 
-    // Traiter les tags d'activité
+    // Traiter la catégorie du formulaire
+    $categoryCode = $_POST['category'] ?? null;
     $categoryIds = [];
-    if (isset($_POST['categories'])) {
-        $categoriesRaw = $_POST['categories'];
-        if (is_string($categoriesRaw) && $categoriesRaw !== '') {
-            $decoded = json_decode($categoriesRaw, true);
-            if (is_array($decoded)) {
-                $categoryIds = array_filter(array_map('intval', $decoded));
-            }
-        } elseif (is_array($categoriesRaw)) {
-            $categoryIds = array_filter(array_map('intval', $categoriesRaw));
-        }
-    }
-
-    $firstCategoryCode = null;
-    if (!empty($categoryIds)) {
-        $stmt = $pdo->prepare("SELECT code FROM event_categories WHERE id = ?");
-        $stmt->execute([$categoryIds[0]]);
-        $firstCategoryRow = $stmt->fetch(PDO::FETCH_ASSOC);
-        if ($firstCategoryRow) {
-            $firstCategoryCode = $firstCategoryRow['code'];
+    if (!empty($categoryCode)) {
+        $stmt = $pdo->prepare("SELECT id FROM event_categories WHERE code = ?");
+        $stmt->execute([$categoryCode]);
+        $catRow = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($catRow) {
+            $categoryIds = [(int)$catRow['id']];
         }
     }
 
@@ -123,7 +111,7 @@ try {
         'location' => $_POST['location_name'] ?? null,
         'venue' => $_POST['address'] ?? null,
         'coordinates' => $_POST['coordinates'] ?? null,
-        'category' => $firstCategoryCode,
+        'category' => $categoryCode,
         'organisation' => $_POST['organizerId'] ?? null,
         'updated_at' => date('Y-m-d H:i:s')
     ];

@@ -487,7 +487,6 @@ document.addEventListener('DOMContentLoaded', function() {
     initLocationMap();
     setupAddressSearch();
     initGpxMap();
-    initActivityTags();
     updateProgress();
     updateButtons();
     updateStepButtons();
@@ -917,7 +916,7 @@ function validateForm() {
         'registrationOpens': 'Ouverture des inscriptions',
         'registrationCloses': 'Fermeture des inscriptions',
         'location_name': 'Nom du local',
-        'categories': 'Tags d\'activité',
+        'category': 'Catégorie',
         'organizerName': 'Nom de l\'organisation',
         'organizerEmail': 'Email de l\'organisation'
     };
@@ -1114,9 +1113,9 @@ function updateProgress() {
     });
 }
 
-// Navigation directe vers une étape
+// Navigation directe vers une étape (uniquement retour arrière)
 function setStep(step) {
-    if (step < 1 || step > totalSteps || step === currentStep) return;
+    if (step < 1 || step > totalSteps || step === currentStep || step > currentStep) return;
     
     const currentStepElement = document.getElementById(`step${currentStep}`);
     const nextStepElement = document.getElementById(`step${step}`);
@@ -1130,12 +1129,43 @@ function setStep(step) {
     hideGlobalErrors();
 }
 
+// Fonction pour enregistrer le brouillon
+async function saveDraft() {
+    try {
+        const form = document.getElementById('createEventForm');
+        if (!form) return;
+
+        const formData = new FormData(form);
+        const response = await fetch('/api/events/save_draft.php', {
+            method: 'POST',
+            body: formData
+        });
+
+        const data = await response.json();
+        if (!data.success) {
+            throw new Error(data.message || 'Erreur lors de l\'enregistrement du brouillon');
+        }
+
+        if (data.draftId) {
+            const draftIdInput = document.querySelector('input[name="draftId"]');
+            if (draftIdInput) draftIdInput.value = data.draftId;
+            window.draftId = data.draftId;
+        }
+
+        showToast('Brouillon enregistré', 'success');
+    } catch (error) {
+        console.error('Erreur enregistrement brouillon:', error);
+        showToast(error.message || 'Impossible d\'enregistrer le brouillon', 'error');
+    }
+}
+
 // Fonction pour mettre à jour l'affichage des boutons
 function updateButtons() {
     console.log(" Mise à jour des boutons. Étape actuelle:", currentStep);
     const nextButton = document.getElementById('nextButton');
     const prevButton = document.getElementById('prevButton');
     const publishButton = document.getElementById('publishButton');
+    const saveDraftButton = document.getElementById('saveDraftButton');
     
     if (prevButton) {
         if (currentStep === 1) {
@@ -1156,6 +1186,10 @@ function updateButtons() {
                 nextButton.innerHTML = 'Continuer : photos et aperçu <i class="bi bi-arrow-right"></i>';
             }
         }
+    }
+
+    if (saveDraftButton) {
+        saveDraftButton.classList.toggle('d-none', currentStep !== 1);
     }
 
     if (publishButton) {

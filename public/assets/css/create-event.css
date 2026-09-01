@@ -51,114 +51,96 @@
 /* Steps styling */
 .steps {
     display: flex;
-    justify-content: space-around;
-    margin: 3rem auto;
-    position: relative;
-    padding: 0 1rem;
-    max-width: 800px;
+    justify-content: space-between;
+    align-items: center;
+    margin: 2rem 0 2.5rem;
+    padding: 0;
+    border-bottom: 1px solid #e5e5e5;
+    list-style: none;
 }
 
 .steps::before {
-    content: '';
-    position: absolute;
-    top: 24px;
-    left: 100px;
-    right: 100px;
-    height: 2px;
-    background: #e9ecef;
-    z-index: 1;
+    display: none;
 }
 
 .step {
-    position: relative;
-    z-index: 2;
-    width: 120px;
-    text-align: center;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 0.75rem 0.5rem;
+    color: #888;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    transition: color 0.3s ease, border-color 0.3s ease;
+    text-decoration: none;
 }
 
 .step-button {
     border-radius: 50%;
-    width: 48px;
-    height: 48px;
+    width: 36px;
+    height: 36px;
     background: white;
-    border: 2px solid #e9ecef;
-    color: var(--secondary-color);
+    border: 1px solid #ccc;
+    color: #666;
     font-weight: 600;
-    font-size: 1.1rem;
-    display: flex;
+    font-size: 0.95rem;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    margin: 0 auto 1rem;
-    position: relative;
+    padding: 0;
+    line-height: 1;
     transition: all 0.3s ease;
     cursor: pointer;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .step-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    border-color: var(--secondary-color);
+    color: var(--secondary-color);
+}
+
+.step.active {
+    color: var(--secondary-color);
+    border-bottom-color: var(--secondary-color);
+    font-weight: 600;
 }
 
 .step.active .step-button {
     background: var(--secondary-color);
     border-color: var(--secondary-color);
     color: white;
-    box-shadow: 0 4px 8px rgba(108, 117, 125, 0.25);
 }
 
 .step[data-title]::after {
     content: attr(data-title);
-    display: block;
-    font-size: 0.8rem;
-    color: var(--secondary-color);
-    margin-top: 0.5rem;
-    font-weight: 500;
+    display: inline;
+    position: static;
+    transform: none;
+    font-size: 1rem;
+    white-space: nowrap;
+    color: inherit;
     transition: color 0.3s ease;
-    white-space: pre-line;
-    line-height: 1.2;
-    min-height: 2.4em;
-    width: 120px;
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-}
-
-.step[data-title="Informations de l'événement"]::after,
-.step[data-title="Informations de l'organisateur"]::after {
-    width: 140px;
-}
-
-.step.active[data-title]::after {
-    color: var(--secondary-color);
-    font-weight: 600;
+    min-height: auto;
+    width: auto;
+    margin: 0;
 }
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-    .steps::before {
-        left: 50px;
-        right: 50px;
-    }
-    
     .step {
-        width: 80px;
-    }
-    
-    .step[data-title]::after {
-        font-size: 0.7rem;
-        width: 80px;
-    }
-    
-    .step[data-title="Informations de l'événement"]::after,
-    .step[data-title="Informations de l'organisateur"]::after {
-        width: 100px;
+        gap: 0.4rem;
+        padding: 0.5rem 0.25rem;
     }
     
     .step-button {
-        width: 36px;
-        height: 36px;
-        font-size: 0.9rem;
+        width: 30px;
+        height: 30px;
+        font-size: 0.85rem;
+    }
+    
+    .step[data-title]::after {
+        font-size: 0.75rem;
     }
 }
 
@@ -302,6 +284,42 @@ input[type="time"]:focus {
     box-shadow: 0 6px 8px rgba(13, 110, 253, 0.3);
 }
 
+/* Navigation principale du formulaire */
+.form-navigation {
+    align-items: center;
+    padding: 0 0.5rem;
+}
+
+.form-navigation .btn {
+    border-radius: 8px;
+    padding: 0.625rem 1.25rem;
+    font-weight: 500;
+}
+
+.form-navigation #nextButton,
+.form-navigation #publishButton {
+    background-color: var(--secondary-color) !important;
+    border-color: var(--secondary-color) !important;
+    color: #fff !important;
+}
+
+.form-navigation #nextButton:hover,
+.form-navigation #publishButton:hover {
+    background-color: var(--secondary-hover) !important;
+    border-color: var(--secondary-hover) !important;
+    color: #fff !important;
+}
+
+.form-navigation #saveDraftButton {
+    background-color: transparent !important;
+    border-color: var(--secondary-color) !important;
+    color: var(--secondary-color) !important;
+}
+
+.form-navigation #saveDraftButton:hover {
+    background-color: var(--secondary-color) !important;
+    color: #fff !important;
+}
 
 /* Image upload styling */
 .image-upload-container {
@@ -1059,8 +1077,22 @@ input[type="time"]:focus {
     margin-bottom: 1.5rem;
 }
 
+/* Champs de formulaire */
+.form-control,
+.form-select {
+    border: 1px solid #CBD8CC;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    color: #333;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--secondary-color);
+    box-shadow: 0 0 0 0.15rem rgba(58, 138, 61, 0.15);
+}
+
 /* Ajustements pour 3 étapes */
 .steps.three-steps::before {
-    left: 120px;
-    right: 120px;
+    display: none;
 }
