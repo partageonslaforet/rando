@@ -9,6 +9,16 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 requireLogin();
 
+// Initialisation des listes (sécurise l'affichage en cas d'erreur)
+$events = [];
+$totalEvents = 0;
+$approvedEvents = [];
+$pendingEvents = [];
+$draftEvents = [];
+$rejectedEvents = [];
+$currentTab = 'all';
+$filteredEvents = [];
+
 try {
     // Connexion à la base de données
     require_once __DIR__ . '/../../config/database.php';
@@ -33,16 +43,6 @@ try {
         header('Location: /pages/user/my-events.php');
         exit();
     }
-
-    // Initialisation des listes (sécurise l'affichage en cas d'erreur)
-    $events = [];
-    $totalEvents = 0;
-    $approvedEvents = [];
-    $pendingEvents = [];
-    $draftEvents = [];
-    $rejectedEvents = [];
-    $currentTab = 'all';
-    $filteredEvents = [];
 
     // Récupérer les événements publiés
     $stmt = $db->prepare('
@@ -120,15 +120,23 @@ function formatEventDate($date) {
     if (empty($date)) {
         return '—';
     }
-    $formatter = new IntlDateFormatter(
-        'fr_FR',
-        IntlDateFormatter::LONG,
-        IntlDateFormatter::NONE,
-        null,
-        null,
-        'dd MMMM yyyy'
-    );
-    return $formatter->format(strtotime($date));
+    $timestamp = strtotime($date);
+    if (class_exists('IntlDateFormatter')) {
+        $formatter = new IntlDateFormatter(
+            'fr_FR',
+            IntlDateFormatter::LONG,
+            IntlDateFormatter::NONE,
+            null,
+            null,
+            'dd MMMM yyyy'
+        );
+        return $formatter->format($timestamp);
+    }
+    $months = [
+        1 => 'janvier', 'février', 'mars', 'avril', 'mai', 'juin',
+        'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'
+    ];
+    return date('j', $timestamp) . ' ' . $months[(int) date('n', $timestamp)] . ' ' . date('Y', $timestamp);
 }
 
 // Fonction pour formater l'heure
