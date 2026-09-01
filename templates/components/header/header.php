@@ -30,6 +30,7 @@ function render_header() {
         
         <!-- Custom CSS -->
         <link rel="stylesheet" href="/assets/css/style.css">
+        <link rel="stylesheet" href="/assets/css/components/connexion.css">
         <!-- <link rel="stylesheet" href="/assets/css/lq.css">
         <link rel="stylesheet" href="/assets/css/lq-dark.css"> -->
         <link rel="stylesheet" href="/assets/css/components/home.css">

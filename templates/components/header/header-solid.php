@@ -25,6 +25,7 @@ render_flash_messages();
     
     <!-- Custom CSS -->
     <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/components/connexion.css">
     <link rel="stylesheet" href="/assets/css/header-solid.css">
     
     <!-- Additional Styles -->
