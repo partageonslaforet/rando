@@ -410,7 +410,7 @@ async function removeSecondaryImage(event, imageId) {
                                 <p class="form-intro">Décrivez votre activité afin que les participants puissent facilement la trouver.</p>
 
                                 <div class="mb-3">
-                                    <label for="title" class="form-label">Titre de l'événement</label>
+                                    <label for="title" class="form-label required-field">Titre de l'événement</label>
                                     <input type="text" class="form-control" id="title" name="title" value="<?= htmlspecialchars($draft['title'] ?? '') ?>" placeholder="Ex. Randonnée familiale en forêt de Soignes" required>
                                 </div>
 
@@ -421,7 +421,7 @@ async function removeSecondaryImage(event, imageId) {
 
                                 <div class="row g-3 mb-3">
                                     <div class="col-md-6">
-                                        <label class="form-label">Catégories</label>
+                                        <label class="form-label required-field">Catégories</label>
                                         <div class="category-checkboxes d-flex flex-column align-items-start">
                                             <?php foreach ($categories as $cat): ?>
                                                 <div class="form-check">
@@ -434,7 +434,7 @@ async function removeSecondaryImage(event, imageId) {
                                     </div>
                                     <div class="col-md-6">
                                         <div class="mb-3">
-                                            <label for="date" class="form-label">Date</label>
+                                            <label for="date" class="form-label required-field">Date</label>
                                             <input type="text" class="form-control flatpickr-date" id="date" name="date" value="<?= !empty($draft['date']) ? date('d/m/Y', strtotime($draft['date'])) : '' ?>" placeholder="jj / mm / aaaa" required>
                                         </div>
                                         <div class="row g-3">
@@ -488,7 +488,7 @@ async function removeSecondaryImage(event, imageId) {
                                 </div>
 
                                 <div class="form-group mb-3">
-                                    <label class="form-label">Adresse</label>
+                                    <label class="form-label required-field">Adresse</label>
                                     <div class="input-group">
                                         <input type="text" 
                                                class="form-control" 
@@ -528,7 +528,7 @@ async function removeSecondaryImage(event, imageId) {
                                         <div class="row">
                                             <div class="col-md-4">
                                                 <div class="mb-2">
-                                                    <label class="form-label">Distance (km)</label>
+                                                    <label class="form-label required-field">Distance (km)</label>
                                                     <input type="number" step="0.1" class="form-control" name="routes[0][distance]" required>
                                                 </div>
                                             </div>
