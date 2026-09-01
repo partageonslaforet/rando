@@ -258,13 +258,12 @@ input[type="time"]:focus {
     border-radius: 8px;
     font-weight: 500;
     transition: all 0.3s ease;
-    border-color: var(--primary-color) !important;
-    background-color: transparent !important;
-    color: var(--primary-color) !important;
+    background-color: var(--secondary-color) !important;
+    color: white !important;
 }
 
 .btn:hover{
-    background-color: var(--primary-color) !important;
+    background-color: var(--secondary-color) !important;
     color: white !important;
 }
 

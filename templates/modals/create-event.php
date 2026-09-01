@@ -46,6 +46,7 @@ error_log("✅ Utilisateur connecté (ID: " . $_SESSION['user_id'] . ")");
 // Vérifier si on est en mode édition d'un brouillon existant
 $draft_id = isset($_GET['draft_id']) ? intval($_GET['draft_id']) : null;
 $isEditMode = false;
+$openCreateModal = (isset($_GET['create']) && $_GET['create'] == '1');
 
 if ($draft_id) {
     // Mode édition : vérifier que le brouillon existe et appartient à l'utilisateur
@@ -796,8 +797,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialisation des champs de date
     flatpickr(".flatpickr-date", dateConfig);
 
-    <?php if (empty($createModalOnly)): ?>
-    // Ouvrir le modal automatiquement en page dédiée
+    <?php if (!empty($openCreateModal)): ?>
+    // Ouvrir le modal automatiquement si demandé
     const createEventModal = document.getElementById('createEventModal');
     if (createEventModal && typeof bootstrap !== 'undefined') {
         new bootstrap.Modal(createEventModal).show();

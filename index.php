@@ -80,6 +80,12 @@ try {
     } else {
         debug_log('🎯 Chargement de la page d\'accueil');
         require_once __DIR__ . '/templates/home.php';
+
+        // Inclure la modale de création d'événement si l'utilisateur est connecté
+        if (isLoggedIn()) {
+            $createModalOnly = true;
+            require_once __DIR__ . '/templates/modals/create-event.php';
+        }
     }
     debug_log('✅ Template chargé avec succès');
 
