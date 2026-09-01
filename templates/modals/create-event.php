@@ -89,6 +89,8 @@ try {
     $categories = $categoryManager->getAllActive();
     error_log("✅ Catégories récupérées : " . count($categories));
 
+    $draft = [];
+
     // Récupérer les catégories du brouillon en mode édition
     $draftCategories = [];
     if ($isEditMode && $draft_id) {
@@ -97,6 +99,11 @@ try {
         $draftCategories = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
         $draftCategories = array_map('intval', $draftCategories);
         error_log("✅ Catégories du brouillon récupérées : " . (count($draftCategories) > 0 ? implode(', ', $draftCategories) : 'aucune'));
+
+        $stmt = $db->prepare("SELECT * FROM draft_events WHERE id = ? AND user_id = ?");
+        $stmt->execute([$draft_id, $_SESSION['user_id']]);
+        $draft = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
+        error_log("✅ Données du brouillon récupérées");
     }
 
 } catch (PDOException $e) {
@@ -107,6 +114,15 @@ try {
     error_log("❌ Erreur inattendue : " . $e->getMessage());
     header('Location: /?error=unexpected_error');
     exit;
+}
+
+$draftLat = $draftLng = '';
+$draftMeetingLat = $draftMeetingLng = '';
+if (!empty($draft['coordinates'])) {
+    list($draftLat, $draftLng) = array_map('trim', explode(',', $draft['coordinates'], 2));
+}
+if (!empty($draft['meeting_coordinates'])) {
+    list($draftMeetingLat, $draftMeetingLng) = array_map('trim', explode(',', $draft['meeting_coordinates'], 2));
 }
 
 ?>
@@ -395,12 +411,12 @@ async function removeSecondaryImage(event, imageId) {
 
                                 <div class="mb-3">
                                     <label for="title" class="form-label">Titre de l'événement</label>
-                                    <input type="text" class="form-control" id="title" name="title" placeholder="Ex. Randonnée familiale en forêt de Soignes" required>
+                                    <input type="text" class="form-control" id="title" name="title" value="<?= htmlspecialchars($draft['title'] ?? '') ?>" placeholder="Ex. Randonnée familiale en forêt de Soignes" required>
                                 </div>
 
                                 <div class="mb-3">
                                     <label for="description" class="form-label">Description</label>
-                                    <textarea class="form-control" id="description" name="description" rows="4" placeholder="Présentez brièvement l'activité, le public visé et les informations importantes..." required></textarea>
+                                    <textarea class="form-control" id="description" name="description" rows="4" placeholder="Présentez brièvement l'activité, le public visé et les informations importantes..." required><?= htmlspecialchars($draft['description'] ?? '') ?></textarea>
                                 </div>
 
                                 <div class="row g-3 mb-3">
@@ -419,16 +435,16 @@ async function removeSecondaryImage(event, imageId) {
                                     <div class="col-md-6">
                                         <div class="mb-3">
                                             <label for="date" class="form-label">Date</label>
-                                            <input type="text" class="form-control flatpickr-date" id="date" name="date" placeholder="jj / mm / aaaa" required>
+                                            <input type="text" class="form-control flatpickr-date" id="date" name="date" value="<?= !empty($draft['date']) ? date('d/m/Y', strtotime($draft['date'])) : '' ?>" placeholder="jj / mm / aaaa" required>
                                         </div>
                                         <div class="row g-3">
                                             <div class="col-6">
                                                 <label for="registrationOpens" class="form-label">Ouverture des inscriptions</label>
-                                                <input type="text" class="form-control time-picker-input" id="registrationOpens" name="registrationOpens" placeholder="00:00" required>
+                                                <input type="text" class="form-control time-picker-input" id="registrationOpens" name="registrationOpens" value="<?= !empty($draft['registration_opens']) ? substr($draft['registration_opens'], 0, 5) : '' ?>" placeholder="00:00" required>
                                             </div>
                                             <div class="col-6">
                                                 <label for="registrationCloses" class="form-label">Fermeture des inscriptions</label>
-                                                <input type="text" class="form-control time-picker-input" id="registrationCloses" name="registrationCloses" placeholder="00:00" required>
+                                                <input type="text" class="form-control time-picker-input" id="registrationCloses" name="registrationCloses" value="<?= !empty($draft['registration_closes']) ? substr($draft['registration_closes'], 0, 5) : '' ?>" placeholder="00:00" required>
                                             </div>
                                         </div>
                                     </div>
@@ -445,13 +461,13 @@ async function removeSecondaryImage(event, imageId) {
                                 <p class="form-intro">Indiquez le point de rendez-vous de l'activité.</p>
                                 <div class="mb-3">
                                     <label for="meeting_name" class="form-label">Nom du local</label>
-                                    <input type="text" class="form-control" id="meeting_name" name="meeting_name" placeholder="Ex. Parking de l'église">
+                                    <input type="text" class="form-control" id="meeting_name" name="meeting_name" value="<?= htmlspecialchars($draft['meeting_name'] ?? '') ?>" placeholder="Ex. Parking de l'église">
                                 </div>
                                 <div class="mb-3">
                                     <label for="meeting_address" class="form-label">Adresse</label>
-                                    <input type="text" class="form-control" id="meeting_address" name="meeting_address" placeholder="Rue, numéro, localité">
+                                    <input type="text" class="form-control" id="meeting_address" name="meeting_address" value="<?= htmlspecialchars($draft['meeting_address'] ?? '') ?>" placeholder="Rue, numéro, localité">
                                 </div>
-                                <input type="hidden" id="meeting_coordinates" name="meeting_coordinates">
+                                <input type="hidden" id="meeting_coordinates" name="meeting_coordinates" value="<?= htmlspecialchars($draft['meeting_coordinates'] ?? '') ?>">
                                 <div class="mb-3">
                                     <div id="meetingMap" style="height: 300px; border-radius: 8px; width: 100%;"></div>
                                 </div>
@@ -468,7 +484,7 @@ async function removeSecondaryImage(event, imageId) {
                                 
                                 <div class="form-group mb-3">
                                     <label for="location_name" class="form-label">Nom du local</label>
-                                    <input type="text" class="form-control" id="location_name" name="location_name" required>
+                                    <input type="text" class="form-control" id="location_name" name="location_name" value="<?= htmlspecialchars($draft['location'] ?? '') ?>" required>
                                 </div>
 
                                 <div class="form-group mb-3">
@@ -478,6 +494,7 @@ async function removeSecondaryImage(event, imageId) {
                                                class="form-control" 
                                                id="address" 
                                                name="address" 
+                                               value="<?= htmlspecialchars($draft['venue'] ?? '') ?>"
                                                required>
                                         <button class="btn btn-outline-secondary" type="button" id="searchAddressBtn">
                                             <i class="bi bi-search"></i>
@@ -487,8 +504,8 @@ async function removeSecondaryImage(event, imageId) {
                                 </div>
                                 <div id="locationMap" style="height: 400px;" class="mb-3"></div>
                                 <div class="form-text">Déplacez le marqueur pour ajuster la position exacte</div>
-                                <input type="hidden" id="latitude" name="latitude" required>
-                                <input type="hidden" id="longitude" name="longitude" required>
+                                <input type="hidden" id="latitude" name="latitude" value="<?= htmlspecialchars($draftLat) ?>" required>
+                                <input type="hidden" id="longitude" name="longitude" value="<?= htmlspecialchars($draftLng) ?>" required>
                             </div>
                         </div>
 
@@ -650,7 +667,7 @@ async function removeSecondaryImage(event, imageId) {
                             <i class="bi bi-arrow-down-circle-fill"></i>
                         </button> -->
                         <div class="form-nav-right">
-                            <button type="button" id="nextButton" class="btn btn-primary" onclick="nextStep()">
+                            <button type="button" id="nextButton" class="btn btn-secondary" onclick="nextStep()">
                                 Continuer : lieu et parcours <i class="bi bi-arrow-right"></i>
                             </button>
                             <button type="button" id="publishButton" class="btn btn-success d-none" onclick="event.preventDefault(); submitEvent();">

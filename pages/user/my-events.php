@@ -2,6 +2,7 @@
 // Inclure les fonctions
 require_once __DIR__ . '/../../includes/functions.php';
 require_once __DIR__ . '/../../includes/flash_messages.php';
+require_once __DIR__ . '/../../includes/csrf.php';
 
 // Démarrer la session et vérifier la connexion
 if (session_status() === PHP_SESSION_NONE) {
@@ -23,6 +24,19 @@ try {
     // Connexion à la base de données
     require_once __DIR__ . '/../../config/database.php';
     $db = getConnection();
+
+    // Suppression d'un brouillon
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_draft_id'])) {
+        if (verifyCsrf($_POST['csrf_token'] ?? '')) {
+            $stmt = $db->prepare('DELETE FROM draft_events WHERE id = ? AND user_id = ?');
+            $stmt->execute([(int)$_POST['delete_draft_id'], $_SESSION['user_id']]);
+            addFlashMessage('success', 'Brouillon supprimé avec succès.');
+        } else {
+            addFlashMessage('danger', 'Token de sécurité invalide.');
+        }
+        header('Location: /pages/user/my-events.php' . (isset($_GET['status']) ? '?status=' . $_GET['status'] : ''));
+        exit;
+    }
 
     // Récupérer les informations de l'utilisateur
     $stmt = $db->prepare('SELECT * FROM users WHERE id = ?');
@@ -220,7 +234,6 @@ require_once __DIR__ . '/../../includes/header-solid.php';
                                     <th>Titre</th>
                                     <th>Date</th>
                                     <th>Heure</th>
-                                    <th>Catégorie</th>
                                     <th>Statut</th>
                                     <th>Actions</th>
                                 </tr>
@@ -229,19 +242,26 @@ require_once __DIR__ . '/../../includes/header-solid.php';
                                 <?php foreach ($filteredEvents as $event): ?>
                                     <tr>
                                         <td>
-                                            <strong><?= htmlspecialchars($event['title'] ?? '') ?></strong>
+                                            <?php if ($event['status'] === 'draft'): ?>
+                                                <a href="/?create=1&draft_id=<?= (int)$event['id'] ?>" class="fw-bold text-decoration-none">
+                                                    <?= htmlspecialchars($event['title'] ?? '') ?>
+                                                </a>
+                                            <?php else: ?>
+                                                <strong><?= htmlspecialchars($event['title'] ?? '') ?></strong>
+                                            <?php endif; ?>
                                         </td>
                                         <td><?= formatEventDate($event['date']) ?></td>
                                         <td><?= formatTime($event['start_time'] ?? $event['registration_opens'] ?? null) ?></td>
-                                        <td>
-                                            <span class="badge bg-primary">
-                                                <?= htmlspecialchars(ucfirst($event['category'] ?? '')) ?>
-                                            </span>
-                                        </td>
                                         <td><?= getStatusBadge($event['status']) ?></td>
                                         <td>
                                             <?php if ($event['status'] === 'draft'): ?>
-                                                <span class="text-muted">Brouillon</span>
+                                                <form method="POST" action="/pages/user/my-events.php<?= $currentTab !== 'all' ? '?status=' . $currentTab : '' ?>" class="d-inline" onsubmit="return confirm('Supprimer ce brouillon ?');">
+                                                    <?= csrfField() ?>
+                                                    <input type="hidden" name="delete_draft_id" value="<?= (int)$event['id'] ?>">
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger btn-action" title="Supprimer">
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+                                                </form>
                                             <?php else: ?>
                                                 <div class="btn-group">
                                                     <a href="/templates/events/event-detail.php?id=<?= $event['id'] ?>"
