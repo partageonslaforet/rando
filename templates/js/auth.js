@@ -272,13 +272,13 @@ function updateUIAfterLogin(user) {
     
     // Mettre à jour les liens "Créer un événement"
     document.querySelectorAll('a[href="#"][data-bs-target="#loginModal"]').forEach(link => {
-        link.href = '/templates/events/create-event.php';
+        link.href = '/?create=1';
         link.removeAttribute('data-bs-target');
     });
 
     // Vérifier si nous devons rediriger vers la page de création d'événement
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.has('redirect') && urlParams.get('redirect') === 'create-event') {
-        window.location.href = '/templates/events/create-event.php';
+        window.location.href = '/?create=1';
     }
 }

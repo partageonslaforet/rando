@@ -67,7 +67,7 @@ displayFlashMessages();
                     </li>
                     <li class="nav-item">
                         <?php if (isset($_SESSION['user_id'])): ?>
-                            <a class="nav-link" href="/templates/events/create-event.php">Créer un Événement</a>
+                            <a class="nav-link" href="/?create=1">Créer un Événement</a>
                         <?php else: ?>
                             <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">Créer un Événement</a>
                         <?php endif; ?>

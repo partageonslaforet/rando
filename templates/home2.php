@@ -98,7 +98,7 @@ $totalEvents = $eventCounts['all'];
                 </button>
             </div>
             <?php if (isset($_SESSION['user_id'])): ?>
-                <a href="/templates/events/create-event.php" class="btn btn-success">
+                <a href="/?create=1" class="btn btn-success">
                     Créer un Événement
                 </a>
             <?php else: ?>

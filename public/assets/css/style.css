@@ -1359,7 +1359,7 @@ body.dark-theme .modal a:hover {
 }
 
 /* Create event link */
-.navbar .nav-item a[href="/templates/events/create-event.php"] {
+.navbar .nav-item a[href="/?create=1"] {
     background: none !important;
     padding: 0.5rem 1rem;
 }
