@@ -1163,3 +1163,92 @@ input[type="time"]:focus {
 .steps.three-steps::before {
     display: none;
 }
+
+/* Styles migrés depuis create-event.php */
+
+/* Styles pour les champs requis */
+/* Pas d'astérisque visuel sur les labels */
+
+.progress-bar {
+    background-color: var(--primary-color);
+}
+
+/* Styles pour le chargement */
+#loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    backdrop-filter: blur(5px);
+    display: none;
+}
+
+.loading-spinner {
+    text-align: center;
+}
+
+.loading-text {
+    font-size: 1.2rem;
+    color: #0d6efd;
+    margin-top: 1rem;
+}
+
+.spinner-border {
+    width: 3rem;
+    height: 3rem;
+}
+
+/* Styles pour les images secondaires */
+#secondaryImagesPreview {
+    display: flex !important;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+#secondaryImagesPreview .col-md-4 {
+    flex: 0 0 auto;
+    width: calc(33.333% - 10px);
+    padding: 0;
+    margin: 0;
+}
+
+.secondary-image-container {
+    position: relative;
+    width: 100%;
+    padding-top: 75%; /* Ratio 4:3 */
+    overflow: hidden;
+}
+
+.secondary-image-container img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.secondary-image-container .remove-image-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    z-index: 2;
+}
+
+/* Styles pour les inputs time */
+input[type="time"]::-webkit-datetime-edit-ampm-field {
+    display: none;
+}
+
+input[type="time"] {
+    -webkit-appearance: textfield;
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
