@@ -44,7 +44,7 @@ try {
     $currentTab = 'all';
     $filteredEvents = [];
 
-    // Récupérer les événements de l'utilisateur
+    // Récupérer les événements publiés
     $stmt = $db->prepare('
         SELECT * FROM events 
         WHERE user_id = ? 
@@ -52,6 +52,21 @@ try {
     ');
     $stmt->execute([$user['id']]);
     $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // Récupérer les brouillons
+    $stmt2 = $db->prepare('
+        SELECT * FROM draft_events 
+        WHERE user_id = ? 
+        ORDER BY date DESC, updated_at DESC
+    ');
+    $stmt2->execute([$user['id']]);
+    $drafts = $stmt2->fetchAll(PDO::FETCH_ASSOC);
+    foreach ($drafts as &$draft) {
+        $draft['status'] = 'draft';
+    }
+    unset($draft);
+
+    $events = array_merge($events, $drafts);
 
     // Récupérer les statistiques
     $totalEvents = count($events);
@@ -93,6 +108,8 @@ function getStatusBadge($status) {
             return '<span class="badge bg-success">Approuvé</span>';
         case 'rejected':
             return '<span class="badge bg-danger">Rejeté</span>';
+        case 'draft':
+            return '<span class="badge bg-secondary">Brouillon</span>';
         default:
             return '<span class="badge bg-warning text-dark">En attente</span>';
     }
@@ -100,6 +117,9 @@ function getStatusBadge($status) {
 
 // Fonction pour formater la date
 function formatEventDate($date) {
+    if (empty($date)) {
+        return '—';
+    }
     $formatter = new IntlDateFormatter(
         'fr_FR',
         IntlDateFormatter::LONG,
@@ -113,7 +133,7 @@ function formatEventDate($date) {
 
 // Fonction pour formater l'heure
 function formatTime($time) {
-    return substr($time, 0, 5);
+    return empty($time) ? '—' : substr($time, 0, 5);
 }
 
 // Inclure l'en-tête
@@ -204,27 +224,31 @@ require_once __DIR__ . '/../../includes/header-solid.php';
                                             <strong><?= htmlspecialchars($event['title']) ?></strong>
                                         </td>
                                         <td><?= formatEventDate($event['date']) ?></td>
-                                        <td><?= formatTime($event['start_time']) ?></td>
+                                        <td><?= formatTime($event['start_time'] ?? $event['registration_opens'] ?? null) ?></td>
                                         <td>
                                             <span class="badge bg-primary">
-                                                <?= ucfirst($event['category']) ?>
+                                                <?= htmlspecialchars(ucfirst($event['category'] ?? '')) ?>
                                             </span>
                                         </td>
                                         <td><?= getStatusBadge($event['status']) ?></td>
                                         <td>
-                                            <div class="btn-group">
-                                                <a href="/templates/events/event-detail.php?id=<?= $event['id'] ?>"
-                                                   onclick="console.log('Clicking view button for event ID: <?= $event['id'] ?>')"
-                                                   class="btn btn-sm btn-outline-primary btn-action">
-                                                    <i class="bi bi-eye"></i> Voir
-                                                </a>
-                                                <?php if ($event['status'] === 'approved'): ?>
-                                                    <a href="/templates/events/edit-event.php?id=<?= $event['id'] ?>"
-                                                       class="btn btn-sm btn-outline-secondary btn-action">
-                                                        <i class="bi bi-pencil"></i> Modifier
+                                            <?php if ($event['status'] === 'draft'): ?>
+                                                <span class="text-muted">Brouillon</span>
+                                            <?php else: ?>
+                                                <div class="btn-group">
+                                                    <a href="/templates/events/event-detail.php?id=<?= $event['id'] ?>"
+                                                       onclick="console.log('Clicking view button for event ID: <?= $event['id'] ?>')"
+                                                       class="btn btn-sm btn-outline-primary btn-action">
+                                                        <i class="bi bi-eye"></i> Voir
                                                     </a>
-                                                <?php endif; ?>
-                                            </div>
+                                                    <?php if ($event['status'] === 'approved'): ?>
+                                                        <a href="/templates/events/edit-event.php?id=<?= $event['id'] ?>"
+                                                           class="btn btn-sm btn-outline-secondary btn-action">
+                                                            <i class="bi bi-pencil"></i> Modifier
+                                                        </a>
+                                                    <?php endif; ?>
+                                                </div>
+                                            <?php endif; ?>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
