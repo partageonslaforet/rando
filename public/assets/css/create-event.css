@@ -17,36 +17,46 @@
     --background-color: #dfe2e6;
 }
 
-/* Hero section */
-.create-event-hero {
-    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('/assets/images/map-hero.jpg');
-    background-size: cover;
-    background-position: center;
-    color: white;
-    padding: 6rem 0;
-    text-align: center;
-    margin-bottom: 2rem;
-    height:400px;
-    margin-top:-87px;
+/* Page header */
+.create-event-header {
+    background: #F7FAF7;
+    color: #1F3320;
+    padding: 2.5rem 0 0.5rem;
+    margin-bottom: 0;
 }
 
-.create-event-hero h1 {
-    font-size: 2.5rem;
+.create-event-header .breadcrumb {
+    --bs-breadcrumb-divider: '>';
+    font-size: 0.85rem;
+    margin-bottom: 0.75rem;
+    padding: 0;
+    color: #6b7a6e;
+}
+
+.create-event-header .breadcrumb a {
+    color: #6b7a6e;
+    text-decoration: none;
+}
+
+.create-event-header .breadcrumb a:hover {
+    color: #3A8A3D;
+    text-decoration: underline;
+}
+
+.create-event-header .breadcrumb-item.active {
+    color: #1F3320;
+    font-weight: 500;
+}
+
+.create-event-header .page-title {
+    font-size: 2rem;
     font-weight: 700;
-    margin-bottom: 1rem;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-    margin-top: 4rem;
-
+    margin-bottom: 0;
+    color: #1F3320;
 }
 
-.create-event-hero p {
-    font-size: 1.2rem;
-    opacity: 0.9;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
-}
-
-.eventTitle{
-    color : white
+.eventTitle {
+    color: #1F3320;
 }
 /* Steps styling */
 .steps {
@@ -1086,10 +1096,26 @@ input[type="time"]:focus {
     color: #333;
 }
 
+.form-control::placeholder,
+.form-select:invalid {
+    color: #95A198;
+}
+
 .form-control:focus,
 .form-select:focus {
     border-color: var(--secondary-color);
     box-shadow: 0 0 0 0.15rem rgba(58, 138, 61, 0.15);
+}
+
+.form-label {
+    color: #1F3320;
+    font-weight: 600;
+    margin-bottom: 0.35rem;
+}
+
+.form-select {
+    background-size: 1rem;
+    padding-right: 2.25rem;
 }
 
 /* Ajustements pour 3 étapes */

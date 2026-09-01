@@ -1,6 +1,6 @@
 <?php
-require_once __DIR__ . '/../includes/config.php';
-require_once __DIR__ . '/../includes/functions.php';
+require_once __DIR__ . '/../../includes/config.php';
+require_once __DIR__ . '/../../includes/functions.php';
 
 // Vérifier si l'utilisateur est connecté
 if (!isLoggedIn()) {
@@ -9,4 +9,4 @@ if (!isLoggedIn()) {
 }
 
 // Inclure le template
-require_once __DIR__ . '/../templates/events/create-event.php';
+require_once __DIR__ . '/../../templates/events/create-event.php';

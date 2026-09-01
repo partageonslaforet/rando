@@ -373,7 +373,7 @@ body {
         overflow: hidden;
     }
 }
-}
+
 
 /* Hero section responsive */
 @media (min-width: 772px) {
@@ -631,49 +631,6 @@ body {
     line-height: 1;
 }
 
-
-/* Styles spécifiques pour les boutons */
-
-
-/* Styles des pastilles pour tous les boutons */
-
-
-
-
-/* Styles pour les filtres */
-
-
-
-
-/* Styles pour les cartes d'événements - Déplacé vers events.css */
-/* .event-card {
-    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-}
-
-.event-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-}
-
-.event-card .card-img-top {
-    height: 200px;
-    object-fit: cover;
-}
-
-.event-card .card-title {
-    color: var(--primary-color);
-    margin-bottom: 0.5rem;
-}
-
-.event-card .card-text {
-    color: #666;
-    margin-bottom: 1rem;
-}
-
-.event-card .badge {
-    font-size: 0.8rem;
-    padding: 0.4em 0.8em;
-} */
 
 /* Style du bouton réinitialiser */
 .btn-reset {
@@ -1177,6 +1134,7 @@ body.dark-theme .hero-search-container .form-control::placeholder {
     border-radius: 16px !important;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
     padding: 1rem !important;
+    background-color: #F7FAF7 !important;
 }
 
 #loginModal .modal-header {
@@ -1239,7 +1197,7 @@ body.dark-theme .hero-search-container .form-control::placeholder {
 }
 
 #loginModal a {
-    color: var(--primary-color) !important;
+    color: var(--profile-text);
     text-decoration: none !important;
 }
 
@@ -1793,4 +1751,8 @@ body.dark-theme .calendar-container {
 :root {
     --bs-badge-color: var(--primary-color) !important;
     --bs-badge-bg: white !important;
+}
+
+.form-check-label, .form-label {
+    color: var(--profile-text);
 }

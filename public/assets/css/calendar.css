@@ -117,6 +117,10 @@
     color: #adb5bd;
 }
 
+.fc-icon{
+    color:  var(--secondary-color);
+}
+
 .event-count {
     position: absolute;
     top: 2px;

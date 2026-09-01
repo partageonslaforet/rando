@@ -2,7 +2,6 @@
 .events-list {
     background: #F7FAF7;
     border-radius: 16px;
-    padding: 1.5rem;
     margin: 20px 0;
 }
 
@@ -180,6 +179,10 @@
     color: #31708f;
     background-color: #d9edf7;
     border-color: #bce8f1;
+}
+
+.summary-card {
+    border-color: #E5EBE5 !important;
 }
 
 /* Responsive */

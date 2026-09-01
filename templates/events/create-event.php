@@ -132,16 +132,7 @@ error_log("✅ Header inclus");
 
 <style>
 /* Styles pour les champs requis */
-.required-field::after {
-    content: " *";
-    color: var(--bs-primary);
-    font-weight: bold;
-}
-
-.form-label.required-field {
-    position: relative; 
-    display: inline-block;
-}
+/* Pas d'astérisque visuel sur les labels */
 
 .progress-bar {
     background-color: var(--primary-color);
@@ -436,10 +427,15 @@ async function removeSecondaryImage(event, imageId) {
 </div>
 
 <div class="min-h-screen background-color">
-    <div class="create-event-hero">
+    <div class="create-event-header">
         <div class="container">
-            <h1 class="eventTitle">Créer un événement</h1>
-            <p>Partagez votre passion et organisez des événements sportifs</p>
+            <nav class="page-breadcrumb" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/user/my-events.php">Mes événements</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Créer un événement</li>
+                </ol>
+            </nav>
+            <h1 class="page-title">Créer un événement</h1>
         </div>
     </div>
 
@@ -562,7 +558,7 @@ async function removeSecondaryImage(event, imageId) {
 
                                 <div id="organizerFields">
                                     <div class="mb-3">
-                                        <label for="organizerName" class="form-label required-field">Nom de l'organisation</label>
+                                        <label for="organizerName" class="form-label">Nom de l'organisation</label>
                                         <input type="text" class="form-control" id="organizerName" name="organizerName" required>
                                     </div>
                                     <div class="mb-3">
@@ -582,7 +578,7 @@ async function removeSecondaryImage(event, imageId) {
                                         <input type="tel" class="form-control" id="organizerPhone" name="organizerPhone">
                                     </div>
                                     <div class="mb-3">
-                                        <label for="organizerEmail" class="form-label required-field">Email</label>
+                                        <label for="organizerEmail" class="form-label">Email</label>
                                         <input type="email" class="form-control" id="organizerEmail" name="organizerEmail" required>
                                     </div>
                                     
@@ -613,12 +609,12 @@ async function removeSecondaryImage(event, imageId) {
                                 <h3 class="card-title">Localisation</h3>
                                 
                                 <div class="form-group mb-3">
-                                    <label for="location_name" class="form-label required-field">Nom du local</label>
+                                    <label for="location_name" class="form-label">Nom du local</label>
                                     <input type="text" class="form-control" id="location_name" name="location_name" required>
                                 </div>
 
                                 <div class="form-group mb-3">
-                                    <label class="form-label required-field">Adresse</label>
+                                    <label class="form-label">Adresse</label>
                                     <div class="input-group">
                                         <input type="text" 
                                                class="form-control" 
@@ -651,13 +647,13 @@ async function removeSecondaryImage(event, imageId) {
                                             </button>
                                         </div>
                                         <div class="mb-2">
-                                            <label class="form-label required-field">Nom du parcours</label>
+                                            <label class="form-label">Nom du parcours</label>
                                             <input type="text" class="form-control" name="routes[0][name]" required>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-4">
                                                 <div class="mb-2">
-                                                    <label class="form-label required-field">Distance (km)</label>
+                                                    <label class="form-label">Distance (km)</label>
                                                     <input type="number" step="0.1" class="form-control" name="routes[0][distance]" required>
                                                 </div>
                                             </div>
@@ -669,7 +665,7 @@ async function removeSecondaryImage(event, imageId) {
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="mb-2">
-                                                    <label class="form-label required-field">Prix (€)</label>
+                                                    <label class="form-label">Prix (€)</label>
                                                     <input type="number" step="0.50" class="form-control" name="routes[0][price]" required>
                                                 </div>
                                             </div>

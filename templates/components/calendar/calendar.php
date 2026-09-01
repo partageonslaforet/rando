@@ -7,7 +7,7 @@ function render_calendar($pdo) {
 
     <!-- Conteneur du calendrier -->
     <div class="calendar-container">
-        <p class="calendar-label">AGENDA DES RANDONNÉES</p>
+        <p class="calendar-label">AGENDA DES ÉVÉNEMENTS</p>
         <div id="calendar"></div>
         <div class="calendar-legend">
             <span class="legend-item">

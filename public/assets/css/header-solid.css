@@ -50,7 +50,7 @@
 
 /* Brand styles */
 .navbar .navbar-brand {
-    color: var(--primary-color) !important;
+    color: var(--secondary-color) !important;
     font-weight: bold !important;
     font-size: 1.5rem !important;
 }
