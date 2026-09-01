@@ -10,4 +10,16 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+
+    // Auto-dismiss flash messages after 5 seconds
+    const flashMessages = document.querySelector('.flash-messages');
+    if (flashMessages) {
+        const alerts = flashMessages.querySelectorAll('.alert');
+        alerts.forEach(alert => {
+            setTimeout(() => {
+                alert.classList.remove('show');
+                setTimeout(() => alert.remove(), 150);
+            }, 5000);
+        });
+    }
 });

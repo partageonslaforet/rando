@@ -33,6 +33,7 @@ if (!function_exists('displayFlashMessages')) {
         return;
     }
 
+    echo "<div class='flash-messages' role='region' aria-label='Messages flash'>";
     foreach ($_SESSION['flash_messages'] as $type => $messages) {
         foreach ($messages as $message) {
             echo "<div class='alert alert-{$type} alert-dismissible fade show' role='alert'>";
@@ -41,6 +42,7 @@ if (!function_exists('displayFlashMessages')) {
             echo "</div>";
         }
     }
+    echo "</div>";
 
         // Clear flash messages after displaying them
         unset($_SESSION['flash_messages']);

@@ -242,7 +242,7 @@ require_once __DIR__ . '/../../includes/header-solid.php';
                                     <tr>
                                         <td>
                                             <?php if ($event['status'] === 'draft'): ?>
-                                                <a href="/?create=1&draft_id=<?= (int)$event['id'] ?>" class="fw-bold text-decoration-none">
+                                                <a href="/?create=1&draft_id=<?= (int)$event['id'] ?>" class="fw-bold draft-title">
                                                     <?= htmlspecialchars($event['title'] ?? '') ?>
                                                 </a>
                                             <?php else: ?>
