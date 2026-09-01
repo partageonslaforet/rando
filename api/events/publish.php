@@ -69,23 +69,23 @@ try {
         log_message("📝 Informations de l'événement:");
         log_message("- Titre: " . ($draftData['title'] ?? 'Non défini'));
         log_message("- Date: " . ($draftData['date'] ?? 'Non définie'));
-        log_message("- Horaires: " . ($draftData['start_time'] ?? 'Non défini') . " à " . ($draftData['end_time'] ?? 'Non défini'));
+        log_message("- Heures d'inscription: " . ($draftData['registration_opens'] ?? 'Non définie') . " à " . ($draftData['registration_closes'] ?? 'Non définie'));
         log_message("- Lieu: " . ($draftData['location'] ?? 'Non défini'));
+        log_message("- Adresse: " . ($draftData['venue'] ?? 'Non définie'));
+        log_message("- Coordonnées: " . ($draftData['coordinates'] ?? 'Non définies'));
 
         // 1. Insérer l'événement
         log_message("🔄 Copie des informations principales de l'événement");
         $stmt = $pdo->prepare("
             INSERT INTO events (
-                user_id, title, description, date, start_time, end_time,
+                user_id, title, description, date,
                 registration_opens, registration_closes,
-                location, venue, coordinates, category, status,
-                organisation
+                location, venue, coordinates, status
             ) 
             SELECT 
-                user_id, title, description, date, start_time, end_time,
+                user_id, title, description, date,
                 registration_opens, registration_closes,
-                location, venue, coordinates, category, 'pending',
-                organisation
+                location, venue, coordinates, 'pending'
             FROM draft_events WHERE id = ?
         ");
         try {

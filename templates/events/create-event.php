@@ -88,21 +88,15 @@ try {
     $categories = $categoryManager->getAllActive();
     error_log("✅ Catégories récupérées : " . count($categories));
 
-    // Récupérer la catégorie du brouillon en mode édition
-    $draftCategory = null;
+    // Récupérer les catégories du brouillon en mode édition
+    $draftCategories = [];
     if ($isEditMode && $draft_id) {
-        $stmt = $db->prepare("SELECT category FROM draft_events WHERE id = ? AND user_id = ?");
-        $stmt->execute([$draft_id, $_SESSION['user_id']]);
-        $draftRow = $stmt->fetch(PDO::FETCH_ASSOC);
-        $draftCategory = $draftRow['category'] ?? null;
-        error_log("✅ Catégorie du brouillon récupérée : " . ($draftCategory ?: 'aucune'));
+        $stmt = $db->prepare("SELECT category_id FROM draft_event_category_links WHERE draft_event_id = ?");
+        $stmt->execute([$draft_id]);
+        $draftCategories = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
+        $draftCategories = array_map('intval', $draftCategories);
+        error_log("✅ Catégories du brouillon récupérées : " . (count($draftCategories) > 0 ? implode(', ', $draftCategories) : 'aucune'));
     }
-
-    // Récupérer les profils organisateurs de l'utilisateur
-    $organizerManager = new OrganizerProfile($db);
-    error_log("✅ OrganizerProfile initialisé");
-    $organizers = $organizerManager->getByUserId($_SESSION['user_id']);
-    error_log("✅ Profils organisateurs récupérés : " . count($organizers));
 
 } catch (PDOException $e) {
     error_log("❌ Erreur lors de la récupération des informations : " . $e->getMessage());
@@ -253,9 +247,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     };
 
-    // Initialisation des sélecteurs d'heure
-    flatpickr("#registration_start_time", timeConfig);
-    flatpickr("#registration_end_time", timeConfig);
+    // Initialisation des sélecteurs d'heure d'inscription
+    flatpickr("#registrationOpens", timeConfig);
+    flatpickr("#registrationCloses", timeConfig);
 
     // Écouteur pour l'upload d'images secondaires
     const secondaryImages = document.getElementById('secondaryImages');
@@ -494,112 +488,38 @@ async function removeSecondaryImage(event, imageId) {
                                 </div>
 
                                 <div class="row g-3 mb-3">
-                                    <div class="col-md-4">
-                                        <label for="category" class="form-label">Catégorie</label>
-                                        <select class="form-select" id="category" name="category" required>
-                                            <option value="" disabled selected>Choisir une catégorie</option>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Catégories</label>
+                                        <div class="category-checkboxes">
                                             <?php foreach ($categories as $cat): ?>
-                                                <option value="<?= htmlspecialchars($cat['code'] ?? '') ?>" <?= ($draftCategory === $cat['code']) ? 'selected' : '' ?>>
-                                                    <?= htmlspecialchars($cat['name']) ?>
-                                                </option>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="checkbox" id="cat_<?= (int) $cat['id'] ?>" name="categories[]" value="<?= (int) $cat['id'] ?>" <?= in_array((int) $cat['id'], $draftCategories) ? 'checked' : '' ?>>
+                                                    <label class="form-check-label" for="cat_<?= (int) $cat['id'] ?>"><?= htmlspecialchars($cat['name']) ?></label>
+                                                </div>
                                             <?php endforeach; ?>
-                                        </select>
-                                        <div class="invalid-feedback">Veuillez choisir une catégorie</div>
+                                        </div>
+                                        <div class="invalid-feedback">Veuillez choisir au moins une catégorie</div>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-6">
                                         <label for="date" class="form-label">Date</label>
                                         <input type="text" class="form-control flatpickr-date" id="date" name="date" placeholder="jj / mm / aaaa" required>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label for="startTime" class="form-label">Heure de départ</label>
-                                        <input type="text" class="form-control time-picker-input" id="startTime" name="startTime" placeholder="09:00" required>
                                     </div>
                                 </div>
 
                                 <div class="row g-3">
                                     <div class="col-md-6">
                                         <label for="registrationOpens" class="form-label">Ouverture des inscriptions</label>
-                                        <input type="text" class="form-control flatpickr-date" id="registrationOpens" name="registrationOpens" placeholder="jj / mm / aaaa" required>
+                                        <input type="text" class="form-control time-picker-input" id="registrationOpens" name="registrationOpens" placeholder="00:00" required>
                                     </div>
                                     <div class="col-md-6">
                                         <label for="registrationCloses" class="form-label">Fermeture des inscriptions</label>
-                                        <input type="text" class="form-control flatpickr-date" id="registrationCloses" name="registrationCloses" placeholder="jj / mm / aaaa" required>
+                                        <input type="text" class="form-control time-picker-input" id="registrationCloses" name="registrationCloses" placeholder="00:00" required>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Organizer Information -->
-                        <div class="card mb-4">
-                            <div class="card-body">
-                                <h3 class="card-title">Organisateur</h3>
-                                
-                                <div class="mb-4">
-                                    <?php if (!empty($organizers)): ?>
-                                    <div class="mb-3">
-                                        <label for="organizerSelect" class="form-label">Sélectionner un organisateur existant</label>
-                                        <select class="form-select" id="organizerSelect" name="organizerId">
-                                            <option value="">Nouvel organisateur</option>
-                                            <?php foreach ($organizers as $organizer): ?>
-                                                <option value="<?= htmlspecialchars($organizer['id']) ?>">
-                                                    <?= htmlspecialchars($organizer['name']) ?>
-                                                </option>
-                                            <?php endforeach; ?>
-                                        </select>
-                                    </div>
-                                    <?php endif; ?>
-
-                                    <div id="newOrganizerToggle" class="form-check mb-3">
-                                        <input class="form-check-input" type="checkbox" id="useProfileInfo" name="useProfileInfo">
-                                        <label class="form-check-label" for="useProfileInfo">
-                                            Utiliser mes informations de profil
-                                        </label>
-                                    </div>
-                                </div>
-
-                                <div id="organizerFields">
-                                    <div class="mb-3">
-                                        <label for="organizerName" class="form-label">Nom de l'organisation</label>
-                                        <input type="text" class="form-control" id="organizerName" name="organizerName" required>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="organizerAddress" class="form-label">Adresse</label>
-                                        <input type="text" class="form-control" id="organizerAddress" name="organizerAddress">
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="organizerDescription" class="form-label">Description</label>
-                                        <textarea class="form-control" id="organizerDescription" name="organizerDescription" rows="3"></textarea>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="organizerWebsite" class="form-label">Site web</label>
-                                        <input type="url" class="form-control" id="organizerWebsite" name="organizerWebsite">
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="organizerPhone" class="form-label">Téléphone</label>
-                                        <input type="tel" class="form-control" id="organizerPhone" name="organizerPhone">
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="organizerEmail" class="form-label">Email</label>
-                                        <input type="email" class="form-control" id="organizerEmail" name="organizerEmail" required>
-                                    </div>
-                                    
-                                    <!-- Logo Upload -->
-                                    <div class="mb-3">
-                                        <label for="organizerLogo" class="form-label">Logo</label>
-                                        <div class="logo-upload-container">
-                                            <img id="logoPreview" class="logo-preview" src="" alt="Logo preview" style="display: none; max-width: 200px; margin-bottom: 10px;">
-                                            <input type="file" 
-                                                   class="form-control" 
-                                                   id="organizerLogo" 
-                                                   name="organizerLogo" 
-                                                   accept="image/*"
-                                                   onchange="handleLogoUpload(this)">
-                                        </div>
-                                        <div class="form-text">Format recommandé: PNG ou JPG. Taille maximale: 2 Mo</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <input type="hidden" id="organizerId" name="organizerId" value="">
                     </div>
 
                     <!-- Step 2 -->
@@ -831,9 +751,6 @@ document.addEventListener('DOMContentLoaded', function() {
             meridiem: false
         }
     };
-
-    // Initialisation des champs d'heure
-    flatpickr("#startTime", timeConfig);
 
     // Configuration des champs de date
     const dateConfig = {

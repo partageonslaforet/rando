@@ -912,13 +912,9 @@ function validateForm() {
         'title': 'Titre de l\'événement',
         'description': 'Description',
         'date': 'Date',
-        'startTime': 'Heure de départ',
         'registrationOpens': 'Ouverture des inscriptions',
         'registrationCloses': 'Fermeture des inscriptions',
-        'location_name': 'Nom du local',
-        'category': 'Catégorie',
-        'organizerName': 'Nom de l\'organisation',
-        'organizerEmail': 'Email de l\'organisation'
+        'location_name': 'Nom du local'
     };
 
     // Vérifier chaque champ requis
@@ -928,6 +924,12 @@ function validateForm() {
         if (!field || !field.value) {
             errors.push(`Le champ "${fieldName}" est requis`);
         }
+    }
+
+    // Vérifier qu'au moins une catégorie est cochée
+    const checkedCategories = document.querySelectorAll('input[name="categories[]"]:checked');
+    if (checkedCategories.length === 0) {
+        errors.push('Veuillez choisir au moins une catégorie');
     }
 
     if (errors.length > 0) {

@@ -80,16 +80,10 @@ try {
         customLog(" Nouveau brouillon créé avec ID: " . $draftId);
     }
 
-    // Traiter la catégorie du formulaire
-    $categoryCode = $_POST['category'] ?? null;
+    // Traiter les catégories du formulaire
     $categoryIds = [];
-    if (!empty($categoryCode)) {
-        $stmt = $pdo->prepare("SELECT id FROM event_categories WHERE code = ?");
-        $stmt->execute([$categoryCode]);
-        $catRow = $stmt->fetch(PDO::FETCH_ASSOC);
-        if ($catRow) {
-            $categoryIds = [(int)$catRow['id']];
-        }
+    if (!empty($_POST['categories']) && is_array($_POST['categories'])) {
+        $categoryIds = array_map('intval', $_POST['categories']);
     }
 
     // Helper pour parser les dates du formulaire jj/mm/aaaa
@@ -99,20 +93,26 @@ try {
         return $dt ? $dt->format('Y-m-d') : null;
     }
 
+    // Helper pour parser les heures du formulaire HH:MM
+    function parseFormTime($value) {
+        if (empty($value)) return null;
+        $dt = DateTime::createFromFormat('H:i', $value);
+        if (!$dt) {
+            $dt = DateTime::createFromFormat('H:i:s', $value);
+        }
+        return $dt ? $dt->format('H:i:s') : null;
+    }
+
     // Traiter les informations principales de l'événement
     $eventFields = [
         'title' => $_POST['title'] ?? null,
         'description' => $_POST['description'] ?? null,
         'date' => parseFormDate($_POST['date'] ?? null),
-        'start_time' => $_POST['startTime'] ?? null,
-        'end_time' => $_POST['endTime'] ?? null,
-        'registration_opens' => parseFormDate($_POST['registrationOpens'] ?? null),
-        'registration_closes' => parseFormDate($_POST['registrationCloses'] ?? null),
+        'registration_opens' => parseFormTime($_POST['registrationOpens'] ?? null),
+        'registration_closes' => parseFormTime($_POST['registrationCloses'] ?? null),
         'location' => $_POST['location_name'] ?? null,
         'venue' => $_POST['address'] ?? null,
         'coordinates' => $_POST['coordinates'] ?? null,
-        'category' => $categoryCode,
-        'organisation' => $_POST['organizerId'] ?? null,
         'updated_at' => date('Y-m-d H:i:s')
     ];
 
@@ -122,65 +122,8 @@ try {
         customLog("$field: $value");
     }
 
-    // Gérer l'organisateur
-    customLog("🏢 Début du traitement de l'organisateur");
-    
-    // Vérifier si nous avons un nom d'organisateur
-    if (!empty($_POST['organizerName'])) {
-        customLog("➡️ Création d'un nouvel organisateur");
-        
-        try {
-            // Préparer les données de l'organisateur
-            $params = [
-                'user_id' => $_SESSION['user_id'] ?? null,
-                'name' => $_POST['organizerName'],
-                'description' => $_POST['organizerDescription'] ?? null,
-                'website' => $_POST['organizerWebsite'] ?? null,
-                'email' => $_POST['organizerEmail'] ?? null,
-                'phone' => $_POST['organizerPhone'] ?? null,
-                'address' => $_POST['organizerAddress'] ?? null,
-                'logo_path' => null,
-                'storage_path' => null
-            ];
-            
-            customLog("📊 Paramètres de l'organisateur: " . print_r($params, true));
-            
-            // Insérer dans organizer_profiles
-            $stmt = $pdo->prepare("
-                INSERT INTO organizer_profiles (
-                    user_id, name, description, website, email, 
-                    phone, address, logo_path, storage_path,
-                    created_at, updated_at
-                ) VALUES (
-                    :user_id, :name, :description, :website, :email,
-                    :phone, :address, :logo_path, :storage_path,
-                    CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
-                )
-            ");
-            
-            if (!$stmt->execute($params)) {
-                $error = $stmt->errorInfo();
-                customLog("❌ Erreur SQL: " . print_r($error, true), true);
-                throw new Exception("Erreur lors de la création de l'organisateur: " . $error[2]);
-            }
-            
-            $organizerId = $pdo->lastInsertId();
-            customLog("✅ Organisateur créé avec ID: " . $organizerId);
-            $eventFields['organisation'] = $organizerId;
-            
-        } catch (Exception $e) {
-            customLog("❌ Exception: " . $e->getMessage() . "\n" . $e->getTraceAsString(), true);
-            throw $e;
-        }
-    } elseif (!empty($_POST['organizerId'])) {
-        // C'est un organisateur existant
-        customLog("➡️ Utilisation d'un organisateur existant avec ID: " . $_POST['organizerId']);
-        $eventFields['organisation'] = $_POST['organizerId'];
-    } else {
-        customLog("ℹ️ Aucun organisateur spécifié");
-    }
-
-    customLog("🏢 Fin du traitement de l'organisateur");
+    // L'organisateur est désormais géré dans Mon compte > Organisateur
+    customLog("ℹ️ Aucun organisateur reçu depuis le formulaire événement");
 
     $updateFields = [];
     $updateParams = [];
