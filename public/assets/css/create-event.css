@@ -211,6 +211,9 @@ input[type="time"] {
     border: 1px solid #ced4da;
     border-radius: 0.25rem;
     width: 100%;
+    -webkit-appearance: none;
+    -moz-appearance: textfield;
+    appearance: textfield;
     transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
@@ -230,11 +233,6 @@ input[type="time"]::-moz-time-edit {
 /* Force le format 24h */
 input[type="time"]::-webkit-calendar-picker-indicator {
     background: none;
-}
-
-input[type="time"] {
-    -webkit-appearance: none;
-    -moz-appearance: textfield;
 }
 
 input[type="time"]:focus {
@@ -1267,13 +1265,24 @@ input[type="time"]:focus {
     z-index: 2;
 }
 
-/* Styles pour les inputs time */
-input[type="time"]::-webkit-datetime-edit-ampm-field {
-    display: none;
+/* Checkboxes des catégories */
+.category-checkboxes .form-check {
+    display: flex;
+    align-items: center;
+    margin: 0.25rem 0;
 }
 
-input[type="time"] {
-    -webkit-appearance: textfield;
-    -moz-appearance: textfield;
-    appearance: textfield;
+.category-checkboxes .form-check-input {
+    border: 2px solid #666;
+    margin-right: 0.5rem;
+}
+
+.category-checkboxes .form-check-input:checked {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+body.dark-theme .category-checkboxes .form-check-input {
+    background-color: #3d3d3d;
+    border-color: #4d4d4d;
 }

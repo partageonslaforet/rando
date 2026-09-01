@@ -1300,23 +1300,7 @@ body.dark-theme #loginModal .form-control {
     color: var(--primary-hover);
 }
 
-/* Style de la checkbox */
-.modal .form-check {
-    margin: 1rem 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.modal .form-check-input {
-    border: 2px solid #666;
-    margin-right: 0.5rem;
-}
-
-.modal .form-check-input:checked {
-    background-color: var(--primary-color);
-    border-color: var(--primary-color);
-}
+/* Style de la checkbox (déplacé dans create-event.css) */
 
 /* Styles pour le mode sombre */
 body.dark-theme .modal-content {
