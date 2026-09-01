@@ -1164,6 +1164,21 @@ input[type="time"]:focus {
     display: none;
 }
 
+/* Largeur de la modale Créer un événement */
+#createEventDialog {
+    max-width: 75%;
+    width: 75%;
+    margin: auto;
+}
+
+@media (max-width: 768px) {
+    #createEventDialog {
+        max-width: 95%;
+        width: 95%;
+        margin: 0.5rem auto;
+    }
+}
+
 /* Styles migrés depuis create-event.php */
 
 /* Styles pour les champs requis */

@@ -330,10 +330,10 @@ async function removeSecondaryImage(event, imageId) {
 </div>
 
 <div class="modal fade" id="createEventModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="createEventModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" id="createEventDialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title" id="createEventModalLabel">Créer un événement</h2>
+                <!-- <h2 class="modal-title" id="createEventModalLabel">Créer un événement</h2> -->
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
             </div>
             <div class="modal-body">
