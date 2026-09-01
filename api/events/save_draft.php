@@ -80,6 +80,30 @@ try {
         customLog(" Nouveau brouillon créé avec ID: " . $draftId);
     }
 
+    // Traiter les tags d'activité
+    $categoryIds = [];
+    if (isset($_POST['categories'])) {
+        $categoriesRaw = $_POST['categories'];
+        if (is_string($categoriesRaw) && $categoriesRaw !== '') {
+            $decoded = json_decode($categoriesRaw, true);
+            if (is_array($decoded)) {
+                $categoryIds = array_filter(array_map('intval', $decoded));
+            }
+        } elseif (is_array($categoriesRaw)) {
+            $categoryIds = array_filter(array_map('intval', $categoriesRaw));
+        }
+    }
+
+    $firstCategoryCode = null;
+    if (!empty($categoryIds)) {
+        $stmt = $pdo->prepare("SELECT code FROM event_categories WHERE id = ?");
+        $stmt->execute([$categoryIds[0]]);
+        $firstCategoryRow = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($firstCategoryRow) {
+            $firstCategoryCode = $firstCategoryRow['code'];
+        }
+    }
+
     // Traiter les informations principales de l'événement
     $eventFields = [
         'title' => $_POST['title'] ?? null,
@@ -90,7 +114,7 @@ try {
         'location' => $_POST['location_name'] ?? null,
         'venue' => $_POST['address'] ?? null,
         'coordinates' => $_POST['coordinates'] ?? null,
-        'category' => $_POST['category'] ?? null,
+        'category' => $firstCategoryCode,
         'organisation' => $_POST['organizerId'] ?? null,
         'updated_at' => date('Y-m-d H:i:s')
     ];
@@ -188,6 +212,23 @@ try {
         customLog("Informations principales de l'événement mises à jour avec succès");
     } else {
         customLog("Aucun champ à mettre à jour", true);
+    }
+
+    // Sauvegarder les tags d'activité
+    if (!empty($categoryIds)) {
+        try {
+            $pdo->prepare("DELETE FROM draft_event_category_links WHERE draft_event_id = ?")->execute([$draftId]);
+            $insertStmt = $pdo->prepare("INSERT INTO draft_event_category_links (draft_event_id, category_id) VALUES (?, ?)");
+            foreach ($categoryIds as $categoryId) {
+                $insertStmt->execute([$draftId, $categoryId]);
+            }
+            customLog("✅ Tags d'activité enregistrés : " . implode(', ', $categoryIds));
+        } catch (Exception $e) {
+            customLog("❌ Erreur lors de l'enregistrement des tags : " . $e->getMessage(), true);
+            throw new Exception("Erreur lors de l'enregistrement des tags d'activité");
+        }
+    } else {
+        $pdo->prepare("DELETE FROM draft_event_category_links WHERE draft_event_id = ?")->execute([$draftId]);
     }
 
     // Fonction pour obtenir l'URL complète

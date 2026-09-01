@@ -1004,3 +1004,50 @@ input[type="time"]:focus {
     margin-top: 3rem;
     text-align: center;     
 }
+
+/* Tags d'activité */
+.activity-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-bottom: 0.5rem;
+}
+
+.activity-tag {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 1rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+    line-height: 1.2;
+    color: #2c3e2d;
+    background-color: #ffffff;
+    border: 1px solid #CBD8CC;
+    border-radius: 9999px;
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.activity-tag:hover,
+.activity-tag:focus {
+    border-color: #2E8338;
+    color: #2E8338;
+    outline: none;
+    box-shadow: 0 0 0 0.15rem rgba(46, 131, 56, 0.15);
+}
+
+.activity-tag.selected {
+    background-color: #2E8338;
+    border-color: #2E8338;
+    color: #ffffff;
+}
+
+.activity-tag.selected:hover,
+.activity-tag.selected:focus {
+    background-color: #246b2c;
+    border-color: #246b2c;
+    color: #ffffff;
+    box-shadow: none;
+}

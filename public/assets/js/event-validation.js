@@ -487,6 +487,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initLocationMap();
     setupAddressSearch();
     initGpxMap();
+    initActivityTags();
     updateProgress();
     updateButtons();
     updateStepButtons();
@@ -913,7 +914,7 @@ function validateForm() {
         'date': 'Date',
         'startTime': 'Heure de début',
         'location_name': 'Nom du local',
-        'category': 'Catégorie',
+        'categories': 'Tags d\'activité',
         'organizerName': 'Nom de l\'organisation',
         'organizerEmail': 'Email de l\'organisation'
     };
@@ -2039,4 +2040,48 @@ function initGpxMap() {
     } catch (error) {
         console.error('Erreur lors de l\'initialisation de la carte GPX:', error);
     }
+}
+
+// Gestion des tags d'activité
+function initActivityTags() {
+    const tagsContainer = document.getElementById('activityTags');
+    const hiddenInput = document.getElementById('categories');
+    if (!tagsContainer || !hiddenInput) return;
+
+    const getSelectedIds = () => {
+        const value = hiddenInput.value.trim();
+        if (!value) return [];
+        try {
+            const parsed = JSON.parse(value);
+            return Array.isArray(parsed) ? parsed.map(String) : [];
+        } catch (e) {
+            return [];
+        }
+    };
+
+    const setSelectedIds = (ids) => {
+        hiddenInput.value = ids.length > 0 ? JSON.stringify(ids) : '';
+        hiddenInput.dispatchEvent(new Event('input', { bubbles: true }));
+    };
+
+    tagsContainer.addEventListener('click', function(e) {
+        const tag = e.target.closest('.activity-tag');
+        if (!tag) return;
+
+        const value = tag.dataset.value;
+        let selectedIds = getSelectedIds();
+        const index = selectedIds.indexOf(value);
+
+        if (index >= 0) {
+            selectedIds.splice(index, 1);
+            tag.classList.remove('selected');
+            tag.setAttribute('aria-pressed', 'false');
+        } else {
+            selectedIds.push(value);
+            tag.classList.add('selected');
+            tag.setAttribute('aria-pressed', 'true');
+        }
+
+        setSelectedIds(selectedIds);
+    });
 }

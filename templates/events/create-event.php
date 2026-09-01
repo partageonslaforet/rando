@@ -88,6 +88,15 @@ try {
     $categories = $categoryManager->getAllActive();
     error_log("✅ Catégories récupérées : " . count($categories));
 
+    // Récupérer les tags déjà associés au brouillon en mode édition
+    $draftTagIds = [];
+    if ($isEditMode && $draft_id) {
+        $stmt = $db->prepare("SELECT category_id FROM draft_event_category_links WHERE draft_event_id = ?");
+        $stmt->execute([$draft_id]);
+        $draftTagIds = $stmt->fetchAll(PDO::FETCH_COLUMN);
+        error_log("✅ Tags du brouillon récupérés : " . implode(',', $draftTagIds));
+    }
+
     // Récupérer les profils organisateurs de l'utilisateur
     $organizerManager = new OrganizerProfile($db);
     error_log("✅ OrganizerProfile initialisé");
@@ -555,19 +564,21 @@ async function removeSecondaryImage(event, imageId) {
                                     </div>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="category" class="form-label required-field">Catégorie</label>
-                                    <select class="form-select" id="category" name="category" required>
-                                        <option value="">Sélectionnez une catégorie</option>
+                                    <label class="form-label required-field">Tags d'activité</label>
+                                    <div class="activity-tags" id="activityTags" role="group" aria-label="Tags d'activité">
                                         <?php foreach ($categories as $category): ?>
-                                            <option value="<?= htmlspecialchars($category['id']) ?>" 
-                                                    data-icon="<?= htmlspecialchars($category['icon'] ?? '') ?>"
-                                                    data-color="<?= htmlspecialchars($category['color'] ?? '') ?>">
+                                            <button type="button" 
+                                                    class="activity-tag<?= in_array($category['id'], $draftTagIds) ? ' selected' : '' ?>" 
+                                                    data-value="<?= htmlspecialchars($category['id']) ?>"
+                                                    data-code="<?= htmlspecialchars($category['code'] ?? '') ?>"
+                                                    aria-pressed="<?= in_array($category['id'], $draftTagIds) ? 'true' : 'false' ?>">
                                                 <?= htmlspecialchars($category['name']) ?>
-                                            </option>
+                                            </button>
                                         <?php endforeach; ?>
-                                    </select>
+                                    </div>
+                                    <input type="hidden" id="categories" name="categories" value="<?= htmlspecialchars(json_encode(array_map('intval', $draftTagIds))) ?>" required>
                                     <div class="invalid-feedback">
-                                        Veuillez sélectionner une catégorie
+                                        Veuillez sélectionner au moins un tag
                                     </div>
                                 </div>
                             </div>

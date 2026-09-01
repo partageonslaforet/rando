@@ -61,9 +61,9 @@ try {
             $params[':type'] = $type;
         }
 
-        // Filtre par catégorie
+        // Filtre par catégorie (au moins un tag correspondant)
         if ($category && $category !== 'all') {
-            $baseQuery .= " AND e.category_id = :category";
+            $baseQuery .= " AND e.id IN (SELECT event_id FROM event_category_links WHERE category_id = :category)";
             $params[':category'] = $category;
         }
 
@@ -120,13 +120,13 @@ try {
             $stmt->execute($params);
             $events = $stmt->fetchAll();
             
-            // Récupérer les catégories pour tous les événements
+            // Récupérer les catégories (tags) pour tous les événements
             if (!empty($events)) {
                 $eventIds = array_column($events, 'id');
-                $categoriesQuery = "SELECT e.id as event_id, c.name as category_name, c.icon as category_icon, c.color as category_color 
-                                FROM events e 
-                                LEFT JOIN event_categories c ON e.category_id = c.id 
-                                WHERE e.id IN (" . implode(',', array_fill(0, count($eventIds), '?')) . ")";
+                $categoriesQuery = "SELECT ecl.event_id, ecl.category_id, c.name, c.icon, c.color 
+                                FROM event_category_links ecl 
+                                JOIN event_categories c ON ecl.category_id = c.id 
+                                WHERE ecl.event_id IN (" . implode(',', array_fill(0, count($eventIds), '?')) . ")";
                 
                 $categoryStmt = $pdo->prepare($categoriesQuery);
                 $categoryStmt->execute($eventIds);
@@ -135,17 +135,24 @@ try {
                 // Associer les catégories aux événements
                 $categoryMap = [];
                 foreach ($categories as $category) {
-                    $categoryMap[$category['event_id']] = [
-                        'category_name' => $category['category_name'],
-                        'category_icon' => $category['category_icon'],
-                        'category_color' => $category['category_color']
-                    ];
+                    $eventId = $category['event_id'];
+                    if (!isset($categoryMap[$eventId])) {
+                        $categoryMap[$eventId] = [
+                            'category_name' => $category['name'],
+                            'category_icon' => $category['icon'],
+                            'category_color' => $category['color'],
+                            'category_ids' => []
+                        ];
+                    }
+                    $categoryMap[$eventId]['category_ids'][] = (int)$category['category_id'];
                 }
                 
                 // Ajouter les informations de catégorie à chaque événement
                 foreach ($events as &$event) {
                     if (isset($categoryMap[$event['id']])) {
                         $event = array_merge($event, $categoryMap[$event['id']]);
+                    } else {
+                        $event['category_ids'] = [];
                     }
                 }
                 unset($event);
@@ -181,8 +188,12 @@ try {
 
             error_log("Nombre d'événements trouvés: " . count($events));
 
-            // Requête pour les compteurs par catégorie
-            $countQuery = "SELECT category_id, COUNT(*) as count FROM events WHERE status = 'published' GROUP BY category_id";
+            // Requête pour les compteurs par catégorie (basée sur les tags)
+            $countQuery = "SELECT ecl.category_id, COUNT(DISTINCT ecl.event_id) as count 
+                           FROM event_category_links ecl 
+                           JOIN events e ON ecl.event_id = e.id 
+                           WHERE e.status = 'published' 
+                           GROUP BY ecl.category_id";
             $countStmt = $pdo->query($countQuery);
             $categoryCounts = $countStmt->fetchAll();
 
@@ -190,8 +201,10 @@ try {
             $counts = ['all' => 0];
             foreach ($categoryCounts as $count) {
                 $counts[$count['category_id']] = (int)$count['count'];
-                $counts['all'] += (int)$count['count'];
             }
+
+            $totalStmt = $pdo->query("SELECT COUNT(*) FROM events WHERE status = 'published'");
+            $counts['all'] = (int)$totalStmt->fetchColumn();
 
             // Préparation de la réponse
             $response = [

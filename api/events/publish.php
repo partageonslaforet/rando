@@ -95,7 +95,44 @@ try {
             throw new Exception("Erreur lors de l'insertion de l'événement: " . $e->getMessage());
         }
 
-        // 2. Copier les images
+        // 2. Associer les tags et synchroniser category_id
+        log_message("🔄 Association des tags d'activité");
+        try {
+            $stmt = $pdo->prepare("
+                INSERT INTO event_category_links (event_id, category_id)
+                SELECT ?, category_id FROM draft_event_category_links WHERE draft_event_id = ?
+            ");
+            $stmt->execute([$eventId, $draftId]);
+            log_message("✅ Tags associés");
+
+            // Synchroniser category et category_id avec le premier tag
+            $stmt = $pdo->prepare("
+                UPDATE events e
+                SET e.category_id = (
+                    SELECT dcl.category_id 
+                    FROM draft_event_category_links dcl 
+                    WHERE dcl.draft_event_id = ? 
+                    ORDER BY dcl.category_id ASC 
+                    LIMIT 1
+                ),
+                e.category = (
+                    SELECT c.code 
+                    FROM draft_event_category_links dcl 
+                    JOIN event_categories c ON dcl.category_id = c.id 
+                    WHERE dcl.draft_event_id = ? 
+                    ORDER BY dcl.category_id ASC 
+                    LIMIT 1
+                )
+                WHERE e.id = ?
+            ");
+            $stmt->execute([$draftId, $draftId, $eventId]);
+            log_message("✅ Category_id synchronisé");
+        } catch (PDOException $e) {
+            log_message("❌ Erreur lors de l'association des tags: " . $e->getMessage(), true);
+            throw new Exception("Erreur lors de l'association des tags");
+        }
+
+        // 3. Copier les images
         log_message("🔄 Copie des images");
         try {
             $stmt = $pdo->prepare("

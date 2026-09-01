@@ -106,10 +106,11 @@ function applyFilters(event, filters) {
     }
 
     if (filters.category && filters.category !== 'all') {
-        const result = event.category_id === parseInt(filters.category);
+        const eventCategories = event.category_ids || (event.category_id ? [event.category_id] : []);
+        const result = eventCategories.includes(parseInt(filters.category));
         console.log('📑 Filtre catégorie:', {
             category: filters.category,
-            eventCategory: event.category_id,
+            eventCategory: eventCategories,
             passed: result
         });
         if (!result) return false;
@@ -175,8 +176,10 @@ function updateCounters(allEvents) {
     };
 
     eventsInPeriod.forEach(event => {
-        const categoryId = event.category_id;
-        categoryCounts.categories[categoryId] = (categoryCounts.categories[categoryId] || 0) + 1;
+        const categoryIds = event.category_ids || (event.category_id ? [event.category_id] : []);
+        categoryIds.forEach(categoryId => {
+            categoryCounts.categories[categoryId] = (categoryCounts.categories[categoryId] || 0) + 1;
+        });
     });
 
     // Mise à jour des badges de catégories
