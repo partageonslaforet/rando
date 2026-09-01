@@ -441,7 +441,7 @@ async function removeSecondaryImage(event, imageId) {
                         <!-- Adresse du jour -->
                         <div class="card mb-4">
                             <div class="card-body">
-                                <h3 class="card-title">Adresse du jour</h3>
+                                <!-- <h3 class="card-title">Adresse du jour</h3> -->
                                 <p class="form-intro">Indiquez le point de rendez-vous de l'activité.</p>
                                 <div class="mb-3">
                                     <label for="meeting_name" class="form-label">Nom du local</label>
@@ -646,9 +646,9 @@ async function removeSecondaryImage(event, imageId) {
                                 <i class="bi bi-save"></i> Enregistrer en brouillon
                             </button>
                         </div>
-                        <button type="button" id="nextStepIcon" class="btn-next-step" onclick="nextStep()" aria-label="Continuer">
+                        <!-- <button type="button" id="nextStepIcon" class="btn-next-step" onclick="nextStep()" aria-label="Continuer">
                             <i class="bi bi-arrow-down-circle-fill"></i>
-                        </button>
+                        </button> -->
                         <div class="form-nav-right">
                             <button type="button" id="nextButton" class="btn btn-primary" onclick="nextStep()">
                                 Continuer : lieu et parcours <i class="bi bi-arrow-right"></i>
