@@ -229,7 +229,7 @@ require_once __DIR__ . '/../../includes/header-solid.php';
                                 <?php foreach ($filteredEvents as $event): ?>
                                     <tr>
                                         <td>
-                                            <strong><?= htmlspecialchars($event['title']) ?></strong>
+                                            <strong><?= htmlspecialchars($event['title'] ?? '') ?></strong>
                                         </td>
                                         <td><?= formatEventDate($event['date']) ?></td>
                                         <td><?= formatTime($event['start_time'] ?? $event['registration_opens'] ?? null) ?></td>
