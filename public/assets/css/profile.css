@@ -262,7 +262,7 @@
 .profile-menu-item.active {
     background: rgba(58, 138, 61, 0.12);
     border-color: transparent;
-    color: var(--profile-green);
+    color: var(--profile-green) !important;
 }
 
 .profile-menu-item.active i {

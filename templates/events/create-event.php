@@ -420,21 +420,28 @@ async function removeSecondaryImage(event, imageId) {
     </div>
 </div>
 
-<div class="min-h-screen background-color">
-    <div class="create-event-header">
-        <div class="container">
-            <nav class="page-breadcrumb" aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="/user/my-events.php">Mes événements</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Créer un événement</li>
-                </ol>
-            </nav>
-            <h1 class="page-title">Créer un événement</h1>
-            <p class="page-subtitle">Complétez les informations essentielles. Vous pourrez enregistrer un brouillon à tout moment.</p>
-        </div>
-    </div>
+<div class="modal fade" id="createEventModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="createEventModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="createEventModalLabel">Créer un événement</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+            </div>
+            <div class="modal-body">
+                <div class="create-event-header">
+                    <div class="container">
+                        <nav class="page-breadcrumb" aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="/user/my-events.php">Mes événements</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Créer un événement</li>
+                            </ol>
+                        </nav>
+                        <h1 class="page-title">Créer un événement</h1>
+                        <p class="page-subtitle">Complétez les informations essentielles. Vous pourrez enregistrer un brouillon à tout moment.</p>
+                    </div>
+                </div>
 
-    <div class="container py-5">
+                <div class="container py-5">
         <div class="row justify-content-center">
             <div class="col-lg-8">
                 <!-- Steps -->
@@ -726,8 +733,14 @@ async function removeSecondaryImage(event, imageId) {
         </div>
     </div>
 </div>
+            </div>
+        </div>
+    </div>
+</div>
 
+<?php if (empty($createModalOnly) || !$createModalOnly): ?>
 <?php require_once __DIR__ . '/../../includes/footer.php'; ?>
+<?php endif; ?>
 
 <!-- Scripts -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-gpx/1.7.0/gpx.min.js"></script>
@@ -762,5 +775,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Initialisation des champs de date
     flatpickr(".flatpickr-date", dateConfig);
+
+    <?php if (empty($createModalOnly)): ?>
+    // Ouvrir le modal automatiquement en page dédiée
+    const createEventModal = document.getElementById('createEventModal');
+    if (createEventModal && typeof bootstrap !== 'undefined') {
+        new bootstrap.Modal(createEventModal).show();
+    }
+    <?php endif; ?>
 });
 </script>

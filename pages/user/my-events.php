@@ -136,10 +136,10 @@ require_once __DIR__ . '/../../includes/header-solid.php';
             <h1 id="events-hero-title">Mes événements</h1>
             <p>Créez, suivez et gérez les événements que vous proposez.</p>
         </div>
-        <a href="/templates/events/create-event.php" class="btn btn-create">
+        <button type="button" class="btn btn-create" data-bs-toggle="modal" data-bs-target="#createEventModal">
             <i class="bi bi-plus" aria-hidden="true"></i>
             Créer un événement
-        </a>
+        </button>
     </section>
 
     <section class="my-events-card" aria-labelledby="events-section-title">
@@ -178,10 +178,10 @@ require_once __DIR__ . '/../../includes/header-solid.php';
                     <span class="my-events-empty-icon" aria-hidden="true">+</span>
                     <h3>Créez votre premier événement</h3>
                     <p>Proposez une randonnée, un parcours VTT ou une activité nature. Vous pourrez l’enregistrer en brouillon avant de le soumettre.</p>
-                    <a href="/templates/events/create-event.php" class="btn btn-create">
+                    <button type="button" class="btn btn-create" data-bs-toggle="modal" data-bs-target="#createEventModal">
                         <i class="bi bi-plus" aria-hidden="true"></i>
                         Créer un événement
-                    </a>
+                    </button>
                 </div>
             <?php else: ?>
                 <div class="events-table">
@@ -236,5 +236,7 @@ require_once __DIR__ . '/../../includes/header-solid.php';
         </div>
     </section>
 </main>
+
+<?php $createModalOnly = true; require_once __DIR__ . '/../../templates/events/create-event.php'; ?>
 
 <?php require_once __DIR__ . '/../../includes/footer.php'; ?>
