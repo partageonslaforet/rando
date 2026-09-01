@@ -464,8 +464,8 @@ async function removeSecondaryImage(event, imageId) {
                                     <input type="text" class="form-control" id="meeting_name" name="meeting_name" value="<?= htmlspecialchars($draft['meeting_name'] ?? '') ?>" placeholder="Ex. Parking de l'église">
                                 </div>
                                 <div class="mb-3">
-                                    <label for="meeting_address" class="form-label">Adresse du point de rendez-vous</label>
-                                    <input type="text" class="form-control" id="meeting_address" name="meeting_address" value="<?= htmlspecialchars($draft['meeting_address'] ?? '') ?>" placeholder="Rue, numéro, localité">
+                                    <label for="meeting_address" class="form-label required-field">Adresse du point de rendez-vous</label>
+                                    <input type="text" class="form-control" id="meeting_address" name="meeting_address" value="<?= htmlspecialchars($draft['meeting_address'] ?? '') ?>" placeholder="Rue, numéro, localité" required>
                                 </div>
                                 <input type="hidden" id="meeting_coordinates" name="meeting_coordinates" value="<?= htmlspecialchars($draft['meeting_coordinates'] ?? '') ?>">
                                 <div class="mb-3">
