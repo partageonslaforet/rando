@@ -228,6 +228,7 @@
 
 .profile-menu::-webkit-scrollbar {
     display: none;
+    color: var(--profile-muted)!important;
 }
 
 .profile-menu-item {
@@ -249,12 +250,12 @@
 
 .profile-menu-item i {
     font-size: 1rem;
-    color: var(--profile-muted);
+    color: var(--profile-muted)!important;
 }
 
 .profile-menu-item:hover,
 .profile-menu-item:focus {
-    color: var(--profile-green);
+    color: var(--profile-green)!important;
     background: rgba(58, 138, 61, 0.05);
     outline: none;
 }
@@ -277,6 +278,11 @@
     background: currentColor;
     flex-shrink: 0;
 }
+
+.form-control {
+    border-color: var(--profile-border)!important;
+}
+
 
 @media (min-width: 768px) and (max-width: 1023px) {
     .profile-menu {

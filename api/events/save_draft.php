@@ -113,6 +113,9 @@ try {
         'location' => $_POST['location_name'] ?? null,
         'venue' => $_POST['address'] ?? null,
         'coordinates' => $_POST['coordinates'] ?? null,
+        'meeting_name' => $_POST['meeting_name'] ?? null,
+        'meeting_address' => $_POST['meeting_address'] ?? null,
+        'meeting_coordinates' => $_POST['meeting_coordinates'] ?? null,
         'updated_at' => date('Y-m-d H:i:s')
     ];
 

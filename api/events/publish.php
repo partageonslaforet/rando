@@ -80,12 +80,16 @@ try {
             INSERT INTO events (
                 user_id, title, description, date,
                 registration_opens, registration_closes,
-                location, venue, coordinates, status
+                location, venue, coordinates,
+                meeting_name, meeting_address, meeting_coordinates,
+                status
             ) 
             SELECT 
                 user_id, title, description, date,
                 registration_opens, registration_closes,
-                location, venue, coordinates, 'pending'
+                location, venue, coordinates,
+                meeting_name, meeting_address, meeting_coordinates,
+                'pending'
             FROM draft_events WHERE id = ?
         ");
         try {

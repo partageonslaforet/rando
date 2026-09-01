@@ -51,7 +51,7 @@ if ($draft_id) {
     // Mode édition : vérifier que le brouillon existe et appartient à l'utilisateur
     try {
         $db = getConnection();
-        $stmt = $db->prepare("SELECT id FROM event_drafts WHERE id = ? AND user_id = ?");
+        $stmt = $db->prepare("SELECT id FROM draft_events WHERE id = ? AND user_id = ?");
         $stmt->execute([$draft_id, $_SESSION['user_id']]);
         if (!$stmt->fetch()) {
             error_log("❌ Brouillon non trouvé ou non autorisé");
@@ -527,6 +527,26 @@ async function removeSecondaryImage(event, imageId) {
                         </div>
 
                         <input type="hidden" id="organizerId" name="organizerId" value="">
+
+                        <!-- Adresse du jour -->
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <h3 class="card-title">Adresse du jour</h3>
+                                <p class="form-intro">Indiquez le point de rendez-vous de l'activité.</p>
+                                <div class="mb-3">
+                                    <label for="meeting_name" class="form-label">Nom du local</label>
+                                    <input type="text" class="form-control" id="meeting_name" name="meeting_name" placeholder="Ex. Parking de l'église">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="meeting_address" class="form-label">Adresse</label>
+                                    <input type="text" class="form-control" id="meeting_address" name="meeting_address" placeholder="Rue, numéro, localité">
+                                </div>
+                                <input type="hidden" id="meeting_coordinates" name="meeting_coordinates">
+                                <div class="mb-3">
+                                    <div id="meetingMap" style="height: 300px; border-radius: 8px; width: 100%;"></div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Step 2 -->
@@ -783,5 +803,69 @@ document.addEventListener('DOMContentLoaded', function() {
         new bootstrap.Modal(createEventModal).show();
     }
     <?php endif; ?>
+});
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const meetingMapEl = document.getElementById('meetingMap');
+    if (!meetingMapEl || typeof L === 'undefined') return;
+
+    const meetingMap = L.map(meetingMapEl).setView([50.5039, 4.4699], 8);
+    window.meetingMap = meetingMap;
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(meetingMap);
+
+    const createEventModalEl = document.getElementById('createEventModal');
+    if (createEventModalEl) {
+        createEventModalEl.addEventListener('shown.bs.modal', function() {
+            if (window.meetingMap) window.meetingMap.invalidateSize();
+        });
+    }
+
+    let meetingMarker = null;
+    const addressInput = document.getElementById('meeting_address');
+    const coordsInput = document.getElementById('meeting_coordinates');
+
+    function setMeetingMarker(lat, lng) {
+        if (meetingMarker) {
+            meetingMap.removeLayer(meetingMarker);
+        }
+        meetingMarker = L.marker([lat, lng]).addTo(meetingMap);
+        meetingMap.setView([lat, lng], 15);
+        if (coordsInput) {
+            coordsInput.value = lat + ',' + lng;
+        }
+    }
+
+    if (addressInput) {
+        addressInput.addEventListener('change', function() {
+            const address = addressInput.value.trim();
+            if (!address) return;
+            fetch('https://nominatim.openstreetmap.org/search?q=' + encodeURIComponent(address) + '&limit=1&format=json')
+                .then(response => response.json())
+                .then(data => {
+                    if (data && data.length > 0) {
+                        setMeetingMarker(parseFloat(data[0].lat), parseFloat(data[0].lon));
+                    }
+                })
+                .catch(error => console.error('Géocodage impossible:', error));
+        });
+    }
+
+    meetingMap.on('click', function(e) {
+        setMeetingMarker(e.latlng.lat, e.latlng.lng);
+        if (addressInput) {
+            fetch('https://nominatim.openstreetmap.org/reverse?lat=' + e.latlng.lat + '&lon=' + e.latlng.lng + '&zoom=18&format=json')
+                .then(response => response.json())
+                .then(data => {
+                    if (data && data.display_name) {
+                        addressInput.value = data.display_name;
+                    }
+                })
+                .catch(error => console.error('Géocodage inverse impossible:', error));
+        }
+    });
 });
 </script>
