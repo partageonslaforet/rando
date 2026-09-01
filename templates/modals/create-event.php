@@ -766,6 +766,14 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    // Place un marqueur initial si les coordonnées ou l'adresse sont déjà renseignées
+    const initialCoords = coordsInput && coordsInput.value ? coordsInput.value.split(',').map(parseFloat) : null;
+    if (initialCoords && initialCoords.length === 2 && !isNaN(initialCoords[0]) && !isNaN(initialCoords[1])) {
+        setMeetingMarker(initialCoords[0], initialCoords[1]);
+    } else if (addressInput && addressInput.value.trim()) {
+        addressInput.dispatchEvent(new Event('change'));
+    }
+
     if (addressInput) {
         addressInput.addEventListener('change', function() {
             const address = addressInput.value.trim();
