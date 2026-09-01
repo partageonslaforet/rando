@@ -26,9 +26,9 @@
 }
 
 .create-event-header .breadcrumb {
-    --bs-breadcrumb-divider: '>';
+    --bs-breadcrumb-divider: ' / ';
     font-size: 0.85rem;
-    margin-bottom: 0.75rem;
+    margin-bottom: 0.5rem;
     padding: 0;
     color: #6b7a6e;
 }
@@ -51,8 +51,14 @@
 .create-event-header .page-title {
     font-size: 2rem;
     font-weight: 700;
-    margin-bottom: 0;
+    margin-bottom: 0.25rem;
     color: #1F3320;
+}
+
+.create-event-header .page-subtitle {
+    font-size: 1rem;
+    color: #6b7a6e;
+    margin-bottom: 0;
 }
 
 .eventTitle {
@@ -296,8 +302,19 @@ input[type="time"]:focus {
 
 /* Navigation principale du formulaire */
 .form-navigation {
+    display: flex;
+    justify-content: space-between;
     align-items: center;
+    position: relative;
     padding: 0 0.5rem;
+    min-height: 3rem;
+}
+
+.form-nav-left,
+.form-nav-right {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
 .form-navigation .btn {
@@ -329,6 +346,31 @@ input[type="time"]:focus {
 .form-navigation #saveDraftButton:hover {
     background-color: var(--secondary-color) !important;
     color: #fff !important;
+}
+
+/* Bouton fléché noir centré */
+.btn-next-step {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    background: transparent;
+    border: none;
+    padding: 0;
+    font-size: 2rem;
+    line-height: 1;
+    color: #1a1a1a;
+    transition: transform 0.2s ease;
+}
+
+.btn-next-step:hover {
+    transform: translate(-50%, -50%) scale(1.1);
+    color: #1a1a1a;
+}
+
+.btn-next-step.d-none {
+    display: none !important;
 }
 
 /* Image upload styling */

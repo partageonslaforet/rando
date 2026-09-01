@@ -1166,6 +1166,7 @@ function updateButtons() {
     const prevButton = document.getElementById('prevButton');
     const publishButton = document.getElementById('publishButton');
     const saveDraftButton = document.getElementById('saveDraftButton');
+    const nextStepIcon = document.getElementById('nextStepIcon');
     
     if (prevButton) {
         if (currentStep === 1) {
@@ -1190,6 +1191,10 @@ function updateButtons() {
 
     if (saveDraftButton) {
         saveDraftButton.classList.toggle('d-none', currentStep !== 1);
+    }
+
+    if (nextStepIcon) {
+        nextStepIcon.classList.toggle('d-none', currentStep === 3);
     }
 
     if (publishButton) {

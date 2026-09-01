@@ -436,6 +436,7 @@ async function removeSecondaryImage(event, imageId) {
                 </ol>
             </nav>
             <h1 class="page-title">Créer un événement</h1>
+            <p class="page-subtitle">Complétez les informations essentielles. Vous pourrez enregistrer un brouillon à tout moment.</p>
         </div>
     </div>
 
@@ -507,7 +508,7 @@ async function removeSecondaryImage(event, imageId) {
                                     </div>
                                     <div class="col-md-4">
                                         <label for="date" class="form-label">Date</label>
-                                        <input type="text" class="form-control flatpickr-date" id="date" name="date" placeholder="jj/mm/aaaa" required>
+                                        <input type="text" class="form-control flatpickr-date" id="date" name="date" placeholder="jj / mm / aaaa" required>
                                     </div>
                                     <div class="col-md-4">
                                         <label for="startTime" class="form-label">Heure de départ</label>
@@ -518,11 +519,11 @@ async function removeSecondaryImage(event, imageId) {
                                 <div class="row g-3">
                                     <div class="col-md-6">
                                         <label for="registrationOpens" class="form-label">Ouverture des inscriptions</label>
-                                        <input type="text" class="form-control flatpickr-date" id="registrationOpens" name="registrationOpens" placeholder="jj/mm/aaaa" required>
+                                        <input type="text" class="form-control flatpickr-date" id="registrationOpens" name="registrationOpens" placeholder="jj / mm / aaaa" required>
                                     </div>
                                     <div class="col-md-6">
                                         <label for="registrationCloses" class="form-label">Fermeture des inscriptions</label>
-                                        <input type="text" class="form-control flatpickr-date" id="registrationCloses" name="registrationCloses" placeholder="jj/mm/aaaa" required>
+                                        <input type="text" class="form-control flatpickr-date" id="registrationCloses" name="registrationCloses" placeholder="jj / mm / aaaa" required>
                                     </div>
                                 </div>
                             </div>
@@ -779,8 +780,8 @@ async function removeSecondaryImage(event, imageId) {
                     </div>
 
                     <!-- Navigation Buttons -->
-                    <div class="mt-4 d-flex justify-content-between form-navigation">
-                        <div>
+                    <div class="mt-4 form-navigation">
+                        <div class="form-nav-left">
                             <button type="button" id="prevButton" class="btn btn-secondary" onclick="prevStep()">
                                 <i class="bi bi-arrow-left"></i> Précédent
                             </button>
@@ -788,7 +789,10 @@ async function removeSecondaryImage(event, imageId) {
                                 <i class="bi bi-save"></i> Enregistrer en brouillon
                             </button>
                         </div>
-                        <div>
+                        <button type="button" id="nextStepIcon" class="btn-next-step" onclick="nextStep()" aria-label="Continuer">
+                            <i class="bi bi-arrow-down-circle-fill"></i>
+                        </button>
+                        <div class="form-nav-right">
                             <button type="button" id="nextButton" class="btn btn-primary" onclick="nextStep()">
                                 Continuer : lieu et parcours <i class="bi bi-arrow-right"></i>
                             </button>
