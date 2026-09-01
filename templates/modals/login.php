@@ -5,7 +5,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <div class="auth-icon" aria-hidden="true">
-                    <i class="bi bi-person-circle"></i>
+                    <i class="bi bi-arrow-up-right"></i>
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
             </div>
@@ -15,8 +15,8 @@
                 <div class="auth-alert auth-alert-danger" id="loginError" style="display: none;"></div>
                 <form id="loginForm" method="post">
                     <div class="mb-3">
-                        <label for="loginEmail" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="loginEmail" name="email" required placeholder="votre@email.com">
+                        <label for="loginEmail" class="form-label">Adresse e-mail</label>
+                        <input type="email" class="form-control" id="loginEmail" name="email" required placeholder="vous@exemple.be">
                     </div>
                     <div class="mb-3">
                         <label for="loginPassword" class="form-label">Mot de passe</label>
@@ -41,7 +41,12 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <p class="auth-footer">Vous n'avez pas encore de compte ? <a href="#" class="auth-link" onclick="showRegisterModal(); return false;">Créer un compte</a></p>
+                <div class="auth-separator"><span>ou</span></div>
+                <p class="auth-footer">
+                    Vous n'avez pas encore de compte ?
+                    <i class="bi bi-arrow-down-circle-fill" aria-hidden="true" style="color: #1a1a1a; font-size: 1rem; vertical-align: middle; margin: 0 0.25rem;"></i>
+                    <a href="#" class="auth-link" onclick="showRegisterModal(); return false;">Créer un compte</a>
+                </p>
             </div>
         </div>
     </div>
