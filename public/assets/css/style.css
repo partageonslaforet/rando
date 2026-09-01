@@ -21,6 +21,7 @@
     --profile-bg: #f6f9f7;
     --profile-card: #ffffff;
     --profile-border: #E5EBE5;
+    --profile-background: #F7FAF7;
     --profile-hero-bg: rgba(58, 138, 61, 0.06);
     --profile-green: var(--secondary-color, #3A8A3D);
     --profile-green-hover: var(--secondary-hover, #2d6c2f);
@@ -128,17 +129,6 @@
     }
 }
 
-/* Styles personnalisés */
-
-/* Reset pour assurer le full width */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    color: white;
-    border-color: var(--secondary-color) !important;
-    font-weight: 500;
-}
 
 /* Styles généraux */
 body {
@@ -1384,7 +1374,7 @@ body.dark-theme .modal a:hover {
 
 
 /* Styles pour les étapes */
-.steps {
+/* .steps {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -1449,10 +1439,10 @@ body.dark-theme .modal a:hover {
 .rogress-bar{
     color: var(--primary-color);
     
-}
+} */
 
 /* Styles pour les étapes */
-.steps {
+/* .steps {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -1477,9 +1467,9 @@ body.dark-theme .modal a:hover {
     background: transparent;
     padding: 0 1rem;
     text-align: center;
-}
+} */
 
-.step-button {
+/* .step-button {
     width: 40px;
     height: 40px;
     border-radius: 50%;
@@ -1512,7 +1502,7 @@ body.dark-theme .modal a:hover {
     margin-top: 0.5rem;
     font-size: 0.875rem;
     color: var(--primary-color);
-}
+} */
 
 /* Progress bar */
 .progress-bar {

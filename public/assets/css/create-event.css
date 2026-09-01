@@ -17,11 +17,15 @@
     --background-color: #dfe2e6;
 }
 
+.modal-content{
+   background-color: var(--profile-background); 
+}
+
+
+
 /* Page header */
 .create-event-header {
-    background: #F7FAF7;
     color: #1F3320;
-    padding: 2.5rem 0 0.5rem;
     margin-bottom: 0;
 }
 
@@ -53,6 +57,7 @@
     font-weight: 700;
     margin-bottom: 0.25rem;
     color: #1F3320;
+    padding: 1rem 0;
 }
 
 .create-event-header .page-subtitle {
@@ -71,7 +76,6 @@
     align-items: center;
     margin: 2rem 0 2.5rem;
     padding: 0;
-    border-bottom: 1px solid #e5e5e5;
     list-style: none;
 }
 
@@ -87,10 +91,11 @@
     gap: 0.75rem;
     padding: 0.75rem 0.5rem;
     color: #888;
-    border-bottom: 2px solid transparent;
+    border-bottom: 1px solid var(--profile-muted) !important;
     cursor: pointer;
     transition: color 0.3s ease, border-color 0.3s ease;
     text-decoration: none;
+    margin-right: 1rem;
 }
 
 .step-button {
@@ -98,8 +103,8 @@
     width: 36px;
     height: 36px;
     background: white;
-    border: 1px solid #ccc;
-    color: #666;
+    border: 1px solid var(--profile-muted) !important;
+    color: var(--profile-muted)!important;
     font-weight: 600;
     font-size: 0.95rem;
     display: inline-flex;
@@ -109,23 +114,24 @@
     line-height: 1;
     transition: all 0.3s ease;
     cursor: pointer;
-}
+} 
 
 .step-button:hover {
-    border-color: var(--secondary-color);
-    color: var(--secondary-color);
+    border-color: var(--profile-muted) !important;
+    color: var(--profile-muted) !important;
 }
 
 .step.active {
-    color: var(--secondary-color);
-    border-bottom-color: var(--secondary-color);
     font-weight: 600;
+    border-bottom: 2px solid var(--secondary-color) !important;
+    color: var(--secondary-color);
 }
 
 .step.active .step-button {
     background: var(--secondary-color);
-    border-color: var(--secondary-color);
-    color: white;
+    color: white !important;
+    border-radius: 50%;
+    border-color: var(--secondary-color) !important;
 }
 
 .step[data-title]::after {
@@ -1070,7 +1076,6 @@ input[type="time"]:focus {
 }
 
 .container {
-    margin-top: 3rem;
     text-align: center;     
 }
 
@@ -1152,11 +1157,16 @@ input[type="time"]:focus {
     color: #1F3320;
     font-weight: 600;
     margin-bottom: 0.35rem;
+    text-align: left;
 }
 
 .form-select {
     background-size: 1rem;
     padding-right: 2.25rem;
+}
+
+.form-control {
+    border-color: var(--profile-border) !important;
 }
 
 /* Ajustements pour 3 étapes */
@@ -1166,8 +1176,8 @@ input[type="time"]:focus {
 
 /* Largeur de la modale Créer un événement */
 #createEventDialog {
-    max-width: 75%;
-    width: 75%;
+    max-width: 65%;
+    width: 65%;
     margin: auto;
 }
 

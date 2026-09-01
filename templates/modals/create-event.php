@@ -350,9 +350,9 @@ async function removeSecondaryImage(event, imageId) {
                     </div>
                 </div>
 
-                <div class="container py-5">
+                <div class="container py-2">
         <div class="row justify-content-center">
-            <div class="col-lg-8">
+            <div class="col-lg-10">
                 <!-- Steps -->
                 <div class="steps mb-5 three-steps">
                     <div class="step active" data-step="1" data-title="L'événement">
@@ -367,9 +367,9 @@ async function removeSecondaryImage(event, imageId) {
                 </div>
 
                 <!-- Progress Bar -->
-                <div class="progress mb-4">
+                <!-- <div class="progress mb-4">
                     <div id="progressBar" class="progress-bar" role="progressbar" style="width: 20%;" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
-                </div>
+                </div> -->
 
                 <!-- Form -->
                 <form id="createEventForm" class="needs-validation" enctype="multipart/form-data" novalidate>
@@ -406,9 +406,9 @@ async function removeSecondaryImage(event, imageId) {
                                 <div class="row g-3 mb-3">
                                     <div class="col-md-6">
                                         <label class="form-label">Catégories</label>
-                                        <div class="category-checkboxes">
+                                        <div class="category-checkboxes d-flex flex-column align-items-start">
                                             <?php foreach ($categories as $cat): ?>
-                                                <div class="form-check form-check-inline">
+                                                <div class="form-check">
                                                     <input class="form-check-input" type="checkbox" id="cat_<?= (int) $cat['id'] ?>" name="categories[]" value="<?= (int) $cat['id'] ?>" <?= in_array((int) $cat['id'], $draftCategories) ? 'checked' : '' ?>>
                                                     <label class="form-check-label" for="cat_<?= (int) $cat['id'] ?>"><?= htmlspecialchars($cat['name']) ?></label>
                                                 </div>
@@ -417,19 +417,20 @@ async function removeSecondaryImage(event, imageId) {
                                         <div class="invalid-feedback">Veuillez choisir au moins une catégorie</div>
                                     </div>
                                     <div class="col-md-6">
-                                        <label for="date" class="form-label">Date</label>
-                                        <input type="text" class="form-control flatpickr-date" id="date" name="date" placeholder="jj / mm / aaaa" required>
-                                    </div>
-                                </div>
-
-                                <div class="row g-3">
-                                    <div class="col-md-6">
-                                        <label for="registrationOpens" class="form-label">Ouverture des inscriptions</label>
-                                        <input type="text" class="form-control time-picker-input" id="registrationOpens" name="registrationOpens" placeholder="00:00" required>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="registrationCloses" class="form-label">Fermeture des inscriptions</label>
-                                        <input type="text" class="form-control time-picker-input" id="registrationCloses" name="registrationCloses" placeholder="00:00" required>
+                                        <div class="mb-3">
+                                            <label for="date" class="form-label">Date</label>
+                                            <input type="text" class="form-control flatpickr-date" id="date" name="date" placeholder="jj / mm / aaaa" required>
+                                        </div>
+                                        <div class="row g-3">
+                                            <div class="col-6">
+                                                <label for="registrationOpens" class="form-label">Ouverture des inscriptions</label>
+                                                <input type="text" class="form-control time-picker-input" id="registrationOpens" name="registrationOpens" placeholder="00:00" required>
+                                            </div>
+                                            <div class="col-6">
+                                                <label for="registrationCloses" class="form-label">Fermeture des inscriptions</label>
+                                                <input type="text" class="form-control time-picker-input" id="registrationCloses" name="registrationCloses" placeholder="00:00" required>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
