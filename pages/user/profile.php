@@ -149,15 +149,18 @@ require_once __DIR__ . '/../../includes/header-solid.php';
 
                 <!-- Profil organisateur -->
                 <section class="profile-section <?= $activeTab === 'organizer' ? 'active' : '' ?>" id="organizer" aria-labelledby="organizer-heading">
+                    <?php $hasProfiles = !empty($profiles); ?>
                     <header class="section-header">
                         <div class="d-flex flex-column flex-md-row justify-content-md-between align-items-md-center gap-2">
                             <div>
                                 <h2 id="organizer-heading">Organisateur</h2>
                                 <p>Gérez les profils que vous présentez aux participants.</p>
                             </div>
+                            <!-- Toujours proposer la création d'un nouveau profil -->
                             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#organizerModal">
                                 <i class="bi bi-plus-circle" aria-hidden="true"></i> Nouveau profil
                             </button>
+                            
                         </div>
                     </header>
 
@@ -182,14 +185,15 @@ require_once __DIR__ . '/../../includes/header-solid.php';
                                                     <small class="text-muted">Créé le <?= (new DateTime($profile['created_at']))->format('d/m/Y') ?></small>
                                                 </div>
                                             </div>
-                                            <div class="btn-group">
-                                                <button type="button" class="btn btn-sm btn-outline-primary edit-profile"
+                                            <div class="btn-group" role="group" aria-label="Actions du profil">
+                                                <button type="button" class="btn btn-sm btn-outline-primary edit-profile" title="Modifier" aria-label="Modifier"
+                                                        data-bs-toggle="modal" data-bs-target="#organizerModal"
                                                         data-profile-id="<?= $profile['id'] ?>">
-                                                    <i class="bi bi-pencil" aria-hidden="true"></i>
+                                                    <i class="bi bi-pencil-square" aria-hidden="true"></i>
                                                 </button>
-                                                <button type="button" class="btn btn-sm btn-outline-danger delete-profile"
+                                                <button type="button" class="btn btn-sm btn-outline-danger delete-profile" title="Supprimer" aria-label="Supprimer"
                                                         data-profile-id="<?= $profile['id'] ?>">
-                                                    <i class="bi bi-trash" aria-hidden="true"></i>
+                                                    <i class="bi bi-trash3" aria-hidden="true"></i>
                                                 </button>
                                             </div>
                                         </div>
@@ -261,14 +265,21 @@ require_once __DIR__ . '/../../includes/header-solid.php';
 
 <!-- Modal pour le profil organisateur -->
 <div class="modal fade" id="organizerModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content organizer-modal">
             <form id="organizerProfileForm" class="needs-validation" novalidate enctype="multipart/form-data">
-                <div class="modal-header">
-                    <h5 class="modal-title">Profil Organisateur</h5>
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title visually-hidden">Profil Organisateur</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
+
+                <div class="modal-hero">
+                    <nav class="modal-breadcrumb">Mon compte / Organisateur</nav>
+                    <h3 class="modal-title-hero">Nouveau profil</h3>
+                    <p class="modal-subtitle">Complétez les informations essentielles. Ces informations apparaîtront dans vos publications</p>
+                </div>
+
+                <div class="modal-body pt-3">
                     <input type="hidden" id="profile_id" name="profile_id">
                     
                     <div class="mb-3">
@@ -286,8 +297,9 @@ require_once __DIR__ . '/../../includes/header-solid.php';
                     </div>
 
                     <div class="mb-3">
-                        <label for="org_name" class="form-label">Nom de l'organisation *</label>
+                        <label for="org_name" class="form-label required-field">Nom de l'organisation</label>
                         <input type="text" class="form-control" id="org_name" name="name" required>
+                        <div class="invalid-feedback">Le nom de l’organisation est requis.</div>
                     </div>
                     <div class="mb-3">
                         <label for="org_description" class="form-label">Description</label>
@@ -296,14 +308,16 @@ require_once __DIR__ . '/../../includes/header-solid.php';
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="org_email" class="form-label">Email de contact</label>
-                                <input type="email" class="form-control" id="org_email" name="email">
+                                <label for="org_email" class="form-label required-field">Email de contact</label>
+                                <input type="email" class="form-control" id="org_email" name="email" required>
+                                <div class="invalid-feedback">Veuillez entrer une adresse e-mail valide.</div>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="org_phone" class="form-label">Téléphone</label>
-                                <input type="tel" class="form-control" id="org_phone" name="phone">
+                                <label for="org_phone" class="form-label required-field">Téléphone</label>
+                                <input type="tel" class="form-control" id="org_phone" name="phone" required>
+                                <div class="invalid-feedback">Le numéro de téléphone est requis.</div>
                             </div>
                         </div>
                     </div>
@@ -322,9 +336,9 @@ require_once __DIR__ . '/../../includes/header-solid.php';
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+                <div class="modal-footer d-flex flex-column flex-md-row justify-content-md-end">
+                    <button type="submit" class="btn btn-secondary btn-save">Enregistrer</button>
+                    <button type="button" class="btn btn-secondary btn-cancel" data-bs-dismiss="modal">Annuler</button>
                 </div>
             </form>
         </div>

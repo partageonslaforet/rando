@@ -470,14 +470,16 @@
     background: var(--profile-green);
     border-color: var(--profile-green);
     color: #fff;
-    border-radius: 8px;
-    min-width: 40px;
-    min-height: 40px;
+    border-radius: 8px !important;
+    min-width: 36px;
+    min-height: 36px;
 }
 
-.organizer-profiles .btn-group .btn:hover {
-    background: var(--profile-green-hover);
-    border-color: var(--profile-green-hover);
+.organizer-profiles .btn-group
+ {
+    gap: 10px;
+    border-color: var(--profile-green
+    );
 }
 
 @media (min-width: 768px) {
@@ -535,6 +537,7 @@
     height: 100%;
     object-fit: cover;
 }
+
 
 /* ----------------------------------------------------------------
    Aperçu logo dans le modal
@@ -645,4 +648,117 @@ header .navbar-brand .logo-text {
         opacity: 1;
         transform: translateY(0);
     }
+}
+
+/* ---------------------------------------------------------------
+   Header doux pour la modale Organisateur
+   --------------------------------------------------------------- */
+#organizerModal .organizer-modal {
+    border-radius: 16px;
+    overflow: hidden;
+    background-color: var(--profile-background);
+}
+
+#organizerModal .modal-hero {
+    padding: 16px 2rem;
+}
+
+#organizerModal .modal-breadcrumb {
+    color: #5a6a5d;
+    font-size: .9rem;
+    margin: 0 0 6px;
+}
+
+#organizerModal .modal-title-hero {
+    margin: 0 0 4px;
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+#organizerModal .modal-subtitle {
+    color: #5a6a5d;
+    margin: 0;
+}
+
+/* Empêche le scroll horizontal dans la modale */
+#organizerModal .modal-body {
+    overflow-x: hidden;
+    padding-left: 2rem;
+    padding-right: 2rem;
+}
+
+#organizerProfileForm{
+    overflow-y: auto;
+}
+
+.profile-details{
+    margin-top: 1rem;
+}
+
+/* ---------------------------------------------------------------
+   Footer du popup Organisateur: responsive boutons
+   --------------------------------------------------------------- */
+#organizerModal .modal-footer {
+    gap: 10px;
+}
+
+/* Annule le style global .modal .btn-primary (width:100%, margin-bottom:1rem) */
+#organizerModal .modal-footer .btn {
+    width: 100%;
+    margin: 0;
+}
+
+@media (min-width: 768px) {
+    #organizerModal .modal-footer .btn {
+        width: auto;
+    }
+}
+
+/* Couleurs spécifiques des boutons de la modale organisateur */
+#organizerModal .modal-footer .btn-save {
+    background-color: var(--secondary-color) !important;
+    border-color: var(--secondary-color) !important;
+    color: #fff !important;
+}
+
+#organizerModal .modal-footer .btn-save:hover {
+    background-color: var(--secondary-hover) !important;
+    border-color: var(--secondary-hover) !important;
+}
+
+#organizerModal .modal-footer .btn-cancel {
+    background-color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+    color: #fff !important;
+}
+
+#organizerModal .modal-footer .btn-cancel:hover {
+    background-color: var(--primary-hover) !important;
+    border-color: var(--primary-hover) !important;
+}
+
+/* ---------------------------------------------------------------
+   Champs requis & feedback (identique à "Créer un événement")
+   --------------------------------------------------------------- */
+.required-field::after {
+    content: " *";
+    color: var(--primary-color) !important;
+    font-weight: bold;
+}
+
+#organizerModal .invalid-feedback {
+    display: none;
+    color: var(--primary-color);
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+}
+
+#organizerModal .form-control.is-invalid ~ .invalid-feedback,
+#organizerModal form.was-validated .form-control:invalid ~ .invalid-feedback {
+    display: block;
+}
+
+#organizerModal .form-control.is-invalid,
+#organizerModal form.was-validated .form-control:invalid {
+    border-color: var(--primary-color) !important;
 }

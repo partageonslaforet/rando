@@ -7,11 +7,19 @@ document.addEventListener('DOMContentLoaded', function() {
         loginForm.addEventListener('submit', async function(event) {
             event.preventDefault();
             const submitBtn = event.target.querySelector('button[type="submit"]');
+            const originalBtnText = submitBtn ? submitBtn.innerHTML : '';
             const errorDiv = document.getElementById('loginError');
             const formData = new FormData(event.target);
 
+            if (errorDiv) {
+                errorDiv.style.display = 'none';
+            }
+
             try {
-                submitBtn.disabled = true;
+                if (submitBtn) {
+                    submitBtn.disabled = true;
+                    submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Connexion...';
+                }
 
                 const requestData = {
                     email: formData.get('email'),
@@ -28,7 +36,15 @@ document.addEventListener('DOMContentLoaded', function() {
                     body: JSON.stringify(requestData)
                 });
 
-                const data = await response.json();
+                const contentType = response.headers.get('content-type');
+                let data;
+                if (contentType && contentType.includes('application/json')) {
+                    data = await response.json();
+                } else {
+                    const text = await response.text();
+                    console.error('[login] Réponse non JSON:', text.substring(0, 500));
+                    throw new Error('Le serveur a renvoyé une réponse inattendue.');
+                }
 
                 if (!data.success) {
                     throw new Error(data.message || 'Erreur de connexion');
@@ -39,7 +55,24 @@ document.addEventListener('DOMContentLoaded', function() {
                     loginModal.hide();
                 }
 
-                window.location.reload();
+                if (typeof showToast === 'function') {
+                    showToast('Connexion réussie', 'success');
+                }
+
+                // Redirection post-login si un paramètre redirect est présent dans l'URL
+                let redirect = null;
+                try {
+                    const url = new URL(window.location.href);
+                    redirect = url.searchParams.get('redirect');
+                } catch (_) {}
+
+                setTimeout(() => {
+                    if (redirect) {
+                        window.location.href = redirect;
+                    } else {
+                        window.location.reload();
+                    }
+                }, 1000);
 
             } catch (error) {
                 if (errorDiv) {
@@ -47,7 +80,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     errorDiv.style.display = 'block';
                 }
             } finally {
-                submitBtn.disabled = false;
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalBtnText;
+                }
             }
         });
     }
@@ -58,10 +94,19 @@ document.addEventListener('DOMContentLoaded', function() {
         registerForm.addEventListener('submit', async function(event) {
             event.preventDefault();
             const submitBtn = event.target.querySelector('button[type="submit"]');
+            const originalBtnText = submitBtn ? submitBtn.innerHTML : '';
             const errorDiv = document.getElementById('registerError');
 
+            if (errorDiv) {
+                errorDiv.style.display = 'none';
+            }
+
             try {
-                submitBtn.disabled = true;
+                if (submitBtn) {
+                    submitBtn.disabled = true;
+                    submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Envoi...';
+                }
+
                 const formData = new FormData(event.target);
 
                 if (formData.get('password') !== formData.get('password_confirm')) {
@@ -86,7 +131,15 @@ document.addEventListener('DOMContentLoaded', function() {
                     })
                 });
 
-                const data = await response.json();
+                const contentType = response.headers.get('content-type');
+                let data;
+                if (contentType && contentType.includes('application/json')) {
+                    data = await response.json();
+                } else {
+                    const text = await response.text();
+                    console.error('[register] Réponse non JSON:', text.substring(0, 500));
+                    throw new Error('Le serveur a renvoyé une réponse inattendue.');
+                }
 
                 if (!data.success) {
                     throw new Error(data.message || 'Une erreur est survenue lors de l\'inscription');
@@ -97,15 +150,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     registerModal.hide();
                 }
 
-                const successDiv = document.getElementById('registerSuccess') || document.createElement('div');
-                if (successDiv && successDiv.id === 'registerSuccess') {
-                    successDiv.textContent = data.message;
-                    successDiv.className = 'alert alert-success';
-                    successDiv.style.display = 'block';
+                registerForm.reset();
+
+                if (typeof showToast === 'function') {
+                    showToast(data.message, 'success');
                 } else {
                     alert(data.message);
                 }
-                registerForm.reset();
 
             } catch (error) {
                 if (errorDiv) {
@@ -113,7 +164,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     errorDiv.style.display = 'block';
                 }
             } finally {
-                submitBtn.disabled = false;
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalBtnText;
+                }
             }
         });
     }
@@ -124,10 +178,14 @@ document.addEventListener('DOMContentLoaded', function() {
         forgotPasswordForm.addEventListener('submit', async function(event) {
             event.preventDefault();
             const submitBtn = event.target.querySelector('button[type="submit"]');
+            const originalBtnText = submitBtn ? submitBtn.innerHTML : '';
             const formData = new FormData(event.target);
 
             try {
-                submitBtn.disabled = true;
+                if (submitBtn) {
+                    submitBtn.disabled = true;
+                    submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Envoi...';
+                }
 
                 const response = await fetch('/api/auth/forgot-password.php', {
                     method: 'POST',
@@ -140,33 +198,34 @@ document.addEventListener('DOMContentLoaded', function() {
                     })
                 });
 
-                const data = await response.json();
-
-                if (data.success) {
-                    const successDiv = document.getElementById('forgotSuccess') || document.createElement('div');
-                    if (successDiv && successDiv.id === 'forgotSuccess') {
-                        successDiv.textContent = data.message;
-                        successDiv.className = 'alert alert-success';
-                        successDiv.style.display = 'block';
-                    } else {
-                        alert(data.message);
-                    }
-                    forgotPasswordForm.reset();
+                const contentType = response.headers.get('content-type');
+                let data;
+                if (contentType && contentType.includes('application/json')) {
+                    data = await response.json();
                 } else {
+                    const text = await response.text();
+                    console.error('[forgot] Réponse non JSON:', text.substring(0, 500));
+                    throw new Error('Le serveur a renvoyé une réponse inattendue.');
+                }
+
+                if (!data.success) {
                     throw new Error(data.message || 'Une erreur est survenue');
                 }
 
-            } catch (error) {
-                const errorDiv = document.getElementById('forgotError') || document.createElement('div');
-                if (errorDiv && errorDiv.id === 'forgotError') {
-                    errorDiv.textContent = error.message;
-                    errorDiv.className = 'alert alert-danger';
-                    errorDiv.style.display = 'block';
-                } else {
-                    alert(error.message);
+                showSuccess(data.message);
+                forgotPasswordForm.reset();
+                const modalEl = document.getElementById('forgotPasswordModal');
+                if (modalEl) {
+                    const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+                    modal.hide();
                 }
+            } catch (error) {
+                showError(error.message);
             } finally {
-                submitBtn.disabled = false;
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalBtnText;
+                }
             }
         });
     }
@@ -233,6 +292,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+
 });
 
 // Fonction de déconnexion
@@ -281,5 +341,64 @@ function showError(message) {
 function showSuccess(message) {
     showMessage(message, 'success');
 }
+
+function logEyeButtons(label) {
+    document.querySelectorAll('.toggle-password').forEach((btn, i) => {
+        const inputId = btn.getAttribute('data-target');
+        const input = inputId ? document.getElementById(inputId) : null;
+        const cs = window.getComputedStyle(btn);
+        console.log('[auth.js eye]', label, 'button#' + i, {
+            inputId,
+            inputFound: !!input,
+            display: cs.display,
+            visibility: cs.visibility,
+            opacity: cs.opacity,
+            rect: btn.getBoundingClientRect()
+        });
+    });
+}
+
+// Gestion de l'affichage/masquage des mots de passe (oeil) via délégation d'événements
+document.addEventListener('click', function(e) {
+    const button = e.target.closest('.toggle-password');
+    if (!button) return;
+
+    const inputId = button.getAttribute('data-target');
+    const input = document.getElementById(inputId);
+    const icon = button.querySelector('i');
+
+    console.log('[auth.js] click oeil', { inputId, inputFound: !!input, iconFound: !!icon, inputValueLen: input ? input.value.length : 0 });
+
+    if (!input) {
+        console.warn('[auth.js] champ mot de passe non trouvé pour', inputId);
+        return;
+    }
+
+    if (input.type === 'password') {
+        input.type = 'text';
+        if (icon) {
+            icon.classList.remove('bi-eye');
+            icon.classList.add('bi-eye-slash');
+        }
+    } else {
+        input.type = 'password';
+        if (icon) {
+            icon.classList.remove('bi-eye-slash');
+            icon.classList.add('bi-eye');
+        }
+    }
+
+    logEyeButtons('after click');
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('[auth.js] DOMContentLoaded, auth.js v3');
+    logEyeButtons('DOMContentLoaded');
+});
+
+document.addEventListener('shown.bs.modal', function(e) {
+    console.log('[auth.js] modal shown', e.target.id);
+    logEyeButtons('modal shown');
+});
 
 console.log(' Fin du chargement de auth.js');

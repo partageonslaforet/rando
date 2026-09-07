@@ -23,9 +23,15 @@ render_flash_messages();
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     
+    <!-- Roboto Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
     <!-- Custom CSS -->
     <link rel="stylesheet" href="/assets/css/style.css">
-    <link rel="stylesheet" href="/assets/css/components/connexion.css">
+    <link rel="stylesheet" href="/assets/css/components/connexion.css?v=2">
+    <link rel="stylesheet" href="/assets/css/components/contact-modal.css">
     <link rel="stylesheet" href="/assets/css/header-solid.css">
     
     <!-- Additional Styles -->
@@ -40,8 +46,6 @@ render_flash_messages();
     <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
 
     <!-- Custom JS -->
-    <script src="/assets/js/auth.js"></script>
-    
     <script>
         
         $(document).ready(function() {

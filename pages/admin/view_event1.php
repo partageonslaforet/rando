@@ -23,7 +23,7 @@ if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
 $eventId = (int)$_GET['id'];
 
 // Inclure la configuration
-require_once '/home/cool5792/rando.partageonslaforet.be/includes/config.php';
+require_once __DIR__ . '/../../includes/config.php';
 
 try {
     // Connexion à la base de données
@@ -115,7 +115,7 @@ try {
 }
 
 // Inclure l'en-tête
-include '/home/cool5792/rando.partageonslaforet.be/includes/header.php';
+include __DIR__ . '/../../includes/header.php';
 ?>
 
 <div class="container mt-5 pt-4">
@@ -306,5 +306,5 @@ function deleteEvent(eventId) {
 </script>
 
 <?php
-include '/home/cool5792/rando.partageonslaforet.be/includes/footer.php';
+include __DIR__ . '/../../includes/footer.php';
 ?>

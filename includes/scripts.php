@@ -5,9 +5,15 @@
 <!-- Initialisation des données (si on est sur la page home) -->
 <?php if (basename($_SERVER['PHP_SELF']) === 'index.php'): ?>
 <script>
-    window.allEvents = <?php echo json_encode($events); ?>;
-    window.eventsByPeriod = <?php echo json_encode($eventsByPeriod); ?>;
-    window.eventCounts = <?php echo json_encode($eventCounts); ?>;
+    <?php if (isset($events)): ?>
+    window.allEvents = <?= json_encode($events, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) ?>;
+    <?php endif; ?>
+    <?php if (isset($eventsByPeriod)): ?>
+    window.eventsByPeriod = <?= json_encode($eventsByPeriod, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) ?>;
+    <?php endif; ?>
+    <?php if (isset($eventCounts)): ?>
+    window.eventCounts = <?= json_encode($eventCounts, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) ?>;
+    <?php endif; ?>
 </script>
 <?php endif; ?>
 
@@ -23,6 +29,7 @@
 <script src="/assets/js/calendar.js"></script>
 <script src="/assets/js/filters.js"></script>
 <script src="/assets/js/modals.js"></script>
-<script src="/assets/js/auth.js"></script>
+<script src="/assets/js/auth.js?v=5"></script>
 <script src="/assets/js/header.js?v=2"></script>
+<script src="/assets/js/contact.js?v=1"></script>
 <script src="/assets/js/init.js"></script>

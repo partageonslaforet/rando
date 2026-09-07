@@ -38,7 +38,7 @@ return [
 
     // Types MIME autorisés
     'allowed_mimes' => [
-        'gpx' => ['application/gpx+xml', 'text/xml', 'application/xml']
+        'gpx' => ['application/gpx+xml', 'text/xml', 'application/xml', 'application/octet-stream', 'text/plain']
     ],
     
     // Taille maximale des fichiers (en bytes)

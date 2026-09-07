@@ -4,10 +4,13 @@
  * Réponse neutre quelle que soit l'existence du compte.
  */
 
-require_once '../../config/database.php';
-require_once '../../includes/csrf.php';
-require_once '../../includes/rate_limit.php';
-require_once '../../logs/error.log.php';
+ini_set('display_errors', '0');
+error_reporting(E_ALL);
+
+require_once __DIR__ . '/../../config/database.php';
+require_once __DIR__ . '/../../includes/csrf.php';
+require_once __DIR__ . '/../../includes/rate_limit.php';
+require_once __DIR__ . '/../../logs/error.log.php';
 
 header('Content-Type: application/json');
 
@@ -56,7 +59,7 @@ try {
         $stmt = $db->prepare('INSERT INTO password_reset_tokens (user_id, token_hash, expires_at) VALUES (?, ?, ?)');
         $stmt->execute([$user['id'], $tokenHash, $expiresAt]);
 
-        require_once '../../includes/mailer.php';
+        require_once __DIR__ . '/../../includes/mailer.php';
         $mailer = new Mailer();
         $mailer->sendPasswordResetEmail($email, $user['name'], $token);
     }

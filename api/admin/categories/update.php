@@ -2,9 +2,11 @@
 // Démarrer la capture de sortie immédiatement
 ob_start();
 
-require_once $_SERVER['DOCUMENT_ROOT'] . '/config/database.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/auth_check.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/src/Models/EventCategory.php';
+// Includes robustes (depuis api/admin/categories/ -> racine)
+require_once __DIR__ . '/../../../includes/config.php';
+require_once __DIR__ . '/../../../logs/error.log.php';
+require_once ROOT_PATH . '/includes/auth_check.php';
+require_once ROOT_PATH . '/src/Models/EventCategory.php';
 
 // Nettoyer toute sortie potentielle des includes
 ob_clean();
@@ -131,6 +133,9 @@ try {
         'message' => $e->getMessage(),
         'trace' => $e->getTraceAsString()
     ];
+    if (function_exists('logError')) {
+        logError(basename(__FILE__), $e->getMessage(), $debug);
+    }
     sendJsonResponse(false, $e->getMessage(), $debug, 400);
 } catch (Error $e) {
     $debug['error'] = [
@@ -138,5 +143,8 @@ try {
         'message' => $e->getMessage(),
         'trace' => $e->getTraceAsString()
     ];
+    if (function_exists('logError')) {
+        logError(basename(__FILE__), $e->getMessage(), $debug);
+    }
     sendJsonResponse(false, 'Une erreur interne est survenue', $debug, 500);
 }

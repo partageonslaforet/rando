@@ -62,11 +62,7 @@ try {
     $total_pages = $result['total_pages'];
     debug_log('✓ Événements récupérés', ['count' => count($events)]);
 
-    // 7. Début de l'affichage (APRÈS tous les headers)
-    render_header();
-    debug_log('✓ Header affiché');
-
-    // 8. Routage et affichage du contenu
+    // 7. Routage AVANT d'afficher le layout : la page détail gère son propre header/footer
     debug_log('🎯 Chargement du template');
     $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
     debug_log('URI analysée: ' . $uri);
@@ -74,7 +70,14 @@ try {
     if ($uri === '/event') {
         debug_log('🎯 Chargement de la page détail événement');
         require_once __DIR__ . '/templates/events/event-detail.php';
-    } elseif ($uri === '/events') {
+        return;
+    }
+
+    // 8. Début de l'affichage (pages classiques)
+    render_header();
+    debug_log('✓ Header affiché');
+
+    if ($uri === '/events') {
         debug_log('🎯 Chargement de la page liste des événements');
         require_once __DIR__ . '/templates/events/events.php';
     } else {

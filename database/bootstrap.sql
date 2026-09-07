@@ -115,7 +115,9 @@ CREATE TABLE IF NOT EXISTS `event_images` (
     `id` INT(11) NOT NULL AUTO_INCREMENT,
     `event_id` INT(11) NOT NULL,
     `image_path` VARCHAR(255) NOT NULL,
+    `storage_path` VARCHAR(255) DEFAULT NULL,
     `is_main` TINYINT(1) NOT NULL DEFAULT 0,
+    `storage_type` VARCHAR(50) DEFAULT 'local',
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`),
     KEY `event_id` (`event_id`),
@@ -141,6 +143,7 @@ CREATE TABLE IF NOT EXISTS `event_routes` (
     `id` INT(11) NOT NULL AUTO_INCREMENT,
     `event_id` INT(11) NOT NULL,
     `name` VARCHAR(255) NOT NULL,
+    `category_id` INT(11) DEFAULT NULL,
     `distance` DECIMAL(10,2) DEFAULT NULL,
     `elevation` INT(11) DEFAULT NULL,
     `gpx_file` VARCHAR(255) DEFAULT NULL,
@@ -150,14 +153,30 @@ CREATE TABLE IF NOT EXISTS `event_routes` (
     CONSTRAINT `event_routes_ibfk_1` FOREIGN KEY (`event_id`) REFERENCES `events` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- Contacts des événements
+CREATE TABLE IF NOT EXISTS `event_contacts` (
+    `id` INT(11) NOT NULL AUTO_INCREMENT,
+    `event_id` INT(11) NOT NULL,
+    `name` VARCHAR(255) NOT NULL,
+    `email` VARCHAR(255) DEFAULT NULL,
+    `phone` VARCHAR(50) DEFAULT NULL,
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`),
+    KEY `event_id` (`event_id`),
+    CONSTRAINT `event_contacts_ibfk_1` FOREIGN KEY (`event_id`) REFERENCES `events` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 -- Parcours / parcours (template event-detail.php)
 CREATE TABLE IF NOT EXISTS `event_parcours` (
     `id` INT(11) NOT NULL AUTO_INCREMENT,
     `event_id` INT(11) NOT NULL,
     `name` VARCHAR(255) NOT NULL,
+    `category_id` INT(11) DEFAULT NULL,
     `distance` DECIMAL(10,2) DEFAULT NULL,
     `elevation_gain` INT(11) DEFAULT NULL,
+    `description` TEXT DEFAULT NULL,
     `gpx_file` VARCHAR(255) DEFAULT NULL,
+    `gpx_downloadable` TINYINT(1) DEFAULT 0,
     `price` DECIMAL(10,2) DEFAULT 0.00,
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at` TIMESTAMP NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
@@ -211,10 +230,10 @@ INSERT INTO `event_images` (`event_id`, `image_path`, `is_main`) VALUES
 (3, 'uploads/events/trail.jpg', 1);
 
 -- Parcours pour event-detail.php
-INSERT INTO `event_parcours` (`event_id`, `name`, `distance`, `elevation_gain`, `gpx_file`, `price`) VALUES
-(1, 'Parcours facile', 8.50, 120, NULL, 0.00),
-(2, 'Boucle VTT 25 km', 25.00, 350, 'uploads/gpx/vtt.gpx', 0.00),
-(3, 'Trail 12 km', 12.00, 220, NULL, 0.00);
+INSERT INTO `event_parcours` (`event_id`, `name`, `category_id`, `distance`, `elevation_gain`, `gpx_file`, `price`) VALUES
+(1, 'Parcours facile', 1, 8.50, 120, NULL, 0.00),
+(2, 'Boucle VTT 25 km', 3, 25.00, 350, 'uploads/gpx/vtt.gpx', 0.00),
+(3, 'Trail 12 km', 2, 12.00, 220, NULL, 0.00);
 
 -- Pour créer un compte admin local après import, exécuter :
 -- INSERT INTO `users` (`email`, `password`, `name`, `role`, `is_active`, `email_verified`)

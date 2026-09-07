@@ -24,19 +24,13 @@ function render_map() {
     
     <script>
     // Définir les variables globales nécessaires
-    window.allEvents = <?= json_encode($locations) ?>;
+    window.allEvents = <?= json_encode($locations, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE) ?>;
     window.currentFilters = {};  // Filtres par défaut
     </script>
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <!-- Notre script de carte -->
     <script src="<?= APP_URL ?>/assets/js/map.js"></script>
-
-    <script>
-// Définir les variables globales nécessaires
-window.allEvents = <?= json_encode($locations) ?>;
-window.currentFilters = {};  // Filtres par défaut
-</script>
     <?php
 }
 

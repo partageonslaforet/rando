@@ -1,7 +1,7 @@
 <?php
-require_once '../../config/database.php';
-require_once '../../includes/flash_messages.php';
-require_once '../../logs/error.log.php';
+require_once __DIR__ . '/../../config/database.php';
+require_once __DIR__ . '/../../includes/flash_messages.php';
+require_once __DIR__ . '/../../logs/error.log.php';
 
 try {
     if (empty($_GET['token']) || empty($_GET['email'])) {

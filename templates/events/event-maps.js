@@ -111,7 +111,7 @@ function getCoordinates(event) {
                 lng: parseFloat(lng)
             };
         } catch (e) {
-            console.warn('Erreur lors du parsing des coordonnées:', e);
+            console.warn('Erreur lors du parsing des coordonnées:', e, 'payload=', event.coordinates);
         }
     }
     return null;
@@ -137,6 +137,13 @@ async function updateMapMarkers(events) {
                 let coordinates = getCoordinates(event);
 
                 if (coordinates && coordinates.lat && coordinates.lng) {
+                    console.debug('📍 Ajout du marqueur', {
+                        id: event.id,
+                        title: event.title,
+                        location: event.location,
+                        venue: event.venue,
+                        coordinates: event.coordinates
+                    });
                     const popupContent = `
                         <div class="event-popup">
                             <div class="event-popup-image">
@@ -166,6 +173,14 @@ async function updateMapMarkers(events) {
                     
                     marker.addTo(window.markersLayer);
                     bounds.extend([coordinates.lat, coordinates.lng]);
+                } else {
+                    console.warn('⛔ Pas de marqueur pour cet événement (coordonnées absentes ou invalides)', {
+                        id: event.id,
+                        title: event.title,
+                        location: event.location,
+                        venue: event.venue,
+                        coordinates: event.coordinates
+                    });
                 }
             } catch (error) {
                 console.error(`Erreur lors du traitement de l'événement:`, error);

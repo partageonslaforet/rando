@@ -38,6 +38,11 @@ try {
         exit();
     }
 
+    if ($user['role'] !== 'admin') {
+        header('Location: /pages/user/profile.php');
+        exit();
+    }
+
     // Récupérer les statistiques avec vérification des erreurs
     try {
         $stats = [
@@ -74,6 +79,12 @@ try {
     // Récupérer toutes les catégories
     $categoryManager = new EventCategory($pdo);
     $categories = $categoryManager->getAll();
+    // Tri alphabétique sur le nom uniquement (insensible à la casse)
+    if (is_array($categories)) {
+        usort($categories, function($a, $b) {
+            return strcasecmp($a['name'] ?? '', $b['name'] ?? '');
+        });
+    }
 
 } catch (PDOException $e) {
     error_log("Erreur base de données: " . $e->getMessage());
@@ -83,348 +94,221 @@ try {
 
 // Titre de la page
 $pageTitle = "Administration";
+$additionalStyles = '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.css">' . "\n"
+                  . '<link rel="stylesheet" href="/assets/css/dashboard.css">' . "\n"
+                  . '<link rel="stylesheet" href="/assets/css/admin-dashboard.css">';
 
 // Inclure l'en-tête
 include __DIR__ . '/../../includes/header-solid.php';
 ?>
 
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.css" rel="stylesheet">
-    <style>
-        .dashboard-container {
-            max-width: 1400px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-        }
-
-        .dashboard-header {
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            padding: 3rem 0;
-            margin-bottom: 2rem;
-            color: white;
-            border-radius: 15px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .stats-card {
-            background: white;
-            border-radius: 10px;
-            padding: 1.5rem;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s ease;
-        }
-
-        .stats-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .stats-icon {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .stats-number {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #2a5298;
-        }
-
-        .nav-tabs {
-            border: none;
-            margin-bottom: 2rem;
-        }
-
-        .nav-tabs .nav-link {
-            border: none;
-            color: #6c757d;
-            padding: 1rem 1.5rem;
-            font-weight: 500;
-            transition: all 0.3s ease;
-        }
-
-        .nav-tabs .nav-link:hover {
-            color: #2a5298;
-            background: rgba(42, 82, 152, 0.1);
-            border-radius: 8px;
-        }
-
-        .nav-tabs .nav-link.active {
-            color: #2a5298;
-            background: rgba(42, 82, 152, 0.1);
-            border-radius: 8px;
-        }
-
-        .card {
-            border: none;
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-        }
-
-        .table th {
-            border-top: none;
-            font-weight: 600;
-            color: #495057;
-        }
-
-        .color-preview {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border-radius: 4px;
-            border: 1px solid #ddd;
-        }
-
-        .event-card {
-            border: none;
-            border-radius: 10px;
-            margin-bottom: 1rem;
-            transition: transform 0.3s ease;
-        }
-
-        .event-card:hover {
-            transform: translateY(-3px);
-        }
-
-        .event-status {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-        }
-    </style>
-</head>
-<body>
-    <div class="dashboard-container">
-        <!-- En-tête du dashboard -->
-        <div class="dashboard-header text-center">
-            <h1 class="mb-4">Dashboard Administration</h1>
-            <div class="d-flex justify-content-center gap-3">
-                <a href="/pages/admin/organizer_logos.php" class="btn btn-light">
-                    <i class="bi bi-images"></i> Logos
-                </a>
-                <a href="/pages/admin/users.php" class="btn btn-light">
-                    <i class="bi bi-people-fill"></i> Utilisateurs
-                </a>
-            </div>
-        </div>
-
-        <!-- Statistiques -->
-        <div class="row mb-4">
-            <div class="col-md-3">
-                <div class="stats-card text-center">
-                    <div class="stats-icon text-primary">
-                        <i class="bi bi-people-fill"></i>
-                    </div>
-                    <div class="stats-number"><?php echo $stats['total_users']; ?></div>
-                    <div class="stats-label">Utilisateurs</div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="stats-card text-center">
-                    <div class="stats-icon text-success">
-                        <i class="bi bi-calendar-check"></i>
-                    </div>
-                    <div class="stats-number"><?php echo $stats['total_events']; ?></div>
-                    <div class="stats-label">Événements</div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="stats-card text-center">
-                    <div class="stats-icon text-warning">
-                        <i class="bi bi-clock"></i>
-                    </div>
-                    <div class="stats-number"><?php echo $stats['pending_events']; ?></div>
-                    <div class="stats-label">En attente</div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="stats-card text-center">
-                    <div class="stats-icon text-info">
-                        <i class="bi bi-check-circle"></i>
-                    </div>
-                    <div class="stats-number"><?php echo $stats['active_events']; ?></div>
-                    <div class="stats-label">Actifs</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Navigation -->
-        <ul class="nav nav-tabs" id="adminTabs" role="tablist">
-            <li class="nav-item">
-                <a class="nav-link active" id="events-tab" data-bs-toggle="tab" href="#events" role="tab">
-                    <i class="bi bi-calendar-event"></i> Événements
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="categories-tab" data-bs-toggle="tab" href="#categories" role="tab">
-                    <i class="bi bi-tags-fill"></i> Catégories
-                </a>
-            </li>
-        </ul>
-
-        <!-- Contenu des onglets -->
-        <div class="tab-content" id="adminTabsContent">
-            <!-- Événements -->
-            <div class="tab-pane fade show active" id="events" role="tabpanel">
-                <div class="card">
-                    <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
-                        <h5 class="mb-0">Événements récents</h5>
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-outline-primary active" data-status="all">Tous</button>
-                            <button type="button" class="btn btn-outline-primary" data-status="pending">En attente</button>
-                            <button type="button" class="btn btn-outline-primary" data-status="approved">Actifs</button>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-hover">
-                                <thead>
-                                    <tr>
-                                        <th>Date</th>
-                                        <th>Titre</th>
-                                        <th>Organisateur</th>
-                                        <th>Statut</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="eventsTableBody">
-                                    <?php foreach ($recentEvents as $event): ?>
-                                        <tr data-status="<?php echo $event['status']; ?>">
-                                            <td><?php echo date('d/m/Y', strtotime($event['date'])); ?></td>
-                                            <td>
-                                                <?php echo h($event['title']); ?>
-                                                <br>
-                                                <small class="text-muted">
-                                                    <i class="bi <?php echo $event['category_icon']; ?>" 
-                                                       style="color: <?php echo $event['category_color']; ?>"></i>
-                                                    <?php echo h($event['category_name']); ?>
-                                                </small>
-                                            </td>
-                                            <td><?php echo h($event['organizer_name']); ?></td>
-                                            <td>
-                                                <span class="badge bg-<?php 
-                                                    echo $event['status'] === 'pending' ? 'warning' : 
-                                                        ($event['status'] === 'approved' ? 'success' : 'secondary'); 
-                                                    ?>">
-                                                    <?php 
-                                                        switch($event['status']) {
-                                                            case 'pending':
-                                                                echo 'En attente';
-                                                                break;
-                                                            case 'approved':
-                                                                echo 'Actif';
-                                                                break;
-                                                            default:
-                                                                echo ucfirst($event['status']);
-                                                        }
-                                                    ?>
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <div class="btn-group">
-                                                    <a href="/pages/admin/view_event.php?id=<?php echo $event['id']; ?>" 
-                                                       class="btn btn-sm btn-outline-primary">
-                                                        <i class="bi bi-eye"></i>
-                                                    </a>
-                                                    <?php if ($event['status'] === 'pending'): ?>
-                                                        <button type="button" 
-                                                                class="btn btn-sm btn-success"
-                                                                onclick="updateEventStatus(<?php echo $event['id']; ?>, 'approved')">
-                                                            <i class="bi bi-check"></i>
-                                                        </button>
-                                                    <?php endif; ?>
-                                                    <button type="button" 
-                                                            class="btn btn-sm btn-danger"
-                                                            onclick="deleteEvent(<?php echo $event['id']; ?>)">
-                                                        <i class="bi bi-trash"></i>
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    <?php endforeach; ?>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Catégories -->
-            <div class="tab-pane fade" id="categories" role="tabpanel">
-                <div class="card">
-                    <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
-                        <h5 class="mb-0">Gestion des catégories</h5>
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#categoryModal">
-                            <i class="bi bi-plus"></i> Nouvelle catégorie
-                        </button>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th style="width: 50px;"></th>
-                                        <th>Code</th>
-                                        <th>Nom</th>
-                                        <th>Icône</th>
-                                        <th>Couleur</th>
-                                        <th>Statut</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="categoriesTableBody">
-                                    <?php foreach ($categories as $category): ?>
-                                        <tr data-id="<?= htmlspecialchars($category['id']) ?>">
-                                            <td>
-                                                <i class="bi bi-grip-vertical handle" style="cursor: move;"></i>
-                                            </td>
-                                            <td><?= htmlspecialchars($category['code']) ?></td>
-                                            <td><?= htmlspecialchars($category['name']) ?></td>
-                                            <td>
-                                                <?php if ($category['icon']): ?>
-                                                    <i class="bi <?= htmlspecialchars($category['icon']) ?>"></i>
-                                                <?php endif; ?>
-                                            </td>
-                                            <td>
-                                                <?php if ($category['color']): ?>
-                                                    <span class="color-preview" style="background-color: <?= htmlspecialchars($category['color']) ?>"></span>
-                                                <?php endif; ?>
-                                            </td>
-                                            <td>
-                                                <div class="form-check form-switch">
-                                                    <input class="form-check-input toggle-category" 
-                                                           type="checkbox" 
-                                                           <?= $category['active'] ? 'checked' : '' ?>
-                                                           data-id="<?= $category['id'] ?>">
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <button type="button" 
-                                                        class="btn btn-sm btn-outline-primary edit-category"
-                                                        data-id="<?= $category['id'] ?>"
-                                                        data-code="<?= htmlspecialchars($category['code']) ?>"
-                                                        data-name="<?= htmlspecialchars($category['name']) ?>"
-                                                        data-icon="<?= htmlspecialchars($category['icon'] ?? '') ?>"
-                                                        data-color="<?= htmlspecialchars($category['color'] ?? '') ?>">
-                                                    <i class="bi bi-pencil"></i>
-                                                </button>
-                                                <button type="button" 
-                                                        class="btn btn-sm btn-outline-danger delete-category"
-                                                        data-id="<?= $category['id'] ?>">
-                                                    <i class="bi bi-trash"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    <?php endforeach; ?>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+<div class="container mt-4">
+  <!-- Hero -->
+  <div class="dash-hero d-flex justify-content-between align-items-center">
+    <h1>Tableau de bord</h1>
+    <div class="hero-actions">
+      <!-- <a href="/?create=1" class="btn btn-success btn-pill"><i class="bi bi-plus-lg"></i> Créer un événement</a>
+      <a href="/pages/admin/events.php" class="btn btn-outline-secondary btn-pill ms-2"><i class="bi bi-list-ul"></i> Tous les événements</a> -->
     </div>
+  </div>
+
+  <!-- KPIs -->
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-icon users"><i class="bi bi-people-fill"></i></div>
+      <div>
+        <div class="kpi-label">UTILISATEURS</div>
+        <div class="kpi-value"><?php echo (int)$stats['total_users']; ?></div>
+      </div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-icon events"><i class="bi bi-calendar-event-fill"></i></div>
+      <div>
+        <div class="kpi-label">ÉVÉNEMENTS</div>
+        <div class="kpi-value"><?php echo (int)$stats['total_events']; ?></div>
+      </div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-icon pending"><i class="bi bi-hourglass-split"></i></div>
+      <div>
+        <div class="kpi-label">EN ATTENTE</div>
+        <div class="kpi-value"><?php echo (int)$stats['pending_events']; ?></div>
+      </div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-icon active"><i class="bi bi-check2-circle"></i></div>
+      <div>
+        <div class="kpi-label">ACTIFS</div>
+        <div class="kpi-value"><?php echo (int)$stats['active_events']; ?></div>
+      </div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-icon categories"><i class="bi bi-tags-fill"></i></div>
+      <div>
+        <div class="kpi-label">CATÉGORIES</div>
+        <div class="kpi-value"><?php echo is_array($categories) ? count($categories) : 0; ?></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="dash-toolbar">
+    <div class="pills">
+      <button type="button" class="pill active" data-filter="all">Tous</button>
+      <button type="button" class="pill" data-filter="pending">En attente</button>
+      <button type="button" class="pill" data-filter="approved">Actifs</button>
+      <button type="button" class="pill" data-filter="rejected">Rejetés</button>
+      <button type="button" class="pill" data-filter="expired">Échus</button>
+    </div>
+    <div class="search"><input type="search" id="dashSearch" class="form-control" placeholder="Rechercher par titre ou organisateur…"></div>
+  </div>
+
+  <div class="row g-4">
+    <aside class="col-lg-3">
+      <div class="dash-sidenav">
+        <nav class="nav flex-column">
+          <a href="#" class="nav-link active" data-target="section-events"><i class="bi bi-calendar-event me-1"></i> Événements</a>
+          <a href="#" class="nav-link" data-target="section-categories"><i class="bi bi-tags-fill me-1"></i> Catégories</a>
+        </nav>
+      </div>
+    </aside>
+
+    <main class="col-lg-9">
+      <!-- Section Événements -->
+      <section id="section-events" data-section>
+        <!-- Événements récents -->
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title mb-3"><i class="bi bi-clock-history"></i> Événements récents</h5>
+            <div class="table-responsive">
+              <table class="table align-middle">
+                <thead>
+                  <tr>
+                    <th>DATE</th>
+                    <th>TITRE</th>
+                    <th>ORGANISATEUR</th>
+                    <th>STATUT</th>
+                    <th class="text-end">ACTIONS</th>
+                  </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($recentEvents as $event): 
+                  $status = strtolower($event['status'] ?? 'pending');
+                  $badgeClass = $status === 'approved' ? 'status-approved' : ($status === 'rejected' ? 'status-rejected' : 'status-pending');
+                  $dateTxt = !empty($event['date']) ? date('d/m/Y', strtotime($event['date'])) : '-';
+                  $titleTxt = h($event['title'] ?? 'Sans titre');
+                  $orgTxt = h($event['organizer_name'] ?? '-');
+                  $isExpired = !empty($event['date']) && (strtotime($event['date']) < strtotime(date('Y-m-d')));
+                ?>
+                  <tr data-status="<?= $status ?>" data-title="<?= $titleTxt ?>" data-org="<?= $orgTxt ?>" data-expired="<?= $isExpired ? '1' : '0' ?>">
+                    <td><?= $dateTxt ?></td>
+                    <td>
+                      <?= $titleTxt ?><br>
+                      <small class="text-muted">
+                        <?php
+                          $rawIcon = $event['category_icon'] ?? '';
+                          $iconClass = 'bi bi-tree';
+                          if ($rawIcon) {
+                            if (str_starts_with($rawIcon, 'fa')) {
+                              $iconClass = (str_contains($rawIcon, 'fa-') && !str_contains($rawIcon, 'fa-solid') && !str_starts_with($rawIcon, 'fas ')) ? ('fa-solid ' . $rawIcon) : $rawIcon;
+                            } elseif (str_starts_with($rawIcon, 'bi-')) {
+                              $iconClass = 'bi ' . $rawIcon;
+                            }
+                          }
+                        ?>
+                        <i class="<?= htmlspecialchars($iconClass) ?>" style="color: <?= htmlspecialchars($event['category_color'] ?? '') ?>"></i>
+                        <?= h($event['category_name'] ?? '') ?>
+                      </small>
+                    </td>
+                    <td><?= $orgTxt ?></td>
+                    <td><span class="status-badge <?= $badgeClass ?>"><?php if ($status === 'approved'): ?>Actif<?php elseif ($status === 'rejected'): ?>Rejeté<?php else: ?>En attente<?php endif; ?></span></td>
+                    <td class="text-end">
+                      <a href="/pages/admin/view_event.php?id=<?= (int)$event['id'] ?>" class="btn btn-sm btn-view btn-pill me-2"><i class="bi bi-eye"></i> Voir</a>
+                      <button type="button" class="btn btn-sm btn-delete btn-pill" onclick="deleteEvent(<?= (int)$event['id'] ?>)"><i class="bi bi-trash"></i> Suppr.</button>
+                    </td>
+                  </tr>
+                <?php endforeach; ?>
+                <?php if (empty($recentEvents)): ?>
+                  <tr><td colspan="5" class="text-center text-muted py-4">Aucun événement récent</td></tr>
+                <?php endif; ?>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section Catégories -->
+      <section id="section-categories" class="d-none" data-section>
+        <div class="card">
+          <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
+            <h5 class="mb-0">Gestion des catégories</h5>
+            <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#categoryModal">
+              <i class="bi bi-plus"></i> Nouvelle catégorie
+            </button>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Code</th>
+                    <th>Nom</th>
+                    <th>Icône</th>
+                    <th>Couleur</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="categoriesTableBody">
+                  <?php foreach ($categories as $category): ?>
+                    <tr data-id="<?= htmlspecialchars($category['id']) ?>">
+                      <td><?= htmlspecialchars($category['code']) ?></td>
+                      <td><?= htmlspecialchars($category['name']) ?></td>
+                      <td>
+                        <?php 
+                          $rawIcon = $category['icon'] ?? '';
+                          if ($rawIcon) {
+                            $iconClass = 'bi bi-tree';
+                            if (str_starts_with($rawIcon, 'fa')) {
+                              $iconClass = (str_contains($rawIcon, 'fa-') && !str_contains($rawIcon, 'fa-solid') && !str_starts_with($rawIcon, 'fas '))
+                                  ? ('fa-solid ' . $rawIcon)
+                                  : $rawIcon;
+                            } elseif (str_starts_with($rawIcon, 'bi-')) {
+                              $iconClass = 'bi ' . $rawIcon;
+                            }
+                            echo '<i class="' . htmlspecialchars($iconClass) . '"></i>';
+                          }
+                        ?>
+                      </td>
+                      <td>
+                        <?php if ($category['color']): ?>
+                          <span class="color-preview" style="background-color: <?= htmlspecialchars($category['color']) ?>"></span>
+                        <?php endif; ?>
+                      </td>
+                      <td>
+                        <button type="button" class="btn btn-sm btn-outline-primary edit-category"
+                                data-id="<?= $category['id'] ?>"
+                                data-code="<?= htmlspecialchars($category['code']) ?>"
+                                data-name="<?= htmlspecialchars($category['name']) ?>"
+                                data-icon="<?= htmlspecialchars($category['icon'] ?? '') ?>"
+                                data-color="<?= htmlspecialchars($category['color'] ?? '') ?>">
+                          <i class="bi bi-pencil"></i>
+                        </button>
+                        <button type="button" class="btn btn-sm btn-outline-danger delete-category" data-id="<?= $category['id'] ?>">
+                          <i class="bi bi-trash"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  <?php endforeach; ?>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
 
     <!-- Modal pour les catégories -->
     <div class="modal fade" id="categoryModal" tabindex="-1" aria-hidden="true">
@@ -464,7 +348,7 @@ include __DIR__ . '/../../includes/header-solid.php';
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                        <button type="submit" class="btn btn-primary">Enregistrer</button>
+                        <button type="submit" class="btn btn-secondary">Enregistrer</button>
                     </div>
                 </form>
             </div>
@@ -474,6 +358,7 @@ include __DIR__ . '/../../includes/header-solid.php';
     <!-- Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js"></script>
     <script src="/assets/js/admin/categories.js"></script>
+    <script src="/assets/js/admin-dashboard.js"></script>
     <script>
     function updateEventStatus(eventId, status) {
         if (!confirm('Êtes-vous sûr de vouloir ' + (status === 'approved' ? 'approuver' : 'rejeter') + ' cet événement ?')) {
@@ -532,31 +417,8 @@ include __DIR__ . '/../../includes/header-solid.php';
         });
     }
 
-    // Filtres des événements
-    document.addEventListener('DOMContentLoaded', function() {
-        function filterEvents(status) {
-            const rows = document.querySelectorAll('#eventsTableBody tr');
-            rows.forEach(row => {
-                if (status === 'all' || row.dataset.status === status) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
-                }
-            });
-        }
-
-        filterEvents('all');
-
-        document.querySelectorAll('.btn-group .btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                this.parentElement.querySelectorAll('.btn').forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
-                filterEvents(this.dataset.status);
-            });
-        });
-    });
+    // Ancien filtre retiré (remplacé par admin-dashboard.js)
     </script>
 
+</div>
     <?php include __DIR__ . '/../../includes/footer.php'; ?>
-</body>
-</html>

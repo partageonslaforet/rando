@@ -51,7 +51,7 @@ try {
 
     // Vérifier le rôle et rediriger si nécessaire
     if ($user['role'] === 'admin' && strpos($_SERVER['REQUEST_URI'], '/pages/user/') !== false) {
-        header('Location: /pages/admin/my-events.php');
+        header('Location: /pages/admin');
         exit();
     } elseif ($user['role'] === 'user' && strpos($_SERVER['REQUEST_URI'], '/pages/admin/') !== false) {
         header('Location: /pages/user/my-events.php');
@@ -85,29 +85,52 @@ try {
     // Récupérer les statistiques
     $totalEvents = count($events);
     $approvedEvents = array_filter($events, function($event) {
-        return $event['status'] === 'approved';
+        return ($event['status'] ?? '') === 'approved';
     });
     $pendingEvents = array_filter($events, function($event) {
-        return $event['status'] === 'pending';
+        return ($event['status'] ?? '') === 'pending';
     });
     $draftEvents = array_filter($events, function($event) {
-        return $event['status'] === 'draft';
+        return ($event['status'] ?? '') === 'draft';
     });
     $rejectedEvents = array_filter($events, function($event) {
-        return $event['status'] === 'rejected';
+        return ($event['status'] ?? '') === 'rejected';
+    });
+
+    // Échus: statut 'expired' OU approuvés dont la date est passée
+    $today = new DateTime('today');
+    $expiredEvents = array_filter($events, function($event) use ($today) {
+        $status = $event['status'] ?? '';
+        if ($status === 'expired') return true;
+        if ($status === 'approved' && !empty($event['date'])) {
+            try { return (new DateTime($event['date'])) < $today; } catch (Exception $e) { return false; }
+        }
+        return false;
     });
 
     // Filtrer selon l'onglet actif
     $currentTab = $_GET['status'] ?? 'all';
-    $allowedTabs = ['all', 'draft', 'pending', 'approved', 'rejected'];
+    $allowedTabs = ['all', 'draft', 'pending', 'approved', 'rejected', 'expired'];
     if (!in_array($currentTab, $allowedTabs, true)) {
         $currentTab = 'all';
     }
     $filteredEvents = $events;
     if ($currentTab !== 'all') {
-        $filteredEvents = array_filter($events, function($event) use ($currentTab) {
-            return $event['status'] === $currentTab;
-        });
+        if ($currentTab === 'expired') {
+            $todayF = new DateTime('today');
+            $filteredEvents = array_filter($events, function($event) use ($todayF) {
+                $status = $event['status'] ?? '';
+                if ($status === 'expired') return true;
+                if ($status === 'approved' && !empty($event['date'])) {
+                    try { return (new DateTime($event['date'])) < $todayF; } catch (Exception $e) { return false; }
+                }
+                return false;
+            });
+        } else {
+            $filteredEvents = array_filter($events, function($event) use ($currentTab) {
+                return ($event['status'] ?? '') === $currentTab;
+            });
+        }
     }
 
 } catch (Exception $e) {
@@ -115,9 +138,23 @@ try {
     addFlashMessage('danger', "Une erreur est survenue lors de la récupération de vos événements.");
 }
 
-// Fonction pour obtenir le badge selon le statut
-function getStatusBadge($status) {
+// Fonction pour obtenir le badge selon le statut (+ affichage "Échu" J+1 pour approuvé)
+function getStatusBadge($status, $eventDate = null) {
+    // Si approuvé mais date passée (J+1), afficher Échu
+    if ($status === 'approved' && !empty($eventDate)) {
+        try {
+            $event = new DateTime($eventDate);
+            $today = new DateTime('today');
+            if ($event < $today) {
+                return '<span class="badge bg-expired">Échu</span>';
+            }
+        } catch (Exception $e) {
+            // ignore parsing errors, fallback to normal approved
+        }
+    }
     switch ($status) {
+        case 'expired':
+            return '<span class="badge bg-expired">Échu</span>';
         case 'approved':
             return '<span class="badge bg-success">Approuvé</span>';
         case 'rejected':
@@ -197,11 +234,12 @@ require_once __DIR__ . '/../../includes/header-solid.php';
         <nav class="my-events-tabs" aria-label="Filtrer les événements">
             <?php
             $tabs = [
-                'all'   => ['Tous', $totalEvents],
-                'draft' => ['Brouillons', count($draftEvents)],
+                'all'      => ['Tous', $totalEvents],
+                'draft'    => ['Brouillons', count($draftEvents)],
                 'pending'  => ['En validation', count($pendingEvents)],
                 'approved' => ['Publiés', count($approvedEvents)],
                 'rejected' => ['Refusés', count($rejectedEvents)],
+                'expired'  => ['Échus', count($expiredEvents)],
             ];
             foreach ($tabs as $status => $tab):
                 $isActive = $currentTab === $status;
@@ -228,52 +266,70 @@ require_once __DIR__ . '/../../includes/header-solid.php';
             <?php else: ?>
                 <div class="events-table">
                     <div class="table-responsive">
-                        <table class="table">
+                        <table class="table table-modern align-middle" id="my-events-table">
                             <thead>
                                 <tr>
-                                    <th>Titre</th>
-                                    <th>Date</th>
-                                    <th>Statut</th>
-                                    <th>Actions</th>
+                                    <th><button type="button" class="sort-toggle" data-sort="title" aria-label="Trier par titre">Titre <span class="arrows"><span class="caret up">▲</span><span class="caret down">▼</span></span></button></th>
+                                    <th><button type="button" class="sort-toggle" data-sort="date" aria-label="Trier par date">Date <span class="arrows"><span class="caret up">▲</span><span class="caret down">▼</span></span></button></th>
+                                    <th><button type="button" class="sort-toggle" data-sort="status" aria-label="Trier par statut">Statut <span class="arrows"><span class="caret up">▲</span><span class="caret down">▼</span></span></button></th>
+                                    <th><button type="button" class="sort-toggle" data-sort="recorded" aria-label="Trier par enregistrement">Enregistré le <span class="arrows"><span class="caret up">▲</span><span class="caret down">▼</span></span></button></th>
+                                    <th class="text-start ps-1">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody class="myev-compact">
                                 <?php foreach ($filteredEvents as $event): ?>
-                                    <tr>
-                                        <td>
+                                    <?php
+                                        // Préparer timestamp d'enregistrement (created_at sinon updated_at)
+                                        $ts = $event['created_at'] ?? $event['updated_at'] ?? null;
+                                        $tsOut = '';
+                                        $tsEpoch = '';
+                                        if ($ts) {
+                                            try { $dt = new DateTime($ts); $tsOut = $dt->format('d/m/Y H:i'); $tsEpoch = $dt->getTimestamp(); } catch (Exception $e) { $tsOut = ''; $tsEpoch = ''; }
+                                        }
+                                        // Titre pour tri
+                                        $titleText = trim((string)($event['title'] ?? ''));
+                                        // Date de l'événement pour tri (draft -> created_at/date, sinon date)
+                                        $eventDateStr = ($event['status'] === 'draft') ? ($event['created_at'] ?? $event['date'] ?? null) : ($event['date'] ?? null);
+                                        $eventDateEpoch = '';
+                                        if ($eventDateStr) { $eventDateEpoch = strtotime($eventDateStr) ?: ''; }
+                                        $statusText = (string)($event['status'] ?? '');
+                                    ?>
+                                    <tr data-title="<?= htmlspecialchars($titleText) ?>" data-date-ts="<?= htmlspecialchars($eventDateEpoch) ?>" data-status="<?= htmlspecialchars($statusText) ?>" data-recorded-ts="<?= htmlspecialchars($tsEpoch) ?>">
+                                        <td class="cell-title">
                                             <?php if ($event['status'] === 'draft'): ?>
-                                                <a href="/?create=1&draft_id=<?= (int)$event['id'] ?>" class="fw-bold draft-title">
+                                                <a href="/?create=1&draft_id=<?= (int)$event['id'] ?>" class="draft-title">
                                                     <?= htmlspecialchars($event['title'] ?? '') ?>
                                                 </a>
                                             <?php else: ?>
-                                                <strong><?= htmlspecialchars($event['title'] ?? '') ?></strong>
+                                                <span class="title-text"><?= htmlspecialchars($event['title'] ?? '') ?></span>
                                             <?php endif; ?>
                                         </td>
-                                        <td>
+                                        <td class="cell-date">
                                             <?php if ($event['status'] === 'draft'): ?>
                                                 <?= formatEventDate($event['created_at'] ?? $event['date']) ?>
                                             <?php else: ?>
                                                 <?= formatEventDate($event['date']) ?>
                                             <?php endif; ?>
                                         </td>
-                                        <td><?= getStatusBadge($event['status']) ?></td>
-                                        <td>
+                                        <td class="cell-status"><?= getStatusBadge($event['status'], $event['date'] ?? null) ?></td>
+                                        <td class="cell-recorded"><span class="myev-recorded"><?= htmlspecialchars($tsOut) ?></span></td>
+                                        <td class="text-start ps-1">
                                             <?php if ($event['status'] === 'draft'): ?>
-                                                <button type="button" class="btn btn-sm btn-outline-danger btn-action" data-bs-toggle="modal" data-bs-target="#deleteConfirmModal" data-draft-id="<?= (int)$event['id'] ?>" title="Supprimer">
-                                                    <i class="bi bi-trash"></i>
+                                                <button type="button" class="btn btn-sm btn-action btn-delete" data-bs-toggle="modal" data-bs-target="#deleteConfirmModal" data-draft-id="<?= (int)$event['id'] ?>" title="Supprimer">
+                                                    <i class="bi bi-trash"></i><span>Supprimer</span>
                                                 </button>
                                             <?php else: ?>
-                                                <div class="btn-group">
+                                                <div class="btn-actions">
                                                     <a href="/templates/events/event-detail.php?id=<?= $event['id'] ?>"
-                                                       onclick="console.log('Clicking view button for event ID: <?= $event['id'] ?>')"
-                                                       class="btn btn-sm btn-outline-primary btn-action">
-                                                        <i class="bi bi-eye"></i> Voir
+                                                       class="btn btn-sm btn-action btn-view" title="Voir">
+                                                        <i class="bi bi-eye"></i><span>Voir</span>
                                                     </a>
                                                     <?php if ($event['status'] === 'approved'): ?>
-                                                        <a href="/templates/events/edit-event.php?id=<?= $event['id'] ?>"
-                                                           class="btn btn-sm btn-outline-secondary btn-action">
-                                                            <i class="bi bi-pencil"></i> Modifier
-                                                        </a>
+                                                        <button type="button"
+                                                                class="btn btn-sm btn-action btn-edit btn-edit-published"
+                                                                data-event-id="<?= (int)$event['id'] ?>" title="Modifier">
+                                                            <i class="bi bi-pencil"></i><span>Modifier</span>
+                                                        </button>
                                                     <?php endif; ?>
                                                 </div>
                                             <?php endif; ?>

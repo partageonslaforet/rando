@@ -1,0 +1,5423 @@
+[2025-01-16 15:17:39] INFO: 🚀 Début de la prévisualisation
+[2025-01-16 15:17:39] INFO: Données JSON brutes reçues: {"draftId":"342"}
+[2025-01-16 15:17:39] INFO: Données décodées: Array
+(
+    [draftId] => 342
+)
+
+[2025-01-16 15:17:39] INFO: DraftId extrait: 342
+[2025-01-16 15:17:39] INFO: Données formatées: Array
+(
+    [id] => 342
+    [title] => <qsf<sqdfc<
+    [description] => <sqdcsf<cdsd
+    [date] => 2025-01-21
+    [start_time] => 08:00:00
+    [end_time] => 00:00:00
+    [location] => wdfb
+    [venue] => Rue de l'Abreuvoir Saint-Médard 6887
+    [coordinates] => 49.820265,5.317383
+    [category] => running
+    [status] => draft
+    [visitors] => 
+    [user_id] => 96
+    [created_at] => 2025-01-16 15:11:12
+    [updated_at] => 2025-01-16 15:17:39
+    [organisation] => 0
+    [has_gpx] => 0
+    [gpx_path] => 
+    [gpx_downloadable] => 0
+    [main_image_path] => 
+    [main_image_storage] => 
+    [secondary_images] => Array
+        (
+        )
+
+    [organizer_name] => 
+    [organizer_email] => 
+    [route_ids] => 47
+    [route_names] => ≈◊ß≈ß 
+    [route_distances] => 32.10
+    [route_elevations] => 518
+    [route_descriptions] => 
+    [route_gpx_paths] => /uploads/gpx/678915036c9d0_1737037059.gpx
+    [route_gpx_downloadable] => 0
+    [contact_names] => 
+    [contact_emails] => 
+    [contact_phones] => 
+    [routes] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 47
+                    [name] => ≈◊ß≈ß 
+                    [distance] => 32.10
+                    [elevation_gain] => 518
+                    [description] => 
+                    [gpx_file] => /uploads/gpx/678915036c9d0_1737037059.gpx
+                    [gpx_downloadable] => 0
+                )
+
+        )
+
+    [contacts] => Array
+        (
+        )
+
+)
+
+[2025-01-16 15:17:39] ERROR: PHP Error [2]: Undefined array key "elevation" in /home/cool5792/rando.partageonslaforet.be/templates/events/preview-template.php:62
+[2025-01-16 15:23:49] INFO: 🚀 Début de la prévisualisation
+[2025-01-16 15:23:49] INFO: Données JSON brutes reçues: {"draftId":"342"}
+[2025-01-16 15:23:49] INFO: Données décodées: Array
+(
+    [draftId] => 342
+)
+
+[2025-01-16 15:23:49] INFO: DraftId extrait: 342
+[2025-01-16 15:23:49] INFO: Données formatées: Array
+(
+    [id] => 342
+    [title] => <qsf<sqdfc<
+    [description] => <sqdcsf<cdsd
+    [date] => 2025-01-21
+    [start_time] => 08:00:00
+    [end_time] => 00:00:00
+    [location] => wdfb
+    [venue] => Rue de l'Abreuvoir Saint-Médard 6887
+    [coordinates] => 49.820265,5.317383
+    [category] => running
+    [status] => draft
+    [visitors] => 
+    [user_id] => 96
+    [created_at] => 2025-01-16 15:11:12
+    [updated_at] => 2025-01-16 15:23:49
+    [organisation] => 0
+    [has_gpx] => 0
+    [gpx_path] => 
+    [gpx_downloadable] => 0
+    [main_image_path] => 
+    [main_image_storage] => 
+    [secondary_images] => Array
+        (
+        )
+
+    [organizer_name] => 
+    [organizer_email] => 
+    [route_ids] => 48
+    [route_names] => ≈◊ß≈ß 
+    [route_distances] => 32.10
+    [route_elevations] => 518
+    [route_descriptions] => 
+    [route_gpx_paths] => /uploads/gpx/6789167590f1f_1737037429.gpx
+    [route_gpx_downloadable] => 0
+    [contact_names] => 
+    [contact_emails] => 
+    [contact_phones] => 
+    [routes] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 48
+                    [name] => ≈◊ß≈ß 
+                    [distance] => 32.10
+                    [elevation_gain] => 518
+                    [description] => 
+                    [gpx_file] => /uploads/gpx/6789167590f1f_1737037429.gpx
+                    [gpx_downloadable] => 0
+                )
+
+        )
+
+    [contacts] => Array
+        (
+        )
+
+)
+
+[2025-01-16 15:23:49] ERROR: PHP Error [2]: Undefined array key "elevation" in /home/cool5792/rando.partageonslaforet.be/templates/events/preview-template.php:62
+[2025-01-16 15:26:47] INFO: 🚀 Début de la prévisualisation
+[2025-01-16 15:26:47] INFO: Données JSON brutes reçues: {"draftId":"342"}
+[2025-01-16 15:26:47] INFO: Données décodées: Array
+(
+    [draftId] => 342
+)
+
+[2025-01-16 15:26:47] INFO: DraftId extrait: 342
+[2025-01-16 15:26:47] INFO: Données formatées: Array
+(
+    [id] => 342
+    [title] => <qsf<sqdfc<
+    [description] => <sqdcsf<cdsd
+    [date] => 2025-01-21
+    [start_time] => 08:00:00
+    [end_time] => 00:00:00
+    [location] => wdfb
+    [venue] => Rue de l'Abreuvoir Saint-Médard 6887
+    [coordinates] => 49.820265,5.317383
+    [category] => running
+    [status] => draft
+    [visitors] => 
+    [user_id] => 96
+    [created_at] => 2025-01-16 15:11:12
+    [updated_at] => 2025-01-16 15:26:47
+    [organisation] => 18
+    [has_gpx] => 0
+    [gpx_path] => 
+    [gpx_downloadable] => 0
+    [main_image_path] => 
+    [main_image_storage] => 
+    [secondary_images] => Array
+        (
+        )
+
+    [organizer_name] => wdfsgbvwbdwfb
+    [organizer_email] => olivier@conrard.be
+    [route_ids] => 49
+    [route_names] => ≈◊ß≈ß 
+    [route_distances] => 32.10
+    [route_elevations] => 518
+    [route_descriptions] => 
+    [route_gpx_paths] => /uploads/gpx/67891727ab4ec_1737037607.gpx
+    [route_gpx_downloadable] => 0
+    [contact_names] => 
+    [contact_emails] => 
+    [contact_phones] => 
+    [routes] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 49
+                    [name] => ≈◊ß≈ß 
+                    [distance] => 32.10
+                    [elevation_gain] => 518
+                    [description] => 
+                    [gpx_file] => /uploads/gpx/67891727ab4ec_1737037607.gpx
+                    [gpx_downloadable] => 0
+                )
+
+        )
+
+    [contacts] => Array
+        (
+        )
+
+)
+
+[2025-01-16 15:26:47] ERROR: PHP Error [2]: Undefined array key "elevation" in /home/cool5792/rando.partageonslaforet.be/templates/events/preview-template.php:62
+[2025-01-16 15:32:11] INFO: 🚀 Début de la prévisualisation
+[2025-01-16 15:32:11] INFO: Données JSON brutes reçues: {"draftId":"342"}
+[2025-01-16 15:32:11] INFO: Données décodées: Array
+(
+    [draftId] => 342
+)
+
+[2025-01-16 15:32:11] INFO: DraftId extrait: 342
+[2025-01-16 15:32:11] INFO: Données formatées: Array
+(
+    [id] => 342
+    [title] => <qsf<sqdfc<
+    [description] => <sqdcsf<cdsd
+    [date] => 2025-01-21
+    [start_time] => 08:00:00
+    [end_time] => 00:00:00
+    [location] => wdfb
+    [venue] => Rue de l'Abreuvoir Saint-Médard 6887
+    [coordinates] => 49.820265,5.317383
+    [category] => running
+    [status] => draft
+    [visitors] => 
+    [user_id] => 96
+    [created_at] => 2025-01-16 15:11:12
+    [updated_at] => 2025-01-16 15:32:11
+    [organisation] => 19
+    [has_gpx] => 0
+    [gpx_path] => 
+    [gpx_downloadable] => 0
+    [main_image_path] => 
+    [main_image_storage] => 
+    [secondary_images] => Array
+        (
+        )
+
+    [organizer_name] => wdfsgbvwbdwfb
+    [organizer_email] => olivier@conrard.be
+    [route_ids] => 50
+    [route_names] => ≈◊ß≈ß 
+    [route_distances] => 32.10
+    [route_elevations] => 518
+    [route_descriptions] => 
+    [route_gpx_paths] => /uploads/gpx/6789186ba5fd3_1737037931.gpx
+    [route_gpx_downloadable] => 0
+    [contact_names] => 
+    [contact_emails] => 
+    [contact_phones] => 
+    [routes] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 50
+                    [name] => ≈◊ß≈ß 
+                    [distance] => 32.10
+                    [elevation_gain] => 518
+                    [description] => 
+                    [gpx_file] => /uploads/gpx/6789186ba5fd3_1737037931.gpx
+                    [gpx_downloadable] => 0
+                )
+
+        )
+
+    [contacts] => Array
+        (
+        )
+
+)
+
+[2025-01-16 15:32:11] ERROR: PHP Error [2]: Undefined array key "elevation" in /home/cool5792/rando.partageonslaforet.be/templates/events/preview-template.php:62
+[2025-01-16 15:33:42] INFO: 🚀 Début de la prévisualisation
+[2025-01-16 15:33:42] INFO: Données JSON brutes reçues: {"draftId":"345"}
+[2025-01-16 15:33:42] INFO: Données décodées: Array
+(
+    [draftId] => 345
+)
+
+[2025-01-16 15:33:42] INFO: DraftId extrait: 345
+[2025-01-16 15:33:42] INFO: Données formatées: Array
+(
+    [id] => 345
+    [title] => wsvbsdfxv‹
+    [description] => xv≈fv x
+    [date] => 2025-01-22
+    [start_time] => 08:00:00
+    [end_time] => 00:00:00
+    [location] => <◊∂d‹∂c©◊ 
+    [venue] => Juseret 6640
+    [coordinates] => 49.905249,5.509644
+    [category] => hiking
+    [status] => draft
+    [visitors] => 
+    [user_id] => 96
+    [created_at] => 2025-01-16 15:33:42
+    [updated_at] => 2025-01-16 15:33:42
+    [organisation] => 20
+    [has_gpx] => 0
+    [gpx_path] => 
+    [gpx_downloadable] => 0
+    [main_image_path] => 
+    [main_image_storage] => 
+    [secondary_images] => Array
+        (
+        )
+
+    [organizer_name] => sq<sc<c<sc
+    [organizer_email] => olivier@conrard.be
+    [route_ids] => 51
+    [route_names] => dfgsgfg 
+    [route_distances] => 21.20
+    [route_elevations] => 357
+    [route_descriptions] => 
+    [route_gpx_paths] => /uploads/gpx/678918c624e6f_1737038022.gpx
+    [route_gpx_downloadable] => 0
+    [contact_names] => 
+    [contact_emails] => 
+    [contact_phones] => 
+    [routes] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 51
+                    [name] => dfgsgfg 
+                    [distance] => 21.20
+                    [elevation_gain] => 357
+                    [description] => 
+                    [gpx_file] => /uploads/gpx/678918c624e6f_1737038022.gpx
+                    [gpx_downloadable] => 0
+                )
+
+        )
+
+    [contacts] => Array
+        (
+        )
+
+)
+
+[2025-01-16 15:33:42] ERROR: PHP Error [2]: Undefined array key "elevation" in /home/cool5792/rando.partageonslaforet.be/templates/events/preview-template.php:62
+[2025-01-16 15:39:43] INFO: 🚀 Début de la prévisualisation
+[2025-01-16 15:39:43] INFO: Données JSON brutes reçues: {"draftId":"345"}
+[2025-01-16 15:39:43] INFO: Données décodées: Array
+(
+    [draftId] => 345
+)
+
+[2025-01-16 15:39:43] INFO: DraftId extrait: 345
+[2025-01-16 15:39:43] INFO: Données formatées: Array
+(
+    [id] => 345
+    [title] => wsvbsdfxv‹
+    [description] => xv≈fv x
+    [date] => 2025-01-22
+    [start_time] => 08:00:00
+    [end_time] => 00:00:00
+    [location] => <◊∂d‹∂c©◊ 
+    [venue] => Juseret 6640
+    [coordinates] => 49.905249,5.509644
+    [category] => hiking
+    [status] => draft
+    [visitors] => 
+    [user_id] => 96
+    [created_at] => 2025-01-16 15:33:42
+    [updated_at] => 2025-01-16 15:39:43
+    [organisation] => 21
+    [has_gpx] => 0
+    [gpx_path] => 
+    [gpx_downloadable] => 0
+    [main_image_path] => 
+    [main_image_storage] => 
+    [secondary_images] => Array
+        (
+        )
+
+    [organizer_name] => sq<sc<c<sc
+    [organizer_email] => olivier@conrard.be
+    [route_ids] => 52
+    [route_names] => dfgsgfg 
+    [route_distances] => 21.20
+    [route_elevations] => 357
+    [route_descriptions] => 
+    [route_gpx_paths] => /uploads/gpx/67891a2f61866_1737038383.gpx
+    [route_gpx_downloadable] => 0
+    [contact_names] => 
+    [contact_emails] => 
+    [contact_phones] => 
+    [routes] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 52
+                    [name] => dfgsgfg 
+                    [distance] => 21.20
+                    [elevation_gain] => 357
+                    [description] => 
+                    [gpx_file] => /uploads/gpx/67891a2f61866_1737038383.gpx
+                    [gpx_downloadable] => 0
+                )
+
+        )
+
+    [contacts] => Array
+        (
+        )
+
+)
+
+[2025-01-16 15:39:43] ERROR: PHP Error [2]: Undefined array key "elevation" in /home/cool5792/rando.partageonslaforet.be/templates/events/preview-template.php:62
+[2025-01-16 15:42:03] INFO: 🚀 Début de la prévisualisation
+[2025-01-16 15:42:03] INFO: Données JSON brutes reçues: {"draftId":"345"}
+[2025-01-16 15:42:03] INFO: Données décodées: Array
+(
+    [draftId] => 345
+)
+
+[2025-01-16 15:42:03] INFO: DraftId extrait: 345
+[2025-01-16 15:42:03] INFO: Données formatées: Array
+(
+    [id] => 345
+    [title] => wsvbsdfxv‹
+    [description] => xv≈fv x
+    [date] => 2025-01-22
+    [start_time] => 08:00:00
+    [end_time] => 00:00:00
+    [location] => <◊∂d‹∂c©◊ 
+    [venue] => Juseret 6640
+    [coordinates] => 49.905249,5.509644
+    [category] => hiking
+    [status] => draft
+    [visitors] => 
+    [user_id] => 96
+    [created_at] => 2025-01-16 15:33:42
+    [updated_at] => 2025-01-16 15:42:03
+    [organisation] => 22
+    [has_gpx] => 0
+    [gpx_path] => 
+    [gpx_downloadable] => 0
+    [main_image_path] => 
+    [main_image_storage] => 
+    [secondary_images] => Array
+        (
+        )
+
+    [organizer_name] => sq<sc<c<sc
+    [organizer_email] => olivier@conrard.be
+    [route_ids] => 53
+    [route_names] => dfgsgfg 
+    [route_distances] => 21.20
+    [route_elevations] => 357
+    [route_descriptions] => 
+    [route_gpx_paths] => /uploads/gpx/67891abbe25ea_1737038523.gpx
+    [route_gpx_downloadable] => 0
+    [contact_names] => 
+    [contact_emails] => 
+    [contact_phones] => 
+    [routes] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 53
+                    [name] => dfgsgfg 
+                    [distance] => 21.20
+                    [elevation_gain] => 357
+                    [description] => 
+                    [gpx_file] => /uploads/gpx/67891abbe25ea_1737038523.gpx
+                    [gpx_downloadable] => 0
+                )
+
+        )
+
+    [contacts] => Array
+        (
+        )
+
+)
+
+[2025-01-16 15:42:03] ERROR: PHP Error [2]: Undefined array key "elevation" in /home/cool5792/rando.partageonslaforet.be/templates/events/preview-template.php:62
+[2025-01-16 15:43:03] INFO: 🚀 Début de la prévisualisation
+[2025-01-16 15:43:03] INFO: Données JSON brutes reçues: {"draftId":"348"}
+[2025-01-16 15:43:03] INFO: Données décodées: Array
+(
+    [draftId] => 348
+)
+
+[2025-01-16 15:43:03] INFO: DraftId extrait: 348
+[2025-01-16 15:43:03] INFO: Données formatées: Array
+(
+    [id] => 348
+    [title] => dgfhxfngc
+    [description] => fgncfgncgfvn
+    [date] => 2025-01-22
+    [start_time] => 08:00:00
+    [end_time] => 00:00:00
+    [location] => cgh,ngh,gh
+    [venue] => Rue de la Fontenelle Chiny 6810
+    [coordinates] => 49.717376,5.328369
+    [category] => hiking
+    [status] => draft
+    [visitors] => 
+    [user_id] => 96
+    [created_at] => 2025-01-16 15:43:03
+    [updated_at] => 2025-01-16 15:43:03
+    [organisation] => 17
+    [has_gpx] => 0
+    [gpx_path] => 
+    [gpx_downloadable] => 0
+    [main_image_path] => 
+    [main_image_storage] => 
+    [secondary_images] => Array
+        (
+        )
+
+    [organizer_name] => BIKING CLUB LA RULLES
+    [organizer_email] => rando@partageonslaforet.be
+    [route_ids] => 54
+    [route_names] => cgh,gch,g,
+    [route_distances] => 32.10
+    [route_elevations] => 518
+    [route_descriptions] => 
+    [route_gpx_paths] => /uploads/gpx/67891af74d99d_1737038583.gpx
+    [route_gpx_downloadable] => 0
+    [contact_names] => 
+    [contact_emails] => 
+    [contact_phones] => 
+    [routes] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 54
+                    [name] => cgh
+                    [distance] => 32.10
+                    [elevation_gain] => 518
+                    [description] => 
+                    [gpx_file] => /uploads/gpx/67891af74d99d_1737038583.gpx
+                    [gpx_downloadable] => 0
+                )
+
+        )
+
+    [contacts] => Array
+        (
+        )
+
+)
+
+[2025-01-16 15:43:03] ERROR: PHP Error [2]: Undefined array key "elevation" in /home/cool5792/rando.partageonslaforet.be/templates/events/preview-template.php:62
+[2025-01-16 15:48:36] INFO: 🚀 Début de la prévisualisation
+[2025-01-16 15:48:36] INFO: Données JSON brutes reçues: {"draftId":"348"}
+[2025-01-16 15:48:36] INFO: Données décodées: Array
+(
+    [draftId] => 348
+)
+
+[2025-01-16 15:48:36] INFO: DraftId extrait: 348
+[2025-01-16 15:48:36] INFO: Données formatées: Array
+(
+    [id] => 348
+    [title] => dgfhxfngc
+    [description] => fgncfgncgfvn
+    [date] => 2025-01-22
+    [start_time] => 08:00:00
+    [end_time] => 00:00:00
+    [location] => cgh,ngh,gh
+    [venue] => Rue de la Fontenelle Chiny 6810
+    [coordinates] => 49.717376,5.328369
+    [category] => hiking
+    [status] => draft
+    [visitors] => 
+    [user_id] => 96
+    [created_at] => 2025-01-16 15:43:03
+    [updated_at] => 2025-01-16 15:48:36
+    [organisation] => 17
+    [has_gpx] => 0
+    [gpx_path] => 
+    [gpx_downloadable] => 0
+    [main_image_path] => 
+    [main_image_storage] => 
+    [secondary_images] => Array
+        (
+        )
+
+    [organizer_name] => BIKING CLUB LA RULLES
+    [organizer_email] => rando@partageonslaforet.be
+    [route_ids] => 55
+    [route_names] => cgh,gch,g,
+    [route_distances] => 32.10
+    [route_elevations] => 518
+    [route_descriptions] => 
+    [route_gpx_paths] => /uploads/gpx/67891c448271b_1737038916.gpx
+    [route_gpx_downloadable] => 0
+    [contact_names] => 
+    [contact_emails] => 
+    [contact_phones] => 
+    [routes] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 55
+                    [name] => cgh
+                    [distance] => 32.10
+                    [elevation_gain] => 518
+                    [description] => 
+                    [gpx_file] => /uploads/gpx/67891c448271b_1737038916.gpx
+                    [gpx_downloadable] => 0
+                )
+
+        )
+
+    [contacts] => Array
+        (
+        )
+
+)
+
+[2025-01-16 15:48:36] ERROR: PHP Error [2]: Undefined array key "elevation" in /home/cool5792/rando.partageonslaforet.be/templates/events/preview-template.php:62
+[2025-01-16 15:49:28] INFO: 🚀 Début de la prévisualisation
+[2025-01-16 15:49:28] INFO: Données JSON brutes reçues: {"draftId":"351"}
+[2025-01-16 15:49:28] INFO: Données décodées: Array
+(
+    [draftId] => 351
+)
+
+[2025-01-16 15:49:28] INFO: DraftId extrait: 351
+[2025-01-16 15:49:28] INFO: Données formatées: Array
+(
+    [id] => 351
+    [title] => vsdv
+    [description] => svdsvdv
+    [date] => 2025-01-28
+    [start_time] => 08:00:00
+    [end_time] => 00:00:00
+    [location] => sdvsdvdv
+    [venue] => 33 Chaussée de la Braquenière Longlier 6840
+    [coordinates] => 49.866317,5.416260
+    [category] => running
+    [status] => draft
+    [visitors] => 
+    [user_id] => 96
+    [created_at] => 2025-01-16 15:49:28
+    [updated_at] => 2025-01-16 15:49:28
+    [organisation] => 11
+    [has_gpx] => 0
+    [gpx_path] => 
+    [gpx_downloadable] => 0
+    [main_image_path] => 
+    [main_image_storage] => 
+    [secondary_images] => Array
+        (
+        )
+
+    [organizer_name] => CC BELLEFONTAINE
+    [organizer_email] => rando@partageonslaforet.be
+    [route_ids] => 56
+    [route_names] => xvdxvdvb
+    [route_distances] => 43.70
+    [route_elevations] => 764
+    [route_descriptions] => 
+    [route_gpx_paths] => /uploads/gpx/67891c7826be6_1737038968.gpx
+    [route_gpx_downloadable] => 0
+    [contact_names] => 
+    [contact_emails] => 
+    [contact_phones] => 
+    [routes] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 56
+                    [name] => xvdxvdvb
+                    [distance] => 43.70
+                    [elevation_gain] => 764
+                    [description] => 
+                    [gpx_file] => /uploads/gpx/67891c7826be6_1737038968.gpx
+                    [gpx_downloadable] => 0
+                )
+
+        )
+
+    [contacts] => Array
+        (
+        )
+
+)
+
+[2025-01-16 15:49:28] ERROR: PHP Error [2]: Undefined array key "elevation" in /home/cool5792/rando.partageonslaforet.be/templates/events/preview-template.php:62
+[2025-01-16 15:53:03] INFO: 🚀 Début de la prévisualisation
+[2025-01-16 15:53:03] INFO: Données JSON brutes reçues: {"draftId":"352"}
+[2025-01-16 15:53:03] INFO: Données décodées: Array
+(
+    [draftId] => 352
+)
+
+[2025-01-16 15:53:03] INFO: DraftId extrait: 352
+[2025-01-16 15:53:03] INFO: Données formatées: Array
+(
+    [id] => 352
+    [title] => s<ddscs
+    [description] => <sdc<sdvc
+    [date] => 2025-01-29
+    [start_time] => 08:00:00
+    [end_time] => 00:00:00
+    [location] => sdqcvsdc
+    [venue] => Autoroute des Ardennes Resteigne 6927
+    [coordinates] => 50.088869,5.163574
+    [category] => running
+    [status] => draft
+    [visitors] => 
+    [user_id] => 96
+    [created_at] => 2025-01-16 15:53:03
+    [updated_at] => 2025-01-16 15:53:03
+    [organisation] => 11
+    [has_gpx] => 0
+    [gpx_path] => 
+    [gpx_downloadable] => 0
+    [main_image_path] => 
+    [main_image_storage] => 
+    [secondary_images] => Array
+        (
+        )
+
+    [organizer_name] => CC BELLEFONTAINE
+    [organizer_email] => rando@partageonslaforet.be
+    [route_ids] => 57
+    [route_names] => <qscdsc
+    [route_distances] => 43.70
+    [route_elevations] => 764
+    [route_descriptions] => 
+    [route_gpx_paths] => /uploads/gpx/67891d4fc569d_1737039183.gpx
+    [route_gpx_downloadable] => 0
+    [contact_names] => 
+    [contact_emails] => 
+    [contact_phones] => 
+    [routes] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 57
+                    [name] => <qscdsc
+                    [distance] => 43.70
+                    [elevation_gain] => 764
+                    [description] => 
+                    [gpx_file] => /uploads/gpx/67891d4fc569d_1737039183.gpx
+                    [gpx_downloadable] => 0
+                )
+
+        )
+
+    [contacts] => Array
+        (
+        )
+
+)
+
+[2025-01-16 15:53:03] ERROR: PHP Error [2]: Undefined array key "elevation" in /home/cool5792/rando.partageonslaforet.be/templates/events/preview-template.php:62
+[2025-01-16 15:56:18] INFO: 🚀 Début de la prévisualisation
+[2025-01-16 15:56:18] INFO: Données JSON brutes reçues: {"draftId":"353"}
+[2025-01-16 15:56:18] INFO: Données décodées: Array
+(
+    [draftId] => 353
+)
+
+[2025-01-16 15:56:18] INFO: DraftId extrait: 353
+[2025-01-16 15:56:18] INFO: Données formatées: Array
+(
+    [id] => 353
+    [title] => sdvqwsc
+    [description] => sdvcqwdvc
+    [date] => 2025-01-29
+    [start_time] => 08:00:00
+    [end_time] => 00:00:00
+    [location] => zefqzfqe
+    [venue] => Chiny
+    [coordinates] => 49.749331,5.383301
+    [category] => hiking
+    [status] => draft
+    [visitors] => 
+    [user_id] => 96
+    [created_at] => 2025-01-16 15:56:18
+    [updated_at] => 2025-01-16 15:56:18
+    [organisation] => 11
+    [has_gpx] => 0
+    [gpx_path] => 
+    [gpx_downloadable] => 0
+    [main_image_path] => 
+    [main_image_storage] => 
+    [secondary_images] => Array
+        (
+        )
+
+    [organizer_name] => CC BELLEFONTAINE
+    [organizer_email] => rando@partageonslaforet.be
+    [route_ids] => 58
+    [route_names] => qs<vcqsdvdv
+    [route_distances] => 34.30
+    [route_elevations] => 514
+    [route_descriptions] => 
+    [route_gpx_paths] => /uploads/gpx/67891e12c1057_1737039378.gpx
+    [route_gpx_downloadable] => 0
+    [contact_names] => 
+    [contact_emails] => 
+    [contact_phones] => 
+    [routes] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 58
+                    [name] => qs<vcqsdvdv
+                    [distance] => 34.30
+                    [elevation_gain] => 514
+                    [description] => 
+                    [gpx_file] => /uploads/gpx/67891e12c1057_1737039378.gpx
+                    [gpx_downloadable] => 0
+                )
+
+        )
+
+    [contacts] => Array
+        (
+        )
+
+)
+
+[2025-01-16 15:56:18] ERROR: PHP Error [2]: Undefined array key "elevation" in /home/cool5792/rando.partageonslaforet.be/templates/events/preview-template.php:62
+[2025-01-16 16:00:21] INFO: 🚀 Début de la prévisualisation
+[2025-01-16 16:00:21] INFO: Données JSON brutes reçues: {"draftId":"354"}
+[2025-01-16 16:00:21] INFO: Données décodées: Array
+(
+    [draftId] => 354
+)
+
+[2025-01-16 16:00:21] INFO: DraftId extrait: 354
+[2025-01-16 16:00:21] INFO: Données formatées: Array
+(
+    [id] => 354
+    [title] => ghsxdfbfgd
+    [description] => xdfbxfdgbxfg
+    [date] => 2025-01-29
+    [start_time] => 08:00:00
+    [end_time] => 00:00:00
+    [location] => dfbxfgdb
+    [venue] => Bure 6927
+    [coordinates] => 50.071244,5.262451
+    [category] => hiking
+    [status] => draft
+    [visitors] => 
+    [user_id] => 96
+    [created_at] => 2025-01-16 16:00:21
+    [updated_at] => 2025-01-16 16:00:21
+    [organisation] => 11
+    [has_gpx] => 0
+    [gpx_path] => 
+    [gpx_downloadable] => 0
+    [main_image_path] => 
+    [main_image_storage] => 
+    [secondary_images] => Array
+        (
+        )
+
+    [organizer_name] => CC BELLEFONTAINE
+    [organizer_email] => rando@partageonslaforet.be
+    [route_ids] => 59
+    [route_names] => hsxrhxdftb
+    [route_distances] => 34.30
+    [route_elevations] => 514
+    [route_descriptions] => 
+    [route_gpx_paths] => /uploads/gpx/67891f056747f_1737039621.gpx
+    [route_gpx_downloadable] => 0
+    [contact_names] => 
+    [contact_emails] => 
+    [contact_phones] => 
+    [routes] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 59
+                    [name] => hsxrhxdftb
+                    [distance] => 34.30
+                    [elevation_gain] => 514
+                    [description] => 
+                    [gpx_file] => /uploads/gpx/67891f056747f_1737039621.gpx
+                    [gpx_downloadable] => 0
+                )
+
+        )
+
+    [contacts] => Array
+        (
+        )
+
+)
+
+[2025-01-16 16:00:21] ERROR: PHP Error [2]: Undefined array key "elevation" in /home/cool5792/rando.partageonslaforet.be/templates/events/preview-template.php:62
+[2025-01-16 16:04:45] INFO: 🚀 Début de la prévisualisation
+[2025-01-16 16:04:45] INFO: Données JSON brutes reçues: {"draftId":"354"}
+[2025-01-16 16:04:45] INFO: Données décodées: Array
+(
+    [draftId] => 354
+)
+
+[2025-01-16 16:04:45] INFO: DraftId extrait: 354
+[2025-01-16 16:04:45] INFO: Données formatées: Array
+(
+    [id] => 354
+    [title] => ghsxdfbfgd
+    [description] => xdfbxfdgbxfg
+    [date] => 2025-01-29
+    [start_time] => 08:00:00
+    [end_time] => 00:00:00
+    [location] => dfbxfgdb
+    [venue] => Bure 6927
+    [coordinates] => 50.071244,5.262451
+    [category] => hiking
+    [status] => draft
+    [visitors] => 
+    [user_id] => 96
+    [created_at] => 2025-01-16 16:00:21
+    [updated_at] => 2025-01-16 16:04:44
+    [organisation] => 11
+    [has_gpx] => 0
+    [gpx_path] => 
+    [gpx_downloadable] => 0
+    [main_image_path] => 
+    [main_image_storage] => 
+    [secondary_images] => Array
+        (
+        )
+
+    [organizer_name] => CC BELLEFONTAINE
+    [organizer_email] => rando@partageonslaforet.be
+    [route_ids] => 60
+    [route_names] => hsxrhxdftb
+    [route_distances] => 34.30
+    [route_elevations] => 514
+    [route_descriptions] => 
+    [route_gpx_paths] => /uploads/gpx/6789200cedec7_1737039884.gpx
+    [route_gpx_downloadable] => 0
+    [contact_names] => 
+    [contact_emails] => 
+    [contact_phones] => 
+    [routes] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 60
+                    [name] => hsxrhxdftb
+                    [distance] => 34.30
+                    [elevation_gain] => 514
+                    [description] => 
+                    [gpx_file] => /uploads/gpx/6789200cedec7_1737039884.gpx
+                    [gpx_downloadable] => 0
+                )
+
+        )
+
+    [contacts] => Array
+        (
+        )
+
+)
+
+[2025-01-16 16:04:45] ERROR: PHP Error [2]: Undefined array key "elevation" in /home/cool5792/rando.partageonslaforet.be/templates/events/preview-template.php:62
+[2025-01-16 16:05:35] INFO: 🚀 Début de la prévisualisation
+[2025-01-16 16:05:35] INFO: Données JSON brutes reçues: {"draftId":"355"}
+[2025-01-16 16:05:35] INFO: Données décodées: Array
+(
+    [draftId] => 355
+)
+
+[2025-01-16 16:05:35] INFO: DraftId extrait: 355
+[2025-01-16 16:05:35] INFO: Données formatées: Array
+(
+    [id] => 355
+    [title] => hg;gbh;kjhb
+    [description] => bhj;kgkjgh
+    [date] => 2025-01-15
+    [start_time] => 08:00:00
+    [end_time] => 00:00:00
+    [location] => ghk;lghjbk;
+    [venue] => 9 Rue Saint-Nicolas Éprave 5580
+    [coordinates] => 50.145226,5.158081
+    [category] => running
+    [status] => draft
+    [visitors] => 
+    [user_id] => 96
+    [created_at] => 2025-01-16 16:05:35
+    [updated_at] => 2025-01-16 16:05:35
+    [organisation] => 11
+    [has_gpx] => 0
+    [gpx_path] => 
+    [gpx_downloadable] => 0
+    [main_image_path] => 
+    [main_image_storage] => 
+    [secondary_images] => Array
+        (
+        )
+
+    [organizer_name] => CC BELLEFONTAINE
+    [organizer_email] => rando@partageonslaforet.be
+    [route_ids] => 61
+    [route_names] => ghjk;ghjk
+    [route_distances] => 21.20
+    [route_elevations] => 357
+    [route_descriptions] => 
+    [route_gpx_paths] => /uploads/gpx/6789203f7ef7a_1737039935.gpx
+    [route_gpx_downloadable] => 0
+    [contact_names] => 
+    [contact_emails] => 
+    [contact_phones] => 
+    [routes] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 61
+                    [name] => ghjk;ghjk
+                    [distance] => 21.20
+                    [elevation_gain] => 357
+                    [description] => 
+                    [gpx_file] => /uploads/gpx/6789203f7ef7a_1737039935.gpx
+                    [gpx_downloadable] => 0
+                )
+
+        )
+
+    [contacts] => Array
+        (
+        )
+
+)
+
+[2025-01-16 16:05:35] ERROR: PHP Error [2]: Undefined array key "elevation" in /home/cool5792/rando.partageonslaforet.be/templates/events/preview-template.php:62
+[2025-01-16 16:10:38] INFO: 🚀 Début de la prévisualisation
+[2025-01-16 16:10:38] INFO: Données JSON brutes reçues: {"draftId":"355"}
+[2025-01-16 16:10:38] INFO: Données décodées: Array
+(
+    [draftId] => 355
+)
+
+[2025-01-16 16:10:38] INFO: DraftId extrait: 355
+[2025-01-16 16:10:38] INFO: Données formatées: Array
+(
+    [id] => 355
+    [title] => hg;gbh;kjhb
+    [description] => bhj;kgkjgh
+    [date] => 2025-01-15
+    [start_time] => 08:00:00
+    [end_time] => 00:00:00
+    [location] => ghk;lghjbk;
+    [venue] => 9 Rue Saint-Nicolas Éprave 5580
+    [coordinates] => 50.145226,5.158081
+    [category] => running
+    [status] => draft
+    [visitors] => 
+    [user_id] => 96
+    [created_at] => 2025-01-16 16:05:35
+    [updated_at] => 2025-01-16 16:10:38
+    [organisation] => 11
+    [has_gpx] => 0
+    [gpx_path] => 
+    [gpx_downloadable] => 0
+    [main_image_path] => 
+    [main_image_storage] => 
+    [secondary_images] => Array
+        (
+        )
+
+    [organizer_name] => CC BELLEFONTAINE
+    [organizer_email] => rando@partageonslaforet.be
+    [route_ids] => 62
+    [route_names] => ghjk;ghjk
+    [route_distances] => 21.20
+    [route_elevations] => 357
+    [route_descriptions] => 
+    [route_gpx_paths] => /uploads/gpx/6789216e7f21e_1737040238.gpx
+    [route_gpx_downloadable] => 0
+    [contact_names] => 
+    [contact_emails] => 
+    [contact_phones] => 
+    [routes] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 62
+                    [name] => ghjk;ghjk
+                    [distance] => 21.20
+                    [elevation_gain] => 357
+                    [description] => 
+                    [gpx_file] => /uploads/gpx/6789216e7f21e_1737040238.gpx
+                    [gpx_downloadable] => 0
+                )
+
+        )
+
+    [contacts] => Array
+        (
+        )
+
+)
+
+[2025-01-16 16:10:38] ERROR: PHP Error [2]: Undefined array key "elevation" in /home/cool5792/rando.partageonslaforet.be/templates/events/preview-template.php:62
+[2025-01-16 16:11:28] INFO: 🚀 Début de la prévisualisation
+[2025-01-16 16:11:28] INFO: Données JSON brutes reçues: {"draftId":"356"}
+[2025-01-16 16:11:28] INFO: Données décodées: Array
+(
+    [draftId] => 356
+)
+
+[2025-01-16 16:11:28] INFO: DraftId extrait: 356
+[2025-01-16 16:11:28] INFO: Données formatées: Array
+(
+    [id] => 356
+    [title] => dwfbwdgfx
+    [description] => wdbvwdxfvw
+    [date] => 2025-01-28
+    [start_time] => 08:00:00
+    [end_time] => 00:00:00
+    [location] => wdfbwxdfvb
+    [venue] => Rue de Nanciry Bastogne 6686
+    [coordinates] => 50.071244,5.553589
+    [category] => running
+    [status] => draft
+    [visitors] => 
+    [user_id] => 96
+    [created_at] => 2025-01-16 16:11:28
+    [updated_at] => 2025-01-16 16:11:28
+    [organisation] => 11
+    [has_gpx] => 0
+    [gpx_path] => 
+    [gpx_downloadable] => 0
+    [main_image_path] => 
+    [main_image_storage] => 
+    [secondary_images] => Array
+        (
+        )
+
+    [organizer_name] => CC BELLEFONTAINE
+    [organizer_email] => rando@partageonslaforet.be
+    [route_ids] => 63
+    [route_names] => wdbwdfvb
+    [route_distances] => 21.20
+    [route_elevations] => 357
+    [route_descriptions] => 
+    [route_gpx_paths] => /uploads/gpx/678921a06569d_1737040288.gpx
+    [route_gpx_downloadable] => 0
+    [contact_names] => 
+    [contact_emails] => 
+    [contact_phones] => 
+    [routes] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 63
+                    [name] => wdbwdfvb
+                    [distance] => 21.20
+                    [elevation_gain] => 357
+                    [description] => 
+                    [gpx_file] => /uploads/gpx/678921a06569d_1737040288.gpx
+                    [gpx_downloadable] => 0
+                )
+
+        )
+
+    [contacts] => Array
+        (
+        )
+
+)
+
+[2025-01-16 16:11:28] ERROR: PHP Error [2]: Undefined array key "elevation" in /home/cool5792/rando.partageonslaforet.be/templates/events/preview-template.php:62
+[2025-01-16 16:14:06] INFO: 🚀 Début de la prévisualisation
+[2025-01-16 16:14:06] INFO: Données JSON brutes reçues: {"draftId":"356"}
+[2025-01-16 16:14:06] INFO: Données décodées: Array
+(
+    [draftId] => 356
+)
+
+[2025-01-16 16:14:06] INFO: DraftId extrait: 356
+[2025-01-16 16:14:06] INFO: Données formatées: Array
+(
+    [id] => 356
+    [title] => dwfbwdgfx
+    [description] => wdbvwdxfvw
+    [date] => 2025-01-28
+    [start_time] => 08:00:00
+    [end_time] => 00:00:00
+    [location] => wdfbwxdfvb
+    [venue] => Rue de Nanciry Bastogne 6686
+    [coordinates] => 50.071244,5.553589
+    [category] => running
+    [status] => draft
+    [visitors] => 
+    [user_id] => 96
+    [created_at] => 2025-01-16 16:11:28
+    [updated_at] => 2025-01-16 16:14:06
+    [organisation] => 11
+    [has_gpx] => 0
+    [gpx_path] => 
+    [gpx_downloadable] => 0
+    [main_image_path] => 
+    [main_image_storage] => 
+    [secondary_images] => Array
+        (
+        )
+
+    [organizer_name] => CC BELLEFONTAINE
+    [organizer_email] => rando@partageonslaforet.be
+    [route_ids] => 64
+    [route_names] => wdbwdfvb
+    [route_distances] => 21.20
+    [route_elevations] => 357
+    [route_descriptions] => 
+    [route_gpx_paths] => /uploads/gpx/6789223e9d612_1737040446.gpx
+    [route_gpx_downloadable] => 0
+    [contact_names] => 
+    [contact_emails] => 
+    [contact_phones] => 
+    [routes] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 64
+                    [name] => wdbwdfvb
+                    [distance] => 21.20
+                    [elevation_gain] => 357
+                    [description] => 
+                    [gpx_file] => /uploads/gpx/6789223e9d612_1737040446.gpx
+                    [gpx_downloadable] => 0
+                )
+
+        )
+
+    [contacts] => Array
+        (
+        )
+
+)
+
+[2025-01-16 16:14:06] ERROR: PHP Error [2]: Undefined array key "elevation" in /home/cool5792/rando.partageonslaforet.be/templates/events/preview-template.php:62
+[2025-01-16 16:14:51] INFO: 🚀 Début de la prévisualisation
+[2025-01-16 16:14:51] INFO: Données JSON brutes reçues: {"draftId":"357"}
+[2025-01-16 16:14:51] INFO: Données décodées: Array
+(
+    [draftId] => 357
+)
+
+[2025-01-16 16:14:51] INFO: DraftId extrait: 357
+[2025-01-16 16:14:51] INFO: Données formatées: Array
+(
+    [id] => 357
+    [title] => dsfgbxbx
+    [description] => xbdfgbx
+    [date] => 2025-01-14
+    [start_time] => 08:00:00
+    [end_time] => 00:00:00
+    [location] => fdbxdfgbx
+    [venue] => N825 Hamipre 6840
+    [coordinates] => 49.848610,5.471191
+    [category] => 
+    [status] => draft
+    [visitors] => 
+    [user_id] => 96
+    [created_at] => 2025-01-16 16:14:51
+    [updated_at] => 2025-01-16 16:14:51
+    [organisation] => 17
+    [has_gpx] => 0
+    [gpx_path] => 
+    [gpx_downloadable] => 0
+    [main_image_path] => 
+    [main_image_storage] => 
+    [secondary_images] => Array
+        (
+        )
+
+    [organizer_name] => BIKING CLUB LA RULLES
+    [organizer_email] => rando@partageonslaforet.be
+    [route_ids] => 65
+    [route_names] => xfgbxsdfgbxdf
+    [route_distances] => 34.40
+    [route_elevations] => 419
+    [route_descriptions] => 
+    [route_gpx_paths] => /uploads/gpx/6789226b7c2ad_1737040491.gpx
+    [route_gpx_downloadable] => 0
+    [contact_names] => 
+    [contact_emails] => 
+    [contact_phones] => 
+    [routes] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 65
+                    [name] => xfgbxsdfgbxdf
+                    [distance] => 34.40
+                    [elevation_gain] => 419
+                    [description] => 
+                    [gpx_file] => /uploads/gpx/6789226b7c2ad_1737040491.gpx
+                    [gpx_downloadable] => 0
+                )
+
+        )
+
+    [contacts] => Array
+        (
+        )
+
+)
+
+[2025-01-16 16:14:51] ERROR: PHP Error [2]: Undefined array key "elevation" in /home/cool5792/rando.partageonslaforet.be/templates/events/preview-template.php:62
+[2025-01-16 16:16:52] INFO: 🚀 Début de la prévisualisation
+[2025-01-16 16:16:52] INFO: Données JSON brutes reçues: {"draftId":"357"}
+[2025-01-16 16:16:52] INFO: Données décodées: Array
+(
+    [draftId] => 357
+)
+
+[2025-01-16 16:16:52] INFO: DraftId extrait: 357
+[2025-01-16 16:16:52] INFO: Données formatées: Array
+(
+    [id] => 357
+    [title] => dsfgbxbx
+    [description] => xbdfgbx
+    [date] => 2025-01-14
+    [start_time] => 08:00:00
+    [end_time] => 00:00:00
+    [location] => fdbxdfgbx
+    [venue] => N825 Hamipre 6840
+    [coordinates] => 49.848610,5.471191
+    [category] => 
+    [status] => draft
+    [visitors] => 
+    [user_id] => 96
+    [created_at] => 2025-01-16 16:14:51
+    [updated_at] => 2025-01-16 16:16:52
+    [organisation] => 17
+    [has_gpx] => 0
+    [gpx_path] => 
+    [gpx_downloadable] => 0
+    [main_image_path] => 
+    [main_image_storage] => 
+    [secondary_images] => Array
+        (
+        )
+
+    [organizer_name] => BIKING CLUB LA RULLES
+    [organizer_email] => rando@partageonslaforet.be
+    [route_ids] => 66
+    [route_names] => xfgbxsdfgbxdf
+    [route_distances] => 34.40
+    [route_elevations] => 419
+    [route_descriptions] => 
+    [route_gpx_paths] => /uploads/gpx/678922e4b3d4b_1737040612.gpx
+    [route_gpx_downloadable] => 0
+    [contact_names] => 
+    [contact_emails] => 
+    [contact_phones] => 
+    [routes] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 66
+                    [name] => xfgbxsdfgbxdf
+                    [distance] => 34.40
+                    [elevation_gain] => 419
+                    [description] => 
+                    [gpx_file] => /uploads/gpx/678922e4b3d4b_1737040612.gpx
+                    [gpx_downloadable] => 0
+                )
+
+        )
+
+    [contacts] => Array
+        (
+        )
+
+)
+
+[2025-01-16 16:16:52] ERROR: PHP Error [2]: Undefined array key "elevation" in /home/cool5792/rando.partageonslaforet.be/templates/events/preview-template.php:62
+[2025-01-16 16:17:32] INFO: 🚀 Début de la prévisualisation
+[2025-01-16 16:17:32] INFO: Données JSON brutes reçues: {"draftId":"358"}
+[2025-01-16 16:17:32] INFO: Données décodées: Array
+(
+    [draftId] => 358
+)
+
+[2025-01-16 16:17:32] INFO: DraftId extrait: 358
+[2025-01-16 16:17:32] INFO: Données formatées: Array
+(
+    [id] => 358
+    [title] => w≈v‹Ò◊‹
+    [description] => wwxvw◊xs
+    [date] => 2025-01-21
+    [start_time] => 08:00:00
+    [end_time] => 00:00:00
+    [location] => ≈‹v‹Ò◊dx
+    [venue] => Suxy 6811
+    [coordinates] => 49.724479,5.438232
+    [category] => running
+    [status] => draft
+    [visitors] => 
+    [user_id] => 96
+    [created_at] => 2025-01-16 16:17:32
+    [updated_at] => 2025-01-16 16:17:32
+    [organisation] => 11
+    [has_gpx] => 0
+    [gpx_path] => 
+    [gpx_downloadable] => 0
+    [main_image_path] => 
+    [main_image_storage] => 
+    [secondary_images] => Array
+        (
+        )
+
+    [organizer_name] => CC BELLEFONTAINE
+    [organizer_email] => rando@partageonslaforet.be
+    [route_ids] => 67
+    [route_names] => ≈vxv
+    [route_distances] => 43.70
+    [route_elevations] => 764
+    [route_descriptions] => 
+    [route_gpx_paths] => /uploads/gpx/6789230cac566_1737040652.gpx
+    [route_gpx_downloadable] => 0
+    [contact_names] => 
+    [contact_emails] => 
+    [contact_phones] => 
+    [routes] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 67
+                    [name] => ≈vxv
+                    [distance] => 43.70
+                    [elevation_gain] => 764
+                    [description] => 
+                    [gpx_file] => /uploads/gpx/6789230cac566_1737040652.gpx
+                    [gpx_downloadable] => 0
+                )
+
+        )
+
+    [contacts] => Array
+        (
+        )
+
+)
+
+[2025-01-16 16:17:32] ERROR: PHP Error [2]: Undefined array key "elevation" in /home/cool5792/rando.partageonslaforet.be/templates/events/preview-template.php:62
+[2025-01-16 16:22:45] INFO: 🚀 Début de la prévisualisation
+[2025-01-16 16:22:45] INFO: Données JSON brutes reçues: {"draftId":"359"}
+[2025-01-16 16:22:45] INFO: Données décodées: Array
+(
+    [draftId] => 359
+)
+
+[2025-01-16 16:22:45] INFO: DraftId extrait: 359
+[2025-01-16 16:22:45] INFO: Données formatées: Array
+(
+    [id] => 359
+    [title] => qzssfvswfv
+    [description] => wqsfvgwsdvfgwdrf
+    [date] => 2025-01-29
+    [start_time] => 08:00:00
+    [end_time] => 00:00:00
+    [location] => wsgrredgxdb
+    [venue] => Chemin de la Mellée Saint-Médard 6887
+    [coordinates] => 49.809632,5.322876
+    [category] => hiking
+    [status] => draft
+    [visitors] => 
+    [user_id] => 96
+    [created_at] => 2025-01-16 16:22:44
+    [updated_at] => 2025-01-16 16:22:44
+    [organisation] => 11
+    [has_gpx] => 0
+    [gpx_path] => 
+    [gpx_downloadable] => 0
+    [main_image_path] => 
+    [main_image_storage] => 
+    [secondary_images] => Array
+        (
+        )
+
+    [organizer_name] => CC BELLEFONTAINE
+    [organizer_email] => rando@partageonslaforet.be
+    [route_ids] => 68
+    [route_names] => xdhbshrdxfb
+    [route_distances] => 34.30
+    [route_elevations] => 514
+    [route_descriptions] => 
+    [route_gpx_paths] => /uploads/gpx/67892444f179d_1737040964.gpx
+    [route_gpx_downloadable] => 0
+    [contact_names] => 
+    [contact_emails] => 
+    [contact_phones] => 
+    [routes] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 68
+                    [name] => xdhbshrdxfb
+                    [distance] => 34.30
+                    [elevation_gain] => 514
+                    [description] => 
+                    [gpx_file] => /uploads/gpx/67892444f179d_1737040964.gpx
+                    [gpx_downloadable] => 0
+                )
+
+        )
+
+    [contacts] => Array
+        (
+        )
+
+)
+
+[2025-01-16 16:22:45] ERROR: PHP Error [2]: Undefined array key "elevation" in /home/cool5792/rando.partageonslaforet.be/templates/events/preview-template.php:62
+[2025-01-16 16:30:33] INFO: 🚀 Début de la prévisualisation
+[2025-01-16 16:30:33] INFO: Données JSON brutes reçues: {"draftId":"360"}
+[2025-01-16 16:30:33] INFO: Données décodées: Array
+(
+    [draftId] => 360
+)
+
+[2025-01-16 16:30:33] INFO: DraftId extrait: 360
+[2025-01-16 16:30:33] INFO: Données formatées: Array
+(
+    [id] => 360
+    [title] => <sdvwsdv
+    [description] => <sdvs<wdvwÒ∂vf
+    [date] => 2025-01-22
+    [start_time] => 08:00:00
+    [end_time] => 00:00:00
+    [location] => wdfbwbdf
+    [venue] => 115 Le Routeux Saint-Médard 6887
+    [coordinates] => 49.813176,5.317383
+    [category] => running
+    [status] => draft
+    [visitors] => 
+    [user_id] => 96
+    [created_at] => 2025-01-16 16:30:33
+    [updated_at] => 2025-01-16 16:30:33
+    [organisation] => 11
+    [has_gpx] => 0
+    [gpx_path] => 
+    [gpx_downloadable] => 0
+    [main_image_path] => 
+    [main_image_storage] => 
+    [secondary_images] => Array
+        (
+        )
+
+    [organizer_name] => CC BELLEFONTAINE
+    [organizer_email] => rando@partageonslaforet.be
+    [route_ids] => 69
+    [route_names] => wdbfwdbf
+    [route_distances] => 32.10
+    [route_elevations] => 518
+    [route_descriptions] => 
+    [route_gpx_paths] => /uploads/gpx/678926195b6c4_1737041433.gpx
+    [route_gpx_downloadable] => 0
+    [contact_names] => 
+    [contact_emails] => 
+    [contact_phones] => 
+    [routes] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 69
+                    [name] => wdbfwdbf
+                    [distance] => 32.10
+                    [elevation_gain] => 518
+                    [description] => 
+                    [gpx_file] => /uploads/gpx/678926195b6c4_1737041433.gpx
+                    [gpx_downloadable] => 0
+                )
+
+        )
+
+    [contacts] => Array
+        (
+        )
+
+)
+
+[2025-01-16 16:58:00] INFO: 🚀 Début de la prévisualisation
+[2025-01-16 16:58:00] INFO: Données JSON brutes reçues: {"draftId":"365"}
+[2025-01-16 16:58:00] INFO: Données décodées: Array
+(
+    [draftId] => 365
+)
+
+[2025-01-16 16:58:00] INFO: DraftId extrait: 365
+[2025-01-16 16:58:00] INFO: Données formatées: Array
+(
+    [id] => 365
+    [title] => wxdfbdb
+    [description] => xdfbwxdfb
+    [date] => 2025-01-29
+    [start_time] => 08:00:00
+    [end_time] => 00:00:00
+    [location] => xdfbxfdb
+    [venue] => ancienne voie de chemin de fer L163A Orgeo 6880
+    [coordinates] => 49.820265,5.284424
+    [category] => running
+    [status] => draft
+    [visitors] => 
+    [user_id] => 96
+    [created_at] => 2025-01-16 16:58:00
+    [updated_at] => 2025-01-16 16:58:00
+    [organisation] => 11
+    [has_gpx] => 0
+    [gpx_path] => 
+    [gpx_downloadable] => 0
+    [main_image_path] => 
+    [main_image_storage] => 
+    [secondary_images] => Array
+        (
+        )
+
+    [organizer_name] => CC BELLEFONTAINE
+    [organizer_email] => rando@partageonslaforet.be
+    [route_ids] => 74
+    [route_names] => xdfbxdfb
+    [route_distances] => 34.30
+    [route_elevations] => 514
+    [route_descriptions] => 
+    [route_gpx_paths] => /uploads/gpx/67892c881fded_1737043080.gpx
+    [route_gpx_downloadable] => 0
+    [contact_names] => 
+    [contact_emails] => 
+    [contact_phones] => 
+    [routes] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 74
+                    [name] => xdfbxdfb
+                    [distance] => 34.30
+                    [elevation_gain] => 514
+                    [description] => 
+                    [gpx_file] => /uploads/gpx/67892c881fded_1737043080.gpx
+                    [gpx_downloadable] => 0
+                )
+
+        )
+
+    [contacts] => Array
+        (
+        )
+
+)
+
+[2025-01-16 17:01:36] INFO: 🚀 Début de la prévisualisation
+[2025-01-16 17:01:36] INFO: Données JSON brutes reçues: {"draftId":"366"}
+[2025-01-16 17:01:36] INFO: Données décodées: Array
+(
+    [draftId] => 366
+)
+
+[2025-01-16 17:01:36] INFO: DraftId extrait: 366
+[2025-01-16 17:01:36] INFO: Données formatées: Array
+(
+    [id] => 366
+    [title] => wdbvwv
+    [description] => wdfbwbvw
+    [date] => 2025-01-29
+    [start_time] => 08:00:00
+    [end_time] => 00:00:00
+    [location] => xnbxbnxfngx
+    [venue] => Grapfontaine
+    [coordinates] => 49.788357,5.399780
+    [category] => hiking
+    [status] => draft
+    [visitors] => 
+    [user_id] => 96
+    [created_at] => 2025-01-16 17:01:36
+    [updated_at] => 2025-01-16 17:01:36
+    [organisation] => 11
+    [has_gpx] => 0
+    [gpx_path] => 
+    [gpx_downloadable] => 0
+    [main_image_path] => 
+    [main_image_storage] => 
+    [secondary_images] => Array
+        (
+        )
+
+    [organizer_name] => CC BELLEFONTAINE
+    [organizer_email] => rando@partageonslaforet.be
+    [route_ids] => 75
+    [route_names] => xfgnxfng
+    [route_distances] => 34.40
+    [route_elevations] => 419
+    [route_descriptions] => 
+    [route_gpx_paths] => /uploads/gpx/67892d609663c_1737043296.gpx
+    [route_gpx_downloadable] => 0
+    [contact_names] => 
+    [contact_emails] => 
+    [contact_phones] => 
+    [routes] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 75
+                    [name] => xfgnxfng
+                    [distance] => 34.40
+                    [elevation_gain] => 419
+                    [description] => 
+                    [gpx_file] => /uploads/gpx/67892d609663c_1737043296.gpx
+                    [gpx_downloadable] => 0
+                )
+
+        )
+
+    [contacts] => Array
+        (
+        )
+
+)
+
+[2025-01-16 17:05:23] INFO: 🚀 Début de la prévisualisation
+[2025-01-16 17:05:23] INFO: Données JSON brutes reçues: {"draftId":"367"}
+[2025-01-16 17:05:23] INFO: Données décodées: Array
+(
+    [draftId] => 367
+)
+
+[2025-01-16 17:05:23] INFO: DraftId extrait: 367
+[2025-01-16 17:05:23] INFO: Données formatées: Array
+(
+    [id] => 367
+    [title] => njmomknjlm:
+    [description] => njkl:nkjl:
+    [date] => 2025-01-22
+    [start_time] => 08:00:00
+    [end_time] => 00:00:00
+    [location] => bhkj;b:
+    [venue] => Herbeumont 6887
+    [coordinates] => 49.784811,5.289917
+    [category] => hiking
+    [status] => draft
+    [visitors] => 
+    [user_id] => 96
+    [created_at] => 2025-01-16 17:05:23
+    [updated_at] => 2025-01-16 17:05:23
+    [organisation] => 11
+    [has_gpx] => 0
+    [gpx_path] => 
+    [gpx_downloadable] => 0
+    [main_image_path] => 
+    [main_image_storage] => 
+    [secondary_images] => Array
+        (
+        )
+
+    [organizer_name] => CC BELLEFONTAINE
+    [organizer_email] => rando@partageonslaforet.be
+    [route_ids] => 76
+    [route_names] => b:;b:;;:
+    [route_distances] => 34.40
+    [route_elevations] => 419
+    [route_descriptions] => 
+    [route_gpx_paths] => /uploads/gpx/67892e43db31e_1737043523.gpx
+    [route_gpx_downloadable] => 0
+    [contact_names] => 
+    [contact_emails] => 
+    [contact_phones] => 
+    [routes] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 76
+                    [name] => b:;b:;;:
+                    [distance] => 34.40
+                    [elevation_gain] => 419
+                    [description] => 
+                    [gpx_file] => /uploads/gpx/67892e43db31e_1737043523.gpx
+                    [gpx_downloadable] => 0
+                )
+
+        )
+
+    [contacts] => Array
+        (
+        )
+
+)
+
+[2025-01-16 17:08:30] INFO: 🚀 Début de la prévisualisation
+[2025-01-16 17:08:30] INFO: Données JSON brutes reçues: {"draftId":"368"}
+[2025-01-16 17:08:30] INFO: Données décodées: Array
+(
+    [draftId] => 368
+)
+
+[2025-01-16 17:08:30] INFO: DraftId extrait: 368
+[2025-01-16 17:08:30] INFO: Données formatées: Array
+(
+    [id] => 368
+    [title] => ws∂v‹◊
+    [description] => wsdv≤Òdv
+    [date] => 2025-01-29
+    [start_time] => 08:00:00
+    [end_time] => 00:00:00
+    [location] => wdrgwdbghwxg
+    [venue] => Virton 6760
+    [coordinates] => 49.589349,5.570068
+    [category] => running
+    [status] => draft
+    [visitors] => 
+    [user_id] => 96
+    [created_at] => 2025-01-16 17:08:30
+    [updated_at] => 2025-01-16 17:08:30
+    [organisation] => 11
+    [has_gpx] => 0
+    [gpx_path] => 
+    [gpx_downloadable] => 0
+    [main_image_path] => 
+    [main_image_storage] => 
+    [secondary_images] => Array
+        (
+        )
+
+    [organizer_name] => CC BELLEFONTAINE
+    [organizer_email] => rando@partageonslaforet.be
+    [route_ids] => 77
+    [route_names] => xbxgdfn
+    [route_distances] => 21.20
+    [route_elevations] => 357
+    [route_descriptions] => 
+    [route_gpx_paths] => /uploads/gpx/67892efeac5a4_1737043710.gpx
+    [route_gpx_downloadable] => 0
+    [contact_names] => 
+    [contact_emails] => 
+    [contact_phones] => 
+    [routes] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 77
+                    [name] => xbxgdfn
+                    [distance] => 21.20
+                    [elevation_gain] => 357
+                    [description] => 
+                    [gpx_file] => /uploads/gpx/67892efeac5a4_1737043710.gpx
+                    [gpx_downloadable] => 0
+                )
+
+        )
+
+    [contacts] => Array
+        (
+        )
+
+)
+
+[2025-01-16 17:11:55] INFO: 🚀 Début de la prévisualisation
+[2025-01-16 17:11:55] INFO: Données JSON brutes reçues: {"draftId":"369"}
+[2025-01-16 17:11:55] INFO: Données décodées: Array
+(
+    [draftId] => 369
+)
+
+[2025-01-16 17:11:55] INFO: DraftId extrait: 369
+[2025-01-16 17:11:55] INFO: Données formatées: Array
+(
+    [id] => 369
+    [title] => wrgbwgbv
+    [description] => wbwbgwdx
+    [date] => 2025-01-29
+    [start_time] => 08:00:00
+    [end_time] => 00:00:00
+    [location] => xfnxfgnxcfn
+    [venue] => Montplainchamps Nolinfaing 6840
+    [coordinates] => 49.806087,5.416260
+    [category] => hiking
+    [status] => draft
+    [visitors] => 
+    [user_id] => 96
+    [created_at] => 2025-01-16 17:11:55
+    [updated_at] => 2025-01-16 17:11:55
+    [organisation] => 11
+    [has_gpx] => 0
+    [gpx_path] => 
+    [gpx_downloadable] => 0
+    [main_image_path] => 
+    [main_image_storage] => 
+    [secondary_images] => Array
+        (
+        )
+
+    [organizer_name] => CC BELLEFONTAINE
+    [organizer_email] => rando@partageonslaforet.be
+    [route_ids] => 78
+    [route_names] => cfncn
+    [route_distances] => 34.30
+    [route_elevations] => 514
+    [route_descriptions] => 
+    [route_gpx_paths] => /uploads/gpx/67892fcbc4896_1737043915.gpx
+    [route_gpx_downloadable] => 0
+    [contact_names] => 
+    [contact_emails] => 
+    [contact_phones] => 
+    [routes] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 78
+                    [name] => cfncn
+                    [distance] => 34.30
+                    [elevation_gain] => 514
+                    [description] => 
+                    [gpx_file] => /uploads/gpx/67892fcbc4896_1737043915.gpx
+                    [gpx_downloadable] => 0
+                )
+
+        )
+
+    [contacts] => Array
+        (
+        )
+
+)
+
+[2025-01-16 17:14:53] INFO: 🚀 Début de la prévisualisation
+[2025-01-16 17:14:53] INFO: Données JSON brutes reçues: {"draftId":"370"}
+[2025-01-16 17:14:53] INFO: Données décodées: Array
+(
+    [draftId] => 370
+)
+
+[2025-01-16 17:14:53] INFO: DraftId extrait: 370
+[2025-01-16 17:14:53] INFO: Données formatées: Array
+(
+    [id] => 370
+    [title] => wsvwsv
+    [description] => wsdvwvw
+    [date] => 2025-01-29
+    [start_time] => 08:00:00
+    [end_time] => 00:00:00
+    [location] => wvsdfvw
+    [venue] => Chemin de Malinchamps Marche-en-Famenne 6900
+    [coordinates] => 50.198001,5.328369
+    [category] => running
+    [status] => draft
+    [visitors] => 
+    [user_id] => 96
+    [created_at] => 2025-01-16 17:14:53
+    [updated_at] => 2025-01-16 17:14:53
+    [organisation] => 11
+    [has_gpx] => 0
+    [gpx_path] => 
+    [gpx_downloadable] => 0
+    [main_image_path] => 
+    [main_image_storage] => 
+    [secondary_images] => Array
+        (
+        )
+
+    [organizer_name] => CC BELLEFONTAINE
+    [organizer_email] => rando@partageonslaforet.be
+    [route_ids] => 79
+    [route_names] => fvwdfbv
+    [route_distances] => 34.40
+    [route_elevations] => 419
+    [route_descriptions] => 
+    [route_gpx_paths] => /uploads/gpx/6789307d67cd1_1737044093.gpx
+    [route_gpx_downloadable] => 0
+    [contact_names] => 
+    [contact_emails] => 
+    [contact_phones] => 
+    [routes] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 79
+                    [name] => fvwdfbv
+                    [distance] => 34.40
+                    [elevation_gain] => 419
+                    [description] => 
+                    [gpx_file] => /uploads/gpx/6789307d67cd1_1737044093.gpx
+                    [gpx_downloadable] => 0
+                )
+
+        )
+
+    [contacts] => Array
+        (
+        )
+
+)
+
+[2025-01-16 18:27:33] INFO: 🚀 Début de la prévisualisation
+[2025-01-16 18:27:33] INFO: Données JSON brutes reçues: {"draftId":"371"}
+[2025-01-16 18:27:33] INFO: Données décodées: Array
+(
+    [draftId] => 371
+)
+
+[2025-01-16 18:27:33] INFO: DraftId extrait: 371
+[2025-01-16 18:27:33] INFO: Données formatées: Array
+(
+    [id] => 371
+    [title] => xnxfgn
+    [description] => xfnxfvgn
+    [date] => 2025-01-21
+    [start_time] => 08:00:00
+    [end_time] => 00:00:00
+    [location] => fbb
+    [venue] => 35 Les Rouges Eaux Gribomont 6887
+    [coordinates] => 49.823809,5.328369
+    [category] => hiking
+    [status] => draft
+    [visitors] => 
+    [user_id] => 96
+    [created_at] => 2025-01-16 18:27:33
+    [updated_at] => 2025-01-16 18:27:33
+    [organisation] => 11
+    [has_gpx] => 0
+    [gpx_path] => 
+    [gpx_downloadable] => 0
+    [main_image_path] => 
+    [main_image_storage] => 
+    [secondary_images] => Array
+        (
+        )
+
+    [organizer_name] => CC BELLEFONTAINE
+    [organizer_email] => rando@partageonslaforet.be
+    [route_ids] => 80
+    [route_names] => wb
+    [route_distances] => 34.40
+    [route_elevations] => 419
+    [route_descriptions] => 
+    [route_gpx_paths] => /uploads/gpx/6789418589129_1737048453.gpx
+    [route_gpx_downloadable] => 0
+    [contact_names] => 
+    [contact_emails] => 
+    [contact_phones] => 
+    [routes] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 80
+                    [name] => wb
+                    [distance] => 34.40
+                    [elevation_gain] => 419
+                    [description] => 
+                    [gpx_file] => /uploads/gpx/6789418589129_1737048453.gpx
+                    [gpx_downloadable] => 0
+                )
+
+        )
+
+    [contacts] => Array
+        (
+        )
+
+)
+
+[2025-01-16 18:32:52] INFO: 🚀 Début de la prévisualisation
+[2025-01-16 18:32:52] INFO: Données JSON brutes reçues: {"draftId":"372"}
+[2025-01-16 18:32:52] INFO: Données décodées: Array
+(
+    [draftId] => 372
+)
+
+[2025-01-16 18:32:52] INFO: DraftId extrait: 372
+[2025-01-16 18:32:52] INFO: Données formatées: Array
+(
+    [id] => 372
+    [title] => fdgdcfgnjcf
+    [description] => cfgnfgcn
+    [date] => 2025-01-28
+    [start_time] => 08:00:00
+    [end_time] => 00:00:00
+    [location] =>  nbv 
+    [venue] => Chemin des Loges Wancennes 5570
+    [coordinates] => 50.046557,4.949341
+    [category] => running
+    [status] => draft
+    [visitors] => 
+    [user_id] => 96
+    [created_at] => 2025-01-16 18:32:52
+    [updated_at] => 2025-01-16 18:32:52
+    [organisation] => 11
+    [has_gpx] => 0
+    [gpx_path] => 
+    [gpx_downloadable] => 0
+    [main_image_path] => 
+    [main_image_storage] => 
+    [secondary_images] => Array
+        (
+        )
+
+    [organizer_name] => CC BELLEFONTAINE
+    [organizer_email] => rando@partageonslaforet.be
+    [route_ids] => 81
+    [route_names] => dv‹Ò∂◊w
+    [route_distances] => 34.30
+    [route_elevations] => 514
+    [route_descriptions] => 
+    [route_gpx_paths] => /uploads/gpx/678942c474586_1737048772.gpx
+    [route_gpx_downloadable] => 0
+    [contact_names] => 
+    [contact_emails] => 
+    [contact_phones] => 
+    [routes] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 81
+                    [name] => dv‹Ò∂◊w
+                    [distance] => 34.30
+                    [elevation_gain] => 514
+                    [description] => 
+                    [gpx_file] => /uploads/gpx/678942c474586_1737048772.gpx
+                    [gpx_downloadable] => 0
+                )
+
+        )
+
+    [contacts] => Array
+        (
+        )
+
+)
+
+[2025-01-16 18:36:06] INFO: 🚀 Début de la prévisualisation
+[2025-01-16 18:36:06] INFO: Données JSON brutes reçues: {"draftId":"373"}
+[2025-01-16 18:36:06] INFO: Données décodées: Array
+(
+    [draftId] => 373
+)
+
+[2025-01-16 18:36:06] INFO: DraftId extrait: 373
+[2025-01-16 18:36:06] INFO: Données formatées: Array
+(
+    [id] => 373
+    [title] => ≈©◊ ≈◊© 
+    [description] => ◊ ≈©◊ x 
+    [date] => 2025-01-22
+    [start_time] => 08:00:00
+    [end_time] => 00:00:00
+    [location] => rthsdtrh
+    [venue] => 6 Livarchamps Bastogne 6600
+    [coordinates] => 49.919399,5.734863
+    [category] => running
+    [status] => draft
+    [visitors] => 
+    [user_id] => 96
+    [created_at] => 2025-01-16 18:36:06
+    [updated_at] => 2025-01-16 18:36:06
+    [organisation] => 11
+    [has_gpx] => 0
+    [gpx_path] => 
+    [gpx_downloadable] => 0
+    [main_image_path] => 
+    [main_image_storage] => 
+    [secondary_images] => Array
+        (
+        )
+
+    [organizer_name] => CC BELLEFONTAINE
+    [organizer_email] => rando@partageonslaforet.be
+    [route_ids] => 82
+    [route_names] => wvv◊dds
+    [route_distances] => 43.70
+    [route_elevations] => 764
+    [route_descriptions] => 
+    [route_gpx_paths] => /uploads/gpx/678943863fa04_1737048966.gpx
+    [route_gpx_downloadable] => 0
+    [contact_names] => 
+    [contact_emails] => 
+    [contact_phones] => 
+    [routes] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 82
+                    [name] => wvv◊dds
+                    [distance] => 43.70
+                    [elevation_gain] => 764
+                    [description] => 
+                    [gpx_file] => /uploads/gpx/678943863fa04_1737048966.gpx
+                    [gpx_downloadable] => 0
+                )
+
+        )
+
+    [contacts] => Array
+        (
+        )
+
+)
+
+[2025-01-16 18:39:03] INFO: 🚀 Début de la prévisualisation
+[2025-01-16 18:39:03] INFO: Données JSON brutes reçues: {"draftId":"374"}
+[2025-01-16 18:39:03] INFO: Données décodées: Array
+(
+    [draftId] => 374
+)
+
+[2025-01-16 18:39:03] INFO: DraftId extrait: 374
+[2025-01-16 18:39:03] INFO: Données formatées: Array
+(
+    [id] => 374
+    [title] => wdsfvwfxdsvb
+    [description] => sdvw∂vswv
+    [date] => 2025-01-28
+    [start_time] => 08:00:00
+    [end_time] => 00:00:00
+    [location] => f<qfcs<<s
+    [venue] => Sentier n° i1 Hulsonniaux 5560
+    [coordinates] => 50.208549,4.938354
+    [category] => running
+    [status] => draft
+    [visitors] => 
+    [user_id] => 96
+    [created_at] => 2025-01-16 18:39:03
+    [updated_at] => 2025-01-16 18:39:03
+    [organisation] => 17
+    [has_gpx] => 0
+    [gpx_path] => 
+    [gpx_downloadable] => 0
+    [main_image_path] => 
+    [main_image_storage] => 
+    [secondary_images] => Array
+        (
+        )
+
+    [organizer_name] => BIKING CLUB LA RULLES
+    [organizer_email] => rando@partageonslaforet.be
+    [route_ids] => 83
+    [route_names] => dgwdgwd
+    [route_distances] => 34.40
+    [route_elevations] => 419
+    [route_descriptions] => 
+    [route_gpx_paths] => /uploads/gpx/67894437909c4_1737049143.gpx
+    [route_gpx_downloadable] => 0
+    [contact_names] => 
+    [contact_emails] => 
+    [contact_phones] => 
+    [routes] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 83
+                    [name] => dgwdgwd
+                    [distance] => 34.40
+                    [elevation_gain] => 419
+                    [description] => 
+                    [gpx_file] => /uploads/gpx/67894437909c4_1737049143.gpx
+                    [gpx_downloadable] => 0
+                )
+
+        )
+
+    [contacts] => Array
+        (
+        )
+
+)
+
+[2025-01-16 18:54:07] INFO: 🚀 Début de la prévisualisation
+[2025-01-16 18:54:07] INFO: Données JSON brutes reçues: {"draftId":"375"}
+[2025-01-16 18:54:07] INFO: Données décodées: Array
+(
+    [draftId] => 375
+)
+
+[2025-01-16 18:54:07] INFO: DraftId extrait: 375
+[2025-01-16 18:54:07] INFO: Données formatées: Array
+(
+    [id] => 375
+    [title] => xfgcnxnbg
+    [description] => xgfbnfx
+    [date] => 2025-01-15
+    [start_time] => 08:00:00
+    [end_time] => 00:00:00
+    [location] => sdvwsdvwdf
+    [venue] => Orgeo 6880
+    [coordinates] => 49.880478,5.306396
+    [category] => running
+    [status] => draft
+    [visitors] => 
+    [user_id] => 96
+    [created_at] => 2025-01-16 18:54:07
+    [updated_at] => 2025-01-16 18:54:07
+    [organisation] => 11
+    [has_gpx] => 0
+    [gpx_path] => 
+    [gpx_downloadable] => 0
+    [main_image_path] => 
+    [main_image_storage] => 
+    [secondary_images] => Array
+        (
+        )
+
+    [organizer_name] => CC BELLEFONTAINE
+    [organizer_email] => rando@partageonslaforet.be
+    [route_ids] => 84
+    [route_names] => wdfbvwdf
+    [route_distances] => 34.30
+    [route_elevations] => 514
+    [route_descriptions] => 
+    [route_gpx_paths] => /uploads/gpx/678947bf56130_1737050047.gpx
+    [route_gpx_downloadable] => 0
+    [contact_names] => 
+    [contact_emails] => 
+    [contact_phones] => 
+    [routes] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 84
+                    [name] => wdfbvwdf
+                    [distance] => 34.30
+                    [elevation_gain] => 514
+                    [description] => 
+                    [gpx_file] => /uploads/gpx/678947bf56130_1737050047.gpx
+                    [gpx_downloadable] => 0
+                )
+
+        )
+
+    [contacts] => Array
+        (
+        )
+
+)
+
+[2025-01-16 19:05:00] INFO: 🚀 Début de la prévisualisation
+[2025-01-16 19:05:00] INFO: Données JSON brutes reçues: {"draftId":"376"}
+[2025-01-16 19:05:00] INFO: Données décodées: Array
+(
+    [draftId] => 376
+)
+
+[2025-01-16 19:05:00] INFO: DraftId extrait: 376
+[2025-01-16 19:05:00] INFO: Données formatées: Array
+(
+    [id] => 376
+    [title] => chg,cgn,gc
+    [description] => cgh,cgh,
+    [date] => 2025-01-30
+    [start_time] => 08:00:00
+    [end_time] => 00:00:00
+    [location] => xbcx
+    [venue] => Morhet 6640
+    [coordinates] => 49.947685,5.548096
+    [category] => running
+    [status] => draft
+    [visitors] => 
+    [user_id] => 96
+    [created_at] => 2025-01-16 19:05:00
+    [updated_at] => 2025-01-16 19:05:00
+    [organisation] => 17
+    [has_gpx] => 0
+    [gpx_path] => 
+    [gpx_downloadable] => 0
+    [main_image_path] => 
+    [main_image_storage] => 
+    [secondary_images] => Array
+        (
+        )
+
+    [organizer_name] => BIKING CLUB LA RULLES
+    [organizer_email] => rando@partageonslaforet.be
+    [route_ids] => 85
+    [route_names] => sdfgsdgfdsg
+    [route_distances] => 21.20
+    [route_elevations] => 357
+    [route_descriptions] => 
+    [route_gpx_paths] => /uploads/gpx/67894a4c4c678_1737050700.gpx
+    [route_gpx_downloadable] => 0
+    [contact_names] => 
+    [contact_emails] => 
+    [contact_phones] => 
+    [routes] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 85
+                    [name] => sdfgsdgfdsg
+                    [distance] => 21.20
+                    [elevation_gain] => 357
+                    [description] => 
+                    [gpx_file] => /uploads/gpx/67894a4c4c678_1737050700.gpx
+                    [gpx_downloadable] => 0
+                )
+
+        )
+
+    [contacts] => Array
+        (
+        )
+
+)
+
+[2025-01-16 19:07:15] INFO: 🚀 Début de la prévisualisation
+[2025-01-16 19:07:15] INFO: Données JSON brutes reçues: {"draftId":"377"}
+[2025-01-16 19:07:15] INFO: Données décodées: Array
+(
+    [draftId] => 377
+)
+
+[2025-01-16 19:07:15] INFO: DraftId extrait: 377
+[2025-01-16 19:07:15] INFO: Données formatées: Array
+(
+    [id] => 377
+    [title] => xbngxfbx
+    [description] => xgfbxf
+    [date] => 2025-01-29
+    [start_time] => 08:00:00
+    [end_time] => 00:00:00
+    [location] => cngc
+    [venue] => Rue d'Orval Les Hayons Florenville 6820
+    [coordinates] => 49.688955,5.322876
+    [category] => running
+    [status] => draft
+    [visitors] => 
+    [user_id] => 96
+    [created_at] => 2025-01-16 19:07:15
+    [updated_at] => 2025-01-16 19:07:15
+    [organisation] => 17
+    [has_gpx] => 0
+    [gpx_path] => 
+    [gpx_downloadable] => 0
+    [main_image_path] => 
+    [main_image_storage] => 
+    [secondary_images] => Array
+        (
+        )
+
+    [organizer_name] => BIKING CLUB LA RULLES
+    [organizer_email] => rando@partageonslaforet.be
+    [route_ids] => 86
+    [route_names] => cncn
+    [route_distances] => 34.30
+    [route_elevations] => 514
+    [route_descriptions] => 
+    [route_gpx_paths] => /uploads/gpx/67894ad313004_1737050835.gpx
+    [route_gpx_downloadable] => 0
+    [contact_names] => 
+    [contact_emails] => 
+    [contact_phones] => 
+    [routes] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 86
+                    [name] => cncn
+                    [distance] => 34.30
+                    [elevation_gain] => 514
+                    [description] => 
+                    [gpx_file] => /uploads/gpx/67894ad313004_1737050835.gpx
+                    [gpx_downloadable] => 0
+                )
+
+        )
+
+    [contacts] => Array
+        (
+        )
+
+)
+
+[2025-01-16 19:33:07] INFO: 🚀 Début de la prévisualisation
+[2025-01-16 19:33:07] INFO: Données JSON brutes reçues: {"draftId":"378"}
+[2025-01-16 19:33:07] INFO: Données décodées: Array
+(
+    [draftId] => 378
+)
+
+[2025-01-16 19:33:07] INFO: DraftId extrait: 378
+[2025-01-16 19:33:07] INFO: Données formatées: Array
+(
+    [id] => 378
+    [title] => ◊≈◊xdfssdhfdh
+    [description] => fghdfxfhfcg
+    [date] => 2025-01-29
+    [start_time] => 08:00:00
+    [end_time] => 00:00:00
+    [location] => fdgdhsdgh
+    [venue] => Basse Cour Framont 6853
+    [coordinates] => 49.937080,5.152588
+    [category] => hiking
+    [status] => draft
+    [visitors] => 
+    [user_id] => 96
+    [created_at] => 2025-01-16 19:33:07
+    [updated_at] => 2025-01-16 19:33:07
+    [organisation] => 11
+    [has_gpx] => 0
+    [gpx_path] => 
+    [gpx_downloadable] => 0
+    [main_image_path] => 
+    [main_image_storage] => 
+    [secondary_images] => Array
+        (
+        )
+
+    [organizer_name] => CC BELLEFONTAINE
+    [organizer_email] => rando@partageonslaforet.be
+    [route_ids] => 87
+    [route_names] => xngfxnbxfgb
+    [route_distances] => 34.30
+    [route_elevations] => 514
+    [route_descriptions] => 
+    [route_gpx_paths] => /uploads/gpx/678950e36bf82_1737052387.gpx
+    [route_gpx_downloadable] => 0
+    [contact_names] => 
+    [contact_emails] => 
+    [contact_phones] => 
+    [routes] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 87
+                    [name] => xngfxnbxfgb
+                    [distance] => 34.30
+                    [elevation_gain] => 514
+                    [description] => 
+                    [gpx_file] => /uploads/gpx/678950e36bf82_1737052387.gpx
+                    [gpx_downloadable] => 0
+                )
+
+        )
+
+    [contacts] => Array
+        (
+        )
+
+)
+
+[2025-01-16 19:41:50] INFO: 🚀 Début de la prévisualisation
+[2025-01-16 19:41:50] INFO: Données JSON brutes reçues: {"draftId":"379"}
+[2025-01-16 19:41:50] INFO: Données décodées: Array
+(
+    [draftId] => 379
+)
+
+[2025-01-16 19:41:50] INFO: DraftId extrait: 379
+[2025-01-16 19:41:50] INFO: Données formatées: Array
+(
+    [id] => 379
+    [title] => s<df<scsd
+    [description] => CQScq
+    [date] => 2025-01-23
+    [start_time] => 08:00:00
+    [end_time] => 00:00:00
+    [location] => bv ncvbnc
+    [venue] => Freux-Ménil Freux 6800
+    [coordinates] => 49.972422,5.460205
+    [category] => running
+    [status] => draft
+    [visitors] => 
+    [user_id] => 96
+    [created_at] => 2025-01-16 19:41:50
+    [updated_at] => 2025-01-16 19:41:50
+    [organisation] => 11
+    [has_gpx] => 0
+    [gpx_path] => 
+    [gpx_downloadable] => 0
+    [main_image_path] => 
+    [main_image_storage] => 
+    [secondary_images] => Array
+        (
+        )
+
+    [organizer_name] => CC BELLEFONTAINE
+    [organizer_email] => rando@partageonslaforet.be
+    [route_ids] => 88
+    [route_names] => dsvswfvwsd
+    [route_distances] => 34.30
+    [route_elevations] => 514
+    [route_descriptions] => 
+    [route_gpx_paths] => /uploads/gpx/678952ee995e6_1737052910.gpx
+    [route_gpx_downloadable] => 0
+    [contact_names] => 
+    [contact_emails] => 
+    [contact_phones] => 
+    [routes] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 88
+                    [name] => dsvswfvwsd
+                    [distance] => 34.30
+                    [elevation_gain] => 514
+                    [description] => 
+                    [gpx_file] => /uploads/gpx/678952ee995e6_1737052910.gpx
+                    [gpx_downloadable] => 0
+                )
+
+        )
+
+    [contacts] => Array
+        (
+        )
+
+)
+
+[2025-01-16 19:47:25] INFO: 🚀 Début de la prévisualisation
+[2025-01-16 19:47:25] INFO: Données JSON brutes reçues: {"draftId":"380"}
+[2025-01-16 19:47:25] INFO: Données décodées: Array
+(
+    [draftId] => 380
+)
+
+[2025-01-16 19:47:25] INFO: DraftId extrait: 380
+[2025-01-16 19:47:25] INFO: Données formatées: Array
+(
+    [id] => 380
+    [title] => sdvsqdfsqd
+    [description] => fsdfsdfsfdf
+    [date] => 2025-01-30
+    [start_time] => 08:00:00
+    [end_time] => 00:00:00
+    [location] => sddsfd
+    [venue] => Saint-Médard 6887
+    [coordinates] => 49.802541,5.322876
+    [category] => running
+    [status] => draft
+    [visitors] => 
+    [user_id] => 96
+    [created_at] => 2025-01-16 19:47:25
+    [updated_at] => 2025-01-16 19:47:25
+    [organisation] => 11
+    [has_gpx] => 0
+    [gpx_path] => 
+    [gpx_downloadable] => 0
+    [main_image_path] => 
+    [main_image_storage] => 
+    [secondary_images] => Array
+        (
+        )
+
+    [organizer_name] => CC BELLEFONTAINE
+    [organizer_email] => rando@partageonslaforet.be
+    [route_ids] => 89
+    [route_names] => sdfsdgsdgfsd
+    [route_distances] => 21.20
+    [route_elevations] => 357
+    [route_descriptions] => 
+    [route_gpx_paths] => /uploads/gpx/6789543d687cd_1737053245.gpx
+    [route_gpx_downloadable] => 0
+    [contact_names] => 
+    [contact_emails] => 
+    [contact_phones] => 
+    [routes] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 89
+                    [name] => sdfsdgsdgfsd
+                    [distance] => 21.20
+                    [elevation_gain] => 357
+                    [description] => 
+                    [gpx_file] => /uploads/gpx/6789543d687cd_1737053245.gpx
+                    [gpx_downloadable] => 0
+                )
+
+        )
+
+    [contacts] => Array
+        (
+        )
+
+)
+
+[2025-01-16 22:10:51] INFO: 🚀 Début de la prévisualisation
+[2025-01-16 22:10:51] INFO: Données JSON brutes reçues: {"draftId":"415"}
+[2025-01-16 22:10:51] INFO: Données décodées: Array
+(
+    [draftId] => 415
+)
+
+[2025-01-16 22:10:51] INFO: DraftId extrait: 415
+[2025-01-16 22:10:51] INFO: Données formatées: Array
+(
+    [id] => 415
+    [title] => bkhvkjvhj
+    [description] => bkjhvkjbkjhv
+    [date] => 2025-01-30
+    [start_time] => 08:00:00
+    [end_time] => 00:00:00
+    [location] => hgkhgkjhgjh
+    [venue] => Rue de Serinchamps Havrenne 5580
+    [coordinates] => 50.208549,5.223999
+    [category] => running
+    [status] => draft
+    [visitors] => 
+    [user_id] => 96
+    [created_at] => 2025-01-16 22:10:51
+    [updated_at] => 2025-01-16 22:10:51
+    [organisation] => 11
+    [has_gpx] => 0
+    [gpx_path] => 
+    [gpx_downloadable] => 0
+    [main_image_path] => 
+    [main_image_storage] => 
+    [secondary_images] => Array
+        (
+        )
+
+    [organizer_name] => CC BELLEFONTAINE
+    [organizer_email] => rando@partageonslaforet.be
+    [route_ids] => 90
+    [route_names] => lhgkjhvjkhg
+    [route_distances] => 43.70
+    [route_elevations] => 764
+    [route_descriptions] => 
+    [route_gpx_paths] => /uploads/gpx/678975db2d245_1737061851.gpx
+    [route_gpx_downloadable] => 0
+    [contact_names] => 
+    [contact_emails] => 
+    [contact_phones] => 
+    [routes] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 90
+                    [name] => lhgkjhvjkhg
+                    [distance] => 43.70
+                    [elevation_gain] => 764
+                    [description] => 
+                    [gpx_file] => /uploads/gpx/678975db2d245_1737061851.gpx
+                    [gpx_downloadable] => 0
+                )
+
+        )
+
+    [contacts] => Array
+        (
+        )
+
+)
+
+[2025-01-20 13:17:14] INFO: 🚀 Début de la prévisualisation
+[2025-01-20 13:17:14] INFO: Données JSON brutes reçues: {"draftId":"667"}
+[2025-01-20 13:17:14] INFO: Données décodées: Array
+(
+    [draftId] => 667
+)
+
+[2025-01-20 13:17:14] INFO: DraftId extrait: 667
+[2025-01-20 13:17:14] INFO: Données formatées: Array
+(
+    [id] => 667
+    [title] => wgqgfsdg
+    [description] => dfsdfgswgv
+    [date] => 0000-00-00
+    [start_time] => 00:00:00
+    [end_time] => 
+    [location] => dgsgbdgbt
+    [venue] => 6730 Rossignol
+    [coordinates] => 49.75287993415023,5.47119140625
+    [category] => cycling
+    [status] => draft
+    [visitors] => 
+    [user_id] => 96
+    [created_at] => 2025-01-20 13:17:14
+    [updated_at] => 2025-01-20 13:17:14
+    [organisation] => 17
+    [has_gpx] => 0
+    [gpx_path] => 
+    [gpx_downloadable] => 0
+    [main_image_path] => 
+    [main_image_storage] => 
+    [secondary_images] => Array
+        (
+        )
+
+    [organizer_name] => BIKING CLUB LA RULLES
+    [organizer_email] => rando@partageonslaforet.be
+    [route_ids] => 92
+    [route_names] => sdbsbwb
+    [route_distances] => 21.20
+    [route_elevations] => 357
+    [route_descriptions] => 
+    [route_gpx_paths] => /uploads/gpx/678e3eca131ad_1737375434.gpx
+    [route_gpx_downloadable] => 0
+    [contact_names] => oli
+    [contact_emails] => 
+    [contact_phones] => 
+    [routes] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 92
+                    [name] => sdbsbwb
+                    [distance] => 21.20
+                    [elevation_gain] => 357
+                    [description] => 
+                    [gpx_file] => /uploads/gpx/678e3eca131ad_1737375434.gpx
+                    [gpx_downloadable] => 0
+                )
+
+        )
+
+    [contacts] => Array
+        (
+            [0] => Array
+                (
+                    [name] => oli
+                    [email] => 
+                    [phone] => 
+                )
+
+        )
+
+)
+
+[2025-01-20 13:29:25] INFO: 🚀 Début de la prévisualisation
+[2025-01-20 13:29:25] INFO: Données JSON brutes reçues: {"draftId":"667"}
+[2025-01-20 13:29:25] INFO: Données décodées: Array
+(
+    [draftId] => 667
+)
+
+[2025-01-20 13:29:25] INFO: DraftId extrait: 667
+[2025-01-20 13:29:25] INFO: Données formatées: Array
+(
+    [id] => 667
+    [title] => wgqgfsdg
+    [description] => dfsdfgswgv
+    [date] => 0000-00-00
+    [start_time] => 00:00:00
+    [end_time] => 
+    [location] => dgsgbdgbt
+    [venue] => 6730 Rossignol
+    [coordinates] => 49.75287993415023,5.47119140625
+    [category] => cycling
+    [status] => draft
+    [visitors] => 
+    [user_id] => 96
+    [created_at] => 2025-01-20 13:17:14
+    [updated_at] => 2025-01-20 13:29:25
+    [organisation] => 17
+    [has_gpx] => 0
+    [gpx_path] => 
+    [gpx_downloadable] => 0
+    [main_image_path] => 
+    [main_image_storage] => 
+    [secondary_images] => Array
+        (
+        )
+
+    [organizer_name] => BIKING CLUB LA RULLES
+    [organizer_email] => rando@partageonslaforet.be
+    [route_ids] => 93
+    [route_names] => sdbsbwb
+    [route_distances] => 21.20
+    [route_elevations] => 357
+    [route_descriptions] => 
+    [route_gpx_paths] => /uploads/gpx/678e41a57afcf_1737376165.gpx
+    [route_gpx_downloadable] => 0
+    [contact_names] => oli
+    [contact_emails] => 
+    [contact_phones] => 
+    [routes] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 93
+                    [name] => sdbsbwb
+                    [distance] => 21.20
+                    [elevation_gain] => 357
+                    [description] => 
+                    [gpx_file] => /uploads/gpx/678e41a57afcf_1737376165.gpx
+                    [gpx_downloadable] => 0
+                )
+
+        )
+
+    [contacts] => Array
+        (
+            [0] => Array
+                (
+                    [name] => oli
+                    [email] => 
+                    [phone] => 
+                )
+
+        )
+
+)
+
+[2025-01-20 13:36:18] INFO: 🚀 Début de la prévisualisation
+[2025-01-20 13:36:18] INFO: Données JSON brutes reçues: {"draftId":"670"}
+[2025-01-20 13:36:18] INFO: Données décodées: Array
+(
+    [draftId] => 670
+)
+
+[2025-01-20 13:36:18] INFO: DraftId extrait: 670
+[2025-01-20 13:36:18] INFO: Données formatées: Array
+(
+    [id] => 670
+    [title] => fgxnxfngfgn
+    [description] => xfgnxfngxbn
+    [date] => 0000-00-00
+    [start_time] => 08:00:00
+    [end_time] => 10:00:00
+    [location] => cfgndxndythn
+    [venue] => Rue de la Pierrée 6887 Straimont
+    [coordinates] => 49.79899569636492,5.333862304687501
+    [category] => running
+    [status] => draft
+    [visitors] => 
+    [user_id] => 96
+    [created_at] => 2025-01-20 13:36:18
+    [updated_at] => 2025-01-20 13:36:18
+    [organisation] => 11
+    [has_gpx] => 0
+    [gpx_path] => 
+    [gpx_downloadable] => 0
+    [main_image_path] => 
+    [main_image_storage] => 
+    [secondary_images] => Array
+        (
+        )
+
+    [organizer_name] => CC BELLEFONTAINE
+    [organizer_email] => rando@partageonslaforet.be
+    [route_ids] => 94
+    [route_names] => fgnfgncfghn
+    [route_distances] => 21.20
+    [route_elevations] => 357
+    [route_descriptions] => 
+    [route_gpx_paths] => /uploads/gpx/678e43423d5a2_1737376578.gpx
+    [route_gpx_downloadable] => 0
+    [contact_names] => eve
+    [contact_emails] => 
+    [contact_phones] => 
+    [routes] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 94
+                    [name] => fgnfgncfghn
+                    [distance] => 21.20
+                    [elevation_gain] => 357
+                    [description] => 
+                    [gpx_file] => /uploads/gpx/678e43423d5a2_1737376578.gpx
+                    [gpx_downloadable] => 0
+                )
+
+        )
+
+    [contacts] => Array
+        (
+            [0] => Array
+                (
+                    [name] => eve
+                    [email] => 
+                    [phone] => 
+                )
+
+        )
+
+)
+
+[2025-01-20 13:50:13] INFO: 🚀 Début de la prévisualisation
+[2025-01-20 13:50:13] INFO: Données JSON brutes reçues: {"draftId":"675"}
+[2025-01-20 13:50:13] INFO: Données décodées: Array
+(
+    [draftId] => 675
+)
+
+[2025-01-20 13:50:13] INFO: DraftId extrait: 675
+[2025-01-20 13:50:13] INFO: Données formatées: Array
+(
+    [id] => 675
+    [title] => qsgsegvf
+    [description] => wdsfvwdvdf
+    [date] => 0000-00-00
+    [start_time] => 07:00:00
+    [end_time] => 09:00:00
+    [location] => wdfbwdfbd
+    [venue] => Rue de Libin 6870 Hatrival
+    [coordinates] => 50.00067775723633,5.339355468750001
+    [category] => 
+    [status] => draft
+    [visitors] => 
+    [user_id] => 96
+    [created_at] => 2025-01-20 13:50:13
+    [updated_at] => 2025-01-20 13:50:13
+    [organisation] => 17
+    [has_gpx] => 0
+    [gpx_path] => 
+    [gpx_downloadable] => 0
+    [main_image_path] => 
+    [main_image_storage] => 
+    [secondary_images] => Array
+        (
+        )
+
+    [organizer_name] => BIKING CLUB LA RULLES
+    [organizer_email] => rando@partageonslaforet.be
+    [route_ids] => 95
+    [route_names] => wdfbdwbfdf
+    [route_distances] => 21.20
+    [route_elevations] => 357
+    [route_descriptions] => 
+    [route_gpx_paths] => /uploads/gpx/678e4685bcd40_1737377413.gpx
+    [route_gpx_downloadable] => 0
+    [contact_names] => 
+    [contact_emails] => 
+    [contact_phones] => 
+    [routes] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 95
+                    [name] => wdfbdwbfdf
+                    [distance] => 21.20
+                    [elevation_gain] => 357
+                    [description] => 
+                    [gpx_file] => /uploads/gpx/678e4685bcd40_1737377413.gpx
+                    [gpx_downloadable] => 0
+                )
+
+        )
+
+    [contacts] => Array
+        (
+        )
+
+)
+
+[2025-01-20 14:13:46] INFO: 🚀 Début de la prévisualisation
+[2025-01-20 14:13:46] INFO: Données JSON brutes reçues: {"draftId":"678"}
+[2025-01-20 14:13:46] INFO: Données décodées: Array
+(
+    [draftId] => 678
+)
+
+[2025-01-20 14:13:46] INFO: DraftId extrait: 678
+[2025-01-20 14:13:46] INFO: Données formatées: Array
+(
+    [id] => 678
+    [title] => wdfbwdfb
+    [description] => wdfbwdfbngfd
+    [date] => 0000-00-00
+    [start_time] => 08:00:00
+    [end_time] => 10:00:00
+    [location] => xgnbnbxfd
+    [venue] => Autoroute du Soleil 6860 Mellier
+    [coordinates] => 49.75997752330658,5.548095703125
+    [category] => running
+    [status] => draft
+    [visitors] => 
+    [user_id] => 96
+    [created_at] => 2025-01-20 14:13:46
+    [updated_at] => 2025-01-20 14:13:46
+    [organisation] => 11
+    [has_gpx] => 0
+    [gpx_path] => 
+    [gpx_downloadable] => 0
+    [main_image_path] => 
+    [main_image_storage] => 
+    [secondary_images] => Array
+        (
+        )
+
+    [organizer_name] => CC BELLEFONTAINE
+    [organizer_email] => rando@partageonslaforet.be
+    [route_ids] => 96
+    [route_names] => ftghfrgnbfbn
+    [route_distances] => 21.20
+    [route_elevations] => 357
+    [route_descriptions] => 
+    [route_gpx_paths] => /uploads/gpx/678e4c0a4a890_1737378826.gpx
+    [route_gpx_downloadable] => 0
+    [contact_names] => 
+    [contact_emails] => 
+    [contact_phones] => 
+    [routes] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 96
+                    [name] => ftghfrgnbfbn
+                    [distance] => 21.20
+                    [elevation_gain] => 357
+                    [description] => 
+                    [gpx_file] => /uploads/gpx/678e4c0a4a890_1737378826.gpx
+                    [gpx_downloadable] => 0
+                )
+
+        )
+
+    [contacts] => Array
+        (
+        )
+
+)
+
+[2025-01-20 14:16:37] INFO: 🚀 Début de la prévisualisation
+[2025-01-20 14:16:37] INFO: Données JSON brutes reçues: {"draftId":"679"}
+[2025-01-20 14:16:37] INFO: Données décodées: Array
+(
+    [draftId] => 679
+)
+
+[2025-01-20 14:16:37] INFO: DraftId extrait: 679
+[2025-01-20 14:16:37] INFO: Données formatées: Array
+(
+    [id] => 679
+    [title] => <sfv<sv
+    [description] => w<sdvsdvsdv
+    [date] => 0000-00-00
+    [start_time] => 08:00:00
+    [end_time] => 10:00:00
+    [location] => xwdbdfb
+    [venue] => 6800 Recogne
+    [coordinates] => 49.930008124606886,5.339355468750001
+    [category] => running
+    [status] => draft
+    [visitors] => 
+    [user_id] => 96
+    [created_at] => 2025-01-20 14:16:37
+    [updated_at] => 2025-01-20 14:16:37
+    [organisation] => 11
+    [has_gpx] => 0
+    [gpx_path] => 
+    [gpx_downloadable] => 0
+    [main_image_path] => 
+    [main_image_storage] => 
+    [secondary_images] => Array
+        (
+        )
+
+    [organizer_name] => CC BELLEFONTAINE
+    [organizer_email] => rando@partageonslaforet.be
+    [route_ids] => 97
+    [route_names] => qergegv
+    [route_distances] => 21.20
+    [route_elevations] => 357
+    [route_descriptions] => 
+    [route_gpx_paths] => /uploads/gpx/678e4cb53aa73_1737378997.gpx
+    [route_gpx_downloadable] => 0
+    [contact_names] => 
+    [contact_emails] => 
+    [contact_phones] => 
+    [routes] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 97
+                    [name] => qergegv
+                    [distance] => 21.20
+                    [elevation_gain] => 357
+                    [description] => 
+                    [gpx_file] => /uploads/gpx/678e4cb53aa73_1737378997.gpx
+                    [gpx_downloadable] => 0
+                )
+
+        )
+
+    [contacts] => Array
+        (
+        )
+
+)
+
+[2025-01-20 14:23:15] INFO: 🚀 Début de la prévisualisation
+[2025-01-20 14:23:15] INFO: Données JSON brutes reçues: {"draftId":"680"}
+[2025-01-20 14:23:15] INFO: Données décodées: Array
+(
+    [draftId] => 680
+)
+
+[2025-01-20 14:23:15] INFO: DraftId extrait: 680
+[2025-01-20 14:23:15] INFO: Données formatées: Array
+(
+    [id] => 680
+    [title] => dxfbfxgbnxfgb
+    [description] => xfgnbfgnbf
+    [date] => 0000-00-00
+    [start_time] => 08:00:00
+    [end_time] => 10:00:00
+    [location] => huk,vhujk,
+    [venue] => 6840 Nolinfaing
+    [coordinates] => 49.82735281650856,5.4327392578125
+    [category] => 
+    [status] => draft
+    [visitors] => 
+    [user_id] => 96
+    [created_at] => 2025-01-20 14:23:15
+    [updated_at] => 2025-01-20 14:23:15
+    [organisation] => 11
+    [has_gpx] => 0
+    [gpx_path] => 
+    [gpx_downloadable] => 0
+    [main_image_path] => 
+    [main_image_storage] => 
+    [secondary_images] => Array
+        (
+        )
+
+    [organizer_name] => CC BELLEFONTAINE
+    [organizer_email] => rando@partageonslaforet.be
+    [route_ids] => 98
+    [route_names] => dfbxdfbfgdb
+    [route_distances] => 21.20
+    [route_elevations] => 357
+    [route_descriptions] => 
+    [route_gpx_paths] => /uploads/gpx/678e4e43192e5_1737379395.gpx
+    [route_gpx_downloadable] => 0
+    [contact_names] => 
+    [contact_emails] => 
+    [contact_phones] => 
+    [routes] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 98
+                    [name] => dfbxdfbfgdb
+                    [distance] => 21.20
+                    [elevation_gain] => 357
+                    [description] => 
+                    [gpx_file] => /uploads/gpx/678e4e43192e5_1737379395.gpx
+                    [gpx_downloadable] => 0
+                )
+
+        )
+
+    [contacts] => Array
+        (
+        )
+
+)
+
+[2025-01-20 14:26:29] INFO: 🚀 Début de la prévisualisation
+[2025-01-20 14:26:29] INFO: Données JSON brutes reçues: {"draftId":"680"}
+[2025-01-20 14:26:29] INFO: Données décodées: Array
+(
+    [draftId] => 680
+)
+
+[2025-01-20 14:26:29] INFO: DraftId extrait: 680
+[2025-01-20 14:26:29] INFO: Données formatées: Array
+(
+    [id] => 680
+    [title] => dxfbfxgbnxfgb
+    [description] => xfgnbfgnbf
+    [date] => 0000-00-00
+    [start_time] => 08:00:00
+    [end_time] => 10:00:00
+    [location] => huk,vhujk,
+    [venue] => 6840 Nolinfaing
+    [coordinates] => 49.82735281650856,5.4327392578125
+    [category] => 
+    [status] => draft
+    [visitors] => 
+    [user_id] => 96
+    [created_at] => 2025-01-20 14:23:15
+    [updated_at] => 2025-01-20 14:26:29
+    [organisation] => 11
+    [has_gpx] => 0
+    [gpx_path] => 
+    [gpx_downloadable] => 0
+    [main_image_path] => 
+    [main_image_storage] => 
+    [secondary_images] => Array
+        (
+        )
+
+    [organizer_name] => CC BELLEFONTAINE
+    [organizer_email] => rando@partageonslaforet.be
+    [route_ids] => 99
+    [route_names] => dfbxdfbfgdb
+    [route_distances] => 21.20
+    [route_elevations] => 357
+    [route_descriptions] => 
+    [route_gpx_paths] => /uploads/gpx/678e4f05184ca_1737379589.gpx
+    [route_gpx_downloadable] => 0
+    [contact_names] => 
+    [contact_emails] => 
+    [contact_phones] => 
+    [routes] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 99
+                    [name] => dfbxdfbfgdb
+                    [distance] => 21.20
+                    [elevation_gain] => 357
+                    [description] => 
+                    [gpx_file] => /uploads/gpx/678e4f05184ca_1737379589.gpx
+                    [gpx_downloadable] => 0
+                )
+
+        )
+
+    [contacts] => Array
+        (
+        )
+
+)
+
+[2025-01-20 14:32:46] INFO: 🚀 Début de la prévisualisation
+[2025-01-20 14:32:46] INFO: Données JSON brutes reçues: {"draftId":"681"}
+[2025-01-20 14:32:46] INFO: Données décodées: Array
+(
+    [draftId] => 681
+)
+
+[2025-01-20 14:32:46] INFO: DraftId extrait: 681
+[2025-01-20 14:32:46] INFO: Données formatées: Array
+(
+    [id] => 681
+    [title] => hfgnbfgn
+    [description] => fgnfgnfgn
+    [date] => 0000-00-00
+    [start_time] => 08:00:00
+    [end_time] => 10:00:00
+    [location] => gh,,vhgj,
+    [venue] => N849 6870 Saint-Hubert
+    [coordinates] => 50.04302974380058,5.350341796875001
+    [category] => running
+    [status] => draft
+    [visitors] => 
+    [user_id] => 96
+    [created_at] => 2025-01-20 14:32:46
+    [updated_at] => 2025-01-20 14:32:46
+    [organisation] => 11
+    [has_gpx] => 0
+    [gpx_path] => 
+    [gpx_downloadable] => 0
+    [main_image_path] => 
+    [main_image_storage] => 
+    [secondary_images] => Array
+        (
+        )
+
+    [organizer_name] => CC BELLEFONTAINE
+    [organizer_email] => rando@partageonslaforet.be
+    [route_ids] => 100
+    [route_names] => ghj,;vhj;,h;,
+    [route_distances] => 34.30
+    [route_elevations] => 514
+    [route_descriptions] => 
+    [route_gpx_paths] => /uploads/gpx/678e507e9380f_1737379966.gpx
+    [route_gpx_downloadable] => 0
+    [contact_names] => 
+    [contact_emails] => 
+    [contact_phones] => 
+    [routes] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 100
+                    [name] => ghj
+                    [distance] => 34.30
+                    [elevation_gain] => 514
+                    [description] => 
+                    [gpx_file] => /uploads/gpx/678e507e9380f_1737379966.gpx
+                    [gpx_downloadable] => 0
+                )
+
+        )
+
+    [contacts] => Array
+        (
+        )
+
+)
+
+[2025-01-20 14:41:58] INFO: 🚀 Début de la prévisualisation
+[2025-01-20 14:41:58] INFO: Données JSON brutes reçues: {"draftId":"682"}
+[2025-01-20 14:41:58] INFO: Données décodées: Array
+(
+    [draftId] => 682
+)
+
+[2025-01-20 14:41:58] INFO: DraftId extrait: 682
+[2025-01-20 14:41:58] INFO: Données formatées: Array
+(
+    [id] => 682
+    [title] => wvwvfv
+    [description] => xfwfvwdv w
+    [date] => 0000-00-00
+    [start_time] => 08:00:00
+    [end_time] => 10:00:00
+    [location] => dbxdbfxfg
+    [venue] => 6880 Bertrix
+    [coordinates] => 49.834439500479235,5.223999023437501
+    [category] => running
+    [status] => draft
+    [visitors] => 
+    [user_id] => 96
+    [created_at] => 2025-01-20 14:41:58
+    [updated_at] => 2025-01-20 14:41:58
+    [organisation] => 11
+    [has_gpx] => 0
+    [gpx_path] => 
+    [gpx_downloadable] => 0
+    [main_image_path] => 
+    [main_image_storage] => 
+    [secondary_images] => Array
+        (
+        )
+
+    [organizer_name] => CC BELLEFONTAINE
+    [organizer_email] => rando@partageonslaforet.be
+    [route_ids] => 101
+    [route_names] => fgbfgxnfnf
+    [route_distances] => 21.20
+    [route_elevations] => 357
+    [route_descriptions] => 
+    [route_gpx_paths] => /uploads/gpx/678e52a660e4a_1737380518.gpx
+    [route_gpx_downloadable] => 0
+    [contact_names] => 
+    [contact_emails] => 
+    [contact_phones] => 
+    [routes] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 101
+                    [name] => fgbfgxnfnf
+                    [distance] => 21.20
+                    [elevation_gain] => 357
+                    [description] => 
+                    [gpx_file] => /uploads/gpx/678e52a660e4a_1737380518.gpx
+                    [gpx_downloadable] => 0
+                )
+
+        )
+
+    [contacts] => Array
+        (
+        )
+
+)
+
+[2025-01-20 14:52:01] INFO: 🚀 Début de la prévisualisation
+[2025-01-20 14:52:01] INFO: Données JSON brutes reçues: {"draftId":"682"}
+[2025-01-20 14:52:01] INFO: Données décodées: Array
+(
+    [draftId] => 682
+)
+
+[2025-01-20 14:52:01] INFO: DraftId extrait: 682
+[2025-01-20 14:52:01] INFO: Données formatées: Array
+(
+    [id] => 682
+    [title] => wvwvfv
+    [description] => xfwfvwdv w
+    [date] => 2025-01-26
+    [start_time] => 08:00:00
+    [end_time] => 10:00:00
+    [location] => dbxdbfxfg
+    [venue] => 6880 Bertrix
+    [coordinates] => 49.834439500479235,5.223999023437501
+    [category] => running
+    [status] => draft
+    [visitors] => 
+    [user_id] => 96
+    [created_at] => 2025-01-20 14:41:58
+    [updated_at] => 2025-01-20 14:52:01
+    [organisation] => 11
+    [has_gpx] => 0
+    [gpx_path] => 
+    [gpx_downloadable] => 0
+    [main_image_path] => 
+    [main_image_storage] => 
+    [secondary_images] => Array
+        (
+        )
+
+    [organizer_name] => CC BELLEFONTAINE
+    [organizer_email] => rando@partageonslaforet.be
+    [route_ids] => 102
+    [route_names] => fgbfgxnfnf
+    [route_distances] => 21.20
+    [route_elevations] => 357
+    [route_descriptions] => 
+    [route_gpx_paths] => /uploads/gpx/678e550196011_1737381121.gpx
+    [route_gpx_downloadable] => 0
+    [contact_names] => 
+    [contact_emails] => 
+    [contact_phones] => 
+    [routes] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 102
+                    [name] => fgbfgxnfnf
+                    [distance] => 21.20
+                    [elevation_gain] => 357
+                    [description] => 
+                    [gpx_file] => /uploads/gpx/678e550196011_1737381121.gpx
+                    [gpx_downloadable] => 0
+                )
+
+        )
+
+    [contacts] => Array
+        (
+        )
+
+)
+
+[2025-01-20 14:57:30] INFO: 🚀 Début de la prévisualisation
+[2025-01-20 14:57:30] INFO: Données JSON brutes reçues: {"draftId":"682"}
+[2025-01-20 14:57:30] INFO: Données décodées: Array
+(
+    [draftId] => 682
+)
+
+[2025-01-20 14:57:30] INFO: DraftId extrait: 682
+[2025-01-20 14:57:30] INFO: Données formatées: Array
+(
+    [id] => 682
+    [title] => wvwvfv
+    [description] => xfwfvwdv w
+    [date] => 2025-01-26
+    [start_time] => 08:00:00
+    [end_time] => 10:00:00
+    [location] => dbxdbfxfg
+    [venue] => 6880 Bertrix
+    [coordinates] => 49.834439500479235,5.223999023437501
+    [category] => running
+    [status] => draft
+    [visitors] => 
+    [user_id] => 96
+    [created_at] => 2025-01-20 14:41:58
+    [updated_at] => 2025-01-20 14:57:30
+    [organisation] => 11
+    [has_gpx] => 0
+    [gpx_path] => 
+    [gpx_downloadable] => 0
+    [main_image_path] => 
+    [main_image_storage] => 
+    [secondary_images] => Array
+        (
+        )
+
+    [organizer_name] => CC BELLEFONTAINE
+    [organizer_email] => rando@partageonslaforet.be
+    [route_ids] => 103
+    [route_names] => fgbfgxnfnf
+    [route_distances] => 21.20
+    [route_elevations] => 357
+    [route_descriptions] => 
+    [route_gpx_paths] => /uploads/gpx/678e564a056aa_1737381450.gpx
+    [route_gpx_downloadable] => 0
+    [contact_names] => 
+    [contact_emails] => 
+    [contact_phones] => 
+    [routes] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 103
+                    [name] => fgbfgxnfnf
+                    [distance] => 21.20
+                    [elevation_gain] => 357
+                    [description] => 
+                    [gpx_file] => /uploads/gpx/678e564a056aa_1737381450.gpx
+                    [gpx_downloadable] => 0
+                )
+
+        )
+
+    [contacts] => Array
+        (
+        )
+
+)
+
+[2025-01-20 15:00:14] INFO: 🚀 Début de la prévisualisation
+[2025-01-20 15:00:14] INFO: Données JSON brutes reçues: {"draftId":"683"}
+[2025-01-20 15:00:14] INFO: Données décodées: Array
+(
+    [draftId] => 683
+)
+
+[2025-01-20 15:00:14] INFO: DraftId extrait: 683
+[2025-01-20 15:00:14] INFO: Données formatées: Array
+(
+    [id] => 683
+    [title] => swfdvsw<fv
+    [description] => wd
+    [date] => 2025-01-26
+    [start_time] => 08:00:00
+    [end_time] => 10:00:00
+    [location] => <qdscv<vds<c
+    [venue] => 7 Rue de la Vierre 6880 Orgeo
+    [coordinates] => 49.830896288288976,5.306396484375001
+    [category] => running
+    [status] => draft
+    [visitors] => 
+    [user_id] => 96
+    [created_at] => 2025-01-20 15:00:14
+    [updated_at] => 2025-01-20 15:00:14
+    [organisation] => 11
+    [has_gpx] => 0
+    [gpx_path] => 
+    [gpx_downloadable] => 0
+    [main_image_path] => 
+    [main_image_storage] => 
+    [secondary_images] => Array
+        (
+        )
+
+    [organizer_name] => CC BELLEFONTAINE
+    [organizer_email] => rando@partageonslaforet.be
+    [route_ids] => 104
+    [route_names] => <sdv<svdsvc
+    [route_distances] => 21.20
+    [route_elevations] => 357
+    [route_descriptions] => 
+    [route_gpx_paths] => /uploads/gpx/678e56ee68387_1737381614.gpx
+    [route_gpx_downloadable] => 0
+    [contact_names] => 
+    [contact_emails] => 
+    [contact_phones] => 
+    [routes] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 104
+                    [name] => <sdv<svdsvc
+                    [distance] => 21.20
+                    [elevation_gain] => 357
+                    [description] => 
+                    [gpx_file] => /uploads/gpx/678e56ee68387_1737381614.gpx
+                    [gpx_downloadable] => 0
+                )
+
+        )
+
+    [contacts] => Array
+        (
+        )
+
+)
+
+[2025-01-20 15:09:39] INFO: 🚀 Début de la prévisualisation
+[2025-01-20 15:09:39] INFO: Données JSON brutes reçues: {"draftId":"687"}
+[2025-01-20 15:09:39] INFO: Données décodées: Array
+(
+    [draftId] => 687
+)
+
+[2025-01-20 15:09:39] INFO: DraftId extrait: 687
+[2025-01-20 15:09:39] INFO: Données formatées: Array
+(
+    [id] => 687
+    [title] => s<dvsdv
+    [description] => sdvsvdw<v
+    [date] => 2025-01-26
+    [start_time] => 08:00:00
+    [end_time] => 10:00:00
+    [location] => ds<f<vsdv<ws
+    [venue] => 6887 Martilly
+    [coordinates] => 49.7919038200459,5.344848632812501
+    [category] => 
+    [status] => draft
+    [visitors] => 
+    [user_id] => 96
+    [created_at] => 2025-01-20 15:09:39
+    [updated_at] => 2025-01-20 15:09:39
+    [organisation] => 11
+    [has_gpx] => 0
+    [gpx_path] => 
+    [gpx_downloadable] => 0
+    [main_image_path] => 
+    [main_image_storage] => 
+    [secondary_images] => Array
+        (
+        )
+
+    [organizer_name] => CC BELLEFONTAINE
+    [organizer_email] => rando@partageonslaforet.be
+    [route_ids] => 105
+    [route_names] => wsdvsbdvdfbv
+    [route_distances] => 21.20
+    [route_elevations] => 357
+    [route_descriptions] => 
+    [route_gpx_paths] => /uploads/gpx/678e5923d710e_1737382179.gpx
+    [route_gpx_downloadable] => 0
+    [contact_names] => 
+    [contact_emails] => 
+    [contact_phones] => 
+    [routes] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 105
+                    [name] => wsdvsbdvdfbv
+                    [distance] => 21.20
+                    [elevation_gain] => 357
+                    [description] => 
+                    [gpx_file] => /uploads/gpx/678e5923d710e_1737382179.gpx
+                    [gpx_downloadable] => 0
+                )
+
+        )
+
+    [contacts] => Array
+        (
+        )
+
+)
+
+[2025-01-20 15:17:44] INFO: 🚀 Début de la prévisualisation
+[2025-01-20 15:17:44] INFO: Données JSON brutes reçues: {"draftId":"688"}
+[2025-01-20 15:17:44] INFO: Données décodées: Array
+(
+    [draftId] => 688
+)
+
+[2025-01-20 15:17:44] INFO: DraftId extrait: 688
+[2025-01-20 15:17:44] INFO: Données formatées: Array
+(
+    [id] => 688
+    [title] => wdfbwdfbd
+    [description] => xdfbdfgbxgfcdb
+    [date] => 2025-01-26
+    [start_time] => 08:00:00
+    [end_time] => 12:00:00
+    [location] => jkjkgj:;kj
+    [venue] => 81 Rue de la Flèche 6880 Bertrix
+    [coordinates] => 49.85923471774692,5.234985351562501
+    [category] => running
+    [status] => draft
+    [visitors] => 
+    [user_id] => 96
+    [created_at] => 2025-01-20 15:17:44
+    [updated_at] => 2025-01-20 15:17:44
+    [organisation] => 11
+    [has_gpx] => 0
+    [gpx_path] => 
+    [gpx_downloadable] => 0
+    [main_image_path] => 
+    [main_image_storage] => 
+    [secondary_images] => Array
+        (
+        )
+
+    [organizer_name] => CC BELLEFONTAINE
+    [organizer_email] => rando@partageonslaforet.be
+    [route_ids] => 106
+    [route_names] => gh,cjgh,jg
+    [route_distances] => 21.20
+    [route_elevations] => 357
+    [route_descriptions] => 
+    [route_gpx_paths] => /uploads/gpx/678e5b085d248_1737382664.gpx
+    [route_gpx_downloadable] => 0
+    [contact_names] => 
+    [contact_emails] => 
+    [contact_phones] => 
+    [routes] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 106
+                    [name] => gh
+                    [distance] => 21.20
+                    [elevation_gain] => 357
+                    [description] => 
+                    [gpx_file] => /uploads/gpx/678e5b085d248_1737382664.gpx
+                    [gpx_downloadable] => 0
+                )
+
+        )
+
+    [contacts] => Array
+        (
+        )
+
+)
+
+[2025-01-20 15:33:50] INFO: 🚀 Début de la prévisualisation
+[2025-01-20 15:33:50] INFO: Données JSON brutes reçues: {"draftId":"689"}
+[2025-01-20 15:33:50] INFO: Données décodées: Array
+(
+    [draftId] => 689
+)
+
+[2025-01-20 15:33:50] INFO: DraftId extrait: 689
+[2025-01-20 15:33:50] INFO: Données formatées: Array
+(
+    [id] => 689
+    [title] => wdfbwdbf
+    [description] => wdfbwdbfwxfd
+    [date] => 2025-01-26
+    [start_time] => 08:00:00
+    [end_time] => 10:00:00
+    [location] => xfnxfngc
+    [venue] => 6887 Saint-Médard
+    [coordinates] => 49.79899569636492,5.311889648437501
+    [category] => running
+    [status] => draft
+    [visitors] => 
+    [user_id] => 96
+    [created_at] => 2025-01-20 15:33:50
+    [updated_at] => 2025-01-20 15:33:50
+    [organisation] => 11
+    [has_gpx] => 0
+    [gpx_path] => 
+    [gpx_downloadable] => 0
+    [main_image_path] => 
+    [main_image_storage] => 
+    [secondary_images] => Array
+        (
+        )
+
+    [organizer_name] => CC BELLEFONTAINE
+    [organizer_email] => rando@partageonslaforet.be
+    [route_ids] => 107
+    [route_names] => xfgnxfgn
+    [route_distances] => 34.30
+    [route_elevations] => 514
+    [route_descriptions] => 
+    [route_gpx_paths] => /uploads/gpx/678e5ece085c7_1737383630.gpx
+    [route_gpx_downloadable] => 0
+    [contact_names] => 
+    [contact_emails] => 
+    [contact_phones] => 
+    [routes] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 107
+                    [name] => xfgnxfgn
+                    [distance] => 34.30
+                    [elevation_gain] => 514
+                    [description] => 
+                    [gpx_file] => /uploads/gpx/678e5ece085c7_1737383630.gpx
+                    [gpx_downloadable] => 0
+                )
+
+        )
+
+    [contacts] => Array
+        (
+        )
+
+)
+
+[2025-01-20 16:12:59] INFO: 🚀 Début de la prévisualisation
+[2025-01-20 16:12:59] INFO: Données JSON brutes reçues: {"draftId":"690"}
+[2025-01-20 16:12:59] INFO: Données décodées: Array
+(
+    [draftId] => 690
+)
+
+[2025-01-20 16:12:59] INFO: DraftId extrait: 690
+[2025-01-20 16:12:59] INFO: Données formatées: Array
+(
+    [id] => 690
+    [title] => wsdv<sv
+    [description] => wdsvdfvwv
+    [date] => 2025-01-26
+    [start_time] => 08:00:00
+    [end_time] => 10:00:00
+    [location] => hjk;vg;hjvbhjk
+    [venue] => D 981 55600 Verneuil-Grand
+    [coordinates] => 49.532339195028115,5.427246093750001
+    [category] => running
+    [status] => draft
+    [visitors] => 
+    [user_id] => 96
+    [created_at] => 2025-01-20 16:12:59
+    [updated_at] => 2025-01-20 16:12:59
+    [organisation] => 11
+    [has_gpx] => 0
+    [gpx_path] => 
+    [gpx_downloadable] => 0
+    [main_image_path] => 
+    [main_image_storage] => 
+    [secondary_images] => Array
+        (
+        )
+
+    [organizer_name] => CC BELLEFONTAINE
+    [organizer_email] => rando@partageonslaforet.be
+    [route_ids] => 108
+    [route_names] => vh;vhj;bv
+    [route_distances] => 21.20
+    [route_elevations] => 357
+    [route_descriptions] => 
+    [route_gpx_paths] => /uploads/gpx/678e67fb3be0e_1737385979.gpx
+    [route_gpx_downloadable] => 0
+    [contact_names] => 
+    [contact_emails] => 
+    [contact_phones] => 
+    [routes] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 108
+                    [name] => vh;vhj;bv
+                    [distance] => 21.20
+                    [elevation_gain] => 357
+                    [description] => 
+                    [gpx_file] => /uploads/gpx/678e67fb3be0e_1737385979.gpx
+                    [gpx_downloadable] => 0
+                )
+
+        )
+
+    [contacts] => Array
+        (
+        )
+
+)
+
+[2025-01-20 17:15:59] INFO: 🚀 Début de la prévisualisation
+[2025-01-20 17:15:59] INFO: Données JSON brutes reçues: {"draftId":"692"}
+[2025-01-20 17:15:59] INFO: Données décodées: Array
+(
+    [draftId] => 692
+)
+
+[2025-01-20 17:15:59] INFO: DraftId extrait: 692
+[2025-01-20 17:15:59] ERROR: PHP Error [8192]: explode(): Passing null to parameter #2 ($string) of type string is deprecated in /home/cool5792/rando.partageonslaforet.be/api/events/preview.php:103
+[2025-01-20 17:15:59] INFO: Données formatées: Array
+(
+    [id] => 692
+    [title] => VTT de l'école de Buzenol
+    [description] => Les traileurs sont les bienvenus sur nos différents parcours
+- Ravitos et petite restauration.
+- Le port du casque est obligatoire
+Plus d'informations suivront (dénivelés, GPX, ...)
+A très vite sur nos différents parcours
+    [date] => 2025-02-23
+    [start_time] => 07:30:00
+    [end_time] => 10:30:00
+    [location] => Salle La Baricade 
+    [venue] => Place du Midi 6343 Buzenol
+    [coordinates] => 49.64517293740319,5.595278441905976
+    [category] => 
+    [status] => draft
+    [visitors] => 
+    [user_id] => 96
+    [created_at] => 2025-01-20 17:15:59
+    [updated_at] => 2025-01-20 17:15:59
+    [organisation] => 23
+    [has_gpx] => 0
+    [gpx_path] => 
+    [gpx_downloadable] => 0
+    [main_image_path] => 
+    [main_image_storage] => 
+    [secondary_images] => Array
+        (
+        )
+
+    [organizer_name] => Ecole de Buzenol
+    [organizer_email] => z.romeo01985@gmail.com
+    [route_ids] => 109,110,111
+    [route_names] => Parcours 19 km,parcours 25 km,Parcours 43 km
+    [route_distances] => 19.00,25.00,43.00
+    [route_elevations] => 0,0,0
+    [route_descriptions] => ,,
+    [route_gpx_paths] => 
+    [route_gpx_downloadable] => 0,0,0
+    [contact_names] => 
+    [contact_emails] => 
+    [contact_phones] => 
+    [routes] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 109
+                    [name] => Parcours 19 km
+                    [distance] => 19.00
+                    [elevation_gain] => 0
+                    [description] => 
+                    [gpx_file] => 
+                    [gpx_downloadable] => 0
+                )
+
+            [1] => Array
+                (
+                    [id] => 110
+                    [name] => parcours 25 km
+                    [distance] => 25.00
+                    [elevation_gain] => 0
+                    [description] => 
+                    [gpx_file] => 
+                    [gpx_downloadable] => 0
+                )
+
+            [2] => Array
+                (
+                    [id] => 111
+                    [name] => Parcours 43 km
+                    [distance] => 43.00
+                    [elevation_gain] => 0
+                    [description] => 
+                    [gpx_file] => 
+                    [gpx_downloadable] => 0
+                )
+
+        )
+
+    [contacts] => Array
+        (
+        )
+
+)
+
+[2026-09-02 15:48:38] INFO: 🚀 Début de la prévisualisation
+[2026-09-02 15:48:38] ERROR: PHP Error [2]: require_once(/Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/public/includes/init.php): Failed to open stream: No such file or directory in /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/api/events/preview.php:35
+[2026-09-02 15:48:38] ERROR: Exception non capturée: Failed opening required '/Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/public/includes/init.php' (include_path='.:/opt/homebrew/Cellar/php/8.4.14_1/share/php/pear')
+Trace:
+#0 /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/public/index.php(24): require_once()
+#1 /private/tmp/router_public.php(7): require('/Users/oconrard...')
+#2 {main}
+[2026-09-02 15:52:04] INFO: 🚀 Début de la prévisualisation
+[2026-09-02 17:52:04] INFO: Données JSON brutes reçues: {"draftId":"13"}
+[2026-09-02 17:52:04] INFO: Données décodées: Array
+(
+    [draftId] => 13
+)
+
+[2026-09-02 17:52:04] INFO: DraftId extrait: 13
+[2026-09-02 17:52:04] INFO: Données formatées: Array
+(
+    [id] => 13
+    [user_id] => 3
+    [title] => VTT et marche nocturne à Libin-Bas
+    [description] => Le vendredi 4 septembre 2026, rendez-vous à Libin-Bas pour une soirée placée sous le signe du sport, de la convivialité et de la solidarité, au profit de Think Pink et de la lutte contre le cancer du sein
+
+    [category] => 
+    [date] => 2026-09-04
+    [start_time] => 
+    [end_time] => 
+    [location] => 
+    [venue] => 
+    [coordinates] => 
+    [organisation] => 
+    [status] => draft
+    [has_gpx] => 0
+    [gpx_path] => 
+    [gpx_downloadable] => 0
+    [created_at] => 2026-09-01 22:49:28
+    [updated_at] => 2026-09-02 17:52:04
+    [registration_opens] => 09:00:00
+    [registration_closes] => 08:15:00
+    [meeting_name] => cercle
+    [meeting_address] => rue saint-martin 6 6762 saint mard
+    [meeting_coordinates] => 49.5586314,5.5296887
+    [organizer_name] => 
+    [organizer_email] => 
+    [route_ids] => 
+    [route_names] => 
+    [route_distances] => 
+    [route_elevations] => 
+    [route_descriptions] => 
+    [route_gpx_paths] => 
+    [route_gpx_downloadable] => 
+    [contact_names] => 
+    [contact_emails] => 
+    [contact_phones] => 
+    [secondary_images] => Array
+        (
+        )
+
+    [routes] => Array
+        (
+        )
+
+    [contacts] => Array
+        (
+        )
+
+)
+
+[2026-09-02 17:52:04] ERROR: PHP Error [2]: include(/Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/public/templates/events/preview-template.php): Failed to open stream: No such file or directory in /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/api/events/preview.php:144
+[2026-09-02 17:52:04] ERROR: PHP Error [2]: include(): Failed opening '/Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/public/templates/events/preview-template.php' for inclusion (include_path='.:/opt/homebrew/Cellar/php/8.4.14_1/share/php/pear') in /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/api/events/preview.php:144
+[2026-09-02 16:29:58] INFO: 🚀 Début de la prévisualisation
+[2026-09-02 18:29:58] INFO: Données JSON brutes reçues: {"draftId":"13"}
+[2026-09-02 18:29:58] INFO: Données décodées: Array
+(
+    [draftId] => 13
+)
+
+[2026-09-02 18:29:58] INFO: DraftId extrait: 13
+[2026-09-02 18:29:58] ERROR: PHP Error [8192]: explode(): Passing null to parameter #2 ($string) of type string is deprecated in /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/api/events/preview.php:101
+[2026-09-02 18:29:58] ERROR: PHP Error [8192]: explode(): Passing null to parameter #2 ($string) of type string is deprecated in /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/api/events/preview.php:103
+[2026-09-02 18:29:58] INFO: Données formatées: Array
+(
+    [id] => 13
+    [user_id] => 3
+    [title] => VTT et marche nocturne à Libin-Bas
+    [description] => Le vendredi 4 septembre 2026, rendez-vous à Libin-Bas pour une soirée placée sous le signe du sport, de la convivialité et de la solidarité, au profit de Think Pink et de la lutte contre le cancer du sein
+
+    [category] => 
+    [date] => 2026-09-04
+    [start_time] => 
+    [end_time] => 
+    [location] => 
+    [venue] => 
+    [coordinates] => 
+    [organisation] => 
+    [status] => draft
+    [has_gpx] => 0
+    [gpx_path] => 
+    [gpx_downloadable] => 0
+    [created_at] => 2026-09-01 22:49:28
+    [updated_at] => 2026-09-02 18:29:58
+    [registration_opens] => 09:00:00
+    [registration_closes] => 08:15:00
+    [meeting_name] => cercle
+    [meeting_address] => rue saint-martin 6 6762 saint mard
+    [meeting_coordinates] => 49.5586314,5.5296887
+    [organizer_name] => 
+    [organizer_email] => 
+    [route_ids] => 1
+    [route_names] => 
+    [route_distances] => 15.00
+    [route_elevations] => 
+    [route_descriptions] => 
+    [route_gpx_paths] => 
+    [route_gpx_downloadable] => 0
+    [contact_names] => 
+    [contact_emails] => 
+    [contact_phones] => 
+    [secondary_images] => Array
+        (
+        )
+
+    [routes] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 1
+                    [name] => 
+                    [distance] => 15.00
+                    [elevation_gain] => 
+                    [description] => 
+                    [gpx_file] => 
+                    [gpx_downloadable] => 0
+                )
+
+        )
+
+    [contacts] => Array
+        (
+        )
+
+)
+
+[2026-09-02 18:29:58] ERROR: PHP Error [2]: include(/Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/public/templates/events/preview-template.php): Failed to open stream: No such file or directory in /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/api/events/preview.php:144
+[2026-09-02 18:29:58] ERROR: PHP Error [2]: include(): Failed opening '/Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/public/templates/events/preview-template.php' for inclusion (include_path='.:/opt/homebrew/Cellar/php/8.4.14_1/share/php/pear') in /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/api/events/preview.php:144
+[2026-09-02 16:30:54] INFO: 🚀 Début de la prévisualisation
+[2026-09-02 18:30:54] INFO: Données JSON brutes reçues: {"draftId":"13"}
+[2026-09-02 18:30:54] INFO: Données décodées: Array
+(
+    [draftId] => 13
+)
+
+[2026-09-02 18:30:54] INFO: DraftId extrait: 13
+[2026-09-02 18:30:54] ERROR: PHP Error [8192]: explode(): Passing null to parameter #2 ($string) of type string is deprecated in /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/api/events/preview.php:101
+[2026-09-02 18:30:54] ERROR: PHP Error [8192]: explode(): Passing null to parameter #2 ($string) of type string is deprecated in /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/api/events/preview.php:103
+[2026-09-02 18:30:54] INFO: Données formatées: Array
+(
+    [id] => 13
+    [user_id] => 3
+    [title] => VTT et marche nocturne à Libin-Bas
+    [description] => Le vendredi 4 septembre 2026, rendez-vous à Libin-Bas pour une soirée placée sous le signe du sport, de la convivialité et de la solidarité, au profit de Think Pink et de la lutte contre le cancer du sein
+
+    [category] => 
+    [date] => 2026-09-04
+    [start_time] => 
+    [end_time] => 
+    [location] => 
+    [venue] => 
+    [coordinates] => 
+    [organisation] => 
+    [status] => draft
+    [has_gpx] => 0
+    [gpx_path] => 
+    [gpx_downloadable] => 0
+    [created_at] => 2026-09-01 22:49:28
+    [updated_at] => 2026-09-02 18:30:54
+    [registration_opens] => 09:00:00
+    [registration_closes] => 08:15:00
+    [meeting_name] => cercle
+    [meeting_address] => rue saint-martin 6 6762 saint mard
+    [meeting_coordinates] => 49.5586314,5.5296887
+    [organizer_name] => 
+    [organizer_email] => 
+    [route_ids] => 3
+    [route_names] => 
+    [route_distances] => 15.00
+    [route_elevations] => 
+    [route_descriptions] => 
+    [route_gpx_paths] => 
+    [route_gpx_downloadable] => 0
+    [contact_names] => 
+    [contact_emails] => 
+    [contact_phones] => 
+    [secondary_images] => Array
+        (
+        )
+
+    [routes] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 3
+                    [name] => 
+                    [distance] => 15.00
+                    [elevation_gain] => 
+                    [description] => 
+                    [gpx_file] => 
+                    [gpx_downloadable] => 0
+                )
+
+        )
+
+    [contacts] => Array
+        (
+        )
+
+)
+
+[2026-09-02 18:30:54] ERROR: PHP Error [2]: include(/Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/public/templates/events/preview-template.php): Failed to open stream: No such file or directory in /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/api/events/preview.php:144
+[2026-09-02 18:30:54] ERROR: PHP Error [2]: include(): Failed opening '/Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/public/templates/events/preview-template.php' for inclusion (include_path='.:/opt/homebrew/Cellar/php/8.4.14_1/share/php/pear') in /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/api/events/preview.php:144
+[2026-09-02 16:52:30] INFO: 🚀 Début de la prévisualisation
+[2026-09-02 18:52:30] INFO: Données JSON brutes reçues: {"draftId":"13"}
+[2026-09-02 18:52:30] INFO: Données décodées: Array
+(
+    [draftId] => 13
+)
+
+[2026-09-02 18:52:30] INFO: DraftId extrait: 13
+[2026-09-02 18:52:30] ERROR: PHP Error [8192]: explode(): Passing null to parameter #2 ($string) of type string is deprecated in /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/api/events/preview.php:101
+[2026-09-02 18:52:30] ERROR: PHP Error [8192]: explode(): Passing null to parameter #2 ($string) of type string is deprecated in /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/api/events/preview.php:103
+[2026-09-02 18:52:30] INFO: Données formatées: Array
+(
+    [id] => 13
+    [user_id] => 3
+    [title] => VTT et marche nocturne à Libin-Bas
+    [description] => Le vendredi 4 septembre 2026, rendez-vous à Libin-Bas pour une soirée placée sous le signe du sport, de la convivialité et de la solidarité, au profit de Think Pink et de la lutte contre le cancer du sein
+
+    [category] => 
+    [date] => 2026-09-04
+    [start_time] => 
+    [end_time] => 
+    [location] => 
+    [venue] => 
+    [coordinates] => 
+    [organisation] => 
+    [status] => draft
+    [has_gpx] => 0
+    [gpx_path] => 
+    [gpx_downloadable] => 0
+    [created_at] => 2026-09-01 22:49:28
+    [updated_at] => 2026-09-02 18:52:30
+    [registration_opens] => 09:00:00
+    [registration_closes] => 08:15:00
+    [meeting_name] => cercle
+    [meeting_address] => rue saint-martin 6 6762 saint mard
+    [meeting_coordinates] => 49.5586314,5.5296887
+    [organizer_name] => 
+    [organizer_email] => 
+    [route_ids] => 7
+    [route_names] => 
+    [route_distances] => 15.00
+    [route_elevations] => 
+    [route_descriptions] => 
+    [route_gpx_paths] => 
+    [route_gpx_downloadable] => 0
+    [contact_names] => 
+    [contact_emails] => 
+    [contact_phones] => 
+    [secondary_images] => Array
+        (
+        )
+
+    [routes] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 7
+                    [name] => 
+                    [distance] => 15.00
+                    [elevation_gain] => 
+                    [description] => 
+                    [gpx_file] => 
+                    [gpx_downloadable] => 0
+                )
+
+        )
+
+    [contacts] => Array
+        (
+        )
+
+)
+
+[2026-09-02 18:52:30] ERROR: PHP Error [2]: include(/Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/public/templates/events/preview-template.php): Failed to open stream: No such file or directory in /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/api/events/preview.php:144
+[2026-09-02 18:52:30] ERROR: PHP Error [2]: include(): Failed opening '/Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/public/templates/events/preview-template.php' for inclusion (include_path='.:/opt/homebrew/Cellar/php/8.4.14_1/share/php/pear') in /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/api/events/preview.php:144
+[2026-09-02 16:56:47] INFO: 🚀 Début de la prévisualisation
+[2026-09-02 18:56:47] INFO: Données JSON brutes reçues: {"draftId":"13"}
+[2026-09-02 18:56:47] INFO: Données décodées: Array
+(
+    [draftId] => 13
+)
+
+[2026-09-02 18:56:47] INFO: DraftId extrait: 13
+[2026-09-02 18:56:47] ERROR: PHP Error [8192]: explode(): Passing null to parameter #2 ($string) of type string is deprecated in /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/api/events/preview.php:101
+[2026-09-02 18:56:47] ERROR: PHP Error [8192]: explode(): Passing null to parameter #2 ($string) of type string is deprecated in /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/api/events/preview.php:103
+[2026-09-02 18:56:47] INFO: Données formatées: Array
+(
+    [id] => 13
+    [user_id] => 3
+    [title] => VTT et marche nocturne à Libin-Bas
+    [description] => Le vendredi 4 septembre 2026, rendez-vous à Libin-Bas pour une soirée placée sous le signe du sport, de la convivialité et de la solidarité, au profit de Think Pink et de la lutte contre le cancer du sein
+
+    [category] => 
+    [date] => 2026-09-04
+    [start_time] => 
+    [end_time] => 
+    [location] => 
+    [venue] => 
+    [coordinates] => 
+    [organisation] => 
+    [status] => draft
+    [has_gpx] => 0
+    [gpx_path] => 
+    [gpx_downloadable] => 0
+    [created_at] => 2026-09-01 22:49:28
+    [updated_at] => 2026-09-02 18:56:47
+    [registration_opens] => 09:00:00
+    [registration_closes] => 08:15:00
+    [meeting_name] => cercle
+    [meeting_address] => rue saint-martin 6 6762 saint mard
+    [meeting_coordinates] => 49.5586314,5.5296887
+    [organizer_name] => 
+    [organizer_email] => 
+    [route_ids] => 8
+    [route_names] => 
+    [route_distances] => 15.00
+    [route_elevations] => 
+    [route_descriptions] => 
+    [route_gpx_paths] => 
+    [route_gpx_downloadable] => 0
+    [contact_names] => 
+    [contact_emails] => 
+    [contact_phones] => 
+    [secondary_images] => Array
+        (
+        )
+
+    [routes] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 8
+                    [name] => 
+                    [distance] => 15.00
+                    [elevation_gain] => 
+                    [description] => 
+                    [gpx_file] => 
+                    [gpx_downloadable] => 0
+                )
+
+        )
+
+    [contacts] => Array
+        (
+        )
+
+)
+
+[2026-09-02 18:56:47] ERROR: PHP Error [2]: include(/Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/public/templates/events/preview-template.php): Failed to open stream: No such file or directory in /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/api/events/preview.php:144
+[2026-09-02 18:56:47] ERROR: PHP Error [2]: include(): Failed opening '/Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/public/templates/events/preview-template.php' for inclusion (include_path='.:/opt/homebrew/Cellar/php/8.4.14_1/share/php/pear') in /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/api/events/preview.php:144
+[2026-09-02 17:00:14] INFO: 🚀 Début de la prévisualisation
+[2026-09-02 19:00:14] INFO: Données JSON brutes reçues: {"draftId":"13"}
+[2026-09-02 19:00:14] INFO: Données décodées: Array
+(
+    [draftId] => 13
+)
+
+[2026-09-02 19:00:14] INFO: DraftId extrait: 13
+[2026-09-02 19:00:14] ERROR: PHP Error [8192]: explode(): Passing null to parameter #2 ($string) of type string is deprecated in /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/api/events/preview.php:101
+[2026-09-02 19:00:14] ERROR: PHP Error [8192]: explode(): Passing null to parameter #2 ($string) of type string is deprecated in /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/api/events/preview.php:103
+[2026-09-02 19:00:14] INFO: Données formatées: Array
+(
+    [id] => 13
+    [user_id] => 3
+    [title] => VTT et marche nocturne à Libin-Bas
+    [description] => Le vendredi 4 septembre 2026, rendez-vous à Libin-Bas pour une soirée placée sous le signe du sport, de la convivialité et de la solidarité, au profit de Think Pink et de la lutte contre le cancer du sein
+
+    [category] => 
+    [date] => 2026-09-04
+    [start_time] => 
+    [end_time] => 
+    [location] => 
+    [venue] => 
+    [coordinates] => 
+    [organisation] => 
+    [status] => draft
+    [has_gpx] => 0
+    [gpx_path] => 
+    [gpx_downloadable] => 0
+    [created_at] => 2026-09-01 22:49:28
+    [updated_at] => 2026-09-02 19:00:14
+    [registration_opens] => 09:00:00
+    [registration_closes] => 08:15:00
+    [meeting_name] => cercle
+    [meeting_address] => rue saint-martin 6 6762 saint mard
+    [meeting_coordinates] => 49.5586314,5.5296887
+    [organizer_name] => 
+    [organizer_email] => 
+    [route_ids] => 11,12
+    [route_names] => ,
+    [route_distances] => 15.00,30.00
+    [route_elevations] => 
+    [route_descriptions] => ,
+    [route_gpx_paths] => 
+    [route_gpx_downloadable] => 0,0
+    [contact_names] => 
+    [contact_emails] => 
+    [contact_phones] => 
+    [secondary_images] => Array
+        (
+        )
+
+    [routes] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 11
+                    [name] => 
+                    [distance] => 15.00
+                    [elevation_gain] => 
+                    [description] => 
+                    [gpx_file] => 
+                    [gpx_downloadable] => 0
+                )
+
+            [1] => Array
+                (
+                    [id] => 12
+                    [name] => 
+                    [distance] => 30.00
+                    [elevation_gain] => 
+                    [description] => 
+                    [gpx_file] => 
+                    [gpx_downloadable] => 0
+                )
+
+        )
+
+    [contacts] => Array
+        (
+        )
+
+)
+
+[2026-09-02 19:00:14] ERROR: PHP Error [2]: include(/Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/public/templates/events/preview-template.php): Failed to open stream: No such file or directory in /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/api/events/preview.php:144
+[2026-09-02 19:00:14] ERROR: PHP Error [2]: include(): Failed opening '/Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/public/templates/events/preview-template.php' for inclusion (include_path='.:/opt/homebrew/Cellar/php/8.4.14_1/share/php/pear') in /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/api/events/preview.php:144
+[2026-09-02 17:11:20] INFO: 🚀 Début de la prévisualisation
+[2026-09-02 19:11:20] INFO: Données JSON brutes reçues: {"draftId":"13"}
+[2026-09-02 19:11:20] INFO: Données décodées: Array
+(
+    [draftId] => 13
+)
+
+[2026-09-02 19:11:20] INFO: DraftId extrait: 13
+[2026-09-02 19:11:20] ERROR: PHP Error [8192]: explode(): Passing null to parameter #2 ($string) of type string is deprecated in /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/api/events/preview.php:101
+[2026-09-02 19:11:20] ERROR: PHP Error [8192]: explode(): Passing null to parameter #2 ($string) of type string is deprecated in /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/api/events/preview.php:103
+[2026-09-02 19:11:20] INFO: Données formatées: Array
+(
+    [id] => 13
+    [user_id] => 3
+    [title] => VTT et marche nocturne à Libin-Bas
+    [description] => Le vendredi 4 septembre 2026, rendez-vous à Libin-Bas pour une soirée placée sous le signe du sport, de la convivialité et de la solidarité, au profit de Think Pink et de la lutte contre le cancer du sein
+
+    [category] => 
+    [date] => 2026-09-04
+    [start_time] => 
+    [end_time] => 
+    [location] => 
+    [venue] => 
+    [coordinates] => 
+    [organisation] => 
+    [status] => draft
+    [has_gpx] => 0
+    [gpx_path] => 
+    [gpx_downloadable] => 0
+    [created_at] => 2026-09-01 22:49:28
+    [updated_at] => 2026-09-02 19:11:20
+    [registration_opens] => 09:00:00
+    [registration_closes] => 08:15:00
+    [meeting_name] => cercle
+    [meeting_address] => rue saint-martin 6 6762 saint mard
+    [meeting_coordinates] => 49.5586314,5.5296887
+    [organizer_name] => 
+    [organizer_email] => 
+    [route_ids] => 15,16
+    [route_names] => ,
+    [route_distances] => 15.00,30.00
+    [route_elevations] => 
+    [route_descriptions] => ,
+    [route_gpx_paths] => 
+    [route_gpx_downloadable] => 0,0
+    [contact_names] => 
+    [contact_emails] => 
+    [contact_phones] => 
+    [secondary_images] => Array
+        (
+        )
+
+    [routes] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 15
+                    [name] => 
+                    [distance] => 15.00
+                    [elevation_gain] => 
+                    [description] => 
+                    [gpx_file] => 
+                    [gpx_downloadable] => 0
+                )
+
+            [1] => Array
+                (
+                    [id] => 16
+                    [name] => 
+                    [distance] => 30.00
+                    [elevation_gain] => 
+                    [description] => 
+                    [gpx_file] => 
+                    [gpx_downloadable] => 0
+                )
+
+        )
+
+    [contacts] => Array
+        (
+        )
+
+)
+
+[2026-09-02 19:11:20] ERROR: PHP Error [2]: include(/Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/public/templates/events/preview-template.php): Failed to open stream: No such file or directory in /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/api/events/preview.php:144
+[2026-09-02 19:11:20] ERROR: PHP Error [2]: include(): Failed opening '/Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/public/templates/events/preview-template.php' for inclusion (include_path='.:/opt/homebrew/Cellar/php/8.4.14_1/share/php/pear') in /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/api/events/preview.php:144
+[2026-09-02 17:15:08] INFO: 🚀 Début de la prévisualisation
+[2026-09-02 19:15:08] INFO: Données JSON brutes reçues: {"draftId":"13"}
+[2026-09-02 19:15:08] INFO: Données décodées: Array
+(
+    [draftId] => 13
+)
+
+[2026-09-02 19:15:08] INFO: DraftId extrait: 13
+[2026-09-02 19:15:08] ERROR: PHP Error [8192]: explode(): Passing null to parameter #2 ($string) of type string is deprecated in /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/api/events/preview.php:101
+[2026-09-02 19:15:08] ERROR: PHP Error [8192]: explode(): Passing null to parameter #2 ($string) of type string is deprecated in /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/api/events/preview.php:103
+[2026-09-02 19:15:08] INFO: Données formatées: Array
+(
+    [id] => 13
+    [user_id] => 3
+    [title] => VTT et marche nocturne à Libin-Bas
+    [description] => Le vendredi 4 septembre 2026, rendez-vous à Libin-Bas pour une soirée placée sous le signe du sport, de la convivialité et de la solidarité, au profit de Think Pink et de la lutte contre le cancer du sein
+
+    [category] => 
+    [date] => 2026-09-04
+    [start_time] => 
+    [end_time] => 
+    [location] => 
+    [venue] => 
+    [coordinates] => 
+    [organisation] => 
+    [status] => published
+    [has_gpx] => 0
+    [gpx_path] => 
+    [gpx_downloadable] => 0
+    [created_at] => 2026-09-01 22:49:28
+    [updated_at] => 2026-09-02 19:15:08
+    [registration_opens] => 09:00:00
+    [registration_closes] => 08:15:00
+    [meeting_name] => cercle
+    [meeting_address] => rue saint-martin 6 6762 saint mard
+    [meeting_coordinates] => 49.5586314,5.5296887
+    [organizer_name] => 
+    [organizer_email] => 
+    [route_ids] => 19,20
+    [route_names] => ,
+    [route_distances] => 15.00,30.00
+    [route_elevations] => 
+    [route_descriptions] => ,
+    [route_gpx_paths] => 
+    [route_gpx_downloadable] => 0,0
+    [contact_names] => 
+    [contact_emails] => 
+    [contact_phones] => 
+    [secondary_images] => Array
+        (
+        )
+
+    [routes] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 19
+                    [name] => 
+                    [distance] => 15.00
+                    [elevation_gain] => 
+                    [description] => 
+                    [gpx_file] => 
+                    [gpx_downloadable] => 0
+                )
+
+            [1] => Array
+                (
+                    [id] => 20
+                    [name] => 
+                    [distance] => 30.00
+                    [elevation_gain] => 
+                    [description] => 
+                    [gpx_file] => 
+                    [gpx_downloadable] => 0
+                )
+
+        )
+
+    [contacts] => Array
+        (
+        )
+
+)
+
+[2026-09-02 19:15:08] ERROR: PHP Error [2]: include(/Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/public/templates/events/preview-template.php): Failed to open stream: No such file or directory in /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/api/events/preview.php:144
+[2026-09-02 19:15:08] ERROR: PHP Error [2]: include(): Failed opening '/Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/public/templates/events/preview-template.php' for inclusion (include_path='.:/opt/homebrew/Cellar/php/8.4.14_1/share/php/pear') in /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/api/events/preview.php:144
+[2026-09-02 17:16:43] INFO: 🚀 Début de la prévisualisation
+[2026-09-02 19:16:43] INFO: Données JSON brutes reçues: {"draftId":"13"}
+[2026-09-02 19:16:43] INFO: Données décodées: Array
+(
+    [draftId] => 13
+)
+
+[2026-09-02 19:16:43] INFO: DraftId extrait: 13
+[2026-09-02 19:16:43] ERROR: PHP Error [8192]: explode(): Passing null to parameter #2 ($string) of type string is deprecated in /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/api/events/preview.php:101
+[2026-09-02 19:16:43] ERROR: PHP Error [8192]: explode(): Passing null to parameter #2 ($string) of type string is deprecated in /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/api/events/preview.php:103
+[2026-09-02 19:16:43] INFO: Données formatées: Array
+(
+    [id] => 13
+    [user_id] => 3
+    [title] => VTT et marche nocturne à Libin-Bas
+    [description] => Le vendredi 4 septembre 2026, rendez-vous à Libin-Bas pour une soirée placée sous le signe du sport, de la convivialité et de la solidarité, au profit de Think Pink et de la lutte contre le cancer du sein
+
+    [category] => 
+    [date] => 2026-09-04
+    [start_time] => 
+    [end_time] => 
+    [location] => 
+    [venue] => 
+    [coordinates] => 
+    [organisation] => 
+    [status] => published
+    [has_gpx] => 0
+    [gpx_path] => 
+    [gpx_downloadable] => 0
+    [created_at] => 2026-09-01 22:49:28
+    [updated_at] => 2026-09-02 19:16:43
+    [registration_opens] => 09:00:00
+    [registration_closes] => 08:15:00
+    [meeting_name] => cercle
+    [meeting_address] => rue saint-martin 6 6762 saint mard
+    [meeting_coordinates] => 49.5586314,5.5296887
+    [organizer_name] => 
+    [organizer_email] => 
+    [route_ids] => 23,24
+    [route_names] => ,
+    [route_distances] => 15.00,30.00
+    [route_elevations] => 
+    [route_descriptions] => ,
+    [route_gpx_paths] => 
+    [route_gpx_downloadable] => 0,0
+    [contact_names] => 
+    [contact_emails] => 
+    [contact_phones] => 
+    [secondary_images] => Array
+        (
+        )
+
+    [routes] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 23
+                    [name] => 
+                    [distance] => 15.00
+                    [elevation_gain] => 
+                    [description] => 
+                    [gpx_file] => 
+                    [gpx_downloadable] => 0
+                )
+
+            [1] => Array
+                (
+                    [id] => 24
+                    [name] => 
+                    [distance] => 30.00
+                    [elevation_gain] => 
+                    [description] => 
+                    [gpx_file] => 
+                    [gpx_downloadable] => 0
+                )
+
+        )
+
+    [contacts] => Array
+        (
+        )
+
+)
+
+[2026-09-02 19:16:43] ERROR: PHP Error [2]: include(/Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/public/templates/events/preview-template.php): Failed to open stream: No such file or directory in /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/api/events/preview.php:144
+[2026-09-02 19:16:43] ERROR: PHP Error [2]: include(): Failed opening '/Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/public/templates/events/preview-template.php' for inclusion (include_path='.:/opt/homebrew/Cellar/php/8.4.14_1/share/php/pear') in /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/api/events/preview.php:144
+[2026-09-02 17:23:39] INFO: 🚀 Début de la prévisualisation
+[2026-09-02 19:23:39] INFO: Données JSON brutes reçues: {"draftId":"13"}
+[2026-09-02 19:23:39] INFO: Données décodées: Array
+(
+    [draftId] => 13
+)
+
+[2026-09-02 19:23:39] INFO: DraftId extrait: 13
+[2026-09-02 19:23:39] ERROR: PHP Error [8192]: explode(): Passing null to parameter #2 ($string) of type string is deprecated in /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/api/events/preview.php:101
+[2026-09-02 19:23:39] ERROR: PHP Error [8192]: explode(): Passing null to parameter #2 ($string) of type string is deprecated in /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/api/events/preview.php:103
+[2026-09-02 19:23:39] INFO: Données formatées: Array
+(
+    [id] => 13
+    [user_id] => 3
+    [title] => VTT et marche nocturne à Libin-Bas
+    [description] => Le vendredi 4 septembre 2026, rendez-vous à Libin-Bas pour une soirée placée sous le signe du sport, de la convivialité et de la solidarité, au profit de Think Pink et de la lutte contre le cancer du sein
+
+    [category] => 
+    [date] => 2026-09-04
+    [start_time] => 
+    [end_time] => 
+    [location] => 
+    [venue] => 
+    [coordinates] => 
+    [organisation] => 
+    [status] => published
+    [has_gpx] => 0
+    [gpx_path] => 
+    [gpx_downloadable] => 0
+    [created_at] => 2026-09-01 22:49:28
+    [updated_at] => 2026-09-02 19:23:39
+    [registration_opens] => 09:00:00
+    [registration_closes] => 08:15:00
+    [meeting_name] => cercle
+    [meeting_address] => rue saint-martin 6 6762 saint mard
+    [meeting_coordinates] => 49.5586314,5.5296887
+    [organizer_id] => 
+    [organizer_name] => 
+    [organizer_email] => 
+    [route_ids] => 25,26
+    [route_names] => ,
+    [route_distances] => 15.00,30.00
+    [route_elevations] => 
+    [route_descriptions] => ,
+    [route_gpx_paths] => 
+    [route_gpx_downloadable] => 0,0
+    [contact_names] => 
+    [contact_emails] => 
+    [contact_phones] => 
+    [secondary_images] => Array
+        (
+        )
+
+    [routes] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 25
+                    [name] => 
+                    [distance] => 15.00
+                    [elevation_gain] => 
+                    [description] => 
+                    [gpx_file] => 
+                    [gpx_downloadable] => 0
+                )
+
+            [1] => Array
+                (
+                    [id] => 26
+                    [name] => 
+                    [distance] => 30.00
+                    [elevation_gain] => 
+                    [description] => 
+                    [gpx_file] => 
+                    [gpx_downloadable] => 0
+                )
+
+        )
+
+    [contacts] => Array
+        (
+        )
+
+)
+
+[2026-09-02 19:23:39] ERROR: PHP Error [2]: include(/Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/public/templates/events/preview-template.php): Failed to open stream: No such file or directory in /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/api/events/preview.php:144
+[2026-09-02 19:23:39] ERROR: PHP Error [2]: include(): Failed opening '/Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/public/templates/events/preview-template.php' for inclusion (include_path='.:/opt/homebrew/Cellar/php/8.4.14_1/share/php/pear') in /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/api/events/preview.php:144
+[2026-09-02 17:29:07] INFO: 🚀 Début de la prévisualisation
+[2026-09-02 19:29:07] INFO: Données JSON brutes reçues: {"draftId":"13"}
+[2026-09-02 19:29:07] INFO: Données décodées: Array
+(
+    [draftId] => 13
+)
+
+[2026-09-02 19:29:07] INFO: DraftId extrait: 13
+[2026-09-02 19:29:07] ERROR: PHP Error [8192]: explode(): Passing null to parameter #2 ($string) of type string is deprecated in /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/api/events/preview.php:101
+[2026-09-02 19:29:07] ERROR: PHP Error [8192]: explode(): Passing null to parameter #2 ($string) of type string is deprecated in /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/api/events/preview.php:103
+[2026-09-02 19:29:07] INFO: Données formatées: Array
+(
+    [id] => 13
+    [user_id] => 3
+    [title] => VTT et marche nocturne à Libin-Bas
+    [description] => Le vendredi 4 septembre 2026, rendez-vous à Libin-Bas pour une soirée placée sous le signe du sport, de la convivialité et de la solidarité, au profit de Think Pink et de la lutte contre le cancer du sein
+
+    [category] => 
+    [date] => 2026-09-04
+    [start_time] => 
+    [end_time] => 
+    [location] => 
+    [venue] => 
+    [coordinates] => 
+    [organisation] => 
+    [status] => published
+    [has_gpx] => 0
+    [gpx_path] => 
+    [gpx_downloadable] => 0
+    [created_at] => 2026-09-01 22:49:28
+    [updated_at] => 2026-09-02 19:29:07
+    [registration_opens] => 09:00:00
+    [registration_closes] => 08:15:00
+    [meeting_name] => cercle
+    [meeting_address] => rue saint-martin 6 6762 saint mard
+    [meeting_coordinates] => 49.5586314,5.5296887
+    [organizer_id] => 
+    [organizer_name] => 
+    [organizer_email] => 
+    [route_ids] => 27,28
+    [route_names] => ,
+    [route_distances] => 15.00,30.00
+    [route_elevations] => 
+    [route_descriptions] => ,
+    [route_gpx_paths] => 
+    [route_gpx_downloadable] => 0,0
+    [contact_names] => 
+    [contact_emails] => 
+    [contact_phones] => 
+    [secondary_images] => Array
+        (
+        )
+
+    [routes] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 27
+                    [name] => 
+                    [distance] => 15.00
+                    [elevation_gain] => 
+                    [description] => 
+                    [gpx_file] => 
+                    [gpx_downloadable] => 0
+                )
+
+            [1] => Array
+                (
+                    [id] => 28
+                    [name] => 
+                    [distance] => 30.00
+                    [elevation_gain] => 
+                    [description] => 
+                    [gpx_file] => 
+                    [gpx_downloadable] => 0
+                )
+
+        )
+
+    [contacts] => Array
+        (
+        )
+
+)
+
+[2026-09-02 19:29:07] ERROR: PHP Error [2]: include(/Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/public/templates/events/preview-template.php): Failed to open stream: No such file or directory in /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/api/events/preview.php:144
+[2026-09-02 19:29:07] ERROR: PHP Error [2]: include(): Failed opening '/Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/public/templates/events/preview-template.php' for inclusion (include_path='.:/opt/homebrew/Cellar/php/8.4.14_1/share/php/pear') in /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/api/events/preview.php:144
+[2026-09-02 17:34:43] INFO: 🚀 Début de la prévisualisation
+[2026-09-02 19:34:43] INFO: Données JSON brutes reçues: {"draftId":"13"}
+[2026-09-02 19:34:43] INFO: Données décodées: Array
+(
+    [draftId] => 13
+)
+
+[2026-09-02 19:34:43] INFO: DraftId extrait: 13
+[2026-09-02 19:34:43] ERROR: PHP Error [8192]: explode(): Passing null to parameter #2 ($string) of type string is deprecated in /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/api/events/preview.php:101
+[2026-09-02 19:34:43] ERROR: PHP Error [8192]: explode(): Passing null to parameter #2 ($string) of type string is deprecated in /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/api/events/preview.php:103
+[2026-09-02 19:34:43] INFO: Données formatées: Array
+(
+    [id] => 13
+    [user_id] => 3
+    [title] => VTT et marche nocturne à Libin-Bas
+    [description] => Le vendredi 4 septembre 2026, rendez-vous à Libin-Bas pour une soirée placée sous le signe du sport, de la convivialité et de la solidarité, au profit de Think Pink et de la lutte contre le cancer du sein
+
+    [category] => 
+    [date] => 2026-09-04
+    [start_time] => 
+    [end_time] => 
+    [location] => 
+    [venue] => 
+    [coordinates] => 
+    [organisation] => 
+    [status] => published
+    [has_gpx] => 0
+    [gpx_path] => 
+    [gpx_downloadable] => 0
+    [created_at] => 2026-09-01 22:49:28
+    [updated_at] => 2026-09-02 19:34:43
+    [registration_opens] => 09:00:00
+    [registration_closes] => 08:15:00
+    [meeting_name] => cercle
+    [meeting_address] => rue saint-martin 6 6762 saint mard
+    [meeting_coordinates] => 49.5586314,5.5296887
+    [organizer_id] => 
+    [organizer_name] => 
+    [organizer_email] => 
+    [route_ids] => 29,30
+    [route_names] => ,
+    [route_distances] => 15.00,30.00
+    [route_elevations] => 
+    [route_descriptions] => ,
+    [route_gpx_paths] => 
+    [route_gpx_downloadable] => 0,0
+    [contact_names] => 
+    [contact_emails] => 
+    [contact_phones] => 
+    [secondary_images] => Array
+        (
+        )
+
+    [routes] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 29
+                    [name] => 
+                    [distance] => 15.00
+                    [elevation_gain] => 
+                    [description] => 
+                    [gpx_file] => 
+                    [gpx_downloadable] => 0
+                )
+
+            [1] => Array
+                (
+                    [id] => 30
+                    [name] => 
+                    [distance] => 30.00
+                    [elevation_gain] => 
+                    [description] => 
+                    [gpx_file] => 
+                    [gpx_downloadable] => 0
+                )
+
+        )
+
+    [contacts] => Array
+        (
+        )
+
+)
+
+[2026-09-02 19:34:43] ERROR: PHP Error [2]: include(/Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/public/templates/events/preview-template.php): Failed to open stream: No such file or directory in /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/api/events/preview.php:144
+[2026-09-02 19:34:43] ERROR: PHP Error [2]: include(): Failed opening '/Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/public/templates/events/preview-template.php' for inclusion (include_path='.:/opt/homebrew/Cellar/php/8.4.14_1/share/php/pear') in /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/api/events/preview.php:144
+[2026-09-02 17:37:06] INFO: 🚀 Début de la prévisualisation
+[2026-09-02 19:37:06] INFO: Données JSON brutes reçues: {"draftId":"13"}
+[2026-09-02 19:37:06] INFO: Données décodées: Array
+(
+    [draftId] => 13
+)
+
+[2026-09-02 19:37:06] INFO: DraftId extrait: 13
+[2026-09-02 19:37:06] ERROR: PHP Error [8192]: explode(): Passing null to parameter #2 ($string) of type string is deprecated in /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/api/events/preview.php:101
+[2026-09-02 19:37:06] ERROR: PHP Error [8192]: explode(): Passing null to parameter #2 ($string) of type string is deprecated in /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/api/events/preview.php:103
+[2026-09-02 19:37:06] INFO: Données formatées: Array
+(
+    [id] => 13
+    [user_id] => 3
+    [title] => VTT et marche nocturne à Libin-Bas
+    [description] => Le vendredi 4 septembre 2026, rendez-vous à Libin-Bas pour une soirée placée sous le signe du sport, de la convivialité et de la solidarité, au profit de Think Pink et de la lutte contre le cancer du sein
+
+    [category] => 
+    [date] => 2026-09-04
+    [start_time] => 
+    [end_time] => 
+    [location] => 
+    [venue] => 
+    [coordinates] => 
+    [organisation] => 
+    [status] => published
+    [has_gpx] => 0
+    [gpx_path] => 
+    [gpx_downloadable] => 0
+    [created_at] => 2026-09-01 22:49:28
+    [updated_at] => 2026-09-02 19:37:06
+    [registration_opens] => 09:00:00
+    [registration_closes] => 08:15:00
+    [meeting_name] => cercle
+    [meeting_address] => rue saint-martin 6 6762 saint mard
+    [meeting_coordinates] => 49.5586314,5.5296887
+    [organizer_id] => 
+    [organizer_name] => 
+    [organizer_email] => 
+    [route_ids] => 31,32
+    [route_names] => ,
+    [route_distances] => 15.00,30.00
+    [route_elevations] => 
+    [route_descriptions] => ,
+    [route_gpx_paths] => 
+    [route_gpx_downloadable] => 0,0
+    [contact_names] => 
+    [contact_emails] => 
+    [contact_phones] => 
+    [secondary_images] => Array
+        (
+        )
+
+    [routes] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 31
+                    [name] => 
+                    [distance] => 15.00
+                    [elevation_gain] => 
+                    [description] => 
+                    [gpx_file] => 
+                    [gpx_downloadable] => 0
+                )
+
+            [1] => Array
+                (
+                    [id] => 32
+                    [name] => 
+                    [distance] => 30.00
+                    [elevation_gain] => 
+                    [description] => 
+                    [gpx_file] => 
+                    [gpx_downloadable] => 0
+                )
+
+        )
+
+    [contacts] => Array
+        (
+        )
+
+)
+
+[2026-09-02 19:37:06] ERROR: PHP Error [2]: include(/Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/public/templates/events/preview-template.php): Failed to open stream: No such file or directory in /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/api/events/preview.php:144
+[2026-09-02 19:37:06] ERROR: PHP Error [2]: include(): Failed opening '/Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/public/templates/events/preview-template.php' for inclusion (include_path='.:/opt/homebrew/Cellar/php/8.4.14_1/share/php/pear') in /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/api/events/preview.php:144
+[2026-09-02 17:40:35] INFO: 🚀 Début de la prévisualisation
+[2026-09-02 19:40:35] INFO: Données JSON brutes reçues: {"draftId":"13"}
+[2026-09-02 19:40:35] INFO: Données décodées: Array
+(
+    [draftId] => 13
+)
+
+[2026-09-02 19:40:35] INFO: DraftId extrait: 13
+[2026-09-02 19:40:35] ERROR: PHP Error [8192]: explode(): Passing null to parameter #2 ($string) of type string is deprecated in /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/api/events/preview.php:101
+[2026-09-02 19:40:35] ERROR: PHP Error [8192]: explode(): Passing null to parameter #2 ($string) of type string is deprecated in /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/api/events/preview.php:103
+[2026-09-02 19:40:35] INFO: Données formatées: Array
+(
+    [id] => 13
+    [user_id] => 3
+    [title] => VTT et marche nocturne à Libin-Bas
+    [description] => Le vendredi 4 septembre 2026, rendez-vous à Libin-Bas pour une soirée placée sous le signe du sport, de la convivialité et de la solidarité, au profit de Think Pink et de la lutte contre le cancer du sein
+
+    [category] => 
+    [date] => 2026-09-04
+    [start_time] => 
+    [end_time] => 
+    [location] => 
+    [venue] => 
+    [coordinates] => 
+    [organisation] => 
+    [status] => published
+    [has_gpx] => 0
+    [gpx_path] => 
+    [gpx_downloadable] => 0
+    [created_at] => 2026-09-01 22:49:28
+    [updated_at] => 2026-09-02 19:40:35
+    [registration_opens] => 09:00:00
+    [registration_closes] => 08:15:00
+    [meeting_name] => cercle
+    [meeting_address] => rue saint-martin 6 6762 saint mard
+    [meeting_coordinates] => 49.5586314,5.5296887
+    [organizer_id] => 
+    [organizer_name] => 
+    [organizer_email] => 
+    [route_ids] => 33,34
+    [route_names] => ,
+    [route_distances] => 15.00,30.00
+    [route_elevations] => 
+    [route_descriptions] => ,
+    [route_gpx_paths] => 
+    [route_gpx_downloadable] => 0,0
+    [contact_names] => 
+    [contact_emails] => 
+    [contact_phones] => 
+    [secondary_images] => Array
+        (
+        )
+
+    [routes] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 33
+                    [name] => 
+                    [distance] => 15.00
+                    [elevation_gain] => 
+                    [description] => 
+                    [gpx_file] => 
+                    [gpx_downloadable] => 0
+                )
+
+            [1] => Array
+                (
+                    [id] => 34
+                    [name] => 
+                    [distance] => 30.00
+                    [elevation_gain] => 
+                    [description] => 
+                    [gpx_file] => 
+                    [gpx_downloadable] => 0
+                )
+
+        )
+
+    [contacts] => Array
+        (
+        )
+
+)
+
+[2026-09-02 19:40:35] ERROR: PHP Error [2]: include(/Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/public/templates/events/preview-template.php): Failed to open stream: No such file or directory in /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/api/events/preview.php:144
+[2026-09-02 19:40:35] ERROR: PHP Error [2]: include(): Failed opening '/Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/public/templates/events/preview-template.php' for inclusion (include_path='.:/opt/homebrew/Cellar/php/8.4.14_1/share/php/pear') in /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/api/events/preview.php:144
+[2026-09-02 17:42:58] INFO: 🚀 Début de la prévisualisation
+[2026-09-02 19:42:58] INFO: Données JSON brutes reçues: {"draftId":"13"}
+[2026-09-02 19:42:58] INFO: Données décodées: Array
+(
+    [draftId] => 13
+)
+
+[2026-09-02 19:42:58] INFO: DraftId extrait: 13
+[2026-09-02 19:42:58] ERROR: PHP Error [8192]: explode(): Passing null to parameter #2 ($string) of type string is deprecated in /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/api/events/preview.php:101
+[2026-09-02 19:42:58] ERROR: PHP Error [8192]: explode(): Passing null to parameter #2 ($string) of type string is deprecated in /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/api/events/preview.php:103
+[2026-09-02 19:42:58] INFO: Données formatées: Array
+(
+    [id] => 13
+    [user_id] => 3
+    [title] => VTT et marche nocturne à Libin-Bas
+    [description] => Le vendredi 4 septembre 2026, rendez-vous à Libin-Bas pour une soirée placée sous le signe du sport, de la convivialité et de la solidarité, au profit de Think Pink et de la lutte contre le cancer du sein
+
+    [category] => 
+    [date] => 2026-09-04
+    [start_time] => 
+    [end_time] => 
+    [location] => 
+    [venue] => 
+    [coordinates] => 
+    [organisation] => 
+    [status] => published
+    [has_gpx] => 0
+    [gpx_path] => 
+    [gpx_downloadable] => 0
+    [created_at] => 2026-09-01 22:49:28
+    [updated_at] => 2026-09-02 19:42:58
+    [registration_opens] => 09:00:00
+    [registration_closes] => 08:15:00
+    [meeting_name] => cercle
+    [meeting_address] => rue saint-martin 6 6762 saint mard
+    [meeting_coordinates] => 49.5586314,5.5296887
+    [organizer_id] => 
+    [organizer_name] => 
+    [organizer_email] => 
+    [route_ids] => 35,36
+    [route_names] => ,
+    [route_distances] => 15.00,30.00
+    [route_elevations] => 
+    [route_descriptions] => ,
+    [route_gpx_paths] => 
+    [route_gpx_downloadable] => 0,0
+    [contact_names] => 
+    [contact_emails] => 
+    [contact_phones] => 
+    [secondary_images] => Array
+        (
+        )
+
+    [routes] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 35
+                    [name] => 
+                    [distance] => 15.00
+                    [elevation_gain] => 
+                    [description] => 
+                    [gpx_file] => 
+                    [gpx_downloadable] => 0
+                )
+
+            [1] => Array
+                (
+                    [id] => 36
+                    [name] => 
+                    [distance] => 30.00
+                    [elevation_gain] => 
+                    [description] => 
+                    [gpx_file] => 
+                    [gpx_downloadable] => 0
+                )
+
+        )
+
+    [contacts] => Array
+        (
+        )
+
+)
+
+[2026-09-02 19:42:58] ERROR: PHP Error [2]: include(/Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/public/templates/events/preview-template.php): Failed to open stream: No such file or directory in /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/api/events/preview.php:144
+[2026-09-02 19:42:58] ERROR: PHP Error [2]: include(): Failed opening '/Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/public/templates/events/preview-template.php' for inclusion (include_path='.:/opt/homebrew/Cellar/php/8.4.14_1/share/php/pear') in /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/api/events/preview.php:144
+[2026-09-02 17:46:10] INFO: 🚀 Début de la prévisualisation
+[2026-09-02 19:46:10] INFO: Données JSON brutes reçues: {"draftId":"13"}
+[2026-09-02 19:46:10] INFO: Données décodées: Array
+(
+    [draftId] => 13
+)
+
+[2026-09-02 19:46:10] INFO: DraftId extrait: 13
+[2026-09-02 19:46:10] ERROR: PHP Error [8192]: explode(): Passing null to parameter #2 ($string) of type string is deprecated in /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/api/events/preview.php:101
+[2026-09-02 19:46:10] ERROR: PHP Error [8192]: explode(): Passing null to parameter #2 ($string) of type string is deprecated in /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/api/events/preview.php:103
+[2026-09-02 19:46:10] INFO: Données formatées: Array
+(
+    [id] => 13
+    [user_id] => 3
+    [title] => VTT et marche nocturne à Libin-Bas
+    [description] => Le vendredi 4 septembre 2026, rendez-vous à Libin-Bas pour une soirée placée sous le signe du sport, de la convivialité et de la solidarité, au profit de Think Pink et de la lutte contre le cancer du sein
+
+    [category] => 
+    [date] => 2026-09-04
+    [start_time] => 
+    [end_time] => 
+    [location] => 
+    [venue] => 
+    [coordinates] => 
+    [organisation] => 
+    [status] => published
+    [has_gpx] => 0
+    [gpx_path] => 
+    [gpx_downloadable] => 0
+    [created_at] => 2026-09-01 22:49:28
+    [updated_at] => 2026-09-02 19:46:10
+    [registration_opens] => 09:00:00
+    [registration_closes] => 08:15:00
+    [meeting_name] => cercle
+    [meeting_address] => rue saint-martin 6 6762 saint mard
+    [meeting_coordinates] => 49.5586314,5.5296887
+    [organizer_id] => 
+    [organizer_name] => 
+    [organizer_email] => 
+    [route_ids] => 37,38
+    [route_names] => ,
+    [route_distances] => 15.00,30.00
+    [route_elevations] => 
+    [route_descriptions] => ,
+    [route_gpx_paths] => 
+    [route_gpx_downloadable] => 0,0
+    [contact_names] => 
+    [contact_emails] => 
+    [contact_phones] => 
+    [secondary_images] => Array
+        (
+        )
+
+    [routes] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 37
+                    [name] => 
+                    [distance] => 15.00
+                    [elevation_gain] => 
+                    [description] => 
+                    [gpx_file] => 
+                    [gpx_downloadable] => 0
+                )
+
+            [1] => Array
+                (
+                    [id] => 38
+                    [name] => 
+                    [distance] => 30.00
+                    [elevation_gain] => 
+                    [description] => 
+                    [gpx_file] => 
+                    [gpx_downloadable] => 0
+                )
+
+        )
+
+    [contacts] => Array
+        (
+        )
+
+)
+
+[2026-09-02 19:46:10] ERROR: PHP Error [2]: include(/Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/public/templates/events/preview-template.php): Failed to open stream: No such file or directory in /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/api/events/preview.php:144
+[2026-09-02 19:46:10] ERROR: PHP Error [2]: include(): Failed opening '/Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/public/templates/events/preview-template.php' for inclusion (include_path='.:/opt/homebrew/Cellar/php/8.4.14_1/share/php/pear') in /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/api/events/preview.php:144
+[2026-09-02 17:51:42] INFO: 🚀 Début de la prévisualisation
+[2026-09-02 19:51:42] INFO: Données JSON brutes reçues: {"draftId":"13"}
+[2026-09-02 19:51:42] INFO: Données décodées: Array
+(
+    [draftId] => 13
+)
+
+[2026-09-02 19:51:42] INFO: DraftId extrait: 13
+[2026-09-02 19:51:42] ERROR: PHP Error [8192]: explode(): Passing null to parameter #2 ($string) of type string is deprecated in /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/api/events/preview.php:101
+[2026-09-02 19:51:42] ERROR: PHP Error [8192]: explode(): Passing null to parameter #2 ($string) of type string is deprecated in /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/api/events/preview.php:103
+[2026-09-02 19:51:42] INFO: Données formatées: Array
+(
+    [id] => 13
+    [user_id] => 3
+    [title] => VTT et marche nocturne à Libin-Bas
+    [description] => Le vendredi 4 septembre 2026, rendez-vous à Libin-Bas pour une soirée placée sous le signe du sport, de la convivialité et de la solidarité, au profit de Think Pink et de la lutte contre le cancer du sein
+
+    [category] => 
+    [date] => 2026-09-04
+    [start_time] => 
+    [end_time] => 
+    [location] => 
+    [venue] => 
+    [coordinates] => 
+    [organisation] => 
+    [status] => published
+    [has_gpx] => 0
+    [gpx_path] => 
+    [gpx_downloadable] => 0
+    [created_at] => 2026-09-01 22:49:28
+    [updated_at] => 2026-09-02 19:51:42
+    [registration_opens] => 09:00:00
+    [registration_closes] => 08:15:00
+    [meeting_name] => cercle
+    [meeting_address] => rue saint-martin 6 6762 saint mard
+    [meeting_coordinates] => 49.5586314,5.5296887
+    [organizer_id] => 
+    [organizer_name] => 
+    [organizer_email] => 
+    [route_ids] => 39,40
+    [route_names] => ,
+    [route_distances] => 15.00,30.00
+    [route_elevations] => 
+    [route_descriptions] => ,
+    [route_gpx_paths] => 
+    [route_gpx_downloadable] => 0,0
+    [contact_names] => 
+    [contact_emails] => 
+    [contact_phones] => 
+    [secondary_images] => Array
+        (
+        )
+
+    [routes] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 39
+                    [name] => 
+                    [distance] => 15.00
+                    [elevation_gain] => 
+                    [description] => 
+                    [gpx_file] => 
+                    [gpx_downloadable] => 0
+                )
+
+            [1] => Array
+                (
+                    [id] => 40
+                    [name] => 
+                    [distance] => 30.00
+                    [elevation_gain] => 
+                    [description] => 
+                    [gpx_file] => 
+                    [gpx_downloadable] => 0
+                )
+
+        )
+
+    [contacts] => Array
+        (
+        )
+
+)
+
+[2026-09-02 19:51:42] ERROR: PHP Error [2]: include(/Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/public/templates/events/preview-template.php): Failed to open stream: No such file or directory in /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/api/events/preview.php:144
+[2026-09-02 19:51:42] ERROR: PHP Error [2]: include(): Failed opening '/Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/public/templates/events/preview-template.php' for inclusion (include_path='.:/opt/homebrew/Cellar/php/8.4.14_1/share/php/pear') in /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/api/events/preview.php:144

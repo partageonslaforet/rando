@@ -44,7 +44,7 @@
                 <div class="auth-separator"><span>ou</span></div>
                 <p class="auth-footer">
                     Vous n'avez pas encore de compte ?
-                    <i class="bi bi-arrow-down-circle-fill" aria-hidden="true" style="color: #1a1a1a; font-size: 1rem; vertical-align: middle; margin: 0 0.25rem;"></i>
+                    <!-- <i class="bi bi-arrow-down-circle-fill" aria-hidden="true" style="color: #1a1a1a; font-size: 1rem; vertical-align: middle; margin: 0 0.25rem;"></i> -->
                     <a href="#" class="auth-link" onclick="showRegisterModal(); return false;">Créer un compte</a>
                 </p>
             </div>

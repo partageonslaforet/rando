@@ -1,9 +1,28 @@
 <?php
 require_once __DIR__ . '/functions.php';
+require_once __DIR__ . '/../logs/error.log.php';
+
+// Charger la connexion si elle n'est pas encore disponible
+if (!function_exists('getConnection')) {
+    require_once __DIR__ . '/../config/database.php';
+}
 
 // Fonction pour vérifier si l'utilisateur est connecté via un cookie "Se souvenir de moi"
 function checkRememberMeCookie() {
-    global $db;
+    // Récupérer la connexion disponible ($db, $pdo ou nouvelle)
+    $db = $GLOBALS['db'] ?? $GLOBALS['pdo'] ?? null;
+    if (!$db && function_exists('getConnection')) {
+        $db = getConnection();
+    }
+    if (!$db) {
+        logError('auth_check.php', 'Connexion DB indisponible dans checkRememberMeCookie', [
+            'uri' => $_SERVER['REQUEST_URI'] ?? null,
+            'db_global' => isset($GLOBALS['db']),
+            'pdo_global' => isset($GLOBALS['pdo']),
+            'getConnection_exists' => function_exists('getConnection')
+        ]);
+        return;
+    }
     
     // Si l'utilisateur est déjà connecté, pas besoin de vérifier le cookie
     if (isset($_SESSION['user_id'])) {
@@ -17,10 +36,9 @@ function checkRememberMeCookie() {
             
             // Rechercher l'utilisateur avec ce token et vérifier qu'il n'est pas expiré
             $stmt = $db->prepare("
-                SELECT u.* 
-                FROM users u
-                JOIN remember_tokens rt ON u.id = rt.user_id
-                WHERE rt.token = ? AND rt.expires_at > NOW()
+                SELECT * 
+                FROM users 
+                WHERE remember_token = ? AND remember_token_expires_at > NOW()
             ");
             $stmt->execute([$token]);
             $user = $stmt->fetch();
@@ -28,7 +46,13 @@ function checkRememberMeCookie() {
             if ($user) {
                 // Mettre à jour la session avec les informations de l'utilisateur
                 $_SESSION['user_id'] = $user['id'];
+                $_SESSION['user_email'] = $user['email'];
                 $_SESSION['user_role'] = $user['role'];
+                $_SESSION['user'] = [
+                    'id' => $user['id'],
+                    'email' => $user['email'],
+                    'role' => $user['role']
+                ];
                 
                 // Générer un nouveau token pour la prochaine fois
                 $newToken = bin2hex(random_bytes(32));
@@ -36,27 +60,30 @@ function checkRememberMeCookie() {
                 
                 // Mettre à jour le token dans la base de données
                 $stmt = $db->prepare("
-                    UPDATE remember_tokens 
-                    SET token = ?, expires_at = ? 
-                    WHERE user_id = ? AND token = ?
+                    UPDATE users 
+                    SET remember_token = ?, remember_token_expires_at = ? 
+                    WHERE id = ?
                 ");
-                $stmt->execute([$newToken, $expiresAt, $user['id'], $token]);
+                $stmt->execute([$newToken, $expiresAt, $user['id']]);
                 
                 // Mettre à jour le cookie
+                $isHttps = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off';
                 setcookie(
                     'remember_token',
                     $newToken,
                     [
                         'expires' => time() + (30 * 24 * 60 * 60),
                         'path' => '/',
-                        'secure' => true,
+                        'secure' => $isHttps,
                         'httponly' => true,
-                        'samesite' => 'Strict'
+                        'samesite' => 'Lax'
                     ]
                 );
             }
         } catch (PDOException $e) {
-            error_log("Erreur lors de la vérification du cookie remember_me: " . $e->getMessage());
+            logError('auth_check.php', 'Erreur PDO lors de la vérification du cookie remember_me', [
+                'message' => $e->getMessage()
+            ]);
         }
     }
 }

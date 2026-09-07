@@ -38,8 +38,6 @@ displayFlashMessages();
     <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
 
     <!-- Custom JS -->
-    <script src="/assets/js/auth.js"></script>
-    
     <script>
         console.log('=== DÉBUT INITIALISATION DROPDOWN HEADER-SOLID ===');
         
@@ -98,6 +96,9 @@ displayFlashMessages();
                         <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin'): ?>
                             <li class="nav-item">
                                 <a href="/pages/admin/dashboard.php" class="nav-link">Administration</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link btn-connexion" href="javascript:void(0);" onclick="logout()">Déconnexion</a>
                             </li>
                         <?php else: ?>
                             <li class="nav-item dropdown">

@@ -1,4 +1,8 @@
 <?php
+if (defined('PLF_FUNCTIONS_LOADED')) {
+    return;
+}
+define('PLF_FUNCTIONS_LOADED', true);
 
 /**
  * Vérifie si la requête est une requête AJAX
@@ -158,6 +162,11 @@ function requireAccess($resource) {
  * Redirige si non connecté
  */
 function requireLogin() {
+    // Tenter de restaurer la session via le cookie remember_me si besoin
+    if (!isLoggedIn()) {
+        require_once __DIR__ . '/auth_check.php';
+    }
+
     if (!isLoggedIn()) {
         if (isAjaxRequest()) {
             header('Content-Type: application/json');
@@ -235,6 +244,30 @@ function processGpxFile($file) {
 
     // Retourner le chemin relatif
     return '/uploads/gpx/' . $newFileName;
+}
+
+if (!function_exists('getFullUrl')) {
+    function getFullUrl($path) {
+        $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') ? 'https://' : 'http://';
+        $domain = $_SERVER['HTTP_HOST'] ?? 'localhost';
+        return $protocol . $domain . '/' . ltrim($path, '/');
+    }
+}
+
+if (!function_exists('resolveImagePublicUrl')) {
+    function resolveImagePublicUrl($imagePath, $storagePath) {
+        if (!empty($imagePath)) {
+            return $imagePath;
+        }
+        if (empty($storagePath)) {
+            return null;
+        }
+        $docRoot = realpath($_SERVER['DOCUMENT_ROOT'] ?? '');
+        if ($docRoot && strpos($storagePath, $docRoot) === 0) {
+            return getFullUrl(substr($storagePath, strlen($docRoot)));
+        }
+        return $storagePath;
+    }
 }
 
 // Initialiser la session au chargement du fichier

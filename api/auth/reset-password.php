@@ -3,10 +3,13 @@
  * Définition d'un nouveau mot de passe via token de réinitialisation.
  */
 
-require_once '../../config/database.php';
-require_once '../../includes/csrf.php';
-require_once '../../includes/rate_limit.php';
-require_once '../../logs/error.log.php';
+ini_set('display_errors', '0');
+error_reporting(E_ALL);
+
+require_once __DIR__ . '/../../config/database.php';
+require_once __DIR__ . '/../../includes/csrf.php';
+require_once __DIR__ . '/../../includes/rate_limit.php';
+require_once __DIR__ . '/../../logs/error.log.php';
 
 header('Content-Type: application/json');
 

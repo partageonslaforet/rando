@@ -89,6 +89,11 @@ try {
     $categories = $categoryManager->getAllActive();
     error_log("✅ Catégories récupérées : " . count($categories));
 
+    // Récupérer les profils organisateur de l'utilisateur
+    $organizerProfile = new OrganizerProfile($db, $_SESSION['user_id']);
+    $organizerProfiles = $organizerProfile->getByUserId($_SESSION['user_id']);
+    error_log("✅ Profils organisateur récupérés : " . count($organizerProfiles));
+
     $draft = [];
 
     // Récupérer les catégories du brouillon en mode édition
@@ -104,6 +109,84 @@ try {
         $stmt->execute([$draft_id, $_SESSION['user_id']]);
         $draft = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
         error_log("✅ Données du brouillon récupérées");
+
+        $stmt = $db->prepare("SELECT * FROM draft_parcours WHERE event_id = ? ORDER BY id");
+        $stmt->execute([$draft_id]);
+        $draftRoutes = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
+        error_log("✅ Parcours du brouillon récupérés : " . count($draftRoutes));
+
+        // Si l'organisateur n'est pas présent sur le brouillon mais qu'on connaît l'événement d'origine, tenter de le récupérer depuis events
+        try {
+            $origId = isset($draft['original_event_id']) ? (int)$draft['original_event_id'] : 0;
+            if ($origId && (empty($draft['organizer_id']) || empty($draft['organisation']))) {
+                $ost = $db->prepare("SELECT organizer_id, organisation, user_id FROM events WHERE id = ?");
+                $ost->execute([$origId]);
+                if ($row = $ost->fetch(PDO::FETCH_ASSOC)) {
+                    if (empty($draft['organizer_id']) && !empty($row['organizer_id'])) {
+                        $draft['organizer_id'] = (int)$row['organizer_id'];
+                    }
+                    if (empty($draft['organisation']) && !empty($row['organisation'])) {
+                        $draft['organisation'] = $row['organisation'];
+                    }
+                    // Fallback via le premier profil organisateur du propriétaire de l'événement
+                    if (empty($draft['organizer_id']) && !empty($row['user_id'])) {
+                        try {
+                            $pst = $db->prepare("SELECT id, name, email FROM organizer_profiles WHERE user_id = ? ORDER BY id ASC LIMIT 1");
+                            $pst->execute([(int)$row['user_id']]);
+                            if ($prof = $pst->fetch(PDO::FETCH_ASSOC)) {
+                                $draft['organizer_id'] = (int)$prof['id'];
+                                if (empty($draft['organisation']) && !empty($prof['name'])) {
+                                    $draft['organisation'] = $prof['name'];
+                                }
+                                if (function_exists('logError')) {
+                                    logError('create-event.php', 'Organizer fallback from owner profile', [
+                                        'draft_id' => $draft_id,
+                                        'event_user_id' => (int)$row['user_id'],
+                                        'fallback_organizer_id' => (int)$prof['id'],
+                                        'fallback_organizer_name' => $prof['name'] ?? null,
+                                    ]);
+                                }
+                            }
+                        } catch (Throwable $e) {
+                            if (function_exists('logError')) {
+                                logError('create-event.php', 'Owner profile fallback failed', [
+                                    'draft_id' => $draft_id,
+                                    'error' => $e->getMessage()
+                                ]);
+                            }
+                        }
+                    }
+                    if (function_exists('logError')) {
+                        logError('create-event.php', 'Organizer backfilled from original event', [
+                            'draft_id' => $draft_id,
+                            'original_event_id' => $origId,
+                            'draft.organizer_id' => $draft['organizer_id'] ?? null,
+                            'draft.organisation' => $draft['organisation'] ?? null,
+                        ]);
+                    }
+                }
+            }
+        } catch (Throwable $e) {
+            if (function_exists('logError')) {
+                logError('create-event.php', 'Backfill organizer failed', [
+                    'draft_id' => $draft_id,
+                    'error' => $e->getMessage()
+                ]);
+            }
+        }
+        // Pré-remplir les contacts depuis draft_contacts
+        $prefillContacts = [];
+        try {
+            $cst = $db->prepare("SELECT name, email, phone FROM draft_contacts WHERE event_id = ? ORDER BY id ASC");
+            $cst->execute([$draft_id]);
+            $prefillContacts = $cst->fetchAll(PDO::FETCH_ASSOC) ?: [];
+            error_log("✅ Contacts du brouillon récupérés: " . count($prefillContacts));
+        } catch (Throwable $e) {
+            error_log("❌ Erreur récupération contacts brouillon: " . $e->getMessage());
+        }
+    } else {
+        $draftRoutes = [];
+        $prefillContacts = [];
     }
 
 } catch (PDOException $e) {
@@ -129,6 +212,7 @@ if (!empty($draft['meeting_coordinates'])) {
 
 <!-- Dépendances CSS -->
 <link rel="stylesheet" href="/assets/css/create-event.css">
+<link rel="stylesheet" href="/assets/css/event-display.css">
 <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder@2.4.0/dist/Control.Geocoder.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
@@ -176,164 +260,10 @@ document.addEventListener('DOMContentLoaded', function() {
     flatpickr("#registrationOpens", timeConfig);
     flatpickr("#registrationCloses", timeConfig);
 
-    // Écouteur pour l'upload d'images secondaires
-    const secondaryImages = document.getElementById('secondaryImages');
-    if (secondaryImages) {
-        secondaryImages.addEventListener('change', handleSecondaryImagesUpload);
-    }
+    // NOTE : la gestion de l'upload/suppression des images (principale et secondaires)
+    // est centralisée dans /assets/js/event-images.js (une seule source, un seul listener
+    // par input, pour éviter les doubles soumissions).
 });
-
-// Tableau pour stocker les images secondaires
-let secondaryImagesArray = [];
-
-// Fonction pour mettre à jour l'affichage des images secondaires
-function updateSecondaryImagesPreview(data) {
-    console.log('🔄 Mise à jour des images secondaires avec:', data);
-    const container = document.getElementById('secondaryImagesPreview');
-    if (!container) return;
-
-    // Récupérer les images existantes
-    const existingImages = Array.from(container.querySelectorAll('img')).map(img => ({
-        path: img.src,
-        id: img.dataset.imageId
-    }));
-    console.log('📌 Images existantes:', existingImages);
-
-    // Si on reçoit des données du serveur, on ajoute les nouvelles images
-    if (data && data.secondaryImages) {
-        console.log('📌 Nouvelles images reçues:', data.secondaryImages);
-        
-        // Fusionner les nouvelles images avec les existantes
-        const allImages = [...existingImages];
-        data.secondaryImages.forEach(newImage => {
-            if (!allImages.some(img => img.id === newImage.id)) {
-                allImages.push(newImage);
-            }
-        });
-        console.log('📌 Images après fusion:', allImages);
-
-        // Afficher toutes les images
-        container.style.display = 'flex';
-        allImages.forEach((image, index) => {
-            // Vérifier si l'image existe déjà
-            const existingImage = container.querySelector(`img[data-image-id="${image.id}"]`);
-            if (!existingImage) {
-                console.log('➕ Ajout d\'une nouvelle image:', image);
-                
-                const col = document.createElement('div');
-                col.classList.add('col-md-4');
-                
-                const imgContainer = document.createElement('div');
-                imgContainer.classList.add('secondary-image-container', 'position-relative');
-                
-                const img = document.createElement('img');
-                img.src = image.path;
-                img.alt = `Image secondaire ${index + 1}`;
-                img.classList.add('img-fluid', 'rounded');
-                img.dataset.imageId = image.id;
-                
-                const removeBtn = document.createElement('button');
-                removeBtn.type = 'button';
-                removeBtn.classList.add('remove-image-btn');
-                removeBtn.innerHTML = '×';
-                removeBtn.addEventListener('click', (e) => removeSecondaryImage(e, image.id));
-                
-                imgContainer.appendChild(img);
-                imgContainer.appendChild(removeBtn);
-                col.appendChild(imgContainer);
-                container.appendChild(col);
-            }
-        });
-    }
-}
-
-// Fonction pour gérer l'upload des images secondaires
-async function handleSecondaryImagesUpload(event) {
-    const files = event.target.files;
-    if (!files || files.length === 0) return;
-    
-    // Vérifier la taille de chaque fichier
-    for (let file of files) {
-        if (file.size > 2 * 1024 * 1024) {
-            showToast(`L'image ${file.name} ne doit pas dépasser 2Mo`, 'warning');
-            event.target.value = '';
-            return;
-        }
-    }
-    
-    try {
-        const formData = new FormData(document.getElementById('createEventForm'));
-        
-        const response = await fetch('/api/events/save_draft.php', {
-            method: 'POST',
-            body: formData
-        });
-        
-        const result = await response.json();
-        if (!result.success) {
-            throw new Error(result.message || 'Erreur lors de l\'upload');
-        }
-        
-        // Mettre à jour l'affichage avec les nouvelles images
-        updateSecondaryImagesPreview(result);
-        
-        // Vider l'input pour permettre de sélectionner à nouveau le même fichier
-        event.target.value = '';
-        
-    } catch (error) {
-        console.error('❌ Erreur lors de l\'upload:', error);
-        showToast(error.message || 'Erreur lors de l\'upload des images', 'error');
-        event.target.value = '';
-    }
-}
-
-// Fonction pour supprimer une image secondaire
-async function removeSecondaryImage(event, imageId) {
-    event?.preventDefault();
-    event?.stopPropagation();
-    
-    console.log('🔄 Tentative de suppression de l\'image secondaire:', imageId);
-    
-    if (!imageId) {
-        console.error('❌ Erreur: ID de l\'image non fourni');
-        showToast('Erreur lors de la suppression de l\'image', 'error');
-        return;
-    }
-    
-    try {
-        console.log('📝 Préparation du FormData pour la suppression');
-        const formData = new FormData(document.getElementById('createEventForm'));
-        formData.append('deleteImage', imageId);
-        
-        console.log('🌐 Envoi de la requête de suppression');
-        const response = await fetch('/api/events/save_draft.php', {
-            method: 'POST',
-            body: formData
-        });
-        
-        const result = await response.json();
-        
-        if (!result.success) {
-            throw new Error(result.message || 'Erreur lors de la suppression');
-        }
-        
-        // Supprimer l'élément du DOM
-        const imageElement = document.querySelector(`img[data-image-id="${imageId}"]`);
-        if (imageElement) {
-            const container = imageElement.closest('.col-md-4');
-            if (container) {
-                container.remove();
-            }
-        }
-        
-        showToast('Image supprimée avec succès', 'success');
-        
-    } catch (error) {
-        console.error('❌ Erreur lors de la suppression:', error);
-        showToast(error.message || 'Erreur lors de la suppression de l\'image', 'error');
-    }
-}
-
 </script>
 
 <div id="loading-overlay" style="display: none;">
@@ -355,12 +285,15 @@ async function removeSecondaryImage(event, imageId) {
             <div class="modal-body">
                 <div class="create-event-header">
                     <div class="container">
-                        <nav class="page-breadcrumb" aria-label="breadcrumb">
+                        <!-- <nav class="page-breadcrumb" aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="/user/my-events.php">Mes événements</a></li>
                                 <li class="breadcrumb-item active" aria-current="page">Créer un événement</li>
                             </ol>
-                        </nav>
+                        </nav> -->
+                        <div class="auth-icon" aria-hidden="true">
+                            <i class="bi bi-calendar-event"></i>
+                        </div>
                         <h1 class="page-title">Créer un événement</h1>
                         <p class="page-subtitle">Complétez les informations essentielles. Vous pourrez enregistrer un brouillon à tout moment.</p>
                     </div>
@@ -371,15 +304,15 @@ async function removeSecondaryImage(event, imageId) {
             <div class="col-lg-10">
                 <!-- Steps -->
                 <div class="steps mb-5 three-steps">
-                    <div class="step active" data-step="1" data-title="L'événement">
-                        <button class="step-button" onclick="setStep(1)">1</button>
-                    </div>
-                    <div class="step" data-step="2" data-title="Lieu et parcours">
-                        <button class="step-button" onclick="setStep(2)">2</button>
-                    </div>
-                    <div class="step" data-step="3" data-title="Photos et aperçu">
-                        <button class="step-button" onclick="setStep(3)">3</button>
-                    </div>
+                    <a class="step active" data-step="1" data-title="L'événement" href="#step1">
+                        <span class="step-button">1</span>
+                    </a>
+                    <a class="step" data-step="2" data-title="Lieu et parcours" href="#step2">
+                        <span class="step-button">2</span>
+                    </a>
+                    <a class="step" data-step="3" data-title="Photos et aperçu" href="#step3">
+                        <span class="step-button">3</span>
+                    </a>
                 </div>
 
                 <!-- Progress Bar -->
@@ -391,7 +324,7 @@ async function removeSecondaryImage(event, imageId) {
                 <form id="createEventForm" class="needs-validation" enctype="multipart/form-data" novalidate>
                     <?php if ($isEditMode): ?>
                         <!-- Champ caché pour le draftId en mode édition -->
-                        <input type="hidden" name="draftId" value="<?php echo htmlspecialchars($draft_id); ?>">
+                        <input type="hidden" name="draftId" id="draftId" value="<?php echo htmlspecialchars($draft_id); ?>">
                     <?php else: ?>
                         <!-- Champ caché pour le draftId en mode création -->
                         <input type="hidden" name="draftId" id="draftId">
@@ -452,8 +385,6 @@ async function removeSecondaryImage(event, imageId) {
                             </div>
                         </div>
 
-                        <input type="hidden" id="organizerId" name="organizerId" value="">
-
                         <!-- Adresse du jour -->
                         <div class="card mb-4">
                             <div class="card-body">
@@ -467,6 +398,7 @@ async function removeSecondaryImage(event, imageId) {
                                     <label for="meeting_address" class="form-label required-field">Adresse du point de rendez-vous</label>
                                     <input type="text" class="form-control" id="meeting_address" name="meeting_address" value="<?= htmlspecialchars($draft['meeting_address'] ?? '') ?>" placeholder="Rue, numéro, localité" required>
                                 </div>
+                                <input type="hidden" id="meeting_city" name="meeting_city" value="<?= htmlspecialchars($draft['meeting_city'] ?? '') ?>">
                                 <input type="hidden" id="meeting_coordinates" name="meeting_coordinates" value="<?= htmlspecialchars($draft['meeting_coordinates'] ?? '') ?>">
                                 <div class="mb-3">
                                     <div id="meetingMap" style="height: 300px; border-radius: 8px; width: 100%;"></div>
@@ -477,86 +409,79 @@ async function removeSecondaryImage(event, imageId) {
 
                     <!-- Step 2 -->
                     <div class="step-content d-none" id="step2">
-                        <!-- Location -->
-                        <div class="card mb-4">
-                            <div class="card-body">
-                                <h3 class="card-title">Localisation</h3>
-                                
-                                <div class="form-group mb-3">
-                                    <label for="location_name" class="form-label">Nom du local</label>
-                                    <input type="text" class="form-control" id="location_name" name="location_name" value="<?= htmlspecialchars($draft['location'] ?? '') ?>" required>
-                                </div>
-
-                                <div class="form-group mb-3">
-                                    <label class="form-label">Adresse</label>
-                                    <div class="input-group">
-                                        <input type="text" 
-                                               class="form-control" 
-                                               id="address" 
-                                               name="address" 
-                                               value="<?= htmlspecialchars($draft['venue'] ?? '') ?>"
-                                               required>
-                                        <button class="btn btn-outline-secondary" type="button" id="searchAddressBtn">
-                                            <i class="bi bi-search"></i>
-                                        </button>
-                                    </div>
-                                    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
-                                </div>
-                                <div id="locationMap" style="height: 400px;" class="mb-3"></div>
-                                <div class="form-text">Déplacez le marqueur pour ajuster la position exacte</div>
-                                <input type="hidden" id="latitude" name="latitude" value="<?= htmlspecialchars($draftLat) ?>" required>
-                                <input type="hidden" id="longitude" name="longitude" value="<?= htmlspecialchars($draftLng) ?>" required>
-                            </div>
-                        </div>
-
                         <!-- Routes -->
                         <div class="card mb-4">
                             <div class="card-body">
-                                <h3 class="card-title">Parcours</h3>
+                                <!-- <h3 class="card-title">Parcours</h3> -->
                                 <div id="routes-container">
+                                    <?php
+                                    $routesToDisplay = !empty($draftRoutes) ? $draftRoutes : [[]];
+                                    foreach ($routesToDisplay as $index => $route):
+                                        $routeName = htmlspecialchars($route['name'] ?? '');
+                                        $routeDistance = !empty($route['distance']) ? htmlspecialchars($route['distance']) : '';
+                                        $routeElevation = !empty($route['elevation_gain']) ? htmlspecialchars($route['elevation_gain']) : '';
+                                        $routePrice = !empty($route['price']) && $route['price'] != '0.00' ? htmlspecialchars($route['price']) : '';
+                                        $routeDesc = htmlspecialchars($route['description'] ?? '');
+                                        $routeCategoryId = (int) ($route['category_id'] ?? 0);
+                                        $routeDownloadable = !empty($route['gpx_downloadable']);
+                                    ?>
                                     <div class="mb-4">
                                         <div class="d-flex justify-content-between align-items-center mb-2">
-                                            <h5 class="mb-0">Parcours 1</h5>
-                                            <button type="button" class="btn btn-outline-danger btn-sm" onclick="removeRoute(this)" data-route-index="0">
+                                            <h5 class="mb-0">Parcours <?= (int) $index + 1 ?></h5>
+                                            <button type="button" class="btn btn-outline-danger btn-sm" onclick="removeRoute(this)" data-route-index="<?= (int) $index ?>">
                                                 <i class="bi bi-trash"></i>
                                             </button>
                                         </div>
                                         <div class="mb-2">
                                             <label class="form-label">Nom du parcours</label>
-                                            <input type="text" class="form-control" name="routes[0][name]" required>
+                                            <input type="text" class="form-control" name="routes[<?= (int) $index ?>][name]" value="<?= $routeName ?>">
+                                        </div>
+                                        <div class="mb-2">
+                                            <label class="form-label required-field">Catégorie du parcours</label>
+                                            <select class="form-select" name="routes[<?= (int) $index ?>][category_id]" required>
+                                                <option value="">Choisir une catégorie</option>
+                                                <?php foreach ($categories as $cat): ?>
+                                                    <option value="<?= (int) $cat['id'] ?>" <?= $routeCategoryId === (int) $cat['id'] ? 'selected' : '' ?>><?= htmlspecialchars($cat['name']) ?></option>
+                                                <?php endforeach; ?>
+                                            </select>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-4">
                                                 <div class="mb-2">
                                                     <label class="form-label required-field">Distance (km)</label>
-                                                    <input type="number" step="0.1" class="form-control" name="routes[0][distance]" required>
+                                                    <input type="number" step="0.1" class="form-control" name="routes[<?= (int) $index ?>][distance]" value="<?= $routeDistance ?>" required>
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="mb-2">
                                                     <label class="form-label">Dénivelé (m)</label>
-                                                    <input type="number" class="form-control" name="routes[0][elevation]">
+                                                    <input type="number" class="form-control" name="routes[<?= (int) $index ?>][elevation]" value="<?= $routeElevation ?>">
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="mb-2">
                                                     <label class="form-label">Prix (€)</label>
-                                                    <input type="number" step="0.50" class="form-control" name="routes[0][price]" required>
+                                                    <input type="number" step="0.01" class="form-control" name="routes[<?= (int) $index ?>][price]" value="<?= $routePrice ?>">
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="mb-2">
                                             <label class="form-label">GPX</label>
-                                            <input type="file" class="form-control" name="routes[0][gpx]" accept=".gpx" onchange="handleGpxUpload(this, 0)">
+                                            <input type="file" class="form-control" name="routes[<?= (int) $index ?>][gpx]" accept=".gpx" onchange="handleGpxUpload(this, <?= (int) $index ?>)">
+                                            <input type="hidden" name="routes[<?= (int) $index ?>][gpx_file]" value="<?= htmlspecialchars($route['gpx_file'] ?? '') ?>">
                                         </div>
-                                        
+                                        <div class="mb-2">
+                                            <label class="form-label">Description du parcours</label>
+                                            <textarea class="form-control" name="routes[<?= (int) $index ?>][description]" rows="3"><?= $routeDesc ?></textarea>
+                                        </div>
                                         <div class="mb-2">
                                             <div class="form-check">
-                                                <input type="checkbox" class="form-check-input" id="gpx_downloadable_0" name="routes[0][gpx_downloadable]" value="1">
-                                                <label class="form-check-label" for="gpx_downloadable_0">Autoriser le téléchargement du GPX</label>
+                                                <input type="checkbox" class="form-check-input" id="gpx_downloadable_<?= (int) $index ?>" name="routes[<?= (int) $index ?>][gpx_downloadable]" value="1" <?= $routeDownloadable ? 'checked' : '' ?>>
+                                                <label class="form-check-label" for="gpx_downloadable_<?= (int) $index ?>">Autoriser le téléchargement du GPX</label>
                                             </div>
                                         </div>
                                     </div>
+                                    <?php endforeach; ?>
                                 </div>
                                 <button type="button" id="addBtn" class="btn btn-outline-primary" onclick="addRoute()">
                                     <i class="bi bi-plus-circle"></i> Ajouter un parcours
@@ -573,19 +498,6 @@ async function removeSecondaryImage(event, imageId) {
                                 </div>   
                             </div>
                         </div>
-
-                        <!-- Contact Information -->
-                        <div class="card mb-4">
-                            <div class="card-body">
-                                <h3 class="card-title">Contacts supplémentaires</h3>
-                                <div id="contacts-container">
-                                    <!-- Les contacts seront ajoutés ici dynamiquement -->
-                                </div>
-                                <button type="button" class="btn btn-outline-primary" onclick="addContactField()">
-                                    <i class="bi bi-plus-circle"></i> Ajouter un contact
-                                </button>
-                            </div>
-                        </div>
                     </div>
 
                     <!-- Step 3 -->
@@ -594,37 +506,38 @@ async function removeSecondaryImage(event, imageId) {
                         <div class="card mb-4">
                             <div class="card-body">
                                 <h3 class="card-title">Photos de l'événement</h3>
-                                
-                                <!-- Image principale -->
-                                <div class="mb-4">
-                                    <label class="form-label">
-                                        <i class="bi bi-star-fill text-warning"></i> Image principale
-                                    </label>
-                                    <div class="main-image-container">
-                                        <img id="mainImagePreview" class="main-image-preview" style="display: none;">
-                                        <label class="image-upload-button">
-                                            <i class="bi bi-upload"></i>
-                                            <span>Choisir l'image principale</span>
-                                            <input type="file" 
-                                                   id="mainImage"
-                                                   name="mainImage"
-                                                   accept="image/*" 
-                                                   class="hidden">
-                                        </label>
-                                    </div>
-                                    <div class="form-text">Cette image sera affichée en couverture de votre événement. Format recommandé: carré. Poids maximum: 5 Mo</div>
-                                </div>
 
-                                <!-- Images secondaires -->
-                                <div class="mb-3">
-                                    <label class="form-label">Images secondaires</label>
-                                    <div class="secondary-images-container">
-                                        <div id="secondaryImagesPreview" style="display: none;"></div>
-                                        <div class="secondary-images-input">
+                                <div class="row g-4 photo-section">
+                                    <!-- Image principale -->
+                                    <div class="col-md-4 main-photo-col">
+                                        <label class="form-label">
+                                            <i class="bi bi-star-fill text-warning"></i> Photo de couverture
+                                        </label>
+                                        <div class="main-image-container">
+                                            <img id="mainImagePreview" class="main-image-preview" style="display: none;">
                                             <label class="image-upload-button">
                                                 <i class="bi bi-upload"></i>
-                                                <span>Choisir des images</span>
-                                                <input type="file" 
+                                                <span>Choisir l'image</span>
+                                                <input type="file"
+                                                       id="mainImage"
+                                                       name="mainImage"
+                                                       accept="image/*"
+                                                       class="hidden">
+                                            </label>
+                                            <span class="main-image-badge"></span>
+                                        </div>
+                                        <p class="image-help">Carré recommandé. 5 Mo max.</p>
+                                    </div>
+
+                                    <!-- Images secondaires -->
+                                    <div class="col-md-8 secondary-photos-col">
+                                        <label class="form-label">Galerie secondaire</label>
+                                        <div class="secondary-images-container">
+                                            <div id="secondaryImagesPreview" class="secondary-images-preview"></div>
+                                            <label class="secondary-images-add">
+                                                <i class="bi bi-plus-lg"></i>
+                                                <span>Ajouter</span>
+                                                <input type="file"
                                                        id="secondaryImages"
                                                        name="secondaryImages[]"
                                                        accept="image/*"
@@ -632,12 +545,87 @@ async function removeSecondaryImage(event, imageId) {
                                                        class="hidden">
                                             </label>
                                         </div>
+                                        <p class="image-help">Jusqu'à 3 images. 1920×1080 recommandé, 5 Mo max.</p>
                                     </div>
-                                    <div class="form-text">Format recommandé: 1920x1080px. Poids maximum: 2 Mo par image</div>
                                 </div>
                             </div>
                         </div>
-
+                        <!-- Choix de l'organisateur -->
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <h3 class="card-title">Organisateur</h3>
+                                <div class="mb-3">
+                                    <label for="organizerId" class="form-label">Profil organisateur</label>
+                                    <select class="form-select" id="organizerId" name="organizerId">
+                                        <option value="">Moi-même / compte principal</option>
+                                        <option value="new" <?= (empty($draft['organizer_id']) && !empty($draft['organisation'])) ? 'selected' : '' ?>>+ Nouvel organisateur</option>
+                                        <?php
+                                        // Si le brouillon référence un organizer_id qui n'appartient pas au user courant, l'afficher quand même
+                                        $selectedOrganizerId = isset($draft['organizer_id']) ? (int)$draft['organizer_id'] : 0;
+                                        $ownedIds = array_map(function($p){ return (int)($p['id'] ?? 0); }, $organizerProfiles ?? []);
+                                        $externalOrganizer = null;
+                                        if ($selectedOrganizerId && !in_array($selectedOrganizerId, $ownedIds, true)) {
+                                            try {
+                                                $ost = $db->prepare("SELECT id, name, email FROM organizer_profiles WHERE id = ?");
+                                                $ost->execute([$selectedOrganizerId]);
+                                                $externalOrganizer = $ost->fetch(PDO::FETCH_ASSOC) ?: null;
+                                            } catch (Throwable $e) { /* ignore */ }
+                                        }
+                                        if ($externalOrganizer): ?>
+                                            <option value="<?= (int)$externalOrganizer['id'] ?>" selected>
+                                                <?= htmlspecialchars($externalOrganizer['name']) ?>
+                                                <?= !empty($externalOrganizer['email']) ? '(' . htmlspecialchars($externalOrganizer['email']) . ')' : '' ?>
+                                            </option>
+                                        <?php endif; ?>
+                                        <?php foreach ($organizerProfiles as $profile): ?>
+                                            <option value="<?= (int) $profile['id'] ?>" <?= (!empty($draft['organizer_id']) && (int) $draft['organizer_id'] === (int) $profile['id']) ? 'selected' : '' ?>>
+                                                <?= htmlspecialchars($profile['name']) ?>
+                                                <?= !empty($profile['email']) ? '(' . htmlspecialchars($profile['email']) . ')' : '' ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                    <input type="text" class="form-control mt-2 <?= (empty($draft['organizer_id']) && !empty($draft['organisation'])) ? '' : 'd-none' ?>" id="organizerName" name="organizerName" placeholder="Nom du nouvel organisateur" value="<?= empty($draft['organizer_id']) && !empty($draft['organisation']) ? htmlspecialchars($draft['organisation']) : '' ?>">
+                                    <div class="form-text">
+                                        <a href="/pages/user/profile.php?tab=organizer" target="_blank">Gérer mes profils organisateur</a>
+                                    </div>
+                                    <?php if (function_exists('logError')) { logError('create-event.php', 'Organizer select rendered', [ 'draft_id' => $draft_id ?? null, 'selected_organizer_id' => $draft['organizer_id'] ?? null, 'organisation' => $draft['organisation'] ?? null ]); } ?>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Contact Information -->
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <h3 class="card-title">Contacts supplémentaires</h3>
+                                <div id="contacts-container">
+                                    <?php if (!empty($prefillContacts)): ?>
+                                        <?php foreach ($prefillContacts as $idx => $ct): ?>
+                                            <div class="contact-field border rounded p-3 mb-3">
+                                                <div class="d-flex justify-content-end">
+                                                    <button type="button" class="btn btn-outline-danger btn-sm" onclick="this.closest('.contact-field').remove()">
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+                                                </div>
+                                                <div class="mb-2">
+                                                    <label class="form-label">Nom</label>
+                                                    <input type="text" class="form-control" name="contacts[<?= (int)$idx ?>][name]" value="<?= htmlspecialchars($ct['name'] ?? '') ?>">
+                                                </div>
+                                                <div class="mb-2">
+                                                    <label class="form-label">Email</label>
+                                                    <input type="email" class="form-control" name="contacts[<?= (int)$idx ?>][email]" value="<?= htmlspecialchars($ct['email'] ?? '') ?>">
+                                                </div>
+                                                <div class="mb-2">
+                                                    <label class="form-label placeholder="+32 473 12 34 5">Téléphone</label>
+                                                    <input type="tel" class="form-control" name="contacts[<?= (int)$idx ?>][phone]" value="<?= htmlspecialchars($ct['phone'] ?? '') ?>">
+                                                </div>
+                                            </div>
+                                        <?php endforeach; ?>
+                                    <?php endif; ?>
+                                </div>
+                                <button type="button" class="btn btn-outline-primary" onclick="addContactField()">
+                                    <i class="bi bi-plus-circle"></i> Ajouter un contact
+                                </button>
+                            </div>
+                        </div>
                         <div class="card mb-4">
                             <div class="card-body">
                                 <h3 class="card-title">Prévisualisation de l'événement</h3>
@@ -668,10 +656,12 @@ async function removeSecondaryImage(event, imageId) {
                         </button> -->
                         <div class="form-nav-right">
                             <button type="button" id="nextButton" class="btn btn-secondary" onclick="nextStep()">
-                                Continuer : lieu et parcours <i class="bi bi-arrow-right"></i>
+                                Continuer : Parcours <i class="bi bi-arrow-right"></i>
                             </button>
-                            <button type="button" id="publishButton" class="btn btn-success d-none" onclick="event.preventDefault(); submitEvent();">
-                                Publier <i class="bi bi-check-lg"></i>
+                            <button type="button" id="publishButton" class="btn btn-success d-none" onclick="event.preventDefault(); submitEvent();" aria-busy="false">
+                                <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                                <span class="btn-label">Publier</span>
+                                <i class="bi bi-check-lg"></i>
                             </button>
                         </div>
                     </div>
@@ -689,9 +679,15 @@ async function removeSecondaryImage(event, imageId) {
 <?php require_once __DIR__ . '/../../includes/footer.php'; ?>
 <?php endif; ?>
 
+<script>
+const routeCategories = <?= json_encode(array_map(function($c) { return ['id' => (int)$c['id'], 'name' => $c['name']]; }, $categories), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) ?>;
+</script>
+
 <!-- Scripts -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-gpx/1.7.0/gpx.min.js"></script>
 <script src="/assets/js/event-validation.js"></script>
+<script src="/assets/js/event-display.js"></script>
 <script src="/assets/js/event-maps.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -753,6 +749,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     let meetingMarker = null;
     const addressInput = document.getElementById('meeting_address');
+    const cityInput = document.getElementById('meeting_city');
     const coordsInput = document.getElementById('meeting_coordinates');
 
     function setMeetingMarker(lat, lng) {
@@ -774,15 +771,39 @@ document.addEventListener('DOMContentLoaded', function() {
         addressInput.dispatchEvent(new Event('change'));
     }
 
+    function extractCity(data) {
+        const addr = data && data.address ? data.address : {};
+        return addr.city || addr.town || addr.village || addr.municipality || addr.hamlet || '';
+    }
+
+    function extractCityFromText(address) {
+        if (!address) return '';
+        const match = address.match(/\b\d{4,5}\s+(.+)$/);
+        if (match) {
+            return match[1].trim();
+        }
+        const parts = address.split(/[,\s]+/);
+        return parts[parts.length - 1].trim();
+    }
+
     if (addressInput) {
         addressInput.addEventListener('change', function() {
             const address = addressInput.value.trim();
             if (!address) return;
-            fetch('https://nominatim.openstreetmap.org/search?q=' + encodeURIComponent(address) + '&limit=1&format=json')
+            if (cityInput) {
+                cityInput.value = extractCityFromText(address);
+            }
+            fetch('https://nominatim.openstreetmap.org/search?q=' + encodeURIComponent(address) + '&limit=1&format=json&addressdetails=1')
                 .then(response => response.json())
                 .then(data => {
                     if (data && data.length > 0) {
                         setMeetingMarker(parseFloat(data[0].lat), parseFloat(data[0].lon));
+                        if (cityInput) {
+                            const nominatimCity = extractCity(data[0]);
+                            if (nominatimCity) {
+                                cityInput.value = nominatimCity;
+                            }
+                        }
                     }
                 })
                 .catch(error => console.error('Géocodage impossible:', error));
@@ -797,6 +818,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 .then(data => {
                     if (data && data.display_name) {
                         addressInput.value = data.display_name;
+                    }
+                    if (cityInput && data) {
+                        cityInput.value = extractCity(data);
                     }
                 })
                 .catch(error => console.error('Géocodage inverse impossible:', error));

@@ -69,12 +69,13 @@ try {
         $stmt = $db->prepare('UPDATE users SET remember_token = ?, remember_token_expires_at = ? WHERE id = ?');
         $stmt->execute([$token, $expires, $user['id']]);
 
+        $isHttps = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off';
         setcookie('remember_token', $token, [
             'expires' => strtotime('+7 days'),
             'path' => '/',
-            'secure' => true,
+            'secure' => $isHttps,
             'httponly' => true,
-            'samesite' => 'Strict'
+            'samesite' => 'Lax'
         ]);
     }
 

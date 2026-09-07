@@ -23,6 +23,172 @@ const routeColors = [
     '#34495e'  // Bleu foncé
 ];
 
+// Debounce utilitaire pour les opérations asynchrones (scope global)
+function debounceAsync(fn, delay = 800) {
+    let timer = null;
+    let lastPromise = Promise.resolve();
+    return (...args) => {
+        clearTimeout(timer);
+        return new Promise((resolve) => {
+            timer = setTimeout(() => {
+                lastPromise = Promise.resolve(fn(...args)).then(resolve).catch(resolve);
+            }, delay);
+        });
+    };
+}
+
+// Auto-save brouillon (silencieux) — scope global
+const _saveDraftRaw = async (reason = 'auto') => {
+    try {
+        const formData = buildEnrichedFormData(false);
+        if (!formData) return;
+        formData.set('saveReason', reason);
+
+        const res = await fetch('/api/events/save_draft.php', { method: 'POST', body: formData });
+        const data = await res.json().catch(() => ({}));
+
+        if (data && data.success && data.draftId) {
+            const draftIdInput = document.querySelector('input[name="draftId"]');
+            if (draftIdInput) draftIdInput.value = data.draftId;
+            window.draftId = data.draftId;
+            updateRouteFieldsFromServer(data);
+        }
+        console.log(`💾 Auto-save (${reason})`, data);
+        return data;
+    } catch (e) {
+        console.warn('Auto-save échoué:', e);
+        return null;
+    }
+};
+
+const maybeSaveDraft = debounceAsync(_saveDraftRaw, 800);
+
+// Construction du FormData enrichi (contacts, parcours, organisateur)
+function buildEnrichedFormData(includeFiles = true) {
+    const form = document.getElementById('createEventForm');
+    if (!form) return null;
+
+    const formData = new FormData(form);
+
+    const draftIdInput = document.querySelector('input[name="draftId"]');
+    if (draftIdInput && draftIdInput.value) {
+        formData.set('draftId', draftIdInput.value);
+    }
+
+    const latInput = document.getElementById('latitude');
+    const lngInput = document.getElementById('longitude');
+    if (latInput && lngInput && latInput.value && lngInput.value) {
+        formData.set('coordinates', `${latInput.value},${lngInput.value}`);
+    }
+
+    const contactsContainer = document.getElementById('contacts-container');
+    if (contactsContainer) {
+        const contacts = [];
+        const contactDivs = contactsContainer.getElementsByClassName('contact-field');
+        Array.from(contactDivs).forEach((div) => {
+            const name = div.querySelector('input[name$="[name]"]')?.value || '';
+            const email = div.querySelector('input[name$="[email]"]')?.value || '';
+            const phone = div.querySelector('input[name$="[phone]"]')?.value || '';
+            if (name || email || phone) {
+                contacts.push({ name, email, phone });
+            }
+        });
+        if (contacts.length > 0) {
+            formData.set('contacts', JSON.stringify(contacts));
+        }
+    }
+
+    const routesContainer = document.getElementById('routes-container');
+    if (routesContainer) {
+        const routes = [];
+        const routeDivs = routesContainer.querySelectorAll(':scope > .mb-4');
+        routeDivs.forEach((div) => {
+            const name = div.querySelector('input[name$="[name]"]')?.value || '';
+            const category_id = div.querySelector('select[name$="[category_id]"]')?.value || '';
+            const distance = div.querySelector('input[name$="[distance]"]')?.value || '';
+            const elevation = div.querySelector('input[name$="[elevation]"]')?.value || '';
+            const price = div.querySelector('input[name$="[price]"]')?.value || '';
+            const description = div.querySelector('textarea[name$="[description]"]')?.value || '';
+            const gpxInput = div.querySelector('input[type="file"][name$="[gpx]"]');
+            const gpxFileInput = div.querySelector('input[type="hidden"][name$="[gpx_file]"]');
+            const downloadable = div.querySelector('input[type="checkbox"][name$="[gpx_downloadable]"]')?.checked || false;
+            if (name || distance || elevation || (gpxFileInput && gpxFileInput.value) || (gpxInput && gpxInput.files[0])) {
+                routes.push({
+                    name,
+                    category_id,
+                    distance,
+                    elevation,
+                    price,
+                    description,
+                    gpx_file: gpxFileInput ? gpxFileInput.value : '',
+                    gpx_downloadable: downloadable
+                });
+            }
+        });
+        if (routes.length > 0) {
+            formData.set('routes', JSON.stringify(routes));
+        }
+    }
+
+    const organizerSelect = document.querySelector('select[name="organizerId"]');
+    const organizerId = organizerSelect ? organizerSelect.value : null;
+    if (organizerId && organizerId !== '' && organizerId !== 'new') {
+        formData.set('organizerId', organizerId);
+    } else {
+        const organizerName = document.getElementById('organizerName');
+        const organizerEmail = document.getElementById('organizerEmail');
+        const organizerAddress = document.getElementById('organizerAddress');
+        const organizerDescription = document.getElementById('organizerDescription');
+        const organizerWebsite = document.getElementById('organizerWebsite');
+        const organizerPhone = document.getElementById('organizerPhone');
+
+        if (organizerName) formData.set('organizerName', organizerName.value);
+        if (organizerEmail) formData.set('organizerEmail', organizerEmail.value);
+        if (organizerAddress) formData.set('organizerAddress', organizerAddress.value);
+        if (organizerDescription) formData.set('organizerDescription', organizerDescription.value);
+        if (organizerWebsite) formData.set('organizerWebsite', organizerWebsite.value);
+        if (organizerPhone) formData.set('organizerPhone', organizerPhone.value);
+    }
+
+    const logoInput = document.getElementById('organizerLogo');
+    if (logoInput && logoInput.files[0]) {
+        formData.append('organizerLogo', logoInput.files[0]);
+    }
+
+    // L'auto-save ne doit pas renvoyer les fichiers déjà uploadés
+    if (!includeFiles) {
+        const fileKeys = new Set();
+        for (const [key, value] of formData.entries()) {
+            if (value instanceof File) {
+                fileKeys.add(key);
+            }
+        }
+        fileKeys.forEach(key => formData.delete(key));
+    }
+
+    return formData;
+}
+
+// Met à jour les champs du formulaire après une sauvegarde réussie
+function updateRouteFieldsFromServer(data) {
+    if (!data || !data.routes || !Array.isArray(data.routes)) return;
+    data.routes.forEach((route) => {
+        const index = route.index;
+        const hiddenInput = document.querySelector(`input[type="hidden"][name="routes[${index}][gpx_file]"]`);
+        const checkbox = document.querySelector(`input[type="checkbox"][name="routes[${index}][gpx_downloadable]"]`);
+        const label = document.getElementById(`gpxFileLabel${index}`);
+
+        if (hiddenInput) hiddenInput.value = route.gpx_file || '';
+        if (checkbox) checkbox.checked = !!route.gpx_downloadable;
+        if (label && route.gpx_file) {
+            const parts = (route.gpx_file || '').split('/');
+            label.textContent = 'Fichier : ' + parts[parts.length - 1];
+        } else if (label) {
+            label.textContent = '';
+        }
+    });
+}
+
 // Fonction pour initialiser la modale de prévisualisation
 function initPreviewModal() {
     console.log(" Initialisation de la modale de prévisualisation");
@@ -66,112 +232,12 @@ async function showPreview() {
     try {
         hideGlobalErrors();
         
-        const form = document.getElementById('createEventForm');
-        const formData = new FormData(form);
-
-        // Combiner latitude et longitude en coordonnées
-        const lat = document.getElementById('latitude').value;
-        const lng = document.getElementById('longitude').value;
-        if (lat && lng) {
-            formData.set('coordinates', `${lat},${lng}`);
+        const formData = buildEnrichedFormData(false);
+        if (!formData) {
+            throw new Error("Formulaire introuvable");
         }
+        formData.set('saveReason', 'preview');
 
-        // Ajouter les contacts
-        const contactsContainer = document.getElementById('contactsContainer');
-        if (contactsContainer) {
-            const contacts = [];
-            const contactDivs = contactsContainer.getElementsByClassName('contact-field');
-            
-            Array.from(contactDivs).forEach((div, index) => {
-                const name = div.querySelector('[name^="contact_name"]')?.value || '';
-                const email = div.querySelector('[name^="contact_email"]')?.value || '';
-                const phone = div.querySelector('[name^="contact_phone"]')?.value || '';
-                
-                if (name || email || phone) {
-                    contacts.push({ name, email, phone });
-                }
-            });
-            
-            if (contacts.length > 0) {
-                // S'assurer que les contacts sont envoyés comme une chaîne JSON
-                const contactsJson = JSON.stringify(contacts);
-                formData.append('contacts', contactsJson);
-                console.log(" ✓ Contacts ajoutés (JSON):", contactsJson);
-            }
-        }
-
-        // Ajouter les parcours
-        const routesContainer = document.getElementById('routesContainer');
-        if (routesContainer) {
-            const routes = [];
-            const routeDivs = routesContainer.getElementsByClassName('route-field');
-            
-            Array.from(routeDivs).forEach((div, index) => {
-                const name = div.querySelector('[name^="route_name"]')?.value || '';
-                const distance = div.querySelector('[name^="route_distance"]')?.value || '';
-                const elevation = div.querySelector('[name^="route_elevation"]')?.value || '';
-                const gpxInput = div.querySelector('[name^="route_gpx"]');
-                const downloadable = div.querySelector('[name^="route_gpx_downloadable"]')?.checked || false;
-                
-                if (name || distance || elevation || (gpxInput && gpxInput.files[0])) {
-                    const route = { 
-                        name, 
-                        distance, 
-                        elevation,  
-                        gpx_downloadable: downloadable
-                    };
-                    routes.push(route);
-                    
-                    // Ajouter le fichier GPX s'il existe
-                    if (gpxInput && gpxInput.files[0]) {
-                        formData.append(`route_gpx_${index}`, gpxInput.files[0]);
-                    }
-                }
-            });
-            
-            if (routes.length > 0) {
-                // Convertir en JSON et ajouter au formData
-                const routesJson = JSON.stringify(routes);
-                formData.append('routes', routesJson);
-                console.log(" ✓ Parcours ajoutés (JSON):", routesJson);
-            }
-        }
-
-        // Ajouter les données de l'organisateur
-        const organizerSelect = document.getElementById('organizerSelect');
-        const organizerId = organizerSelect ? organizerSelect.value : null;
-        
-        if (organizerId && organizerId !== "") {
-            formData.append('organizerId', organizerId);
-            console.log(" ✓ ID de l'organisateur ajouté:", organizerId);
-        } else {
-            console.log(" ℹ️ Pas d'organisateur existant sélectionné, création d'un nouvel organisateur");
-            
-            // Pour un nouvel organisateur, on envoie tous les champs
-            const organizerName = document.getElementById('organizerName');
-            const organizerEmail = document.getElementById('organizerEmail');
-            const organizerAddress = document.getElementById('organizerAddress');
-            const organizerDescription = document.getElementById('organizerDescription');
-            const organizerWebsite = document.getElementById('organizerWebsite');
-            const organizerPhone = document.getElementById('organizerPhone');
-            
-            if (organizerName) formData.append('organizerName', organizerName.value);
-            if (organizerEmail) formData.append('organizerEmail', organizerEmail.value);
-            if (organizerAddress) formData.append('organizerAddress', organizerAddress.value);
-            if (organizerDescription) formData.append('organizerDescription', organizerDescription.value);
-            if (organizerWebsite) formData.append('organizerWebsite', organizerWebsite.value);
-            if (organizerPhone) formData.append('organizerPhone', organizerPhone.value);
-            
-            console.log(" ✓ Données du nouvel organisateur ajoutées");
-        }
-
-        // Ajouter le logo de l'organisateur s'il existe
-        const logoInput = document.getElementById('organizerLogo');
-        if (logoInput && logoInput.files[0]) {
-            formData.append('organizerLogo', logoInput.files[0]);
-            console.log(" ✓ Logo de l'organisateur ajouté");
-        }
-        
         // Déterminer l'URL en fonction du mode
         let apiUrl;
         if (window.isEditMode && window.eventId) {
@@ -224,6 +290,7 @@ async function showPreview() {
             let hiddenDraftId = document.getElementById('draftId');
             if (hiddenDraftId) {
                 hiddenDraftId.value = draftId;
+                updateRouteFieldsFromServer(saveData);
             } else {
                 hiddenDraftId = document.createElement('input');
                 hiddenDraftId.type = 'hidden';
@@ -268,12 +335,6 @@ async function showPreview() {
             throw new Error(previewData.message || "Erreur lors de la prévisualisation");
         }
 
-        // Vider la prévisualisation existante avant d'afficher la nouvelle
-        const previewGrid = document.getElementById('secondaryImagesPreview');
-        if (previewGrid) {
-            previewGrid.innerHTML = '';
-        }
-        
         // Mettre à jour le contenu de la prévisualisation
         const previewContent = document.getElementById('eventPreview');
         if (!previewContent) {
@@ -281,11 +342,34 @@ async function showPreview() {
         }
 
         previewContent.innerHTML = previewData.data.html;
+
+        // Initialiser la carte et les interactions du nouveau template
+        if (typeof window.initEventDisplay === 'function') {
+            window.initEventDisplay(previewContent);
+        }
+
         console.log(" ✓ Prévisualisation affichée avec succès");
 
     } catch (error) {
         console.error(" Erreur:", error);
         showToast(error.message || "Une erreur est survenue", "error");
+    }
+}
+
+// Remonter le contenu de la modale en haut à chaque changement d'étape
+function scrollStepToTop() {
+    const modalBody = document.querySelector('#createEventModal .modal-body');
+    if (modalBody) {
+        modalBody.scrollTop = 0;
+    }
+    window.scrollTo(0, 0);
+}
+
+// S'assurer que la carte GPX est initialisée et correctement redimensionnée
+function ensureGpxMapVisible() {
+    initGpxMap();
+    if (window.gpxMap && typeof window.gpxMap.invalidateSize === 'function') {
+        setTimeout(() => window.gpxMap.invalidateSize(), 100);
     }
 }
 
@@ -297,6 +381,8 @@ async function nextStep() {
     if (currentStep < totalSteps) {
         if (validateStep(currentStep)) {
             try {
+                // Auto-save avant de quitter l'étape courante
+                await maybeSaveDraft('step-next');
                 // Si on passe à l'étape 3 (prévisualisation)
                 if (currentStep === 2) {
                     console.log('📝 Préparation de la prévisualisation');
@@ -339,6 +425,7 @@ async function nextStep() {
                     updateProgress();
                     updateButtons();
                     hideGlobalErrors();
+                    scrollStepToTop();
                     console.log('✅ Navigation vers prévisualisation terminée');
                     return;
                 }
@@ -363,6 +450,10 @@ async function nextStep() {
                 updateProgress();
                 updateButtons();
                 hideGlobalErrors();
+                scrollStepToTop();
+                if (currentStep === 2) {
+                    ensureGpxMapVisible();
+                }
                 console.log('✅ Navigation standard terminée');
             } catch (error) {
                 console.error('❌ Erreur lors de la navigation:', error);
@@ -381,6 +472,8 @@ function prevStep() {
     if (currentStep <= 1) return;
     
     try {
+        // Auto-save avant de revenir en arrière
+        maybeSaveDraft('step-prev');
         // Cacher l'étape actuelle
         const currentStepElement = document.getElementById(`step${currentStep}`);
         if (currentStepElement) {
@@ -398,6 +491,10 @@ function prevStep() {
         updateProgress();
         updateButtons();
         hideGlobalErrors();
+        scrollStepToTop();
+        if (currentStep === 2) {
+            ensureGpxMapVisible();
+        }
     } catch (error) {
         console.error(' Erreur lors du retour à l\'étape précédente:', error);
         showToast("Une erreur est survenue lors du retour à l'étape précédente", "error");
@@ -445,8 +542,14 @@ document.addEventListener('DOMContentLoaded', function() {
             e.preventDefault();
             e.stopPropagation();
             
-            // Désactiver le bouton pendant la publication
-            this.disabled = true;
+            // Désactiver le bouton pendant la publication et afficher le spinner
+            const btn = this;
+            const spinner = btn.querySelector('.spinner-border');
+            const label = btn.querySelector('.btn-label');
+            btn.disabled = true;
+            btn.setAttribute('aria-busy','true');
+            if (spinner) spinner.classList.remove('d-none');
+            if (label) label.textContent = 'Publication...';
             
             try {
                 // Appel direct de submitEvent
@@ -454,7 +557,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 await submitEvent();
             } catch (error) {
                 console.error(" ❌ Erreur attrapée dans le handler de clic:", error);
-                this.disabled = false;
+            } finally {
+                // Restaurer l'état du bouton si on est toujours sur cette page
+                btn.disabled = false;
+                btn.removeAttribute('aria-busy');
+                if (spinner) spinner.classList.add('d-none');
+                if (label) label.textContent = 'Publier';
             }
         });
         
@@ -471,25 +579,37 @@ document.addEventListener('DOMContentLoaded', function() {
         createEventForm.classList.add('was-validated');
     });
     
-    // Validation en temps réel
-    createEventForm.querySelectorAll('input, select, textarea').forEach(field => {
-        field.addEventListener('input', function() {
-            if (this.checkValidity()) {
-                this.classList.remove('is-invalid');
-            }
-        });
+    // Validation en temps réel et auto-save différé
+    createEventForm.addEventListener('input', function(e) {
+        const field = e.target;
+        if (field.checkValidity && field.checkValidity()) {
+            field.classList.remove('is-invalid');
+        }
+        if (field.type !== 'file' && !field.name.startsWith('secondaryImages')) {
+            maybeSaveDraft('input');
+        }
     });
     
     // Initialiser les gestionnaires d'événements
     initializeFormEvents();
     initializeProfileToggle();
+    initializeNewOrganizerToggle();
     initializeImageUploads();
-    initLocationMap();
-    setupAddressSearch();
-    initGpxMap();
+    // initLocationMap, setupAddressSearch et initGpxMap sont gérés par create-event.php (meetingMap/gpxMap)
     updateProgress();
     updateButtons();
     updateStepButtons();
+
+    // Navigation directe via les ancres des étapes
+    document.querySelectorAll('.step').forEach(stepLink => {
+        stepLink.addEventListener('click', async function(e) {
+            e.preventDefault();
+            const step = parseInt(this.dataset.step, 10);
+            if (!isNaN(step)) {
+                await setStep(step);
+            }
+        });
+    });
 });
 
 // Fonction pour gérer l'upload d'images
@@ -567,194 +687,6 @@ function removeContact(button) {
     button.closest('.contact-field').remove();
 }
 
-// Fonction pour initialiser les cartes
-function initializeMaps() {
-    console.log('🗺️ Initialisation des cartes...');
-    
-    const locationMapElement = document.getElementById('locationMap');
-    const gpxMapElement = document.getElementById('gpxMap');
-
-    if (locationMapElement && !window.locationMap) {
-        console.log('📍 Initialisation de la carte de localisation');
-        initLocationMap();
-        
-        // Configurer la recherche d'adresse et le marqueur
-        if (window.locationMap) {
-            setupAddressSearch();
-            
-            // Ajouter le marqueur
-            window.locationMarker = L.marker([46.227638, 2.213749], {
-                draggable: true
-            }).addTo(window.locationMap);
-            
-            // Gérer le déplacement du marqueur
-            window.locationMarker.on('dragend', async function(e) {
-                const latlng = e.target.getLatLng();
-                
-                // Mettre à jour les champs cachés
-                document.getElementById('latitude').value = latlng.lat;
-                document.getElementById('longitude').value = latlng.lng;
-                
-                // Obtenir et mettre à jour l'adresse
-                if (window.reverseGeocode) {
-                    const address = await window.reverseGeocode(latlng.lat, latlng.lng);
-                    if (address) {
-                        updateAddress(address);
-                    }
-                }
-            });
-
-            // Gérer le clic sur la carte
-            window.locationMap.on('click', async function(e) {
-                const latlng = e.latlng;
-                
-                // Déplacer le marqueur
-                window.locationMarker.setLatLng(latlng);
-                
-                // Mettre à jour les champs cachés
-                document.getElementById('latitude').value = latlng.lat;
-                document.getElementById('longitude').value = latlng.lng;
-                
-                // Obtenir et mettre à jour l'adresse
-                if (window.reverseGeocode) {
-                    const address = await window.reverseGeocode(latlng.lat, latlng.lng);
-                    if (address) {
-                        updateAddress(address);
-                    }
-                }
-            });
-        }
-    } else {
-        console.log('ℹ️ Carte de localisation déjà initialisée ou élément non trouvé');
-    }
-
-    if (gpxMapElement && !window.gpxMap) {
-        console.log('🛣️ Initialisation de la carte GPX');
-        initGpxMap();
-        
-        // Initialiser le conteneur des couches GPX si la carte est créée
-        if (window.gpxMap) {
-            window.currentGpxLayers = window.currentGpxLayers || {};
-        }
-    } else {
-        console.log('ℹ️ Carte GPX déjà initialisée ou élément non trouvé');
-    }
-}
-
-// Fonction pour gérer le téléchargement d'un fichier GPX
-function handleGpxUpload(input, routeIndex) {
-    console.log(' Traitement du fichier GPX pour le parcours', routeIndex);
-    
-    const file = input.files[0];
-    if (!file) {
-        console.log('Aucun fichier sélectionné');
-        return;
-    }
-
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        try {
-            const gpxData = e.target.result;
-            
-            // Créer un élément temporaire pour parser le GPX
-            const parser = new DOMParser();
-            const gpx = parser.parseFromString(gpxData, 'text/xml');
-            
-            // Vérifier si le document est bien un GPX
-            if (gpx.documentElement.nodeName !== 'gpx') {
-                throw new Error('Le fichier n\'est pas un GPX valide');
-            }
-
-            // Extraire les points du parcours
-            const points = Array.from(gpx.getElementsByTagName('trkpt'));
-            if (points.length < 2) {
-                throw new Error('Le fichier GPX ne contient pas assez de points');
-            }
-
-            // Calculer la distance et le dénivelé
-            let distance = 0;
-            let elevation = 0;
-            const coordinates = [];
-            
-            for (let i = 1; i < points.length; i++) {
-                const prev = points[i - 1];
-                const curr = points[i];
-                
-                const lat1 = parseFloat(prev.getAttribute('lat'));
-                const lon1 = parseFloat(prev.getAttribute('lon'));
-                const lat2 = parseFloat(curr.getAttribute('lat'));
-                const lon2 = parseFloat(curr.getAttribute('lon'));
-                
-                coordinates.push([lat1, lon1]);
-                if (i === points.length - 1) {
-                    coordinates.push([lat2, lon2]);
-                }
-                
-                // Calculer la distance entre les points
-                distance += calculateHaversineDistance(lat1, lon1, lat2, lon2);
-                
-                // Calculer le dénivelé si disponible
-                const ele1 = prev.getElementsByTagName('ele')[0];
-                const ele2 = curr.getElementsByTagName('ele')[0];
-                if (ele1 && ele2) {
-                    const diff = parseFloat(ele2.textContent) - parseFloat(ele1.textContent);
-                    if (diff > 0) elevation += diff;
-                }
-            }
-
-            // Mettre à jour les champs du formulaire
-            const distanceField = document.querySelector(`input[name="routes[${routeIndex}][distance]"]`);
-            const elevationField = document.querySelector(`input[name="routes[${routeIndex}][elevation]"]`);
-            
-            if (distanceField) distanceField.value = distance.toFixed(1);
-            if (elevationField) elevationField.value = Math.round(elevation);
-
-            // Afficher le parcours sur la carte
-            const color = routeColors[routeIndex % routeColors.length];
-            
-            // Supprimer l'ancien parcours s'il existe
-            if (window.currentGpxLayers[routeIndex]) {
-                window.gpxMap.removeLayer(window.currentGpxLayers[routeIndex]);
-            }
-
-            // Créer le nouveau parcours
-            const polyline = L.polyline(coordinates, {
-                color: color,
-                weight: 3,
-                opacity: 0.7
-            });
-
-            // Ajouter le nouveau parcours
-            window.currentGpxLayers[routeIndex] = polyline;
-            polyline.addTo(window.gpxMap);
-
-            // Ajuster la vue de la carte pour montrer tous les parcours
-            const bounds = polyline.getBounds();
-            for (const layerId in window.currentGpxLayers) {
-                if (layerId !== routeIndex.toString()) {
-                    bounds.extend(window.currentGpxLayers[layerId].getBounds());
-                }
-            }
-            window.gpxMap.flyToBounds(bounds, {
-                padding: [50, 50],
-                duration: 0.5
-            });
-
-            console.log(` Parcours ${routeIndex} chargé avec succès`);
-        } catch (error) {
-            console.error(' Erreur lors du traitement du fichier GPX:', error);
-            showToast('Erreur lors du traitement du fichier GPX. Vérifiez que le fichier est valide.', 'error');
-        }
-    };
-
-    reader.onerror = function() {
-        console.error(' Erreur lors de la lecture du fichier');
-        showToast('Erreur lors de la lecture du fichier', 'error');
-    };
-
-    reader.readAsText(file);
-}
-
 // Fonction pour mettre à jour la légende des GPX
 function updateGpxLegend() {
     const legendContent = document.getElementById('gpx-legend-content');
@@ -802,6 +734,8 @@ function addRoute() {
     const container = document.getElementById('routes-container');
     const routeCount = container.children.length;
     const newIndex = routeCount;
+    const categories = window.routeCategories || (typeof routeCategories !== 'undefined' ? routeCategories : []);
+    const catOptions = categories.map(c => `<option value="${c.id}">${String(c.name).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</option>`).join('');
 
     const newRoute = document.createElement('div');
     newRoute.className = 'mb-4';
@@ -813,8 +747,15 @@ function addRoute() {
             </button>
         </div>
         <div class="mb-2">
-            <label class="form-label required-field">Nom du parcours</label>
-            <input type="text" class="form-control" name="routes[${newIndex}][name]" required>
+            <label class="form-label">Nom du parcours</label>
+            <input type="text" class="form-control" name="routes[${newIndex}][name]">
+        </div>
+        <div class="mb-2">
+            <label class="form-label required-field">Catégorie du parcours</label>
+            <select class="form-select" name="routes[${newIndex}][category_id]" required>
+                <option value="">Choisir une catégorie</option>
+                ${catOptions}
+            </select>
         </div>
         <div class="row">
             <div class="col-md-4">
@@ -831,14 +772,20 @@ function addRoute() {
             </div>
             <div class="col-md-4">
                 <div class="mb-2">
-                    <label class="form-label required-field">Prix (€)</label>
-                    <input type="number" step="0.01" class="form-control" name="routes[${newIndex}][price]" required>
+                    <label class="form-label">Prix (€)</label>
+                    <input type="number" step="0.01" class="form-control" name="routes[${newIndex}][price]">
                 </div>
             </div>
         </div>
         <div class="mb-2">
             <label class="form-label">GPX</label>
             <input type="file" class="form-control" name="routes[${newIndex}][gpx]" accept=".gpx" onchange="handleGpxUpload(this, ${newIndex})">
+            <input type="hidden" name="routes[${newIndex}][gpx_file]" value="">
+            <div class="gpx-file-label" id="gpxFileLabel${newIndex}" style="font-size: 0.85em; color: #666;"></div>
+        </div>
+        <div class="mb-2 form-check">
+            <input type="checkbox" class="form-check-input" id="gpxDownloadable${newIndex}" name="routes[${newIndex}][gpx_downloadable]" value="1" checked>
+            <label class="form-check-label" for="gpxDownloadable${newIndex}">Autoriser le téléchargement du GPX</label>
         </div>
         <div class="mb-2">
             <label class="form-label">Description du parcours</label>
@@ -855,7 +802,7 @@ function removeRoute(button) {
     const routeIndex = button.getAttribute('data-route-index');
     
     // Supprimer le GPX de la carte s'il existe
-    if (window.currentGpxLayers[routeIndex]) {
+    if (window.currentGpxLayers[routeIndex] && window.gpxMap && typeof window.gpxMap.removeLayer === 'function') {
         window.gpxMap.removeLayer(window.currentGpxLayers[routeIndex]);
         delete window.currentGpxLayers[routeIndex];
         console.log('GPX supprimé de la carte pour le parcours', routeIndex);
@@ -877,11 +824,19 @@ function removeRoute(button) {
         }
 
         // Mettre à jour les noms des champs
-        const inputs = route.querySelectorAll('input, select, textarea');
+        const inputs = route.querySelectorAll('input, select, textarea, label');
         inputs.forEach(input => {
             const name = input.getAttribute('name');
             if (name) {
                 input.setAttribute('name', name.replace(/routes\[\d+\]/, `routes[${index}]`));
+            }
+            const htmlFor = input.getAttribute('for');
+            if (htmlFor) {
+                input.setAttribute('for', htmlFor.replace(/gpxDownloadable\d+/, `gpxDownloadable${index}`));
+            }
+            const id = input.getAttribute('id');
+            if (id) {
+                input.setAttribute('id', id.replace(/gpxDownloadable\d+|gpxFileLabel\d+/, (m) => m.replace(/\d+$/, `${index}`)));
             }
         });
 
@@ -895,6 +850,12 @@ function removeRoute(button) {
         const gpxInput = route.querySelector('input[type="file"]');
         if (gpxInput) {
             gpxInput.setAttribute('onchange', `handleGpxUpload(this, ${index})`);
+        }
+
+        // Mettre à jour l'identifiant du libellé de fichier GPX
+        const gpxFileLabel = route.querySelector('.gpx-file-label');
+        if (gpxFileLabel) {
+            gpxFileLabel.id = `gpxFileLabel${index}`;
         }
     });
 
@@ -913,8 +874,7 @@ function validateForm() {
         'description': 'Description',
         'date': 'Date',
         'registrationOpens': 'Ouverture des inscriptions',
-        'registrationCloses': 'Fermeture des inscriptions',
-        'location_name': 'Nom du local'
+        'registrationCloses': 'Fermeture des inscriptions'
     };
 
     // Vérifier chaque champ requis
@@ -927,7 +887,20 @@ function validateForm() {
     }
 
     // Vérifier qu'au moins une catégorie est cochée
+    const allCategoryInputs = document.querySelectorAll('input[name="categories[]"]');
     const checkedCategories = document.querySelectorAll('input[name="categories[]"]:checked');
+    console.log('🔎 Diagnostic catégories — total inputs:', allCategoryInputs.length);
+    console.log('🔎 Diagnostic catégories — checked count:', checkedCategories.length);
+    if (allCategoryInputs.length > 0) {
+        try {
+            console.log('🔎 IDs catégories présentes:', Array.from(allCategoryInputs).map(i => i.id));
+        } catch (e) {}
+    }
+    if (checkedCategories.length > 0) {
+        try {
+            console.log('🔎 Catégories cochées (values):', Array.from(checkedCategories).map(i => i.value));
+        } catch (e) {}
+    }
     if (checkedCategories.length === 0) {
         errors.push('Veuillez choisir au moins une catégorie');
     }
@@ -959,20 +932,10 @@ function validateStep(stepNumber) {
 
     // Validation spéciale pour les champs de parcours à l'étape 2
     if (stepNumber === 2) {
-        // Vérifier l'adresse
-        const addressInput = document.getElementById('address');
-        const latitudeInput = document.getElementById('latitude');
-        const longitudeInput = document.getElementById('longitude');
-
-        if (!addressInput?.value.trim() || !latitudeInput?.value || !longitudeInput?.value) {
-            console.error("❌ Adresse ou coordonnées manquantes");
-            if (addressInput) {
-                addressInput.classList.add('is-invalid');
-                showFieldError(addressInput, "L'adresse est requise");
-            }
-            isValid = false;
-        } else {
-            if (addressInput) addressInput.classList.add('is-valid');
+        // S'assurer que la carte GPX est initialisée et correctement dimensionnée
+        initGpxMap();
+        if (window.gpxMap && typeof window.gpxMap.invalidateSize === 'function') {
+            window.gpxMap.invalidateSize();
         }
 
         // Vérifier les parcours
@@ -1075,7 +1038,6 @@ function validateStep(stepNumber) {
 // Fonction pour mettre à jour la barre de progression
 function updateProgress() {
     const progressBar = document.getElementById('progressBar');
-    if (!progressBar) return;
 
     // Calculer le pourcentage de progression basé sur les 3 étapes
     let progressPercentage;
@@ -1093,11 +1055,13 @@ function updateProgress() {
             progressPercentage = 0;
     }
 
-    // Mettre à jour la barre de progression
-    progressBar.style.width = `${progressPercentage}%`;
-    progressBar.setAttribute('aria-valuenow', progressPercentage);
+    // Mettre à jour la barre de progression si elle existe
+    if (progressBar) {
+        progressBar.style.width = `${progressPercentage}%`;
+        progressBar.setAttribute('aria-valuenow', progressPercentage);
+    }
 
-    // Mettre à jour l'état des étapes
+    // Mettre à jour l'état des étapes (indépendamment de la barre de progression)
     document.querySelectorAll('.step').forEach((step, index) => {
         const stepNumber = index + 1;
         if (stepNumber < currentStep) {
@@ -1115,20 +1079,27 @@ function updateProgress() {
     });
 }
 
-// Navigation directe vers une étape (uniquement retour arrière)
-function setStep(step) {
-    if (step < 1 || step > totalSteps || step === currentStep || step > currentStep) return;
-    
-    const currentStepElement = document.getElementById(`step${currentStep}`);
-    const nextStepElement = document.getElementById(`step${step}`);
-    
-    if (currentStepElement) currentStepElement.classList.add('d-none');
-    if (nextStepElement) nextStepElement.classList.remove('d-none');
-    
-    currentStep = step;
-    updateProgress();
-    updateButtons();
-    hideGlobalErrors();
+// Navigation directe vers une étape en cliquant sur les ancres du wizard
+async function setStep(step) {
+    if (step < 1 || step > totalSteps || step === currentStep) return;
+
+    // Retour arrière : navigue directement
+    if (step < currentStep) {
+        while (currentStep > step) {
+            prevStep();
+        }
+        return;
+    }
+
+    // Avance progressif en validant chaque étape intermédiaire
+    while (currentStep < step) {
+        const before = currentStep;
+        await nextStep();
+        if (currentStep === before) {
+            // Validation échouée ou erreur : on bloque la navigation
+            break;
+        }
+    }
 }
 
 // Fonction pour enregistrer le brouillon
@@ -1137,7 +1108,9 @@ async function saveDraft() {
         const form = document.getElementById('createEventForm');
         if (!form) return;
 
-        const formData = new FormData(form);
+        const formData = buildEnrichedFormData(false);
+        if (!formData) return;
+
         const response = await fetch('/api/events/save_draft.php', {
             method: 'POST',
             body: formData
@@ -1153,11 +1126,10 @@ async function saveDraft() {
             if (draftIdInput) draftIdInput.value = data.draftId;
             window.draftId = data.draftId;
         }
-
-        showToast('Brouillon enregistré', 'success');
+        // Pas de toast visible pour l'auto-save
     } catch (error) {
         console.error('Erreur enregistrement brouillon:', error);
-        showToast(error.message || 'Impossible d\'enregistrer le brouillon', 'error');
+        // Pas de toast en auto-save
     }
 }
 
@@ -1192,7 +1164,8 @@ function updateButtons() {
     }
 
     if (saveDraftButton) {
-        saveDraftButton.classList.toggle('d-none', currentStep !== 1);
+        // Masquer définitivement le bouton enregistrer le brouillon
+        saveDraftButton.classList.add('d-none');
     }
 
     if (nextStepIcon) {
@@ -1278,12 +1251,8 @@ function showToast(message, type = 'success') {
 // Fonction pour initialiser les gestionnaires d'upload d'images
 function initializeImageUploads() {
     console.log(" Initialisation des gestionnaires d'upload d'images");
-    
-    // Image principale
-    const mainImageInput = document.getElementById('mainImage');
-    if (mainImageInput) {
-        mainImageInput.addEventListener('change', handleMainImageUpload);
-    }
+    // NOTE : les listeners mainImage/secondaryImages sont définis dans event-images.js
+    // (single source of truth) pour éviter les doubles soumissions.
 }
 
 // Fonction pour initialiser les événements du formulaire
@@ -1456,37 +1425,6 @@ function initializeProfileToggle() {
     }
 }
 
-// Fonction pour initialiser la carte de localisation
-async function initLocationMap() {
-    try {
-        console.log('📍 Début initLocationMap');
-        const mapElement = document.getElementById('locationMap');
-        
-        if (!mapElement) {
-            console.error('❌ Élément locationMap non trouvé');
-            return;
-        }
-
-        if (window.locationMap) {
-            console.log('ℹ️ Carte de localisation déjà initialisée');
-            return;
-        }
-
-        window.locationMap = L.map('locationMap', {
-            center: [46.227638, 2.213749], // Centre de la France
-            zoom: 5
-        });
-
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: ' OpenStreetMap contributors'
-        }).addTo(window.locationMap);
-
-        console.log('✅ Carte de localisation initialisée avec succès');
-    } catch (error) {
-        console.error('❌ Erreur lors de l\'initialisation de la carte:', error);
-    }
-}
-
 // Fonction pour mettre à jour l'adresse
 function updateAddress(address) {
     const addressInput = document.getElementById('address');
@@ -1576,46 +1514,29 @@ function setupAddressSearch() {
     });
 }
 
-// Fonction pour initialiser la carte GPX
-function initGpxMap() {
-    try {
-        console.log('🛣️ Début initGpxMap');
-        const mapElement = document.getElementById('gpxMap');
-        
-        if (!mapElement) {
-            console.error('❌ Élément gpxMap non trouvé');
-            return;
-        }
-
-        if (window.gpxMap) {
-            console.log('ℹ️ Carte GPX déjà initialisée');
-            return;
-        }
-
-        window.gpxMap = L.map('gpxMap', {
-            center: [46.227638, 2.213749], // Centre de la France
-            zoom: 5
-        });
-
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: ' OpenStreetMap contributors'
-        }).addTo(window.gpxMap);
-
-        console.log('✅ Carte GPX initialisée avec succès');
-    } catch (error) {
-        console.error('❌ Erreur lors de l\'initialisation de la carte GPX:', error);
-    }
-}
-
 // Fonction pour traiter le fichier GPX
 function handleGpxUpload(input, routeIndex) {
     console.log('Traitement du fichier GPX pour le parcours', routeIndex);
+
+    const fileLabel = document.getElementById(`gpxFileLabel${routeIndex}`);
+    if (input.files && input.files[0]) {
+        if (fileLabel) fileLabel.textContent = 'Fichier sélectionné : ' + input.files[0].name;
+    } else if (fileLabel) {
+        fileLabel.textContent = '';
+    }
+
+    ensureGpxMapVisible();
+    if (!window.gpxMap || typeof window.gpxMap.invalidateSize !== 'function') {
+        console.error('Carte GPX non initialisée');
+        return;
+    }
     
     const file = input.files[0];
     if (!file) {
         console.log('Aucun fichier sélectionné');
         return;
     }
+    input.value = '';
 
     const reader = new FileReader();
     reader.onload = function(e) {
@@ -1631,8 +1552,12 @@ function handleGpxUpload(input, routeIndex) {
                 throw new Error('Le fichier n\'est pas un GPX valide');
             }
 
-            // Extraire les points du parcours
-            const points = Array.from(gpx.getElementsByTagName('trkpt'));
+            // Extraire les points du parcours (trkpt, rtept, wpt, namespaces inclus)
+            const getPoints = (tag) => Array.from(gpx.getElementsByTagNameNS('*', tag));
+            const trkpts = getPoints('trkpt');
+            const rtepts = getPoints('rtept');
+            const wpts = getPoints('wpt');
+            const points = trkpts.length >= 2 ? trkpts : (rtepts.length >= 2 ? rtepts : wpts);
             if (points.length < 2) {
                 throw new Error('Le fichier GPX ne contient pas assez de points');
             }
@@ -1660,8 +1585,8 @@ function handleGpxUpload(input, routeIndex) {
                 distance += calculateHaversineDistance(lat1, lon1, lat2, lon2);
                 
                 // Calculer le dénivelé si disponible
-                const ele1 = prev.getElementsByTagName('ele')[0];
-                const ele2 = curr.getElementsByTagName('ele')[0];
+                const ele1 = prev.getElementsByTagNameNS('*', 'ele')[0];
+                const ele2 = curr.getElementsByTagNameNS('*', 'ele')[0];
                 if (ele1 && ele2) {
                     const diff = parseFloat(ele2.textContent) - parseFloat(ele1.textContent);
                     if (diff > 0) elevation += diff;
@@ -1679,7 +1604,7 @@ function handleGpxUpload(input, routeIndex) {
             const color = routeColors[routeIndex % routeColors.length];
             
             // Supprimer l'ancien parcours s'il existe
-            if (window.currentGpxLayers[routeIndex]) {
+            if (window.currentGpxLayers[routeIndex] && window.gpxMap) {
                 window.gpxMap.removeLayer(window.currentGpxLayers[routeIndex]);
             }
 
@@ -1694,6 +1619,11 @@ function handleGpxUpload(input, routeIndex) {
             window.currentGpxLayers[routeIndex] = polyline;
             polyline.addTo(window.gpxMap);
 
+            // Forcer le recalcul de la taille pour afficher toutes les tuiles
+            if (window.gpxMap && typeof window.gpxMap.invalidateSize === 'function') {
+                window.gpxMap.invalidateSize();
+            }
+
             // Ajuster la vue de la carte pour montrer tous les parcours
             const bounds = polyline.getBounds();
             for (const layerId in window.currentGpxLayers) {
@@ -1707,6 +1637,7 @@ function handleGpxUpload(input, routeIndex) {
             });
 
             console.log(`Parcours ${routeIndex} chargé avec succès`);
+            uploadGpxToServer(file, routeIndex);
         } catch (error) {
             console.error('Erreur lors du traitement du fichier GPX:', error);
             showToast('Erreur lors du traitement du fichier GPX. Vérifiez que le fichier est valide.', 'error');
@@ -1719,6 +1650,32 @@ function handleGpxUpload(input, routeIndex) {
     };
 
     reader.readAsText(file);
+}
+
+async function uploadGpxToServer(file, routeIndex) {
+    try {
+        const formData = new FormData();
+        formData.append('gpx_file', file);
+        formData.append('route_index', routeIndex);
+
+        const response = await fetch('/api/events/upload-gpx.php', {
+            method: 'POST',
+            body: formData
+        });
+        const data = await response.json();
+        if (!data.success) {
+            throw new Error(data.error || 'Upload échoué');
+        }
+
+        const hiddenInput = document.querySelector(`input[name="routes[${routeIndex}][gpx_file]"]`);
+        if (hiddenInput) {
+            hiddenInput.value = data.gpx_path;
+        }
+        console.log(`✅ GPX parcours ${routeIndex} uploadé :`, data.gpx_path);
+    } catch (error) {
+        console.error('❌ Erreur upload GPX:', error);
+        showToast('La trace est affichée mais n\'a pas pu être enregistrée. Veuillez réessayer.', 'warning');
+    }
 }
 
 // Fonction pour calculer la distance d'un parcours GPX
@@ -1826,29 +1783,6 @@ function hideFieldError(field) {
     }
 }
 
-// Fonction pour réinitialiser les champs de l'organisateur
-function resetOrganizerFields() {
-    console.log('Réinitialisation des champs de l\'organisateur');
-    const organizerFields = document.getElementById('organizerFields');
-    if (!organizerFields) {
-        console.error('Élément organizerFields non trouvé');
-        return;
-    }
-
-    // Réinitialiser tous les champs texte et textarea
-    const fields = organizerFields.querySelectorAll('input:not([type="file"]), textarea');
-    fields.forEach(field => {
-        field.value = '';
-        field.disabled = false;
-        console.log('Champ réinitialisé:', field.name);
-    });
-
-    // Réinitialiser le logo
-    resetLogo();
-    
-    console.log('Tous les champs ont été réinitialisés');
-}
-
 // Réinitialiser le logo
 function resetLogo() {
     console.log('Réinitialisation du logo');
@@ -1900,6 +1834,9 @@ async function submitEvent() {
         const form = document.getElementById('createEventForm');
         const formData = new FormData(form);
 
+        // Sauvegarder une dernière fois tout le formulaire (incl. étape 3)
+        await maybeSaveDraft('before-publish');
+
         // Si on est en mode édition
         if (window.isEditMode && window.eventId) {
             formData.append('eventId', window.eventId);
@@ -1916,18 +1853,29 @@ async function submitEvent() {
                 throw new Error(data.message || 'Erreur lors de la mise à jour de l\'événement');
             }
 
-            // Rediriger vers la page de l'événement
-            window.location.href = '/pages/user/my-events.php?success=update';
+            // Redirection post-mise à jour
+            try {
+                if (sessionStorage.getItem('adminEdit') === '1') {
+                    sessionStorage.removeItem('adminEdit');
+                    window.location.href = '/pages/admin';
+                } else {
+                    window.location.href = '/event?id=' + encodeURIComponent(window.eventId);
+                }
+            } catch (_) {
+                window.location.href = '/event?id=' + encodeURIComponent(window.eventId);
+            }
             return;
         }
 
         // Code existant pour la création d'événement
-        if (!window.draftId) {
+        const draftIdInput = document.getElementById('draftId') || document.querySelector('input[name="draftId"]');
+        const draftId = draftIdInput ? draftIdInput.value : null;
+        if (!draftId) {
             throw new Error('ID du brouillon manquant');
         }
 
-        formData.append('draftId', window.draftId);
-        
+        formData.append('draftId', draftId);
+
         const response = await fetch('../../api/events/publish.php', {
             method: 'POST',
             body: formData
@@ -1939,8 +1887,19 @@ async function submitEvent() {
             throw new Error(data.message || 'Erreur lors de la publication de l\'événement');
         }
 
-        // Rediriger vers la page des événements
-        window.location.href = '/pages/user/my-events.php?success=create';
+        // Redirection après publication
+        try {
+            if (sessionStorage.getItem('adminEdit') === '1') {
+                sessionStorage.removeItem('adminEdit');
+                window.location.href = '/pages/admin';
+            } else if (data.isUpdate && data.eventId) {
+                window.location.href = '/event?id=' + encodeURIComponent(data.eventId);
+            } else {
+                window.location.href = '/pages/user/my-events.php?success=create';
+            }
+        } catch (_) {
+            window.location.href = '/pages/user/my-events.php?success=create';
+        }
 
     } catch (error) {
         console.error('Erreur lors de la soumission:', error);
@@ -2084,6 +2043,16 @@ function initGpxMap() {
         return;
     }
 
+    if (typeof L === 'undefined') {
+        console.error('Leaflet non chargé');
+        return;
+    }
+
+    if (window.gpxMap && typeof window.gpxMap.invalidateSize === 'function') {
+        console.log('Carte GPX déjà initialisée');
+        return;
+    }
+
     try {
         // Initialiser la carte
         window.gpxMap = L.map('gpxMap').setView([46.227638, 2.213749], 5); // Centre de la France
@@ -2144,4 +2113,23 @@ function initActivityTags() {
 
         setSelectedIds(selectedIds);
     });
+}
+
+function initializeNewOrganizerToggle() {
+    const organizerSelect = document.getElementById('organizerId');
+    const organizerNameInput = document.getElementById('organizerName');
+    if (!organizerSelect || !organizerNameInput) return;
+
+    function updateOrganizerNameField() {
+        if (organizerSelect.value === 'new') {
+            organizerNameInput.classList.remove('d-none');
+            organizerNameInput.focus();
+        } else {
+            organizerNameInput.classList.add('d-none');
+            organizerNameInput.value = '';
+        }
+    }
+
+    organizerSelect.addEventListener('change', updateOrganizerNameField);
+    updateOrganizerNameField();
 }

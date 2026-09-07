@@ -10,7 +10,11 @@ if (session_status() === PHP_SESSION_NONE) {
 
 // Vérifier si l'utilisateur est connecté
 if (!isset($_SESSION['user_id'])) {
-    header('Location: /');
+    $target = '/pages/admin/view_event.php';
+    if (isset($_GET['id']) && is_numeric($_GET['id'])) {
+        $target .= '?id=' . (int)$_GET['id'];
+    }
+    header('Location: /?showLogin=1&redirect=' . urlencode($target));
     exit();
 }
 
@@ -23,9 +27,8 @@ if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
 $eventId = (int)$_GET['id'];
 
 // Inclure la configuration
-require_once '/home/cool5792/rando.partageonslaforet.be/includes/config.php';
-require_once '/home/cool5792/rando.partageonslaforet.be/includes/auth.php';
-require_once '/home/cool5792/rando.partageonslaforet.be/includes/helpers.php';
+require_once __DIR__ . '/../../includes/config.php';
+require_once __DIR__ . '/../../includes/helpers.php';
 
 try {
     // Connexion à la base de données
@@ -45,7 +48,7 @@ try {
         exit();
     }
 
-    // Récupérer les détails de l'événement
+    // Récupérer les détails de l'événement (données brutes pour admin)
     $stmt = $pdo->prepare('
         SELECT 
             e.*,
@@ -107,8 +110,56 @@ try {
         }
     }
 
+    // Charger l'événement normalisé pour l'affichage public (colonne de droite)
+    require_once __DIR__ . '/../../includes/EventDisplayBuilder.php';
+    $builder = new EventDisplayBuilder($pdo);
+    $eventDisplay = $builder->build('published', $eventId);
+    if (!$eventDisplay) {
+        header('Location: /pages/admin/events.php?error=event_not_found');
+        exit();
+    }
+
     // Titre de la page
-    $pageTitle = "Administration - " . h($event['title']);
+    $pageTitle = "Administration - " . h($eventDisplay['title'] ?? $event['title']);
+    // Feuille de style spécifique à la page (injectée via header.php)
+    $additionalStyles =
+        '<link rel="stylesheet" href="/assets/css/admin-event.css?v=3">' .
+        '<link rel="stylesheet" href="/assets/css/event-display.css?v=1">';
+
+    // Logs de diagnostic: vérifier la présence du CSS côté serveur
+    try {
+        require_once __DIR__ . '/../../logs/error.log.php';
+        $fsCandidates = [
+            __DIR__ . '/../../public/assets/css/admin-event.css',
+            __DIR__ . '/../../assets/css/admin-event.css',
+        ];
+        $fsExists = [];
+        foreach ($fsCandidates as $p) {
+            $fsExists[] = [
+                'path' => $p,
+                'exists' => file_exists($p),
+                'readable' => is_readable($p),
+                'mtime' => file_exists($p) ? date('c', filemtime($p)) : null,
+                'size' => (file_exists($p) && is_readable($p)) ? filesize($p) : null,
+            ];
+        }
+        if (function_exists('logError')) {
+            logError('pages/admin/view_event.php', 'Injection additionalStyles et vérification CSS', [
+                'additionalStyles' => $additionalStyles,
+                'served_url' => '/assets/css/admin-event.css?v=2',
+                'fs_candidates' => $fsExists,
+                'event_status' => $event['status'],
+                'expected_classes' => [
+                    'sidebar_card' => 'card mb-4 admin-actions',
+                    'approve_btn' => 'btn btn-admin btn-approve',
+                    'reject_btn' => 'btn btn-admin btn-reject',
+                    'delete_btn' => 'btn btn-admin btn-delete',
+                ],
+            ]);
+        }
+    } catch (Throwable $e) {
+        error_log('view_event.php: logError indisponible: ' . $e->getMessage());
+    }
 
 } catch (PDOException $e) {
     error_log("Erreur BD: " . $e->getMessage());
@@ -116,187 +167,79 @@ try {
     exit();
 }
 
-// Inclure l'en-tête
-include '/home/cool5792/rando.partageonslaforet.be/includes/header.php';
+// Inclure l'en-tête (intègre $additionalStyles dans <head>)
+include __DIR__ . '/../../includes/header.php';
 ?>
 
 <div class="container mt-5 pt-4">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="/pages/admin/dashboard.php">Dashboard</a></li>
-            <li class="breadcrumb-item"><a href="/pages/admin/events.php">Gestion des événements</a></li>
             <li class="breadcrumb-item active" aria-current="page"><?php echo h($event['title']); ?></li>
         </ol>
     </nav>
 
-    <div class="row">
-        <div class="col-md-8">
-            <h1 class="mb-4"><?php echo h($event['title']); ?></h1>
-            
-            <?php if (!empty($event['description'])): ?>
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <h5 class="card-title">Description</h5>
-                        <p class="card-text"><?php echo nl2br(h($event['description'])); ?></p>
-                    </div>
-                </div>
-            <?php endif; ?>
-
-            <div class="card mb-4">
-                <div class="card-body">
-                    <h5 class="card-title">Informations</h5>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <p><strong>Date:</strong> <?php echo date('d/m/Y', strtotime($event['date'])); ?></p>
-                            <p>
-                                <strong>Horaire:</strong> 
-                                <?php 
-                                    echo date('H:i', strtotime($event['start_time']));
-                                    if (!empty($event['end_time'])) {
-                                        echo ' - ' . date('H:i', strtotime($event['end_time']));
-                                    }
-                                ?>
-                            </p>
-                            <p><strong>Lieu:</strong> <?php echo h($event['location']); ?></p>
-                            <?php if (!empty($event['venue'])): ?>
-                                <p><strong>Lieu précis:</strong> <?php echo h($event['venue']); ?></p>
-                            <?php endif; ?>
-                        </div>
-                        <div class="col-md-6">
-                            <p>
-                                <strong>Catégorie:</strong>
-                                <span class="badge bg-<?php 
-                                    echo $event['category'] === 'running' ? 'primary' : 
-                                        ($event['category'] === 'hiking' ? 'success' : 'info'); 
-                                ?>">
-                                    <?php echo ucfirst($event['category']); ?>
-                                </span>
-                            </p>
-                            <?php if (!empty($event['difficulty'])): ?>
-                                <p>
-                                    <strong>Difficulté:</strong>
-                                    <span class="badge bg-<?php 
-                                        echo $event['difficulty'] === 'easy' ? 'success' : 
-                                            ($event['difficulty'] === 'medium' ? 'warning' : 'danger'); 
-                                    ?>">
-                                        <?php echo ucfirst($event['difficulty']); ?>
-                                    </span>
-                                </p>
-                            <?php endif; ?>
-                            <?php if (!empty($event['max_participants'])): ?>
-                                <p><strong>Participants maximum:</strong> <?php echo $event['max_participants']; ?></p>
-                            <?php endif; ?>
-                            <p><strong>Organisation:</strong> <?php echo h($event['organisation']); ?></p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <?php if (!empty($event['coordinates'])): ?>
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <h5 class="card-title">Carte</h5>
-                        <div id="eventMap" style="height: 400px;"></div>
-                    </div>
-                </div>
-
-                <script>
-                    // Attendre que Leaflet soit chargé
-                    window.addEventListener('load', function() {
-                        // S'assurer que la div existe
-                        const mapDiv = document.getElementById('eventMap');
-                        if (!mapDiv) return;
-
-                        // S'assurer que L (Leaflet) est disponible
-                        if (typeof L === 'undefined') {
-                            console.error('Leaflet n\'est pas chargé');
-                            return;
-                        }
-
-                        try {
-                            const coordinates = '<?php echo $event['coordinates']; ?>'.split(',');
-                            const lat = parseFloat(coordinates[0]);
-                            const lng = parseFloat(coordinates[1]);
-                            
-                            if (!isNaN(lat) && !isNaN(lng)) {
-                                // Vérifier si une carte existe déjà
-                                if (window.eventMap) {
-                                    window.eventMap.remove();
-                                }
-
-                                // Créer la nouvelle carte
-                                window.eventMap = L.map('eventMap').setView([lat, lng], 13);
-                                
-                                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                                    attribution: '© OpenStreetMap contributors'
-                                }).addTo(window.eventMap);
-
-                                L.marker([lat, lng]).addTo(window.eventMap)
-                                    .bindPopup('<?php echo h($event['title']); ?>');
-                            }
-                        } catch (error) {
-                            console.error('Erreur lors de l\'initialisation de la carte:', error);
-                        }
-                    });
-                </script>
-            <?php endif; ?>
-        </div>
-
-        <div class="col-md-4">
-            <div class="card mb-4">
+    <div class="row g-4">
+        <!-- Sidebar admin à gauche -->
+        <aside class="col-lg-3">
+            <div class="card mb-4 admin-actions">
                 <div class="card-body">
                     <h5 class="card-title">Actions administrateur</h5>
                     
-                    <?php if (isset($updateMessage)): ?>
-                        <div class="alert alert-<?php echo $updateSuccess ? 'success' : 'danger'; ?> mb-3">
-                            <?php echo $updateMessage; ?>
-                        </div>
-                    <?php endif; ?>
-                    
-                    <form method="post" class="mb-3">
-                        <button type="submit" name="update_paths" class="btn btn-warning btn-sm w-100 mb-2">
-                            Mettre à jour les chemins d'images
+                    <div class="d-grid">
+                         <button class="btn btn-admin btn-approve" onclick="updateEventStatus(<?php echo $event['id']; ?>, 'approved')">
+                            <i class="bi bi-check-circle me-1"></i> Valider
                         </button>
-                    </form>
-                    
-                    <div class="d-grid gap-2">
-                        <?php if ($event['status'] === 'pending'): ?>
-                            <button class="btn btn-success" onclick="updateEventStatus(<?php echo $event['id']; ?>, 'approved')">
-                                <i class="bi bi-check-circle"></i> Approuver
-                            </button>
-                            <button class="btn btn-danger" onclick="updateEventStatus(<?php echo $event['id']; ?>, 'rejected')">
-                                <i class="bi bi-x-circle"></i> Rejeter
-                            </button>
-                        <?php elseif ($event['status'] === 'approved'): ?>
-                            <button class="btn btn-warning" onclick="updateEventStatus(<?php echo $event['id']; ?>, 'pending')">
-                                <i class="bi bi-arrow-counterclockwise"></i> Remettre en attente
-                            </button>
-                        <?php elseif ($event['status'] === 'rejected'): ?>
-                            <button class="btn btn-warning" onclick="updateEventStatus(<?php echo $event['id']; ?>, 'pending')">
-                                <i class="bi bi-arrow-counterclockwise"></i> Remettre en attente
-                            </button>
-                        <?php endif; ?>
-                        <button class="btn btn-danger" onclick="deleteEvent(<?php echo $event['id']; ?>)">
-                            <i class="bi bi-trash"></i> Supprimer
+                        <button class="btn btn-admin btn-edit" onclick="editViaModal(<?php echo (int)$event['id']; ?>)">
+                            <i class="bi bi-pencil-square me-1"></i> Modifier
+                        </button>
+                        <button class="btn btn-admin btn-reject" onclick="openRejectModal(<?php echo $event['id']; ?>)">
+                            <i class="bi bi-x-circle me-1"></i> Refuser
+                        </button>
+                        <button class="btn btn-admin btn-delete" onclick="deleteEvent(<?php echo $event['id']; ?>)">
+                            <i class="bi bi-trash me-1"></i> Supprimer
                         </button>
                     </div>
                 </div>
             </div>
+        </aside>
 
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Informations complémentaires</h5>
-                    <p class="mb-1"><strong>Créé par:</strong> <?php echo h($event['creator_name'] ?? 'Anonyme'); ?></p>
-                    <p class="mb-1"><strong>Email:</strong> <?php echo h($event['creator_email'] ?? 'Non renseigné'); ?></p>
-                    <p class="mb-1"><strong>Créé le:</strong> <?php echo date('d/m/Y H:i', strtotime($event['created_at'])); ?></p>
-                    <?php if (!empty($event['updated_at'])): ?>
-                        <p class="mb-1"><strong>Dernière modification:</strong> <?php echo date('d/m/Y H:i', strtotime($event['updated_at'])); ?></p>
-                    <?php endif; ?>
-                </div>
-            </div>
+        <!-- Page événement (rendu public) à droite -->
+        <div class="col-lg-9">
+            <?php
+                // Isoler la variable $event pour le template d'affichage, sans casser celles de la sidebar
+                $__event_backup = $event;
+                $event = $eventDisplay; // variable attendue par event-display.php
+                $mode = 'published';
+                include __DIR__ . '/../../templates/events/event-display.php';
+                $event = $__event_backup;
+                unset($__event_backup);
+            ?>
         </div>
     </div>
 </div>
+
+<!-- Modal Refus: raison de rejet -->
+<div class="modal fade modal-brand" id="rejectModal" tabindex="-1" aria-labelledby="rejectModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="rejectModalLabel">Motif du refus</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label for="rejectReason" class="form-label">Veuillez indiquer la raison du refus (optionnel)</label>
+          <textarea class="form-control" id="rejectReason" rows="4" placeholder="Ex: informations incomplètes, date invalide, ..."></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-brand-cancel" data-bs-dismiss="modal">Annuler</button>
+        <button type="button" class="btn btn-brand-reject" id="confirmRejectBtn">Confirmer le refus</button>
+      </div>
+    </div>
+  </div>
+  </div>
 
 <script>
 function deleteEvent(eventId) {
@@ -334,7 +277,7 @@ function deleteEvent(eventId) {
     }
 }
 
-function updateEventStatus(eventId, status) {
+function updateEventStatus(eventId, status, rejectionReason) {
     if (!confirm(`Voulez-vous vraiment ${status === 'approved' ? 'approuver' : status === 'rejected' ? 'rejeter' : 'remettre en attente'} cet événement ?`)) {
         return;
     }
@@ -343,6 +286,12 @@ function updateEventStatus(eventId, status) {
         event_id: parseInt(eventId, 10),
         status: status
     };
+    if (status === 'rejected' && typeof rejectionReason === 'string') {
+        const rr = rejectionReason.trim();
+        if (rr.length > 0) {
+            data.rejection_reason = rr;
+        }
+    }
 
     console.log('Envoi des données:', data);
 
@@ -375,8 +324,59 @@ function updateEventStatus(eventId, status) {
         alert(error.message || 'Une erreur est survenue lors de la mise à jour du statut');
     });
 }
+
+function openRejectModal(eventId) {
+    const modalEl = document.getElementById('rejectModal');
+    const reasonEl = document.getElementById('rejectReason');
+    const confirmBtn = document.getElementById('confirmRejectBtn');
+    if (!modalEl || !reasonEl || !confirmBtn) return;
+
+    reasonEl.value = '';
+    const modal = new bootstrap.Modal(modalEl);
+    confirmBtn.onclick = function() {
+        const reason = reasonEl.value || '';
+        updateEventStatus(eventId, 'rejected', reason);
+        modal.hide();
+    };
+    modal.show();
+}
+
+// Ouvrir l'éditeur direct sans créer de brouillon
+function editViaModal(eventId) {
+    try { sessionStorage.setItem('adminEdit','1'); } catch(_) {}
+    window.location.href = `/templates/events/edit-event.php?id=${encodeURIComponent(eventId)}`;
+}
 </script>
 
+<!-- Scripts d'affichage de l'événement (carte, traces GPX) -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-gpx/1.7.0/gpx.min.js"></script>
+<script src="/assets/js/event-display.js"></script>
+
+<!-- Modale de confirmation & Toasts -->
+<div class="modal fade modal-confirm" id="confirmActionModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="confirmActionTitle">Confirmer l’action</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+      </div>
+      <div class="modal-body">
+        <p id="confirmActionMessage">Êtes-vous sûr ?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-cancel" data-bs-dismiss="modal">Annuler</button>
+        <button type="button" class="btn" id="confirmActionBtn">Confirmer</button>
+      </div>
+    </div>
+  </div>
+ </div>
+
+<div class="toast-container position-fixed bottom-0 end-0 p-3" id="adminToastContainer" style="z-index:1080;"></div>
+
+<!-- Actions admin (confirmations et toasts) -->
+<script src="/assets/js/admin-actions.js"></script>
+
 <?php
-include '/home/cool5792/rando.partageonslaforet.be/includes/footer.php';
+include __DIR__ . '/../../includes/footer.php';
 ?>

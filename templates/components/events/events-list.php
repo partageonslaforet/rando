@@ -18,41 +18,49 @@ if (!function_exists('render_events_list')) {
         <!-- Carte de résumé d'événement -->
         <template id="event-template">
             <div class="col">
-                <a href="" class="summary-card-link" aria-label="Voir l'événement">
-                    <article class="summary-card">
-                        <div class="summary-card-image">
-                            <img src="" alt="" loading="lazy">
-                            <span class="summary-card-badge">
-                                <i class="bi"></i>
-                                <span class="badge-text"></span>
-                            </span>
-                        </div>
-                        <div class="summary-card-body">
-                            <h3 class="summary-card-title"></h3>
-                            <div class="summary-card-meta">
+                <div class="summary-card">
+                    <a href="" class="summary-card-image" target="_blank" rel="noopener" aria-label="Afficher l'image">
+                        <img src="" alt="" loading="lazy">
+                    </a>
+                    <a href="" class="summary-card-body" aria-label="Voir l'événement">
+                        <h3 class="summary-card-title"></h3>
+                            <!-- Ligne 1: Lieu | Adresse (à droite) -->
+                            <div class="summary-card-meta line-1">
                                 <span class="meta-item meta-location">
                                     <i class="bi bi-geo-alt"></i>
+                                    <span></span>
+                                </span>
+                                <span class="meta-item meta-address">
+                                    <i class="bi bi-pin-map"></i>
+                                    <span></span>
+                                </span>
+                            </div>
+
+                            <!-- Ligne 2: Date | Heure départ | Heure fin -->
+                            <div class="summary-card-meta line-2">
+                                <span class="meta-item meta-date">
+                                    <i class="bi bi-calendar3"></i>
                                     <span></span>
                                 </span>
                                 <span class="meta-item meta-time">
                                     <i class="bi bi-clock"></i>
                                     <span></span>
                                 </span>
-                                <span class="meta-item meta-distance" style="display: none;">
-                                    <i class="bi bi-signpost"></i>
-                                    <span></span>
-                                </span>
-                                <span class="meta-item meta-difficulty" style="display: none;">
-                                    <i class="bi bi-bar-chart"></i>
+                                <span class="meta-item meta-end-time" style="display: none;">
+                                    <i class="bi bi-clock-history"></i>
                                     <span></span>
                                 </span>
                             </div>
-                            <span class="summary-card-action">
-                                Voir l'événement <span aria-hidden="true">→</span>
-                            </span>
-                        </div>
-                    </article>
-                </a>
+
+                            <!-- Footer: Tag catégorie | Voir l'événement -->
+                            <div class="summary-card-footer">
+                                <div class="meta-categories"></div>
+                                <span class="summary-card-action">
+                                    Voir l'événement <span aria-hidden="true">→</span>
+                                </span>
+                            </div>
+                    </a>
+                </div>
             </div>
         </template>
 
@@ -122,58 +130,119 @@ if (!function_exists('render_events_list')) {
                     img.onerror = function() { this.onerror = null; this.src = placeholderSvg; };
                     img.alt = event.title ? `Image de ${event.title}` : 'Image de l\'événement';
 
-                    // Badge catégorie
-                    const categoryIcons = {
-                        'hiking': 'bi-person-walking',
-                        'running': 'bi-person-walking',
-                        'cycling': 'bi-bicycle'
-                    };
-                    const badge = eventElement.querySelector('.summary-card-badge');
-                    if (event.category_name) {
-                        const badgeIcon = badge.querySelector('i');
-                        const badgeText = badge.querySelector('.badge-text');
-                        const iconClass = (event.category_icon && event.category_icon.startsWith('bi-'))
-                            ? event.category_icon
-                            : (categoryIcons[event.category] || 'bi-tree');
-                        badgeIcon.className = `bi ${iconClass}`;
-                        badgeText.textContent = event.category_name;
-                    } else {
-                        badge.style.display = 'none';
+                    // Ligne 1: Lieu & Adresse (venue)
+                    const locEl = eventElement.querySelector('.meta-location span');
+                    if (locEl) locEl.textContent = event.location || 'Lieu non précisé';
+                    const addrWrap = eventElement.querySelector('.meta-address');
+                    if (addrWrap) {
+                        const addrSpan = addrWrap.querySelector('span');
+                        if (event.venue) {
+                            addrWrap.style.display = 'inline-flex';
+                            addrSpan.textContent = event.venue;
+                        } else {
+                            addrWrap.style.display = 'none';
+                        }
                     }
+
+                    // Ligne 2: Date
+                    const dateEl = eventElement.querySelector('.meta-date span');
+                    if (dateEl) dateEl.textContent = formatDate(event.date);
 
                     // Titre
                     eventElement.querySelector('.summary-card-title').textContent = event.title;
 
-                    // Lieu
-                    eventElement.querySelector('.meta-location span').textContent = event.location || event.venue || 'Lieu non précisé';
-
-                    // Heure de départ
-                    const timeEl = eventElement.querySelector('.meta-time span');
-                    if (event.start_time) {
-                        timeEl.textContent = formatTime(event.start_time);
-                    } else {
-                        eventElement.querySelector('.meta-time').style.display = 'none';
+                    // Heures départ/fin (sur la même ligne que lieu/date)
+                    const timeWrap = eventElement.querySelector('.meta-time');
+                    const timeEl = timeWrap ? timeWrap.querySelector('span') : null;
+                    if (timeWrap && event.start_time) {
+                        timeWrap.style.display = 'inline-flex';
+                        if (timeEl) timeEl.textContent = formatTime(event.start_time);
+                    } else if (timeWrap) {
+                        timeWrap.style.display = 'none';
                     }
 
-                    // Distance
-                    const distanceEl = eventElement.querySelector('.meta-distance');
-                    if (event.distance) {
-                        distanceEl.querySelector('span').textContent = `${event.distance} km`;
-                        distanceEl.style.display = 'inline-flex';
+                    const endTimeWrap = eventElement.querySelector('.meta-end-time');
+                    if (event.end_time) {
+                        endTimeWrap.style.display = 'inline-flex';
+                        endTimeWrap.querySelector('span').textContent = formatTime(event.end_time);
+                    } else if (endTimeWrap) {
+                        endTimeWrap.style.display = 'none';
                     }
 
-                    // Difficulté
-                    const difficultyEl = eventElement.querySelector('.meta-difficulty');
-                    if (event.difficulty) {
-                        const label = difficultyLabels[event.difficulty] || event.difficulty.charAt(0).toUpperCase() + event.difficulty.slice(1);
-                        difficultyEl.querySelector('span').textContent = label;
-                        difficultyEl.style.display = 'inline-flex';
+                    // Footer: plusieurs tags catégories à gauche de l'action
+                    const catsWrap = eventElement.querySelector('.summary-card-footer .meta-categories');
+                    if (catsWrap) {
+                        catsWrap.innerHTML = '';
+                        const iconFallback = { hiking: 'bi-person-walking', running: 'bi-person-walking', cycling: 'bi-bicycle' };
+                        if (Array.isArray(event.categories) && event.categories.length > 0) {
+                            event.categories.forEach(cat => {
+                                const tag = document.createElement('span');
+                                tag.className = 'meta-item meta-category';
+                                const i = document.createElement('i');
+                                const inferKey = (cat.name || '').toLowerCase();
+                                let iconClass = '';
+                                if (cat.icon) {
+                                    if (cat.icon.startsWith('fa')) {
+                                        // Font Awesome 6: ajouter le style par défaut si absent
+                                        iconClass = (cat.icon.includes('fa-') && !cat.icon.includes('fa-solid') && !cat.icon.startsWith('fas '))
+                                            ? `fa-solid ${cat.icon}`
+                                            : cat.icon;
+                                    } else if (cat.icon.startsWith('bi-')) {
+                                        iconClass = `bi ${cat.icon}`;
+                                    }
+                                }
+                                if (!iconClass) {
+                                    const fb = iconFallback[inferKey] || 'bi-tree';
+                                    iconClass = fb.startsWith('bi-') ? `bi ${fb}` : fb;
+                                }
+                                i.className = iconClass;
+                                const text = document.createElement('span');
+                                text.className = 'badge-text';
+                                text.textContent = cat.name || '';
+                                tag.appendChild(i);
+                                tag.appendChild(text);
+                                catsWrap.appendChild(tag);
+                            });
+                        } else if (event.category_name) {
+                            // Rétrocompatibilité: un seul tag si pas de tableau fourni
+                            const tag = document.createElement('span');
+                            tag.className = 'meta-item meta-category';
+                            const i = document.createElement('i');
+                            let iconClass = '';
+                            if (event.category_icon) {
+                                if (event.category_icon.startsWith('fa')) {
+                                    iconClass = (event.category_icon.includes('fa-') && !event.category_icon.includes('fa-solid') && !event.category_icon.startsWith('fas '))
+                                        ? `fa-solid ${event.category_icon}`
+                                        : event.category_icon;
+                                } else if (event.category_icon.startsWith('bi-')) {
+                                    iconClass = `bi ${event.category_icon}`;
+                                }
+                            }
+                            if (!iconClass) {
+                                const fallback = (event.category && iconFallback[event.category]) ? iconFallback[event.category] : 'bi-tree';
+                                iconClass = fallback.startsWith('bi-') ? `bi ${fallback}` : fallback;
+                            }
+                            i.className = iconClass;
+                            const text = document.createElement('span');
+                            text.className = 'badge-text';
+                            text.textContent = event.category_name;
+                            tag.appendChild(i);
+                            tag.appendChild(text);
+                            catsWrap.appendChild(tag);
+                        }
                     }
 
-                    // Lien
-                    const cardLink = eventElement.querySelector('.summary-card-link');
-                    if (cardLink) {
-                        cardLink.href = `https://rando.partageonslaforet.be/templates/events/event-detail.php?id=${event.id}`;
+
+                    // Lien vers l'image (ouvre l'image)
+                    const imageLink = eventElement.querySelector('.summary-card-image');
+                    if (imageLink) {
+                        imageLink.href = img.src;
+                    }
+
+                    // Lien vers la page événement (ouvre le détail)
+                    const bodyLink = eventElement.querySelector('.summary-card-body');
+                    if (bodyLink) {
+                        bodyLink.href = `/event?id=${event.id}`;
                     }
 
                     container.appendChild(eventElement);

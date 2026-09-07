@@ -8,6 +8,11 @@
     padding: 5rem 1.125rem 2rem;
 }
 
+/* Fallback: permettre aussi le scroll sur le bloc si nécessaire */
+@media (max-width: 768px) {
+  .events-table { overflow-x: auto; }
+}
+
 .my-events-breadcrumb {
     margin-bottom: 1rem;
 }
@@ -229,6 +234,15 @@
     .my-events-tab {
         white-space: nowrap;
     }
+
+  /* s'assurer que les parents immédiats ne bloquent pas le scroll */
+  .my-events-card,
+  .my-events-content { overflow: visible !important; }
+  .my-events-card .table-responsive { overflow-x: auto !important; max-width: 100%; }
+  /* si ces blocs sont des flex-items ailleurs, permettre le shrink */
+  .my-events-card,
+  .my-events-content,
+  .events-table { min-width: 0 !important; }
 }
 
 .events-container {
@@ -293,11 +307,21 @@
     background: white;
     border-radius: 1rem;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-    overflow: hidden;
+    overflow: visible; /* ne pas bloquer le scroll du conteneur interne */
 }
 
 .events-table .table {
     margin-bottom: 0;
+}
+
+/* Responsiveness: activer le scroll horizontal sur petits écrans */
+@media (max-width: 768px) {
+  .events-table .table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  /* largeur min pour permettre le scroll si colonnes nombreuses */
+  .events-table .table-modern { min-width: 720px; }
 }
 
 .events-table th {
@@ -309,7 +333,7 @@
 }
 
 .events-table td {
-    padding: 1rem;
+    padding: 0.5rem;
     vertical-align: middle;
 }
 
@@ -321,26 +345,38 @@
     padding: 0.5rem 1rem;
     font-weight: 500;
     border-radius: 2rem;
+    font-size: 0.85rem;
 }
 
 .badge.bg-primary {
     background-color: #ebf5ff !important;
     color: #2b6cb0;
+    font-size: 0.85rem;
 }
 
 .badge.bg-success {
-    background-color: #f0fff4 !important;
-    color: #2f855a;
+    background-color: rgba(58, 138, 61, 0.3)!important;
+    color: var(--secondary-color);
+    font-size: 0.85rem;
 }
 
 .badge.bg-warning {
     background-color: #fffbeb !important;
     color: #92400e;
+    font-size: 0.85rem;
 }
 
 .badge.bg-danger {
-    background-color: #fff5f5 !important;
-    color: #c53030;
+    background-color: rgba(153, 0, 71, 0.3) !important;
+    color: #990047;
+    font-size: 0.85rem;
+}
+
+/* Badge Échu */
+.badge.bg-expired {
+    background-color: rgba(255, 165, 0, 0.2) !important; /* orange clair */
+    color: #b45309; /* orange foncé lisible */
+    font-size: 0.85rem;
 }
 
 .btn-action {
@@ -436,6 +472,84 @@
     color: #333;
 }
 
+/* Titres non gras */
+.table-modern tbody.myev-compact .cell-title .title-text,
+.table-modern tbody.myev-compact .cell-title .draft-title { font-weight: 400 !important; }
+
+/* Colonne Enregistré le */
+.myev-recorded {
+    white-space: nowrap;
+    color: var(--text-color, #1f2937);
+    font-variant-numeric: tabular-nums;
+    font-weight: 500;
+}
+
+/* Actions modernisées */
+.btn-actions { display: inline-flex; gap: .5rem; align-items: center; }
+.btn-action { display: inline-flex; gap: .4rem; align-items: center; border: 1px solid transparent; }
+.btn-action i { font-size: 1.15rem; line-height: 1; }
+
+/* Voir: bg secondary + blanc */
+.btn-action.btn-view { background: var(--secondary-color); color: #fff; border-color: var(--secondary-color); }
+.btn-action.btn-view:hover { filter: brightness(0.95); }
+
+/* Modifier: bg remplacé par rgba(58, 138, 61, 0.12) + blanc */
+.btn-action.btn-edit { 
+    background: rgba(58, 138, 61, 0.12);
+    color: #333;
+    border-color: rgba(58, 138, 61, 0.12);
+}
+
+.btn-action.btn-edit:hover { filter: brightness(0.95); }
+
+/* Supprimer: bg primary + blanc */
+.btn-action.btn-delete { background: var(--primary-color); color: #fff; border-color: var(--primary-color); }
+.btn-action.btn-delete:hover { filter: brightness(0.95); }
+
+/* Tri: en-têtes cliquables avec flèches */
+.table-modern thead th button.sort-toggle {
+    background: transparent;
+    border: 0;
+    color: #4a5568;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: .25rem;
+    cursor: pointer;
+    padding: 0;
+}
+.table-modern thead th .arrow { display: inline-block; width: .55rem; height: .55rem; mask-size: cover; -webkit-mask-size: cover; background: currentColor; opacity: .7; }
+.table-modern thead th .arrow.asc { mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="%234a5568"><path d="M7 14l5-5 5 5z"/></svg>'); -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="%234a5568"><path d="M7 14l5-5 5 5z"/></svg>'); }
+.table-modern thead th .arrow.desc { mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="%234a5568"><path d="M7 10l5 5 5-5z"/></svg>'); -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="%234a5568"><path d="M7 10l5 5 5-5z"/></svg>'); }
+.table-modern thead th .arrow.active { opacity: 1; }
+
+/* Fallback si mask non supporté: petit caret */
+.table-modern thead th button.sort-toggle .arrow::before { content: '\25A0'; font-size: .45rem; opacity: .35; display: inline-block; }
+.table-modern thead th button.sort-toggle .arrow.asc::before { content: '\25B2'; }
+.table-modern thead th button.sort-toggle .arrow.desc::before { content: '\25BC'; }
+
+/* Nouveau style: doubles flèches visibles ▲ ▼ */
+.table-modern thead th .arrows { display:inline-flex; align-items:center; gap:.15rem; }
+.table-modern thead th .caret { display:inline-flex; align-items:center; justify-content:center; width:1rem; height:1rem; border-radius:4px; color:#9ca3af; font-size:.65rem; line-height:1; }
+.table-modern thead th .caret.active { background: var(--secondary-color); color:#fff; }
+
+/* Titre non gras */
+.table-modern tbody.myev-compact .cell-title .title-text { font-weight: 400 !important; }
+
+/* Tbody compact */
+.table-modern tbody.myev-compact td { 
+    font-size: .85rem; 
+    font-weight: 500 !important; 
+    padding-top: .5rem; 
+    padding-bottom: .5rem;
+    font-weight: normal !important;
+}
+
+@media (max-width: 576px) {
+  .btn-action span { display: none; }
+  .btn-action i { font-size: 1.25rem; }
+}
+
 .flash-messages {
     position: fixed;
     top: 50%;
@@ -452,3 +566,77 @@
     box-shadow: 0 10px 25px rgba(0,0,0,0.15);
     pointer-events: auto;
 }
+
+
+.modal-body {
+    padding: 0.5rem 2rem;
+    margin-left:auto;
+    margin-right:auto;
+}
+
+.modal-content {
+    background-color: #F7FAF7;
+}
+
+/* ————— Table responsive improvements ————— */
+@media (max-width: 768px) {
+  /* correctif agressif: garantir shrink + overflow visible sur la hiérarchie */
+  .my-events-container,
+  .my-events-container > section,
+  .my-events-container .my-events-card,
+  .my-events-container .my-events-content,
+  .my-events-container .events-table { min-width: 0 !important; overflow: visible !important; }
+  .my-events-container .events-table .table-responsive { overflow-x: auto !important; display: block; width: 100%; }
+
+  .events-table .table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    display: block;
+    width: 100%;
+  }
+  .events-table .table-responsive::-webkit-scrollbar { height: 8px; }
+  .events-table .table-responsive::-webkit-scrollbar-thumb {
+    background: rgba(0,0,0,.15);
+    border-radius: 8px;
+  }
+
+  /* largeur min pour permettre le scroll si colonnes nombreuses */
+  .events-table .table-modern { min-width: 820px; }
+
+  /* thead sticky en mobile */
+  .events-table .table-modern thead th {
+    position: sticky;
+    top: 0;
+    z-index: 3;
+    background: #f8fafc;
+  }
+
+  /* compacter un peu les lignes */
+  .table-modern tbody.myev-compact td {
+    padding-top: .45rem;
+    padding-bottom: .45rem;
+  }
+}
+
+/* Très petit écran: masquer la colonne "Enregistré le" (4ème) pour éviter overflow, et encore compacter */
+@media (max-width: 576px) {
+  #my-events-table thead th:nth-child(4),
+  #my-events-table tbody td:nth-child(4) { display: none; }
+
+  .events-table .table-modern { min-width: 680px; }
+  .table-modern tbody.myev-compact td { padding-top: .4rem; padding-bottom: .4rem; font-size: .82rem; }
+
+  /* actions plus serrées en mobile */
+  .btn-actions { gap: .35rem; }
+  .btn-action { padding: .35rem .5rem; }
+}
+
+/* Autoriser le titre à revenir à la ligne */
+.table-modern td.cell-title { white-space: normal; }
+
+/* Garder ces colonnes sur une ligne */
+.table-modern td.cell-date,
+.table-modern td.cell-status,
+.table-modern td.cell-recorded { white-space: nowrap; }
+.table-modern td.cell-recorded .myev-recorded { white-space: nowrap; }

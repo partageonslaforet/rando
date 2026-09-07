@@ -9,6 +9,10 @@ $isProduction = strpos($_SERVER['HTTP_HOST'] ?? '', 'partageonslaforet.be') !== 
 
 // Chargement des classes et fonctions
 require_once CONFIG_PATH . '/database.php';
+// Charger d'abord une éventuelle surcharge locale, puis la config globale mail
+if (file_exists(CONFIG_PATH . '/mail.local.php')) {
+    require_once CONFIG_PATH . '/mail.local.php';
+}
 require_once CONFIG_PATH . '/mail.php';  // Ajout de la configuration mail
 require_once INCLUDES_PATH . '/functions.php';
 

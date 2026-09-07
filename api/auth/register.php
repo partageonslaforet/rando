@@ -7,10 +7,13 @@
  * - envoi PHPMailer (MailHog en dev)
  */
 
-require_once '../../config/database.php';
-require_once '../../includes/csrf.php';
-require_once '../../includes/rate_limit.php';
-require_once '../../logs/error.log.php';
+ini_set('display_errors', '0');
+error_reporting(E_ALL);
+
+require_once __DIR__ . '/../../config/database.php';
+require_once __DIR__ . '/../../includes/csrf.php';
+require_once __DIR__ . '/../../includes/rate_limit.php';
+require_once __DIR__ . '/../../logs/error.log.php';
 
 header('Content-Type: application/json');
 
@@ -20,7 +23,15 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-$input = json_decode(file_get_contents('php://input'), true);
+$rawInput = file_get_contents('php://input');
+$input = json_decode($rawInput, true);
+
+if (!is_array($input)) {
+    logError('api/auth/register.php', 'Données JSON invalides', ['raw' => $rawInput]);
+    http_response_code(400);
+    echo json_encode(['success' => false, 'message' => 'Données JSON invalides']);
+    exit;
+}
 
 // CSRF
 $csrfToken = $input['csrf_token'] ?? ($_SERVER['HTTP_X_CSRF_TOKEN'] ?? '');
@@ -99,7 +110,7 @@ try {
         $db->commit();
 
         // Envoi de l'e-mail de confirmation
-        require_once '../../includes/mailer.php';
+        require_once __DIR__ . '/../../includes/mailer.php';
         $mailer = new Mailer();
         $mailer->sendVerificationEmail($input['email'], $input['name'], $token);
 
@@ -115,7 +126,8 @@ try {
         'message' => 'Si cette adresse email est valide, un e-mail de confirmation a été envoyé.'
     ]);
 
-} catch (Exception $e) {
+} catch (Throwable $e) {
+    logError('api/auth/register.php', 'Erreur inscription', ['message' => $e->getMessage()]);
     http_response_code(400);
-    echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+    echo json_encode(['success' => false, 'message' => 'Une erreur est survenue lors de l\'inscription']);
 }

@@ -25,7 +25,7 @@ if (!isset($_SESSION['user_id'])) {
 error_log("User ID dans events: " . $_SESSION['user_id']);
 
 // Inclure la configuration
-require_once '/home/cool5792/rando.partageonslaforet.be/includes/config.php';
+require_once __DIR__ . '/../../includes/config.php';
 error_log("Configuration chargée");
 
 try {
@@ -140,7 +140,7 @@ error_log("Page title défini: " . $pageTitle);
 
 // Inclure l'en-tête
 error_log("=== CHARGEMENT DU HEADER DANS EVENTS ===");
-include '/home/cool5792/rando.partageonslaforet.be/includes/header.php';
+include __DIR__ . '/../../includes/header.php';
 error_log("Header chargé avec succès dans events");
 ?>
 
@@ -351,5 +351,5 @@ console.log('Page de gestion des événements chargée');
 </script>
 
 <?php
-include '/home/cool5792/rando.partageonslaforet.be/includes/footer.php';
+include __DIR__ . '/../../includes/footer.php';
 ?>

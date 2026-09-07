@@ -4,27 +4,6 @@ console.log(' Chargement de profile.js');
 let isSubmitting = false;
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Gestion des boutons pour voir le mot de passe
-    document.querySelectorAll('.toggle-password').forEach(button => {
-        button.addEventListener('click', function() {
-            const targetId = this.getAttribute('data-target');
-            const input = document.getElementById(targetId);
-            const icon = this.querySelector('i');
-
-            if (!input || !icon) return;
-
-            if (input.type === 'password') {
-                input.type = 'text';
-                icon.classList.remove('bi-eye');
-                icon.classList.add('bi-eye-slash');
-            } else {
-                input.type = 'password';
-                icon.classList.remove('bi-eye-slash');
-                icon.classList.add('bi-eye');
-            }
-        });
-    });
-
     // Gestion du formulaire de profil
     const profileForm = document.getElementById('profileForm');
     if (profileForm) {
@@ -261,11 +240,23 @@ document.addEventListener('DOMContentLoaded', function() {
                 submitBtn.disabled = true;
                 isSubmitting = true;
 
+                // Bootstrap validation
+                const formEl = event.target;
+                formEl.classList.add('was-validated');
+                if (!formEl.checkValidity()) {
+                    console.log(' [Submit] Validation HTML5 invalide');
+                    submitBtn.disabled = false;
+                    isSubmitting = false;
+                    return false;
+                }
+
                 const formData = new FormData(event.target);
                 
                 // Vérifier que le nom est présent
                 const name = formData.get('name');
                 if (!name || name.trim() === '') {
+                    // Renforcer l'état invalide si nécessaire
+                    document.getElementById('org_name')?.classList.add('is-invalid');
                     throw new Error('Le nom de l\'organisation est requis');
                 }
 
@@ -318,6 +309,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 organizerForm.reset();
                 hideLogoPreview();
                 isSubmitting = false;
+                organizerForm.classList.remove('was-validated');
+                organizerForm.querySelectorAll('.is-invalid')?.forEach(el => el.classList.remove('is-invalid'));
             });
 
             organizerModal.addEventListener('show.bs.modal', function(event) {
@@ -328,6 +321,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 const button = event.relatedTarget;
                 const profileId = button?.getAttribute('data-profile-id');
                 document.getElementById('profile_id').value = profileId || '';
+
+                // Mettre à jour les titres de la modale selon le contexte
+                const titleEl = organizerModal.querySelector('.modal-title');
+                if (titleEl) {
+                    titleEl.textContent = profileId ? 'Modifier le profil' : 'Nouveau profil';
+                }
+                const titleHero = organizerModal.querySelector('.modal-title-hero');
+                if (titleHero) {
+                    titleHero.textContent = profileId ? 'Modifier le profil' : 'Nouveau profil';
+                }
 
                 if (profileId) {
                     // Mode édition

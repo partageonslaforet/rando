@@ -55,5 +55,11 @@ window.showForgotPasswordModal = function() {
 
 // Initialisation au chargement du DOM
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialisation silencieuse
+    // Ouvrir automatiquement la modale de login si demandé via l'URL
+    try {
+        const url = new URL(window.location.href);
+        if (url.searchParams.get('showLogin') === '1') {
+            window.showLoginModal();
+        }
+    } catch (_) {}
 });

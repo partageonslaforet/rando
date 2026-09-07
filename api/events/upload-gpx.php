@@ -1,6 +1,6 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/init.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/auth_check.php';
+require_once __DIR__ . '/../../includes/init.php';
+require_once __DIR__ . '/../../includes/auth_check.php';
 
 header('Content-Type: application/json');
 

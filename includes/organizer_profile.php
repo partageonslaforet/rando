@@ -114,8 +114,11 @@ class OrganizerProfile {
     }
 
     public function createOrUpdate($data, $profile_id = null) {
+        $ownsTransaction = !$this->db->inTransaction();
         try {
-            $this->db->beginTransaction();
+            if ($ownsTransaction) {
+                $this->db->beginTransaction();
+            }
             
             // Valider les données
             $this->validateData($data);
@@ -172,11 +175,15 @@ class OrganizerProfile {
                 $result = $this->db->lastInsertId();
             }
 
-            $this->db->commit();
+            if ($ownsTransaction) {
+                $this->db->commit();
+            }
             return $result;
             
         } catch (Exception $e) {
-            $this->db->rollBack();
+            if ($ownsTransaction) {
+                $this->db->rollBack();
+            }
             throw $e;
         }
     }

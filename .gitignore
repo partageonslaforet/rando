@@ -1,5 +1,6 @@
 .env
 vendor/
 uploads/
-*.log
 .DS_Store
+
+/config/mail.local.php

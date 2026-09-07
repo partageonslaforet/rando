@@ -7,9 +7,80 @@ body {
     margin: 0 auto;
 }
 
+/* Styles structurés pour les emails (gabarit contact) */
+.email-wrapper {
+    background: #F7FAF7;
+    margin: 0;
+    padding: 20px;
+    font-family: Roboto, Arial, sans-serif;
+    color: #2B2B2B;
+}
+
+.email-container {
+    max-width: 640px;
+    margin: 0 auto;
+    background: #F7FAF7 !important;
+    border: 1px solid #E5EBE5;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.email-header {
+    background: rgba(58, 138, 61, 0.5) !important;
+    color: var(--secondary-color) !important;
+    padding: 20px;
+}
+.email-header h1 {
+    margin: 0;
+    font-size: 20px;
+}
+.email-subject {
+    margin: 6px 0 0;
+    font-size: 14px;
+    opacity: 0.95;
+}
+.email-badge {
+    display: inline-block;
+    margin-top: 8px;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.35);
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 12px;
+}
+
+.email-content {
+    padding: 20px;
+    background: #F7FAF7 !important;
+}
+.email-field {
+    margin: 0 0 12px;
+}
+.email-label {
+    display: inline-block;
+    min-width: 82px;
+    font-weight: 700;
+    color: #6b7a6e !important;
+}
+.email-value {
+    color: #6b7a6e !important;
+}
+.email-message {
+    margin-top: 6px;
+    white-space: pre-wrap;
+    line-height: 1.5;
+}
+
+.email-footer {
+    font-size: 12px;
+    color: #6b7a6e !important;
+    padding: 16px 20px;
+    border-top: 1px solid #E5EBE5 !important;
+    background: #F7FAF7 !important;
+}
 .header {
-    background: #4a6741;
-    color: white;
+    background: rgba(58, 138, 61, 0.5) !important;;
+    color: var(--secondary-color);
     padding: 20px;
     text-align: center;
 }
@@ -35,3 +106,4 @@ body {
     border-radius: 5px;
     margin: 20px 0;
 }
+

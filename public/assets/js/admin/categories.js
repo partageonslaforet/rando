@@ -1,38 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Initialisation de Sortable pour le réordonnancement
-    const tbody = document.getElementById('categoriesTableBody');
-    if (tbody) {
-        new Sortable(tbody, {
-            handle: '.handle',
-            animation: 150,
-            onEnd: function() {
-                const rows = tbody.getElementsByTagName('tr');
-                const orderData = Array.from(rows).map((row, index) => ({
-                    id: row.dataset.id,
-                    order: index
-                }));
-
-                // Envoyer le nouvel ordre au serveur
-                fetch('/api/admin/categories/reorder.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(orderData)
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (!data.success) {
-                        alert(data.message || 'Erreur lors de la mise à jour de l\'ordre');
-                    }
-                })
-                .catch(error => {
-                    console.error('Erreur:', error);
-                    alert('Une erreur est survenue lors de la mise à jour de l\'ordre');
-                });
-            }
-        });
-    }
+    // Tri alphabétique côté serveur: tri manuel par glisser désactivé
+    // (si besoin de réactiver plus tard, utiliser draggable: 'tr' et un endpoint adapté)
 
     // Gestion du formulaire de catégorie
     const categoryForm = document.getElementById('categoryForm');
@@ -62,7 +31,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.log('Réponse du serveur:', data);
 
                 if (data.success) {
-                    window.location.href = '/pages/admin/users.php?tab=categories';
+                    // Fermer le modal si présent puis recharger la page actuelle
+                    try {
+                        const modalEl = document.getElementById('categoryModal');
+                        if (modalEl) {
+                            const bsModal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+                            bsModal.hide();
+                        }
+                    } catch (e) {
+                        console.warn('Fermeture du modal: non critique', e);
+                    }
+                    // Rediriger vers la même page en forçant l'onglet catégories
+                    const url = new URL(window.location.href);
+                    url.searchParams.set('tab', 'categories');
+                    console.debug('Catégorie sauvegardée, redirection vers:', url.toString());
+                    window.location.href = url.toString();
                 } else {
                     let errorMessage = data.message || 'Une erreur est survenue';
                     if (data.debug) {
@@ -154,7 +137,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 const data = await response.json();
                 
                 if (data.success) {
-                    window.location.reload();
+                    const url = new URL(window.location.href);
+                    url.searchParams.set('tab', 'categories');
+                    console.debug('Catégorie supprimée, redirection vers:', url.toString());
+                    window.location.href = url.toString();
                 } else {
                     alert(data.message || 'Une erreur est survenue');
                 }
@@ -175,5 +161,44 @@ document.addEventListener('DOMContentLoaded', function() {
             form.reset();
             form.querySelector('#category_id').value = '';
         });
+    }
+
+    // Forcer l'activation de l'onglet passé en query (?tab=...)
+    try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const tab = urlParams.get('tab');
+        if (tab) {
+            const tabEl = document.querySelector(`#adminTabs a[href="#${tab}"]`);
+            if (tabEl && window.bootstrap && typeof window.bootstrap.Tab === 'function') {
+                new window.bootstrap.Tab(tabEl).show();
+            }
+        }
+    } catch (e) {
+        console.warn('Activation onglet via ?tab=...: non critique', e);
+    }
+
+    // Diagnostics: vérifier la présence du bouton "Nouvelle catégorie" et du modal
+    try {
+        const headers = Array.from(document.querySelectorAll('.card-header'));
+        const catHeader = headers.find(h => /Gestion des catégories/i.test(h.textContent || ''));
+        const hasButton = !!(catHeader && catHeader.querySelector('[data-bs-target="#categoryModal"]'));
+        const hasModal = !!document.getElementById('categoryModal');
+        console.debug('[Catégories][Diag] header trouvé:', !!catHeader, '| bouton présent:', hasButton, '| modal présent:', hasModal, '| url:', window.location.pathname + window.location.search);
+    } catch (e) {
+        console.warn('[Catégories][Diag] échec détection bouton/modal', e);
+    }
+
+    // Met à jour l'URL quand on change d'onglet pour conserver l'onglet actif au reload
+    try {
+        document.querySelectorAll('#adminTabs a[data-bs-toggle="tab"]').forEach(tab => {
+            tab.addEventListener('shown.bs.tab', function(e) {
+                const id = e.target.getAttribute('href').substring(1);
+                const url = new URL(window.location);
+                url.searchParams.set('tab', id);
+                window.history.replaceState({}, '', url);
+            });
+        });
+    } catch (e) {
+        console.warn('[Catégories][Diag] échec binding shown.bs.tab', e);
     }
 });

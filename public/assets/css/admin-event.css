@@ -1,0 +1,130 @@
+/* Sidebar actions — Admin view event */
+.admin-actions .card-title {
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.admin-actions .btn-admin {
+  display: block;
+  width: 100%;
+  border-radius: 16px !important;
+  padding: 16px 20px !important;
+  font-weight: 700 !important;
+  font-size: 1.1rem !important;
+  margin-bottom: 14px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.06);
+}
+
+/* Bandeau de debug visuel temporaire pour confirmer que le CSS est chargé */
+.admin-actions {
+  padding-top: 6px;
+}
+
+/* Mettre à jour chemins (warning) */
+.admin-actions .btn-update {
+  background-color: #F0B323 !important;
+  border-color: #F0B323 !important;
+  color: #1a1a1a !important;
+}
+
+/* Approuver (vert) */
+.admin-actions .btn-approve {
+  background-color: #3A8A3D !important;
+  border-color: #3A8A3D !important;
+  color: #fff !important;
+}
+.admin-actions .btn-approve:hover {
+  background-color: #2f6f32 !important;
+  border-color: #2f6f32 !important;
+}
+
+/* Rejeter (rouge) */
+.admin-actions .btn-reject {
+  background-color: #990047 !important;
+  border-color: #990047 !important;
+  color: #fff !important;
+}
+.admin-actions .btn-reject:hover {
+  background-color: #990047 !important;
+  border-color: #990047 !important;
+}
+
+/* Supprimer (rouge foncé) */
+.admin-actions .btn-delete {
+  background-color: #3e4444 !important;
+  border-color: #3e4444 !important;
+  color: #fff !important;
+}
+.admin-actions .btn-delete:hover {
+  background-color: #3e4444 !important;
+  border-color: #3e4444 !important;
+}
+
+/* Bouton Modifier */
+.admin-actions .btn-edit {
+  background-color: #e3eaa7 !important;
+  border-color: #e3eaa7 !important;
+  color: #fff !important;
+}
+.admin-actions .btn-edit:hover {
+  background-color: #e3eaa7 !important;
+  border-color: #e3eaa7 !important;
+}
+
+/* Modal brandé (refus) */
+.modal-brand .modal-content {
+  border-radius: 16px;
+  border: 1px solid #E5EBE5;
+}
+.modal-brand .modal-header {
+  border-bottom: 0;
+  padding-bottom: 0.25rem;
+}
+.modal-brand .modal-title {
+  font-weight: 800;
+  color: #990047;
+}
+.modal-brand .modal-body .form-label {
+  font-weight: 700;
+  color: #3A8A3D;
+}
+.modal-brand .form-control {
+  border-radius: 12px;
+  border-color: #C8D5CB;
+}
+.btn-brand-cancel {
+  background: #6C757D;
+  border-color: #6C757D;
+  color: #fff;
+}
+.btn-brand-cancel:hover { filter: brightness(0.92); }
+.btn-brand-reject {
+  background: #C0392B;
+  border-color: #C0392B;
+  color: #fff;
+  font-weight: 700;
+}
+.btn-brand-reject:hover {
+  background: #9f2f23;
+  border-color: #9f2f23;
+}
+
+/* --- Modale de confirmation (brand) --- */
+.modal-confirm .modal-header { border-bottom: 0; }
+.modal-confirm .modal-title { font-weight: 800; color: #990047; }
+.modal-confirm .modal-body p { 
+    margin: 0;
+    color: #333;
+    padding-left: 1.5rem;
+  }
+.modal-confirm .btn-confirm-approve { background: #3A8A3D; border-color: #3A8A3D; color: #fff; font-weight: 700; }
+.modal-confirm .btn-confirm-approve:hover { background: #2f6f32; border-color: #2f6f32; }
+.modal-confirm .btn-confirm-reject { background: #C0392B; border-color: #C0392B; color: #fff; font-weight: 700; }
+.modal-confirm .btn-confirm-reject:hover { background: #9f2f23; border-color: #9f2f23; }
+.modal-confirm .btn-cancel { background: #6C757D; border-color: #6C757D; color: #fff; }
+
+/* --- Toast admin --- */
+#adminToastContainer .toast { border-radius: 12px; box-shadow: 0 6px 20px rgba(0,0,0,0.18); }
+#adminToastContainer .toast-header { font-weight: 700; }
+.toast-success { border-left: 5px solid #3A8A3D; }
+.toast-error { border-left: 5px solid #C0392B; }

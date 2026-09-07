@@ -1,3 +1,27 @@
+const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
+const MAX_SECONDARY_IMAGES = 3;
+const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+const ACCEPTED_IMAGE_EXTENSIONS = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+
+function updateDraftId(draftId) {
+    if (!draftId) return;
+    const input = document.querySelector('input[name="draftId"]') || document.getElementById('draftId');
+    if (input) input.value = draftId;
+    window.draftId = draftId;
+}
+
+function validateImageFile(file) {
+    if (!file) return 'Aucun fichier sélectionné';
+    if (file.size > MAX_IMAGE_SIZE) {
+        return `L'image ${file.name} dépasse la taille maximale de 5 Mo`;
+    }
+    const ext = file.name.split('.').pop().toLowerCase();
+    if (!ACCEPTED_IMAGE_EXTENSIONS.includes(ext) || !ACCEPTED_IMAGE_TYPES.includes(file.type)) {
+        return `Le fichier ${file.name} n'est pas une image autorisée (jpg, png, gif, webp)`;
+    }
+    return null;
+}
+
 // Fonction utilitaire pour gérer l'upload d'image
 function handleImageUpload(input, preview, container) {
     if (input.files && input.files[0]) {
@@ -45,12 +69,15 @@ async function removeMainImage(event) {
             mainPreview.src = '';
             mainPreview.style.display = 'none';
         }
-        
-        const removeButton = mainImageContainer.querySelector('.remove-image-btn');
-        if (removeButton) removeButton.style.display = 'none';
-        
+
+        if (mainImageContainer) {
+            mainImageContainer.classList.remove('has-image');
+            const removeButton = mainImageContainer.querySelector('.remove-image-btn');
+            if (removeButton) removeButton.remove();
+        }
+
     } catch (error) {
-        console.error('❌ Erreur:', error);
+        console.error('❌ Erreur suppression image principale:', error);
         showToast('Erreur lors de la suppression de l\'image', 'error');
     }
 }
@@ -110,7 +137,7 @@ async function removeSecondaryImage(event, imageId) {
             
             if (previewContainer && (!remainingImages || remainingImages.length === 0)) {
                 console.log('📦 Masquage du conteneur de prévisualisation');
-                previewContainer.style.display = 'none';
+                previewContainer.style.display = '';
             }
             
             // Réinitialiser l'input file si nécessaire
@@ -152,7 +179,10 @@ function updateMainImagePreview(result) {
         console.log('🖼️ Mise à jour de l\'image principale');
         mainPreview.src = result.mainImage.path || result.mainImage;
         mainPreview.style.display = 'block';
-        
+
+        // Marquer le conteneur comme occupé
+        mainImageContainer.classList.add('has-image');
+
         // Ajouter le bouton de suppression s'il n'existe pas déjà
         if (!mainImageContainer.querySelector('.remove-image-btn')) {
             console.log('➕ Ajout du bouton de suppression');
@@ -186,24 +216,24 @@ function updateSecondaryImagesPreview(result) {
     
     // Conserver les images existantes
     const existingImages = Array.from(container.querySelectorAll('img')).map(img => ({
-        id: img.dataset.imageId,
+        id: String(img.dataset.imageId || ''),
         url: img.src
     }));
     console.log('📌 Images secondaires existantes:', existingImages);
-    
+
     if (result.secondaryImages && result.secondaryImages.length > 0) {
         console.log('🖼️ Nouvelles images secondaires reçues:', result.secondaryImages);
-        container.style.display = 'block';
-        
+
         // Fusionner les nouvelles images avec les existantes
         const allImages = [...existingImages];
         result.secondaryImages.forEach(newImage => {
-            if (!allImages.some(img => img.id === newImage.id)) {
-                allImages.push(newImage);
+            const newId = String(newImage.id || '');
+            if (!allImages.some(img => img.id === newId)) {
+                allImages.push({ ...newImage, id: newId });
             }
         });
         console.log('📌 Images après fusion:', allImages);
-        
+
         // Mettre à jour l'affichage
         allImages.forEach(image => {
             // Vérifier si l'image existe déjà
@@ -218,14 +248,16 @@ function updateSecondaryImagesPreview(result) {
                 imageContainer.className = 'secondary-image-container';
                 
                 const img = document.createElement('img');
-                img.src = image.url;
+                img.src = image.path || image.url;
                 img.dataset.imageId = image.id;
                 img.className = 'img-fluid';
                 
                 const removeBtn = document.createElement('button');
                 removeBtn.className = 'remove-image-btn';
+                removeBtn.type = 'button';
                 removeBtn.innerHTML = '×';
-                
+                removeBtn.addEventListener('click', (e) => removeSecondaryImage(e, image.id));
+
                 imageContainer.appendChild(img);
                 imageContainer.appendChild(removeBtn);
                 col.appendChild(imageContainer);
@@ -242,53 +274,38 @@ async function handleMainImageUpload(event) {
     const file = event.target.files[0];
     if (!file) return;
 
-    // Vérifier la taille du fichier (5Mo max)
-    if (file.size > 5 * 1024 * 1024) {
-        showToast('L\'image ne doit pas dépasser 5Mo', 'warning');
+    const validationError = validateImageFile(file);
+    if (validationError) {
+        showToast(validationError, 'warning');
+        event.target.value = '';
         return;
     }
 
-    const formData = new FormData();
-    formData.append('mainImage', file);
-    
-    // Ajouter le draftId s'il existe
-    const draftId = document.querySelector('input[name="draftId"]')?.value;
-    if (draftId) {
-        formData.append('draftId', draftId);
-    }
-    
-    // Récupérer les images secondaires existantes
-    const secondaryImages = Array.from(document.querySelectorAll('#secondaryImagesPreview img')).map(img => ({
-        id: img.dataset.imageId,
-        path: img.src
-    }));
-    
-    // Ajouter les images secondaires existantes à la requête
-    if (secondaryImages.length > 0) {
-        formData.append('existingSecondaryImages', JSON.stringify(secondaryImages));
-    }
+    const form = document.getElementById('createEventForm');
+    const formData = form ? new FormData(form) : new FormData();
+    formData.set('mainImage', file);
 
     try {
         const response = await fetch('/api/events/save_draft.php', {
             method: 'POST',
             body: formData
         });
-        
+
         const result = await response.json();
-        
+
         if (!result.success) {
             throw new Error(result.message || 'Erreur lors de l\'upload');
         }
-        
-        // Préserver les images secondaires dans le résultat
-        result.secondaryImages = result.secondaryImages || secondaryImages;
-        
-        // Mise à jour uniquement de l'image principale
+
+        updateDraftId(result.draftId);
         updateMainImagePreview(result);
-        
+        updateSecondaryImagesPreview(result);
+
+        event.target.value = '';
+
     } catch (error) {
         console.error('❌ Erreur:', error);
-        showToast('Erreur lors de l\'upload de l\'image', 'error');
+        showToast(error.message || 'Erreur lors de l\'upload de l\'image', 'error');
     }
 }
 
@@ -296,35 +313,51 @@ async function handleMainImageUpload(event) {
 async function handleSecondaryImagesUpload(event) {
     const files = event.target.files;
     if (!files || files.length === 0) return;
-    
-    // Vérifier la taille de chaque fichier
+
+    const existingCount = document.querySelectorAll('#secondaryImagesPreview img').length;
+    if (existingCount + files.length > MAX_SECONDARY_IMAGES) {
+        showToast(`Vous pouvez ajouter jusqu'à ${MAX_SECONDARY_IMAGES} images secondaires`, 'warning');
+        event.target.value = '';
+        return;
+    }
+
     for (let file of files) {
-        if (file.size > 2 * 1024 * 1024) {
-            showToast(`L'image ${file.name} ne doit pas dépasser 2Mo`, 'warning');
+        const validationError = validateImageFile(file);
+        if (validationError) {
+            showToast(validationError, 'warning');
             event.target.value = '';
             return;
         }
     }
-    
+
+    const form = document.getElementById('createEventForm');
+    if (!form) {
+        showToast('Formulaire introuvable', 'error');
+        event.target.value = '';
+        return;
+    }
+
+    const formData = new FormData(form);
+
     try {
-        const formData = new FormData(document.getElementById('createEventForm'));
-        
         const response = await fetch('/api/events/save_draft.php', {
             method: 'POST',
             body: formData
         });
-        
+
         const result = await response.json();
         if (!result.success) {
             throw new Error(result.message || 'Erreur lors de l\'upload');
         }
-        
-        // Mise à jour uniquement des images secondaires
+
+        updateDraftId(result.draftId);
         updateSecondaryImagesPreview(result);
-        
+
+        event.target.value = '';
+
     } catch (error) {
         console.error('❌ Erreur:', error);
-        showToast('Erreur lors de l\'upload des images', 'error');
+        showToast(error.message || 'Erreur lors de l\'upload des images', 'error');
         event.target.value = '';
     }
 }
@@ -356,6 +389,11 @@ async function handleMainImageDelete(event) {
             mainPreview.style.display = 'none';
         }
 
+        const mainImageContainer = document.querySelector('.main-image-container');
+        if (mainImageContainer) {
+            mainImageContainer.classList.remove('has-image');
+        }
+
         // Supprimer le bouton de suppression
         const removeBtn = document.querySelector('.main-image-container .remove-image-btn');
         if (removeBtn) {
@@ -375,8 +413,27 @@ async function handleMainImageDelete(event) {
 }
 
 // Initialisation
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function() {
     console.log('🔄 Initialisation des gestionnaires d\'événements');
+    // Pré-chargement des images d'un brouillon existant
+    try {
+        const draftIdInput = document.getElementById('draftId');
+        const draftId = draftIdInput && draftIdInput.value ? parseInt(draftIdInput.value, 10) : 0;
+        if (draftId) {
+            const res = await fetch('/api/events/get_draft_images.php?draft_id=' + encodeURIComponent(draftId));
+            const data = await res.json();
+            if (data && data.success) {
+                const payload = {
+                    mainImage: data.mainImage ? { path: data.mainImage.path, id: data.mainImage.id } : null,
+                    secondaryImages: (data.secondaryImages || []).map(i => ({ id: i.id, path: i.path }))
+                };
+                updateMainImagePreview(payload);
+                updateSecondaryImagesPreview(payload);
+            }
+        }
+    } catch (e) {
+        console.warn('[event-images] Préchargement images brouillon échoué:', e);
+    }
     
     // Gestionnaire pour l'image principale
     const mainImageInput = document.getElementById('mainImage');

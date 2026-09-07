@@ -40,6 +40,15 @@ try {
             header('Location: /');
             exit;
         }
+
+        // Incrémenter le compteur de vues
+        try {
+            $upd = $db->prepare('UPDATE events SET view_count = view_count + 1 WHERE id = :id');
+            $upd->execute(['id' => $eventId]);
+            $event['view_count'] = (int) ($event['view_count'] ?? 0) + 1;
+        } catch (Exception $e) {
+            error_log('[event-detail] Erreur view_count: ' . $e->getMessage());
+        }
     }
 
     $pageTitle = !empty($event['title']) ? $event['title'] : 'Détail de l\'événement';
@@ -51,6 +60,7 @@ try {
     render_footer();
 
     // Leaflet-gpx et script d'affichage partagé
+    echo '<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>' . "\n";
     echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-gpx/1.7.0/gpx.min.js"></script>' . "\n";
     echo '<script src="/assets/js/event-display.js"></script>' . "\n";
     require_once __DIR__ . '/../../includes/footer.php';

@@ -34,8 +34,8 @@ try {
         $baseQuery = "FROM events e WHERE 1=1";
         $params = [];
 
-        // Ne montrer que les événements publiés/approuvés
-        $baseQuery .= " AND e.status = 'published'";
+        // Ne montrer que les événements approuvés (aligné avec EventManager)
+        $baseQuery .= " AND e.status = 'approved'";
 
         // Récupérer les paramètres de filtrage
         $type = $_GET['type'] ?? 'all';
@@ -135,24 +135,35 @@ try {
                 // Associer les catégories aux événements
                 $categoryMap = [];
                 foreach ($categories as $category) {
-                    $eventId = $category['event_id'];
+                    $eventId = (int)$category['event_id'];
                     if (!isset($categoryMap[$eventId])) {
                         $categoryMap[$eventId] = [
+                            // rétrocompatibilité: premières valeurs
                             'category_name' => $category['name'],
                             'category_icon' => $category['icon'],
                             'category_color' => $category['color'],
+                            // agrégation complète
+                            'categories' => [],
                             'category_ids' => []
                         ];
                     }
                     $categoryMap[$eventId]['category_ids'][] = (int)$category['category_id'];
+                    $categoryMap[$eventId]['categories'][] = [
+                        'id' => (int)$category['category_id'],
+                        'name' => $category['name'],
+                        'icon' => $category['icon'],
+                        'color' => $category['color']
+                    ];
                 }
                 
                 // Ajouter les informations de catégorie à chaque événement
                 foreach ($events as &$event) {
-                    if (isset($categoryMap[$event['id']])) {
-                        $event = array_merge($event, $categoryMap[$event['id']]);
+                    $eid = (int)$event['id'];
+                    if (isset($categoryMap[$eid])) {
+                        $event = array_merge($event, $categoryMap[$eid]);
                     } else {
                         $event['category_ids'] = [];
+                        $event['categories'] = [];
                     }
                 }
                 unset($event);
@@ -192,7 +203,7 @@ try {
             $countQuery = "SELECT ecl.category_id, COUNT(DISTINCT ecl.event_id) as count 
                            FROM event_category_links ecl 
                            JOIN events e ON ecl.event_id = e.id 
-                           WHERE e.status = 'published' 
+                           WHERE e.status = 'approved' 
                            GROUP BY ecl.category_id";
             $countStmt = $pdo->query($countQuery);
             $categoryCounts = $countStmt->fetchAll();
@@ -203,7 +214,7 @@ try {
                 $counts[$count['category_id']] = (int)$count['count'];
             }
 
-            $totalStmt = $pdo->query("SELECT COUNT(*) FROM events WHERE status = 'published'");
+            $totalStmt = $pdo->query("SELECT COUNT(*) FROM events WHERE status = 'approved'");
             $counts['all'] = (int)$totalStmt->fetchColumn();
 
             // Préparation de la réponse

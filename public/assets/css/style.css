@@ -1,6 +1,3 @@
-/* Import de la police Roboto */
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
-
 :root {
     --primary-color: #990047;
     --primary-hover: #7d003a;
@@ -27,6 +24,9 @@
     --profile-green-hover: var(--secondary-hover, #2d6c2f);
     --profile-radius: 16px;
     --profile-gutter: 18px;
+    /* Alias verts utilisés par les formulaires d'authentification */
+    --auth-green: #2E8338;
+    --auth-green-hover: #246b2c;
 }
 
 [data-theme="dark"] {
@@ -220,6 +220,7 @@ body {
     margin-left: auto;
     margin-right: auto;
     text-align: center;
+    margin-top: 4rem;
 }
 
 .hero-content .subtitle {
@@ -368,7 +369,7 @@ body {
 /* Hero section responsive */
 @media (min-width: 772px) {
     .hero {
-        height: 70vh !important;
+        height: 60vh !important;
         min-height: 500px; /* Pour éviter qu'elle soit trop petite sur les grands écrans en hauteur */
         margin-top: -100px;
     }
@@ -1247,7 +1248,7 @@ body.dark-theme #loginModal .form-control {
 }
 
 .modal-body {
-    padding: 1.5rem;
+    padding: .5rem;
 }
 
 .modal-footer {
@@ -1257,7 +1258,7 @@ body.dark-theme #loginModal .form-control {
 
 /* Styles des champs du formulaire */
 .modal .form-control {
-    padding: 0.75rem 1rem;
+    padding: 0.5rem 1rem;
     border: 2px solid #666;
     border-radius: 10px;
     transition: all 0.3s ease;
@@ -1291,13 +1292,13 @@ body.dark-theme #loginModal .form-control {
 
 /* Style des liens */
 .modal a {
-    color: var(--primary-color);
+    color: var(--secondary-color);
     transition: all 0.3s ease;
     text-decoration: none;
 }
 
 .modal a:hover {
-    color: var(--primary-hover);
+    color: var(--secondary-color);
 }
 
 /* Style de la checkbox (déplacé dans create-event.css) */
@@ -1355,139 +1356,6 @@ body.dark-theme .modal a:hover {
     font-size: 1.1rem;
 }
 
-
-
-/* Styles pour les étapes */
-/* .steps {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: relative;
-    margin-bottom: 2rem;
-}
-
-.steps::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background: var(--primary-color);
-    z-index: 1;
-}
-
-.step {
-    position: relative;
-    z-index: 2;
-    background: white;
-    padding: 0 1rem;
-    text-align: center;
-}
-
-.step-button {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    border: 2px solid var(--primary-color);
-    background: white;
-    color: var(--primary-color);
-    font-weight: bold;
-    transition: all 0.3s ease;
-    cursor: pointer;
-}
-
-.step.active .step-button {
-    background: var(--primary-color);
-    color: white;
-}
-
-.step.completed .step-button {
-    background: white;
-    border-color: var(--secondary-color);
-    color: var(--secondary-color);
-}
-
-.step::after {
-    content: attr(data-title);
-    position: absolute;
-    width: max-content;
-    left: 50%;
-    transform: translateX(-50%);
-    top: 100%;
-    margin-top: 0.5rem;
-    font-size: 0.875rem;
-    color: var(--primary-color);
-}
-
-.rogress-bar{
-    color: var(--primary-color);
-    
-} */
-
-/* Styles pour les étapes */
-/* .steps {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: relative;
-    margin-bottom: 2rem;
-}
-
-.steps::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background: var(--primary-color);
-    z-index: 1;
-}
-
-.step {
-    position: relative;
-    z-index: 2;
-    background: transparent;
-    padding: 0 1rem;
-    text-align: center;
-} */
-
-/* .step-button {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    border: 2px solid var(--primary-color);
-    background: white;
-    color: var(--primary-color);
-    font-weight: bold;
-    transition: all 0.3s ease;
-    cursor: pointer;
-}
-
-.step.active .step-button {
-    background: var(--primary-color);
-    color: white;
-}
-
-.step.completed .step-button {
-    background: white;
-    border-color: var(--secondary-color);
-    color: var(--secondary-color);
-}
-
-.step::after {
-    content: attr(data-title);
-    position: absolute;
-    width: max-content;
-    left: 50%;
-    transform: translateX(-50%);
-    top: 100%;
-    margin-top: 0.5rem;
-    font-size: 0.875rem;
-    color: var(--primary-color);
-} */
-
 /* Progress bar */
 .progress-bar {
     background-color: var(--primary-color)!important;
@@ -1504,12 +1372,12 @@ body.dark-theme .modal a:hover {
 
 /* Styles généraux */
 h1 {
-    color: var(--primary-color);
+    color: var(--secondary-color);
     margin-bottom: 1rem;
 }
 
 h3 {
-    color: var(--primary-color);
+    color: var(--secondary-color);
     margin-bottom: 1rem;
     display: flex;
     align-items: center;

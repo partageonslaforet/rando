@@ -119,24 +119,26 @@ try {
         if (!empty($parcours)) {
             $stmt = $db->prepare("
                 INSERT INTO event_parcours (
-                    event_id, 
-                    name, 
-                    distance, 
-                    elevation_gain, 
-                    price, 
-                    gpx_file, 
+                    event_id,
+                    name,
+                    category_id,
+                    distance,
+                    elevation_gain,
+                    price,
+                    gpx_file,
                     gpx_downloadable
-                ) VALUES (?, ?, ?, ?, ?, ?, ?)
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
             ");
             foreach ($parcours as $p) {
                 $stmt->execute([
                     $eventId,
                     $p['name'],
+                    !empty($p['category_id']) ? (int)$p['category_id'] : null,
                     $p['distance'],
                     $p['elevation'],
                     $p['price'],
                     $p['gpx'],
-                    $p['gpx_downloadable'] ? 1 : 0
+                    !empty($p['gpx_downloadable']) ? 1 : 0
                 ]);
             }
         }
@@ -214,6 +216,55 @@ try {
     }
 
     $db->commit();
+
+    // Après mise à jour, notifier l'admin pour validation (cas publication depuis l'édition)
+    try {
+        require_once __DIR__ . '/../../includes/mailer.php';
+        require_once __DIR__ . '/../../logs/error.log.php';
+
+        // Récupérer les informations nécessaires pour l'email
+        $stmt = $db->prepare("SELECT id, title, date, organisation FROM events WHERE id = ?");
+        $stmt->execute([$eventId]);
+        $eventData = $stmt->fetch(PDO::FETCH_ASSOC) ?: ['id' => (int)$eventId];
+
+        $adminTo = defined('CONTACT_TO_EMAIL') ? CONTACT_TO_EMAIL : 'rando@partageonslaforet.be';
+
+        if (function_exists('logError')) {
+            logError('api/events/update.php', 'Tentative envoi email admin (modif)', [
+                'to' => $adminTo,
+                'eventId' => $eventId,
+                'hasEventData' => (bool)$eventData
+            ]);
+        }
+
+        $mailer = new Mailer();
+        // Ajouter timestamp de publication pour l'email admin (modif)
+        $eventData['published_at'] = date('Y-m-d H:i:s');
+        $sent = $mailer->sendAdminEventPendingEmail($adminTo, $eventData);
+
+        if (function_exists('logError')) {
+            if ($sent) {
+                logError('api/events/update.php', 'Email admin de validation (modif) envoyé', [
+                    'to' => $adminTo,
+                    'eventId' => $eventId
+                ]);
+            } else {
+                logError('api/events/update.php', 'Échec envoi email admin (modif)', [
+                    'to' => $adminTo,
+                    'eventId' => $eventId,
+                    'result' => $sent
+                ]);
+            }
+        }
+    } catch (Throwable $e) {
+        if (function_exists('logError')) {
+            logError('api/events/update.php', 'Erreur envoi email admin (modif)', [
+                'eventId' => $eventId,
+                'exception' => $e->getMessage()
+            ]);
+        }
+    }
+
     echo json_encode([
         'success' => true,
         'message' => 'Événement mis à jour avec succès',
@@ -221,7 +272,7 @@ try {
     ]);
 
 } catch (Exception $e) {
-    if ($db->inTransaction()) {
+    if (isset($db) && $db->inTransaction()) {
         $db->rollBack();
     }
     http_response_code(500);

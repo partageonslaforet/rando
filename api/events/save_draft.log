@@ -1,0 +1,73 @@
+[2026-09-07 22:31:25] INFO:  Début de l'enregistrement du brouillon
+[2026-09-07 22:31:25] INFO: POST data: Array
+(
+    [draftId] => 113
+    [title] => 
+    [description] => 
+    [date] => 
+    [registrationOpens] => 
+    [registrationCloses] => 
+    [meeting_name] => gfjfjf
+    [meeting_address] => 6, rue saint matin 6762 saint-mard
+    [meeting_city] => saint-mard
+    [meeting_coordinates] => 
+    [routes] => Array
+        (
+            [0] => Array
+                (
+                    [name] => 
+                    [category_id] => 
+                    [distance] => 
+                    [elevation] => 
+                    [price] => 
+                    [gpx_file] => 
+                    [description] => 
+                )
+
+        )
+
+    [organizerId] => 
+    [organizerName] => 
+    [saveReason] => input
+)
+
+[2026-09-07 22:31:25] INFO: FILES data: Array
+(
+)
+
+[2026-09-07 22:31:25] INFO:  Utilisation du brouillon existant: 113
+[2026-09-07 22:31:25] INFO: 📝 Champs de l'événement:
+[2026-09-07 22:31:25] INFO: title: 
+[2026-09-07 22:31:25] INFO: description: 
+[2026-09-07 22:31:25] INFO: date: 
+[2026-09-07 22:31:25] INFO: registration_opens: 
+[2026-09-07 22:31:25] INFO: registration_closes: 
+[2026-09-07 22:31:25] INFO: location: gfjfjf
+[2026-09-07 22:31:25] INFO: venue: 6, rue saint matin 6762 saint-mard
+[2026-09-07 22:31:25] INFO: coordinates: 
+[2026-09-07 22:31:25] INFO: meeting_name: gfjfjf
+[2026-09-07 22:31:25] INFO: meeting_address: 6, rue saint matin 6762 saint-mard
+[2026-09-07 22:31:25] INFO: meeting_city: saint-mard
+[2026-09-07 22:31:25] INFO: meeting_coordinates: 
+[2026-09-07 22:31:25] INFO: updated_at: 2026-09-07 22:31:25
+[2026-09-07 22:31:25] INFO: organizer_id: 
+[2026-09-07 22:31:25] INFO: organisation: 
+[2026-09-07 22:31:25] INFO: ℹ️ Aucun organisateur reçu depuis le formulaire événement
+[2026-09-07 22:31:25] INFO: Requête SQL: UPDATE draft_events SET title = ?, description = ?, location = ?, venue = ?, meeting_name = ?, meeting_address = ?, meeting_city = ?, meeting_coordinates = ?, updated_at = ?, organizer_id = ? WHERE id = ?
+[2026-09-07 22:31:25] INFO: Paramètres: Array
+(
+    [0] => 
+    [1] => 
+    [2] => gfjfjf
+    [3] => 6, rue saint matin 6762 saint-mard
+    [4] => gfjfjf
+    [5] => 6, rue saint matin 6762 saint-mard
+    [6] => saint-mard
+    [7] => 
+    [8] => 2026-09-07 22:31:25
+    [9] => 
+    [10] => 113
+)
+
+[2026-09-07 22:31:25] INFO: Informations principales de l'événement mises à jour avec succès
+[2026-09-07 22:31:25] INFO:  Transaction validée avec succès

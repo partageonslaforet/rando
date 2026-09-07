@@ -1,0 +1,8 @@
+[2025-01-20 17:38:23] Nouvelle requête de création de catégorie Context: {"POST":{"id":"","code":"gravel","name":"Gravel","icon":"","color":"#990047"},"SESSION":{"id":50,"role":"admin"}}
+[2025-01-20 17:38:23] Tentative de création avec les données Context: {"code":"gravel","name":"Gravel","icon":"","color":"#990047","active":true,"sort_order":9999}
+[2025-01-20 17:38:23] Catégorie créée avec succès Context: {"id":"5"}
+[2025-01-20 17:38:23] Réponse envoyée: {"success":true,"message":"Cat\u00e9gorie cr\u00e9\u00e9e avec succ\u00e8s","data":{"id":"5"}}
+[2025-01-20 17:38:58] Nouvelle requête de création de catégorie Context: {"POST":{"id":"","code":"marche","name":"Marche","icon":"","color":"#990047"},"SESSION":{"id":50,"role":"admin"}}
+[2025-01-20 17:38:58] Tentative de création avec les données Context: {"code":"marche","name":"Marche","icon":"","color":"#990047","active":true,"sort_order":9999}
+[2025-01-20 17:38:58] Catégorie créée avec succès Context: {"id":"6"}
+[2025-01-20 17:38:58] Réponse envoyée: {"success":true,"message":"Cat\u00e9gorie cr\u00e9\u00e9e avec succ\u00e8s","data":{"id":"6"}}

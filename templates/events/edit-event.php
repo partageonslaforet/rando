@@ -13,15 +13,13 @@ error_log("SCRIPT_NAME: " . $_SERVER['SCRIPT_NAME']);
 // Fonction d'autoloading pour les classes avec logs détaillés
 spl_autoload_register(function ($class) {
     error_log("Tentative de chargement de la classe: " . $class);
-    
     // Convertit le namespace en chemin de fichier
     $class = str_replace('App\\', '', $class);
     $class = str_replace('\\', '/', $class);
-    $file = $_SERVER['DOCUMENT_ROOT'] . '/src/' . $class . '.php';
-    
+    $base = defined('ROOT_PATH') ? ROOT_PATH : dirname(__DIR__, 2);
+    $file = $base . '/src/' . $class . '.php';
     error_log("Tentative de chargement du fichier: " . $file);
-    
-    if (file_exists($file)) { 
+    if (file_exists($file)) {
         error_log("Fichier trouvé, chargement de: " . $file);
         require_once $file;
     } else {
@@ -29,17 +27,18 @@ spl_autoload_register(function ($class) {
     }
 });
 
-// Inclure les fichiers nécessaires dans l'ordre
-require_once $_SERVER['DOCUMENT_ROOT'] . '/config/database.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/functions.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/flash_messages.php';
+// Includes robustes: base projet via ROOT_PATH
+require_once __DIR__ . '/../../includes/config.php';
+require_once __DIR__ . '/../../logs/error.log.php';
+require_once ROOT_PATH . '/includes/functions.php';
+require_once ROOT_PATH . '/includes/flash_messages.php';
 
-// Inclure les modèles directement
-require_once $_SERVER['DOCUMENT_ROOT'] . '/src/Models/User.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/src/Models/Organization.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/src/Models/EventCategory.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/src/Models/Event.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/organizer_profile.php';
+// Modèles & helpers
+require_once ROOT_PATH . '/src/Models/User.php';
+require_once ROOT_PATH . '/src/Models/Organization.php';
+require_once ROOT_PATH . '/src/Models/EventCategory.php';
+require_once ROOT_PATH . '/src/Models/Event.php';
+require_once ROOT_PATH . '/includes/organizer_profile.php';
 
 // Vérifier si la session n'est pas déjà démarrée
 if (session_status() === PHP_SESSION_NONE) {
@@ -77,33 +76,84 @@ function logEventModification($db, $event_id, $field_name, $old_value, $new_valu
 try {
     $db = getConnection();
     
-    // Récupérer l'événement avec ses images
-    $stmt = $db->prepare("
-        SELECT e.id, e.title, e.description, e.date, e.start_time, e.end_time, 
-               e.location, e.coordinates, e.organisation, e.venue,
-               e.max_participants, e.category_id, e.user_id,
-               ei.image_path as main_image,
-               GROUP_CONCAT(DISTINCT esi.image_path) as secondary_images
-        FROM events e
-        LEFT JOIN event_images ei ON e.id = ei.event_id AND ei.is_main = 1
-        LEFT JOIN event_images esi ON e.id = esi.event_id AND esi.is_main = 0
-        WHERE e.id = ? AND e.user_id = ?
-        GROUP BY e.id
-    ");
-    $stmt->execute([$_GET['id'], $_SESSION['user_id']]);
+    // ID d'événement normalisé
+    $eventId = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+    if (!$eventId) {
+        require_once ROOT_PATH . '/logs/error.log.php';
+        logError('templates/events/edit-event.php', 'ID d\'événement invalide', ['raw_id' => $_GET['id'] ?? null]);
+        throw new Exception('ID d\'événement invalide');
+    }
+
+    // Déterminer si l'utilisateur est admin
+    $isAdmin = function_exists('isAdmin') ? isAdmin() : (($_SESSION['user_role'] ?? '') === 'admin');
+
+    // Récupérer l'événement (admin: sans contrainte user_id)
+    if ($isAdmin) {
+        $stmt = $db->prepare("
+            SELECT e.id, e.title, e.description, e.date, e.start_time, e.end_time,
+                   e.location, e.coordinates, e.organisation, e.venue,
+                   e.max_participants, e.category_id, e.user_id
+            FROM events e
+            WHERE e.id = ?
+        ");
+        $stmt->execute([$eventId]);
+    } else {
+        $stmt = $db->prepare("
+            SELECT e.id, e.title, e.description, e.date, e.start_time, e.end_time,
+                   e.location, e.coordinates, e.organisation, e.venue,
+                   e.max_participants, e.category_id, e.user_id
+            FROM events e
+            WHERE e.id = ? AND e.user_id = ?
+        ");
+        $stmt->execute([$eventId, $_SESSION['user_id'] ?? 0]);
+    }
     $event = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$event) {
+        require_once ROOT_PATH . '/logs/error.log.php';
+        logError('templates/events/edit-event.php', 'Événement introuvable ou non autorisé', [
+            'event_id' => $eventId,
+            'is_admin' => $isAdmin,
+            'session_user' => $_SESSION['user_id'] ?? null
+        ]);
+        throw new Exception('Événement non trouvé ou non autorisé');
+    }
+
+    // Récupérer les images avec fallback storage_path
+    $mainImage = null;
+    $secondaryImages = [];
+    $imgStmt = $db->prepare("
+        SELECT image_path, storage_path, is_main
+        FROM event_images
+        WHERE event_id = ?
+        ORDER BY is_main DESC, id ASC
+    ");
+    $imgStmt->execute([$event['id']]);
+    while ($img = $imgStmt->fetch(PDO::FETCH_ASSOC)) {
+        $url = resolveImagePublicUrl($img['image_path'], $img['storage_path']);
+        if (!$url) {
+            continue;
+        }
+        if ((int)$img['is_main'] === 1) {
+            $mainImage = $url;
+        } else {
+            $secondaryImages[] = $url;
+        }
+    }
+    $event['main_image'] = $mainImage;
+    $event['secondary_images'] = $secondaryImages;
 
     // Ajouter les variables JavaScript pour le mode édition
     echo "<script>
-        window.eventId = " . json_encode($event['id']) . ";
+        window.eventId = " . json_encode($event['id'] ?? $eventId) . ";
     </script>";
 
     echo "<!-- DEBUG EVENT DATA -->\n";
-    echo "<!-- Event ID: " . htmlspecialchars($_GET['id']) . " -->\n";
+    echo "<!-- Event ID: " . htmlspecialchars((string)$eventId) . " -->\n";
     echo "<!-- User ID: " . htmlspecialchars($_SESSION['user_id']) . " -->\n";
     echo "<!-- Event Data: " . htmlspecialchars(print_r($event, true)) . " -->\n";
     error_log("=== DEBUG EVENT DATA ===");
-    error_log("Event ID: " . $_GET['id']);
+    error_log("Event ID: " . $eventId);
     error_log("User ID: " . $_SESSION['user_id']);
     error_log("Event Data: " . print_r($event, true));
     error_log("=== END DEBUG EVENT DATA ===");
@@ -132,23 +182,35 @@ try {
         ");
         $stmt->execute([$event['organisation']]);
         $organizer = $stmt->fetch(PDO::FETCH_ASSOC);
-        
+
         error_log("Organizer data from DB: " . print_r($organizer, true));
-        
-        if ($organizer) {
-            // Stocker les données dans la variable temporaire
-            $organizer_data = [
-                'name' => $organizer['name'],
-                'description' => $organizer['description'],
-                'logo_path' => $organizer['logo_path'],
-                'email' => $organizer['email'],
-                'phone' => $organizer['phone'],
-                'website' => $organizer['website']
-            ];
-            error_log("Organizer data prepared: " . print_r($organizer_data, true));
-        } else {
-            error_log("❌ Aucun organisateur trouvé en base pour l'ID: " . $event['organisation']);
-        }
+    }
+
+    if (empty($organizer) && !empty($_SESSION['user_id'])) {
+        $stmt = $db->prepare("
+            SELECT *
+            FROM organizer_profiles
+            WHERE user_id = ?
+            ORDER BY id ASC
+            LIMIT 1
+        ");
+        $stmt->execute([$_SESSION['user_id']]);
+        $organizer = $stmt->fetch(PDO::FETCH_ASSOC);
+        error_log("Organizer fallback from user: " . print_r($organizer, true));
+    }
+
+    if ($organizer) {
+        $organizer_data = [
+            'name' => $organizer['name'],
+            'description' => $organizer['description'],
+            'logo_path' => $organizer['logo_path'],
+            'email' => $organizer['email'],
+            'phone' => $organizer['phone'],
+            'website' => $organizer['website']
+        ];
+        error_log("Organizer data prepared: " . print_r($organizer_data, true));
+    } else {
+        error_log("❌ Aucun organisateur trouvé pour l'événement " . $event['id']);
     }
 
     // Debug PHP final
@@ -175,17 +237,24 @@ try {
         $event['parcours'] = [[]];
     }
 
+    // Récupérer les contacts supplémentaires
+    $contactStmt = $db->prepare("
+        SELECT name, phone
+        FROM event_contacts
+        WHERE event_id = ?
+        ORDER BY id ASC
+    ");
+    $contactStmt->execute([$event['id']]);
+    $event['contacts'] = $contactStmt->fetchAll(PDO::FETCH_ASSOC);
+
     // Variables nécessaires pour le template
     $pageTitle = "Modifier l'événement";
     $currentStep = 1;
     $maxSteps = 4;
     $isDraft = false;
-    $originalEventId = $_GET['id'];
+    $originalEventId = $eventId;
 
-    // Convertir les images secondaires en tableau
-    $event['secondary_images'] = $event['secondary_images'] 
-        ? explode(',', $event['secondary_images']) 
-        : [];
+    // Les images secondaires sont déjà un tableau depuis la requête ci-dessus
 
     // Récupérer les données nécessaires pour le formulaire
     $categoryManager = new EventCategory($db);
@@ -271,7 +340,7 @@ try {
 }
 
 // Inclure l'en-tête
-require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/header-solid.php';
+require_once ROOT_PATH . '/includes/header-solid.php';
 ?>
 
 <!-- Dépendances CSS -->
@@ -279,6 +348,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/header-solid.php';
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_blue.css">
 <link rel="stylesheet" href="/assets/css/create-event.css">
+<link rel="stylesheet" href="/assets/css/event-display.css">
 
 <!-- Scripts -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -293,17 +363,35 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/header-solid.php';
 </script>
 
 <script src="/assets/js/event-maps.js"></script>
+<script src="/assets/js/event-display.js"></script>
 
 <!-- Modal de prévisualisation -->
 <div class="modal fade" id="previewModal" tabindex="-1" aria-labelledby="previewModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
+                <div class="auth-icon" aria-hidden="true">
+                    <i class="bi bi-calendar-event"></i>
+                </div>
                 <h5 class="modal-title" id="previewModalLabel">Prévisualisation de l'événement</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
             </div>
             <div class="modal-body" id="previewContent">
-                <!-- Le contenu sera chargé dynamiquement -->
+                <?php
+                    // Prévisualisation avec le template public
+                    require_once ROOT_PATH . '/includes/EventDisplayBuilder.php';
+                    $builder = new EventDisplayBuilder($db);
+                    $eventDisplay = $builder->build('published', (int)$event['id']);
+                    if ($eventDisplay) {
+                        $__backup = $event;
+                        $event = $eventDisplay;
+                        $mode = 'published';
+                        include __DIR__ . '/event-display.php';
+                        $event = $__backup; unset($__backup);
+                    } else {
+                        echo '<div class="alert alert-warning">Prévisualisation indisponible.</div>';
+                    }
+                ?>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
@@ -317,6 +405,11 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/header-solid.php';
         <div class="container">
             <h1 class="eventTitle">Modifier l'événement</h1>
             <p>Modifiez les informations de votre événement</p>
+            <div class="mt-3">
+                <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#previewModal">
+                    <i class="bi bi-eye"></i> Prévisualiser (rendu public)
+                </button>
+            </div>
         </div>
     </div>
 
@@ -681,7 +774,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/header-solid.php';
     </div>
 </div>
 
-<?php require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>
+<?php require_once __DIR__ . '/../../includes/footer.php'; ?>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -698,10 +791,8 @@ document.addEventListener('DOMContentLoaded', function() {
         time_24hr: true,
         defaultDate: storedDate || null,
         onChange: function(selectedDates, dateStr, instance) {
-                selectedDates,
-                dateStr,
-                formatted: instance.formatDate(selectedDates[0], "d/m/Y")
-            });
+            // No-op: l'altInput affiche déjà le format humain
+            // Conserver ce hook si besoin de logique future
         }
     });
 

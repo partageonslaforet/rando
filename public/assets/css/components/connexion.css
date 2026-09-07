@@ -146,6 +146,8 @@
     align-items: center !important;
     justify-content: center !important;
     font-size: 0.95rem !important;
+    z-index: 10 !important;
+    pointer-events: auto !important;
     transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease !important;
 }
 
@@ -168,7 +170,7 @@
     gap: 0.5rem !important;
     margin-bottom: 0 !important;
     min-height: 0 !important;
-    padding-left: 0 !important;
+    padding-left: 1.5 !important;
 }
 
 .auth-modal .form-check-input {
@@ -396,6 +398,10 @@
     font-size: 0.9rem !important;
 }
 
+.card.shadow.auth-modal{
+    background-color: #F7FAF7;
+}
+
 /* Mobile */
 @media (max-width: 576px) {
     .auth-modal .modal-dialog {
@@ -452,3 +458,4 @@
         align-items: center !important;
     }
 }
+

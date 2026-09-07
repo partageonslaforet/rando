@@ -74,36 +74,106 @@ try {
         log_message("- Adresse: " . ($draftData['venue'] ?? 'Non définie'));
         log_message("- Coordonnées: " . ($draftData['coordinates'] ?? 'Non définies'));
 
-        // 1. Insérer l'événement
-        log_message("🔄 Copie des informations principales de l'événement");
-        $stmt = $pdo->prepare("
-            INSERT INTO events (
-                user_id, title, description, date,
-                registration_opens, registration_closes,
-                location, venue, coordinates,
-                meeting_name, meeting_address, meeting_coordinates,
-                status
-            ) 
-            SELECT 
-                user_id, title, description, date,
-                registration_opens, registration_closes,
-                location, venue, coordinates,
-                meeting_name, meeting_address, meeting_coordinates,
-                'pending'
-            FROM draft_events WHERE id = ?
-        ");
+        // 1. UPDATE si original_event_id est présent, sinon INSERT
+        $origId = 0;
         try {
-            $stmt->execute([$draftId]);
-            $eventId = $pdo->lastInsertId();
-            log_message("✅ Événement créé avec l'ID: $eventId");
-        } catch (PDOException $e) {
-            log_message("❌ Erreur lors de l'insertion de l'événement: " . $e->getMessage(), true);
-            throw new Exception("Erreur lors de l'insertion de l'événement: " . $e->getMessage());
+            $st = $pdo->prepare('SELECT original_event_id FROM draft_events WHERE id = ?');
+            $st->execute([$draftId]);
+            $origId = (int)($st->fetchColumn() ?: 0);
+        } catch (Throwable $e) {
+            $origId = 0;
+        }
+
+        // Créer le profil organisateur si un nom personnalisé a été saisi en brouillon
+        $organizerId = $draftData['organizer_id'] ?? null;
+        if (empty($organizerId) && !empty($draftData['organisation'])) {
+            require_once __DIR__ . '/../../includes/organizer_profile.php';
+            $organizerProfile = new OrganizerProfile($pdo, $_SESSION['user_id']);
+            $organizerId = $organizerProfile->createOrUpdate([
+                'name' => $draftData['organisation'],
+                'email' => null,
+                'address' => null,
+                'description' => null,
+                'website' => null,
+                'phone' => null,
+            ]);
+            $pdo->prepare("UPDATE draft_events SET organizer_id = ? WHERE id = ?")->execute([$organizerId, $draftId]);
+            $draftData['organizer_id'] = $organizerId;
+        }
+
+        if ($origId) {
+            log_message("🔁 Mise à jour de l'événement existant ID=$origId -> statut 'pending'");
+            $upd = $pdo->prepare("UPDATE events SET 
+                title = :title,
+                description = :description,
+                date = :date,
+                registration_opens = :reg_open,
+                registration_closes = :reg_close,
+                location = :location,
+                venue = :venue,
+                coordinates = :coordinates,
+                meeting_name = :m_name,
+                meeting_address = :m_addr,
+                meeting_city = :m_city,
+                meeting_coordinates = :m_coord,
+                organizer_id = :organizer_id,
+                organisation = :organisation,
+                status = 'pending'
+                WHERE id = :id");
+            $upd->execute([
+                ':title' => $draftData['title'] ?? null,
+                ':description' => $draftData['description'] ?? null,
+                ':date' => $draftData['date'] ?? null,
+                ':reg_open' => $draftData['registration_opens'] ?? null,
+                ':reg_close' => $draftData['registration_closes'] ?? null,
+                ':location' => $draftData['location'] ?? null,
+                ':venue' => $draftData['venue'] ?? null,
+                ':coordinates' => $draftData['coordinates'] ?? null,
+                ':m_name' => $draftData['meeting_name'] ?? null,
+                ':m_addr' => $draftData['meeting_address'] ?? null,
+                ':m_city' => $draftData['meeting_city'] ?? null,
+                ':m_coord' => $draftData['meeting_coordinates'] ?? null,
+                ':organizer_id' => $organizerId,
+                ':organisation' => $draftData['organisation'] ?? null,
+                ':id' => $origId,
+            ]);
+            $eventId = $origId;
+        } else {
+            log_message("🔄 Copie des informations principales de l'événement (INSERT)");
+            $stmt = $pdo->prepare("
+                INSERT INTO events (
+                    user_id, title, description, date,
+                    start_time, end_time,
+                    registration_opens, registration_closes,
+                    location, venue, coordinates,
+                    meeting_name, meeting_address, meeting_city, meeting_coordinates,
+                    organizer_id, status, organisation
+                )
+                SELECT
+                    user_id, title, description, date,
+                    registration_opens, registration_closes,
+                    registration_opens, registration_closes,
+                    location, venue, coordinates,
+                    meeting_name, meeting_address, meeting_city, meeting_coordinates,
+                    ?, 'pending', organisation
+                FROM draft_events WHERE id = ?
+            ");
+            try {
+                $stmt->execute([$organizerId, $draftId]);
+                $eventId = $pdo->lastInsertId();
+                log_message("✅ Événement créé avec l'ID: $eventId");
+            } catch (PDOException $e) {
+                log_message("❌ Erreur lors de l'insertion de l'événement: " . $e->getMessage(), true);
+                throw new Exception("Erreur lors de l'insertion de l'événement: " . $e->getMessage());
+            }
         }
 
         // 2. Associer les tags et synchroniser category_id
         log_message("🔄 Association des tags d'activité");
         try {
+            if ($origId) {
+                $pdo->prepare('DELETE FROM event_category_links WHERE event_id = ?')->execute([$eventId]);
+            }
             $stmt = $pdo->prepare("
                 INSERT INTO event_category_links (event_id, category_id)
                 SELECT ?, category_id FROM draft_event_category_links WHERE draft_event_id = ?
@@ -141,6 +211,9 @@ try {
         // 3. Copier les images
         log_message("🔄 Copie des images");
         try {
+            if ($origId) {
+                $pdo->prepare('DELETE FROM event_images WHERE event_id = ?')->execute([$eventId]);
+            }
             $stmt = $pdo->prepare("
                 INSERT INTO event_images (event_id, image_path, storage_path, is_main, storage_type)
                 SELECT ?, image_path, storage_path, is_main, storage_type
@@ -156,6 +229,9 @@ try {
         // 3. Copier les contacts
         log_message("🔄 Copie des contacts");
         try {
+            if ($origId) {
+                $pdo->prepare('DELETE FROM event_contacts WHERE event_id = ?')->execute([$eventId]);
+            }
             $stmt = $pdo->prepare("
                 INSERT INTO event_contacts (event_id, name, email, phone)
                 SELECT ?, name, email, phone
@@ -171,13 +247,16 @@ try {
         // 4. Copier les parcours
         log_message("🔄 Copie des parcours");
         try {
+            if ($origId) {
+                $pdo->prepare('DELETE FROM event_parcours WHERE event_id = ?')->execute([$eventId]);
+            }
             $stmt = $pdo->prepare("
                 INSERT INTO event_parcours (
-                    event_id, name, distance, elevation_gain, description,
+                    event_id, name, category_id, distance, elevation_gain, description,
                     gpx_file, gpx_downloadable, price, created_at, updated_at
                 )
                 SELECT 
-                    ?, name, distance, elevation_gain, description,
+                    ?, name, category_id, distance, elevation_gain, description,
                     gpx_file, gpx_downloadable, price, NOW(), NOW()
                 FROM draft_parcours WHERE event_id = ?
             ");
@@ -203,10 +282,14 @@ try {
         $pdo->commit();
         log_message("✅ Transaction validée avec succès");
 
-        $response = ['success' => true, 'eventId' => $eventId];
+        $response = ['success' => true, 'eventId' => $eventId, 'isUpdate' => (bool)$origId];
 
-        // Envoyer l'email de confirmation
+        // Envoyer l'email de confirmation (sauf si admin connecté)
         try {
+            $isAdminSession = isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
+            if ($isAdminSession) {
+                log_message("🛑 Session admin détectée: on n'envoie pas d'e-mails de publication.");
+            }
             // Récupérer les informations de l'événement et de l'utilisateur
             log_message("🔄 Récupération des données pour l'email");
             $stmt = $pdo->prepare("
@@ -229,14 +312,29 @@ try {
                 log_message("✅ Classe Mailer chargée");
 
                 try {
-                    log_message("🔄 Création de l'instance Mailer");
-                    $mailer = new Mailer();
-                    log_message("✅ Instance Mailer créée");
+                    if (!$isAdminSession) {
+                        log_message("🔄 Création de l'instance Mailer");
+                        $mailer = new Mailer();
+                        log_message("✅ Instance Mailer créée");
 
-                    log_message("🔄 Envoi de l'email à " . $eventData['user_email']);
-                    $mailer->sendEventPublishedEmail($eventData['user_email'], $eventData);
-                    log_message("✅ Email de confirmation envoyé à " . $eventData['user_email']);
-                    $response['email'] = 'sent';
+                        log_message("🔄 Envoi de l'email à " . $eventData['user_email']);
+                        $mailer->sendEventPublishedEmail($eventData['user_email'], $eventData);
+                        log_message("✅ Email de confirmation envoyé à " . $eventData['user_email']);
+
+                        // Notification admin pour validation
+                        $adminTo = defined('CONTACT_TO_EMAIL') ? CONTACT_TO_EMAIL : 'rando@partageonslaforet.be';
+                        try {
+                            // Ajouter le timestamp de publication pour l'email
+                            $eventData['published_at'] = date('Y-m-d H:i:s');
+                            $mailer->sendAdminEventPendingEmail($adminTo, $eventData);
+                            log_message("✅ Email admin de validation envoyé à $adminTo");
+                        } catch (Throwable $e) {
+                            log_message("❌ Erreur envoi email admin: " . $e->getMessage(), true);
+                        }
+                        $response['email'] = 'sent';
+                    } else {
+                        $response['email'] = 'skipped_admin';
+                    }
                 } catch (Exception $e) {
                     log_message("❌ Erreur lors de l'envoi de l'email via Mailer : " . $e->getMessage(), true);
                     log_message("📝 Stack trace: " . $e->getTraceAsString());

@@ -15,8 +15,8 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 // Inclure la configuration et les dépendances
-require_once '/home/cool5792/rando.partageonslaforet.be/includes/config.php';
-require_once '/home/cool5792/rando.partageonslaforet.be/src/Models/EventCategory.php';
+require_once __DIR__ . '/../../includes/config.php';
+require_once __DIR__ . '/../../src/Models/EventCategory.php';
 
 try {
     // Connexion à la base de données
@@ -59,6 +59,12 @@ try {
     // Récupérer toutes les catégories
     $categoryManager = new EventCategory($pdo);
     $categories = $categoryManager->getAll();
+    // Tri alphabétique sur le nom uniquement (insensible à la casse)
+    if (is_array($categories)) {
+        usort($categories, function($a, $b) {
+            return strcasecmp($a['name'] ?? '', $b['name'] ?? '');
+        });
+    }
 
 } catch (PDOException $e) {
     error_log("Erreur base de données: " . $e->getMessage());
@@ -70,7 +76,7 @@ try {
 $pageTitle = "Administration - Gestion des utilisateurs";
 
 // Inclure l'en-tête
-include '/home/cool5792/rando.partageonslaforet.be/includes/header-solid.php';
+include __DIR__ . '/../../includes/header-solid.php';
 ?>
 
 <!DOCTYPE html>
@@ -183,40 +189,38 @@ include '/home/cool5792/rando.partageonslaforet.be/includes/header-solid.php';
                             <table class="table table-striped">
                                 <thead>
                                     <tr>
-                                        <th style="width: 50px;"></th>
                                         <th>Code</th>
                                         <th>Nom</th>
                                         <th>Icône</th>
                                         <th>Couleur</th>
-                                        <th>Statut</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody id="categoriesTableBody">
                                     <?php foreach ($categories as $category): ?>
                                         <tr data-id="<?= htmlspecialchars($category['id']) ?>">
-                                            <td>
-                                                <i class="bi bi-grip-vertical handle" style="cursor: move;"></i>
-                                            </td>
                                             <td><?= htmlspecialchars($category['code']) ?></td>
                                             <td><?= htmlspecialchars($category['name']) ?></td>
                                             <td>
-                                                <?php if ($category['icon']): ?>
-                                                    <i class="bi <?= htmlspecialchars($category['icon']) ?>"></i>
-                                                <?php endif; ?>
+                                                <?php 
+                                                    $rawIcon = $category['icon'] ?? '';
+                                                    if ($rawIcon) {
+                                                        $iconClass = 'bi bi-tree';
+                                                        if (str_starts_with($rawIcon, 'fa')) {
+                                                            $iconClass = (str_contains($rawIcon, 'fa-') && !str_contains($rawIcon, 'fa-solid') && !str_starts_with($rawIcon, 'fas '))
+                                                                ? ('fa-solid ' . $rawIcon)
+                                                                : $rawIcon;
+                                                        } elseif (str_starts_with($rawIcon, 'bi-')) {
+                                                            $iconClass = 'bi ' . $rawIcon;
+                                                        }
+                                                        echo '<i class="' . htmlspecialchars($iconClass) . '"></i>';
+                                                    }
+                                                ?>
                                             </td>
                                             <td>
                                                 <?php if ($category['color']): ?>
                                                     <span class="color-preview" style="background-color: <?= htmlspecialchars($category['color']) ?>"></span>
                                                 <?php endif; ?>
-                                            </td>
-                                            <td>
-                                                <div class="form-check form-switch">
-                                                    <input class="form-check-input toggle-category" 
-                                                           type="checkbox" 
-                                                           <?= $category['active'] ? 'checked' : '' ?>
-                                                           data-id="<?= $category['id'] ?>">
-                                                </div>
                                             </td>
                                             <td>
                                                 <button type="button" 
@@ -380,6 +384,6 @@ include '/home/cool5792/rando.partageonslaforet.be/includes/header-solid.php';
     });
     </script>
 
-    <?php include '/home/cool5792/rando.partageonslaforet.be/includes/footer.php'; ?>
+    <?php include __DIR__ . '/../../includes/footer.php'; ?>
 </body>
 </html>

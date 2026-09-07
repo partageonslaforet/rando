@@ -8,8 +8,14 @@
 
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
+// Servir directement les fichiers statiques (css, js, images, etc.)
+$publicFile = __DIR__ . '/' . ltrim($uri, '/');
+if (is_file($publicFile)) {
+    return false;
+}
+
 // Routes autorisées hors du public/ : API, pages, templates d'événements/auth
-$allowedPrefixes = ['/api/', '/pages/', '/templates/events/', '/templates/auth/'];
+$allowedPrefixes = ['/api/', '/pages/', '/templates/events/', '/templates/auth/', '/templates/modals/'];
 $isRoutable = false;
 foreach ($allowedPrefixes as $prefix) {
     if (strpos($uri, $prefix) === 0) {

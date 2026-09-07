@@ -92,10 +92,14 @@ class Storage {
                 throw new Exception("Type de fichier non autorisé");
             }
             
-            // Vérifier le type MIME pour les fichiers GPX
+            // Vérifier le type MIME pour les fichiers GPX (avec fallback sur le contenu XML/GPX)
             if (!in_array($file['type'], self::$config['allowed_mimes']['gpx'])) {
-                error_log("❌ Type MIME non autorisé: " . $file['type']);
-                throw new Exception("Type de fichier non autorisé");
+                $content = @file_get_contents($file['tmp_name'], false, null, 0, 1024);
+                if ($content === false || (stripos($content, '<gpx') === false && stripos($content, '<?xml') === false)) {
+                    error_log("❌ Type MIME non autorisé: " . $file['type'] . " et contenu non GPX/XML");
+                    throw new Exception("Type de fichier non autorisé");
+                }
+                error_log("⚠️ MIME navigateur non listé mais contenu GPX/XML accepté: " . $file['type']);
             }
         } else {
             // Vérification standard pour les images

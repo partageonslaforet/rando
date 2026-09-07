@@ -17,8 +17,7 @@ initSession();
 
 // Charger les configurations
 $configFiles = [
-    '/config/database.php',
-    '/config/mail.php'
+    '/config/database.php'
 ];
 
 foreach ($configFiles as $file) {
@@ -30,6 +29,15 @@ foreach ($configFiles as $file) {
     }
     require_once $fullPath;
 }
+
+// Surcharge locale optionnelle pour la configuration mail (non versionnée) — chargée AVANT la config globale
+$localMail = dirname(__DIR__) . '/config/mail.local.php';
+if (file_exists($localMail)) {
+    require_once $localMail;
+}
+
+// Charger la configuration mail globale (ne définit que ce qui manque)
+require_once dirname(__DIR__) . '/config/mail.php';
 
 // Connexion à la base de données
 try {

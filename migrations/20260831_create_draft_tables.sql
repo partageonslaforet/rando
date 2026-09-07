@@ -57,6 +57,7 @@ CREATE TABLE IF NOT EXISTS `draft_parcours` (
     `id` INT(11) NOT NULL AUTO_INCREMENT,
     `event_id` INT(11) NOT NULL,
     `name` VARCHAR(255) NOT NULL,
+    `category_id` INT(11) DEFAULT NULL,
     `distance` DECIMAL(10,2) DEFAULT NULL,
     `elevation_gain` INT(11) DEFAULT NULL,
     `description` TEXT,

@@ -1,6 +1,6 @@
 <?php
 function render_header() {
-    global $pageTitle, $additionalStyles;
+    global $pageTitle, $additionalStyles, $bodyClass;
 
     if (session_status() === PHP_SESSION_NONE) {
         session_start();
@@ -28,9 +28,15 @@ function render_header() {
         <!-- Font Awesome -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
         
+        <!-- Roboto Fonts -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+        
         <!-- Custom CSS -->
         <link rel="stylesheet" href="/assets/css/style.css">
-        <link rel="stylesheet" href="/assets/css/components/connexion.css">
+        <link rel="stylesheet" href="/assets/css/components/connexion.css?v=2">
+        <link rel="stylesheet" href="/assets/css/components/contact-modal.css">
         <!-- <link rel="stylesheet" href="/assets/css/lq.css">
         <link rel="stylesheet" href="/assets/css/lq-dark.css"> -->
         <link rel="stylesheet" href="/assets/css/components/home.css">
@@ -44,7 +50,7 @@ function render_header() {
         <?= isset($additionalStyles) ? $additionalStyles : '' ?>
         
     </head>
-    <body class="lq-light">
+    <body class="<?= isset($bodyClass) ? htmlspecialchars($bodyClass) . ' ' : '' ?>lq-light">
         <!-- Navigation -->
         <nav class="navbar navbar-expand-lg fixed-top">
             <div class="container">
@@ -97,11 +103,11 @@ function render_header() {
                                 <i class="bi bi-envelope"></i>
                             </a>
                         </li>
-                        <li class="nav-item">
+                        <!-- <li class="nav-item">
                             <a href="#" class="nav-link" id="themeToggle">
                                 <i class="bi bi-sun-fill"></i>
                             </a>
-                        </li>
+                        </li> -->
                     </ul>
                 </div>
             </div>

@@ -15,7 +15,7 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 // Inclure la configuration
-require_once '/home/cool5792/rando.partageonslaforet.be/includes/config.php';
+require_once __DIR__ . '/../../includes/config.php';
 
 try {
     // Connexion à la base de données
@@ -62,7 +62,7 @@ try {
 $pageTitle = "Administration - Mon Profil";
 
 // Inclure l'en-tête
-include '/home/cool5792/rando.partageonslaforet.be/includes/header.php';
+include __DIR__ . '/../../includes/header.php';
 ?>
 
 <div class="container my-5">
@@ -164,4 +164,4 @@ include '/home/cool5792/rando.partageonslaforet.be/includes/header.php';
     </div>
 </div>
 
-<?php include '/home/cool5792/rando.partageonslaforet.be/includes/footer.php'; ?>
+<?php include __DIR__ . '/../../includes/footer.php'; ?>

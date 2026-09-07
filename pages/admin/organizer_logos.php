@@ -15,7 +15,7 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 // Inclure la configuration
-require_once '/home/cool5792/rando.partageonslaforet.be/includes/config.php';
+require_once __DIR__ . '/../../includes/config.php';
 
 try {
     // Connexion à la base de données

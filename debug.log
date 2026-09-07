@@ -1,0 +1,18 @@
+=== Début du script: 2025-01-25 14:01:55 ===
+Point 1: Début du script
+Point 2: Après set_error_handler
+Point 3: Après set_exception_handler
+Point 4: Avant autoload
+Point 5: Après autoload
+Point 6: Après init.php
+Point 7: PDO OK
+Point 8: EventManager instancié
+=== Début du script: 2025-01-25 14:01:55 ===
+Point 1: Début du script
+Point 2: Après set_error_handler
+Point 3: Après set_exception_handler
+Point 4: Avant autoload
+Point 5: Après autoload
+Point 6: Après init.php
+Point 7: PDO OK
+Point 8: EventManager instancié

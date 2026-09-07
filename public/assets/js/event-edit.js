@@ -5,64 +5,7 @@ let step1Text = null;
 let step2Text = null;
 let isInitialized = false;
 
-// Fonction pour initialiser les gestionnaires de boutons
-function initializeButtonHandlers() {
-    console.log('🔵 Début initialisation des boutons...');
-        
-    // Récupérer les références des boutons
-    nextButton = document.getElementById('nextButton');
-    prevButton = document.getElementById('prevButton');
-    step1Text = document.getElementById('step1Text');
-    step2Text = document.getElementById('step2Text');
-
-        console.log('Envoi de la requête...');
-        const response = await fetch('/api/events/update.php', {
-            method: 'POST',
-            body: formData
-        });
-
-        console.log('Status:', response.status);
-        console.log('Headers:', [...response.headers.entries()]);
-
-        // Lire la réponse
-        const responseText = await response.text();
-        console.log('Réponse brute:', responseText);
-
-        // Vérifier si la réponse est vide
-        if (!responseText.trim()) {
-            console.error('Réponse vide du serveur');
-            throw new Error('Le serveur n\'a pas renvoyé de données');
-        }
-
-        // Si la réponse contient une erreur PHP
-        const phpError = extractPhpErrorMessage(responseText);
-        if (phpError) {
-            console.error('Erreur PHP détectée:', phpError);
-            throw new Error(`Erreur serveur: ${phpError}`);
-        }
-
-        // Tenter de parser le JSON
-        let data;
-        try {
-            data = JSON.parse(responseText);
-        } catch (e) {
-            console.error('Erreur de parsing JSON:', e);
-            console.error('Contenu reçu:', responseText);
-            throw new Error('La réponse du serveur n\'est pas au format JSON valide');
-        }
-        
-        if (!data.success) {
-            throw new Error(data.message || 'Erreur lors de la mise à jour de l\'événement');
-        }
-
-        // Rediriger vers la page de l'événement
-        window.location.href = '/pages/user/my-events.php?success=update';
-
-    } catch (error) {
-        console.error('Erreur lors de la mise à jour:', error);
-        showGlobalErrors([error.message]);
-    }
-}
+// Les gestionnaires de boutons sont définis plus bas dans le fichier.
 
 // Fonction pour sauvegarder l'étape 2
 async function saveEvent() {
@@ -129,8 +72,17 @@ async function saveEvent() {
             throw new Error(data.message || 'Erreur lors de la sauvegarde de l\'événement');
         }
 
-        // Passer à l'étape suivante
-        switchStep(1);
+        // Redirection après mise à jour
+        try {
+            if (sessionStorage.getItem('adminEdit') === '1') {
+                sessionStorage.removeItem('adminEdit');
+                window.location.href = '/pages/admin';
+            } else {
+                window.location.href = '/event?id=' + encodeURIComponent(window.eventId);
+            }
+        } catch (_) {
+            window.location.href = '/event?id=' + encodeURIComponent(window.eventId);
+        }
 
     } catch (error) {
         console.error('Erreur lors de la sauvegarde:', error);
