@@ -216,6 +216,7 @@ function getCurrentStep() {
     const step1Content = document.getElementById('step1');
     const step2Content = document.getElementById('step2');
     
+    console.log({
         step1: step1Content,
         step2: step2Content,
         step2Hidden: step2Content ? step2Content.classList.contains('d-none') : 'N/A'
@@ -645,6 +646,7 @@ async function initializeGpxMap() {
     gpxInputs.forEach(async (input, index) => {
         const routeIndex = input.name.match(/routes\[(\d+)\]/)[1];
         const gpxPath = input.value;
+        console.log({
             routeIndex,
             gpxPath
         });
@@ -1050,6 +1052,7 @@ function initializeButtons() {
     step1Text = document.getElementById('step1Text');
     step2Text = document.getElementById('step2Text');
 
+    console.log({
         nextButton: nextButton ? 'trouvé' : 'non trouvé',
         prevButton: prevButton ? 'trouvé' : 'non trouvé',
         step1Text: step1Text ? 'trouvé' : 'non trouvé',
@@ -1086,6 +1089,7 @@ function initializeButtons() {
 
 // Fonction pour mettre à jour les boutons de navigation
 function updateNavigationButtons(stepNumber) {
+    console.log({
         nextButton: nextButton,
         step1Text: step1Text,
         step2Text: step2Text,

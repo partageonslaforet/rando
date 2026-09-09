@@ -26,13 +26,13 @@
     </tr>
     <tr>
       <td class="email-content">
-        <p>Bonjour <?= htmlspecialchars($name, ENT_QUOTES, 'UTF-8') ?>,</p>
+        <p>Bonjour <?= htmlspecialchars($name ?? '', ENT_QUOTES, 'UTF-8') ?>,</p>
         <p>Merci de vous être inscrit sur <strong><?= htmlspecialchars($brand ?? '', ENT_QUOTES, 'UTF-8') ?></strong>. Pour activer votre compte et commencer à utiliser nos services, cliquez sur le bouton ci-dessous :</p>
         <p>
-          <a href="<?= htmlspecialchars($link, ENT_QUOTES, 'UTF-8') ?>" class="button">Vérifier mon compte</a>
+          <a href="<?= htmlspecialchars($link ?? '', ENT_QUOTES, 'UTF-8') ?>" class="button">Vérifier mon compte</a>
         </p>
         <p>Si le bouton ne fonctionne pas, copiez et collez le lien suivant dans votre navigateur :</p>
-        <p style="word-break: break-all; color: #6b7a6e;"><?= htmlspecialchars($link, ENT_QUOTES, 'UTF-8') ?></p>
+        <p style="word-break: break-all; color: #6b7a6e;"><?= htmlspecialchars($link ?? '', ENT_QUOTES, 'UTF-8') ?></p>
         <p><strong>Note :</strong> ce lien est valable pendant 24 heures.</p>
       </td>
     </tr>

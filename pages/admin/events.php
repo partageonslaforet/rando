@@ -284,7 +284,7 @@ function updateEventStatus(eventId, status) {
     console.log(`Tentative de ${action} l'événement ${eventId}`);
     
     if (confirm(`Voulez-vous vraiment ${action} cet événement ?`)) {
-        const url = `/update_event_status.php?id=${eventId}`;
+        const url = `/api/admin/update_event_status.php?id=${eventId}`;
         const data = { status: status };
         
         console.log('Envoi requête à:', url);

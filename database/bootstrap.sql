@@ -84,7 +84,7 @@ CREATE TABLE IF NOT EXISTS `events` (
     `coordinates` VARCHAR(255) DEFAULT NULL,
     `difficulty` ENUM('easy','medium','hard') DEFAULT NULL,
     `max_participants` INT(11) DEFAULT NULL,
-    `status` ENUM('draft','published','approved','pending','rejected') DEFAULT 'draft',
+    `status` ENUM('draft','published','approved','pending','rejected','expired') DEFAULT 'draft',
     `submitted_at` DATETIME DEFAULT NULL,
     `validated_at` DATETIME DEFAULT NULL,
     `validated_by` INT(11) DEFAULT NULL,

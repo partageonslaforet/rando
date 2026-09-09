@@ -20,7 +20,7 @@
     </div>
     
     <div class="content">
-        <?php echo $content; ?>
+        <?php echo $content ?? ''; ?>
     </div>
     
     <div class="footer">
