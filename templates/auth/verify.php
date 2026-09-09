@@ -1,4 +1,10 @@
 <?php
+/**
+ * localisation: templates/auth/verify.php
+ * Role: Authentification : Verify
+ * Usage: Page de verification du compte
+ * Dépendances: Aucune
+ */
 require_once __DIR__ . '/../../config/database.php';
 require_once __DIR__ . '/../../includes/functions.php';
 require_once __DIR__ . '/../../includes/flash_messages.php';

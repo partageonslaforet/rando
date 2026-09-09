@@ -1,4 +1,10 @@
 <?php
+/**
+ * localisation: templates/events/event.php
+ * Role: Template evenement : Event
+ * Usage: Affichage d un evenement
+ * Dépendances: includes/config.php, src/Models/Event.php
+ */
 require_once __DIR__ . '/../../includes/config.php';
 require_once __DIR__ . '/../../src/Models/Event.php';
 

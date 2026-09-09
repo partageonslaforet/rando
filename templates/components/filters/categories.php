@@ -1,6 +1,9 @@
 <?php
 /**
- * Filtres de catégories d'événements.
+ * localisation: templates/components/filters/categories.php
+ * Role: Composant : Categories
+ * Usage: Filtres de categories d evenements
+ * Dépendances: Aucune
  */
 function render_category_filters($pdo) {
     // Récupération des catégories depuis la table event_categories

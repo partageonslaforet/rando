@@ -19,7 +19,7 @@ function handleImageUpload($file, $type = 'event') {
 
     try {
         // Déterminer le type de stockage
-        $storageType = ($type === 'organizer') ? 'organizers' : 'events';
+        $storageType = ($type === 'organizer') ? 'organizer_logos' : 'events';
         
         // Utiliser la classe Storage pour sauvegarder le fichier
         $result = Storage::saveUploadedFile($file, $storageType);

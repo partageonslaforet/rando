@@ -1,6 +1,9 @@
 <?php
 /**
- * En-tête HTML commun des pages (démarrage de session, messages flash).
+ * localisation: templates/layouts/header.php
+ * Role: Layout : Header
+ * Usage: En-tête HTML commun des pages
+ * Dépendances: includes/flash_messages.php
  */
 if (session_status() === PHP_SESSION_NONE) {
     session_start();

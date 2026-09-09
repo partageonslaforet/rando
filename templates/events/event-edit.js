@@ -1,3 +1,9 @@
+/**
+ * localisation: templates/events/event-edit.js
+ * Role: Script client evenement : Event Edit
+ * Usage: Logique client pour l edition d evenement
+ * Dépendances: DOM, APIs navigateur
+ */
 // Fonction pour extraire le message d'erreur PHP
 function extractPhpErrorMessage(html) {
     // Chercher un message d'erreur PHP dans le HTML

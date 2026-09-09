@@ -1,6 +1,9 @@
 <?php
 /**
- * Chargement centralisé des modales du site.
+ * localisation: templates/layouts/modals.php
+ * Role: Layout : Modals
+ * Usage: Chargement centralisé des modales du site
+ * Dépendances: templates/modals/*.php
  */
 // Inclusion des modales
 $modalFiles = [

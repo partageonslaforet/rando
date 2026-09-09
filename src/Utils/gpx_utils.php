@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__ . '/../Services/Storage.php';
+
 /**
  * Gère l'upload d'un fichier GPX
  * 
@@ -24,26 +26,20 @@ function handleGpxUpload($file) {
         return false;
     }
 
-    // Déterminer le chemin du dossier selon l'environnement
-    $isProduction = strpos($_SERVER['HTTP_HOST'], 'rando.partageonslaforet.be') !== false;
-    if ($isProduction) {
-        $uploadDir = '/home/cool5792/rando.partageonslaforet.be/uploads/gpx';
-    } else {
-        $uploadDir = $_SERVER['DOCUMENT_ROOT'] . '/uploads/gpx';
-    }
-
-    // Créer le dossier de destination s'il n'existe pas
-    if (!file_exists($uploadDir)) {
-        if (!mkdir($uploadDir, 0755, true)) {
-            error_log("Erreur lors de la création du dossier GPX: " . $uploadDir);
-            return false;
-        }
-    }
-
     // Générer un nom de fichier unique
     $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
     $filename = uniqid() . '.' . $extension;
-    $targetPath = $uploadDir . '/' . $filename;
+
+    $targetPath = Storage::getStoragePath('gpx', $filename);
+    $uploadDir = dirname($targetPath);
+
+    // Créer le dossier de destination s'il n'existe pas
+    try {
+        Storage::ensureDirectoryExists($uploadDir);
+    } catch (Exception $e) {
+        error_log("Erreur lors de la création du dossier GPX: " . $uploadDir);
+        return false;
+    }
 
     // Déplacer le fichier
     if (!move_uploaded_file($file['tmp_name'], $targetPath)) {
@@ -51,6 +47,6 @@ function handleGpxUpload($file) {
         return false;
     }
 
-    // Retourner le chemin relatif
-    return '/uploads/gpx/' . $filename;
+    // Retourner le chemin public relatif
+    return Storage::getPublicUrl('gpx', $filename);
 }

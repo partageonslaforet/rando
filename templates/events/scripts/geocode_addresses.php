@@ -1,4 +1,10 @@
 <?php
+/**
+ * localisation: templates/events/scripts/geocode_addresses.php
+ * Role: Géocoder manuellement une liste d adresses via l API Nominatim (OpenStreetMap)
+ * Usage: Lancer en CLI : php templates/events/scripts/geocode_addresses.php
+ * Dépendances: Aucune (appels HTTP vers nominatim.openstreetmap.org)
+ */
 
 function geocodeLocation($location) {
     $opts = [

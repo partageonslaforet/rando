@@ -1,6 +1,9 @@
 <?php
 /**
- * Pied de page du site.
+ * localisation: templates/components/footer/footer.php
+ * Role: Composant : Footer
+ * Usage: Pied de page du site
+ * Dépendances: Aucune
  */
 function render_footer() {
     ?>

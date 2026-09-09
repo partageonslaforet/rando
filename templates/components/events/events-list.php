@@ -1,6 +1,9 @@
 <?php
 /**
- * Rendu de la liste d'événements.
+ * localisation: templates/components/events/events-list.php
+ * Role: Composant : Events List
+ * Usage: Rendu de la liste d evenements
+ * Dépendances: Aucune
  */
 if (!function_exists('render_events_list')) {
     function render_events_list() {

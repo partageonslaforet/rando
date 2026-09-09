@@ -1,6 +1,9 @@
 <?php
 /**
- * Filtres temporels des événements.
+ * localisation: templates/components/filters/temporal.php
+ * Role: Composant : Temporal
+ * Usage: Filtres temporels des evenements
+ * Dépendances: Aucune
  */
 function render_temporal_filters($pdo) {
     ?>

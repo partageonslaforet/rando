@@ -1,4 +1,10 @@
 <?php
+/**
+ * localisation: templates/events/scripts/migrate_categories.php
+ * Role: Script CLI : Migrate Categories
+ * Usage: Migration des categories d evenements
+ * Dépendances: Aucune
+ */
 
 // Forcer l'environnement de production
 $_SERVER['HTTP_HOST'] = 'rando.partageonslaforet.be';

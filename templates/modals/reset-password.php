@@ -1,4 +1,10 @@
 <?php
+/**
+ * localisation: templates/modals/reset-password.php
+ * Role: Modale : Reset Password
+ * Usage: Fenetre modale de reinitialisation du mot de passe
+ * Dépendances: includes/csrf.php
+ */
 require_once __DIR__ . '/../../includes/csrf.php';
 $pageTitle = 'Réinitialisation du mot de passe';
 require_once __DIR__ . '/../components/header/header.php';

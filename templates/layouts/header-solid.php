@@ -1,6 +1,9 @@
 <?php
 /**
- * Variante d'en-tête HTML avec fond opaque (messages flash).
+ * localisation: templates/layouts/header-solid.php
+ * Role: Layout : Header Solid
+ * Usage: Variante d en-tête avec fond opaque
+ * Dépendances: includes/flash_messages.php
  */
 // La session est déjà démarrée dans les fichiers qui incluent header-solid.php
 

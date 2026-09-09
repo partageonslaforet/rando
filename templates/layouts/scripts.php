@@ -1,6 +1,9 @@
 <?php
 /**
- * Inclusion des scripts JS communs en fin de page.
+ * localisation: templates/layouts/scripts.php
+ * Role: Layout : Scripts
+ * Usage: Inclusion des scripts JS communs en fin de page
+ * Dépendances: Aucune
  */
 // Scripts communs à toutes les pages
 ?>

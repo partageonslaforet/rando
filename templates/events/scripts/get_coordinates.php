@@ -1,6 +1,14 @@
 <?php
+/**
+ * localisation: templates/events/scripts/get_coordinates.php
+ * Role: Géocoder les adresses des evenements en base et afficher les coordonnees
+ * Usage: Lancer en CLI : php templates/events/scripts/get_coordinates.php
+ * Dépendances: config/database.php, fonction geocodeLocation()
+ */
 
-require_once __DIR__ . '/../config/database.php';
+require_once __DIR__ . '/../../../config/database.php';
+
+$db = getConnection();
 
 function geocodeLocation($location) {
     $opts = [

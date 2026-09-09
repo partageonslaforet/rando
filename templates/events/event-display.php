@@ -1,7 +1,9 @@
 <?php
 /**
- * Template partagé d'affichage d'un événement (publié ou brouillon).
- * Attend un tableau $event normalisé (voir EventDisplayBuilder.php) et $mode ('published'|'draft').
+ * localisation: templates/events/event-display.php
+ * Role: Template evenement : Event Display
+ * Usage: Template partage d affichage d un evenement (publie ou brouillon)
+ * Dépendances: Aucune
  */
 
 if (!function_exists('displayValue')) {

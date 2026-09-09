@@ -1,4 +1,10 @@
 <?php
+/**
+ * src/Utils/helpers.php
+ * Role: Fonctions utilitaires globales (sécurisation HTML, etc.).
+ * Usage: require_once __DIR__ . '/../Utils/helpers.php'
+ * Dépendances: Aucune
+ */
 
 /**
  * Fonction de sécurisation des chaînes de caractères pour l'affichage HTML

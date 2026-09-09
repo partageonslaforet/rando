@@ -1,6 +1,12 @@
 <?php
+/**
+ * localisation: templates/events/scripts/update_image_paths.php
+ * Role: Mettre a jour les chemins images et logos en base (one-time / migration)
+ * Usage: Lancer en CLI : php templates/events/scripts/update_image_paths.php
+ * Dépendances: config/database.php, constante APP_URL
+ */
 
-require_once __DIR__ . '/../config/database.php';
+require_once __DIR__ . '/../../../config/database.php';
 
 try {
     // Connexion à la base de données
@@ -27,7 +33,7 @@ try {
             foreach ($images as $image) {
                 $filename = basename($image['image_path']);
                 $newStoragePath = '/uploads/events/' . $filename;
-                $newImagePath = 'https://rando.partageonslaforet.be/uploads/events/' . $filename;
+                $newImagePath = APP_URL . '/uploads/events/' . $filename;
                 
                 echo "Ancien chemin: " . $image['image_path'] . "\n";
                 echo "Nouveau chemin public: " . $newImagePath . "\n";
@@ -59,8 +65,8 @@ try {
             
             foreach ($logos as $logo) {
                 $filename = basename($logo['logo_path']);
-                $newStoragePath = '/uploads/organizers/' . $filename;
-                $newLogoPath = 'https://rando.partageonslaforet.be/uploads/organizers/' . $filename;
+                $newStoragePath = '/uploads/organizer_logos/' . $filename;
+                $newLogoPath = APP_URL . '/uploads/organizer_logos/' . $filename;
                 
                 echo "Ancien chemin: " . $logo['logo_path'] . "\n";
                 echo "Nouveau chemin public: " . $newLogoPath . "\n";

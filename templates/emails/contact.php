@@ -1,3 +1,11 @@
+<?php
+/**
+ * localisation: templates/emails/contact.php
+ * Role: Email : Contact
+ * Usage: Corps du mail envoye
+ * Dépendances: Aucune
+ */
+?>
 <!doctype html>
 <html lang="fr">
 <head>

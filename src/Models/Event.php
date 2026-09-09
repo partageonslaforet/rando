@@ -1,11 +1,18 @@
 <?php
+/**
+ * src/Models/Event.php
+ * Role: Modèle principal pour la gestion complète des événements (CRUD, médias, GPX).
+ * Usage: new Event($db)
+ * Dépendances: src/Services/Storage.php, config/assets.php
+ */
+
+require_once __DIR__ . '/../Services/Storage.php';
 
 class Event {
     private $db;
     private $config;
     private const LOG_FILE = '/tmp/rando_debug.log';
     private $defaultImage = '/assets/images/default-event.jpg';
-    private $basePath;
     private $validCategories = ['running', 'hiking', 'cycling'];
 
     private function log($message, $data = null) {
@@ -33,23 +40,6 @@ class Event {
             'SCRIPT_FILENAME' => $_SERVER['SCRIPT_FILENAME'] ?? 'non défini',
             'DIR' => __DIR__
         ]);
-        
-        $isProduction = strpos($httpHost, 'rando.partageonslaforet.be') !== false;
-        $this->debug_log("Environnement détecté", [
-            'isProduction' => $isProduction ? 'oui' : 'non'
-        ]);
-        
-        // Déterminer le chemin de base
-        $this->basePath = $isProduction 
-            ? '/home/cool5792/rando.partageonslaforet.be'
-            : __DIR__ . '/../..';
-        
-        $this->debug_log("Chemin de base configuré", [
-            'basePath' => $this->basePath,
-            'exists' => file_exists($this->basePath) ? 'oui' : 'non',
-            'isDir' => is_dir($this->basePath) ? 'oui' : 'non',
-            'permissions' => decoct(fileperms($this->basePath) & 0777)
-        ]);
 
         if (!$db) {
             $this->debug_log("❌ Erreur: La connexion à la base de données est nulle");
@@ -60,7 +50,7 @@ class Event {
 
         // Chargement de la configuration
         try {
-            $configPath = $this->basePath . '/config/assets.php';
+            $configPath = __DIR__ . '/../../config/assets.php';
             $this->debug_log("Tentative de chargement de la configuration", [
                 'configPath' => $configPath,
                 'exists' => file_exists($configPath) ? 'oui' : 'non',
@@ -96,7 +86,8 @@ class Event {
         $this->log("Utilisation de l'image par défaut: " . $defaultImage);
         
         // Vérifier si le fichier existe
-        $fullPath =  $this->basePath . $defaultImage;
+        $publicRoot = __DIR__ . '/../../public';
+        $fullPath = $publicRoot . $defaultImage;
         if (!file_exists($fullPath)) {
             $this->log("❌ ATTENTION: L'image par défaut n'existe pas: " . $fullPath);
             // Fallback sur l'image hero si l'image par défaut n'existe pas
@@ -104,7 +95,7 @@ class Event {
             $this->log("↪ Utilisation de l'image de fallback: " . $defaultImage);
         }
         
-        return $this->basePath . $defaultImage;
+        return $defaultImage;
     }
 
     /**
@@ -689,18 +680,15 @@ class Event {
             throw new Exception("Erreur lors de l'upload du fichier GPX");
         }
 
-        $uploadDir =  $this->basePath . '/uploads/gpx/';
-        if (!file_exists($uploadDir)) {
-            mkdir($uploadDir, 0777, true);
-        }
-
         $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
         if ($extension !== 'gpx') {
             throw new Exception("Le fichier doit être au format GPX");
         }
 
         $filename = uniqid('gpx_' . $eventId . '_') . '.gpx';
-        $targetPath = $uploadDir . $filename;
+        $targetPath = Storage::getStoragePath('gpx', $filename);
+        $uploadDir = dirname($targetPath);
+        Storage::ensureDirectoryExists($uploadDir);
 
         if (!move_uploaded_file($file['tmp_name'], $targetPath)) {
             throw new Exception("Erreur lors du déplacement du fichier GPX");
@@ -709,12 +697,12 @@ class Event {
         $this->log("GPX file uploaded successfully: " . $filename);
         $this->debug_log("GPX file uploaded successfully: " . $filename);
 
-        return '/uploads/gpx/' . $filename;
+        return Storage::getPublicUrl('gpx', $filename);
     }
 
     private function uploadImages($files, $eventId) {
         $uploadedFiles = [];
-        $uploadDir =  $this->basePath . '/uploads/events/';
+        $uploadDir = dirname(Storage::getStoragePath('events', 'placeholder.jpg'));
         
         if (!file_exists($uploadDir)) {
             mkdir($uploadDir, 0777, true);
@@ -748,10 +736,10 @@ class Event {
 
             $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
             $filename = uniqid('event_' . $eventId . '_') . '.' . $extension;
-            $targetPath = $uploadDir . $filename;
+            $targetPath = $uploadDir . '/' . $filename;
 
             if (move_uploaded_file($file['tmp_name'], $targetPath)) {
-                $uploadedFiles[] = '/uploads/events/' . $filename;
+                $uploadedFiles[] = Storage::getPublicUrl('events', $filename);
             }
         }
 
@@ -769,7 +757,7 @@ class Event {
             $image = $stmt->fetch(PDO::FETCH_ASSOC);
 
             if ($image) {
-                $filePath =  $this->basePath . $image['image_path'];
+                $filePath = Storage::getStoragePath('events', basename($image['image_path']));
                 if (file_exists($filePath)) {
                     unlink($filePath);
                 }
@@ -1137,7 +1125,7 @@ class Event {
 
             // Supprimer les fichiers physiques
             foreach ($images as $imagePath) {
-                $fullPath =  $this->basePath . $imagePath;
+                $fullPath = Storage::getStoragePath('events', basename($imagePath));
                 if (file_exists($fullPath)) {
                     unlink($fullPath);
                 }

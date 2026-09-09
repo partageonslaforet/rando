@@ -32,6 +32,7 @@ $eventId = (int)$_GET['id'];
 // Inclure la configuration
 require_once __DIR__ . '/../../includes/config.php';
 require_once __DIR__ . '/../../src/Utils/helpers.php';
+require_once __DIR__ . '/../../src/Services/Storage.php';
 
 try {
     // Connexion à la base de données
@@ -91,8 +92,8 @@ try {
                 
                 foreach ($images as $image) {
                     $filename = basename($image['image_path']);
-                    $newStoragePath = '/uploads/events/' . $filename;
-                    $newImagePath = 'https://rando.partageonslaforet.be/uploads/events/' . $filename;
+                    $newStoragePath = Storage::getStoragePath('events', $filename);
+                    $newImagePath = Storage::getPublicUrl('events', $filename);
                     
                     $updateStmt->execute([
                         'id' => $image['id'],

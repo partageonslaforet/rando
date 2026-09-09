@@ -1,3 +1,11 @@
+<?php
+/**
+ * localisation: templates/emails/event_status_rejected.php
+ * Role: Email : Event Status Rejected
+ * Usage: Corps du mail envoye
+ * Dépendances: Aucune
+ */
+?>
 <!doctype html>
 <html lang="fr">
 <head>

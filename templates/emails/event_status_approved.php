@@ -1,3 +1,11 @@
+<?php
+/**
+ * localisation: templates/emails/event_status_approved.php
+ * Role: Email : Event Status Approved
+ * Usage: Corps du mail envoye
+ * Dépendances: Aucune
+ */
+?>
 <!doctype html>
 <html lang="fr">
 <head>

@@ -7,6 +7,8 @@ if (defined('PLF_FUNCTIONS_LOADED')) {
 }
 define('PLF_FUNCTIONS_LOADED', true);
 
+require_once __DIR__ . '/../src/Services/Storage.php';
+
 /**
  * Vérifie si la requête est une requête AJAX
  * @return bool
@@ -228,16 +230,13 @@ function processGpxFile($file) {
         return false;
     }
 
-    // Créer le dossier de destination s'il n'existe pas
-    $uploadDir = $_SERVER['DOCUMENT_ROOT'] . '/uploads/gpx/';
-    if (!file_exists($uploadDir)) {
-        mkdir($uploadDir, 0755, true);
-    }
-
     // Générer un nom de fichier unique
     $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
     $newFileName = uniqid('gpx_', true) . '.' . $extension;
-    $targetPath = $uploadDir . $newFileName;
+    $targetPath = Storage::getStoragePath('gpx', $newFileName);
+
+    // Créer le dossier de destination s'il n'existe pas
+    Storage::ensureDirectoryExists(dirname($targetPath));
 
     // Déplacer le fichier
     if (!move_uploaded_file($file['tmp_name'], $targetPath)) {
@@ -246,7 +245,7 @@ function processGpxFile($file) {
     }
 
     // Retourner le chemin relatif
-    return '/uploads/gpx/' . $newFileName;
+    return Storage::getPublicUrl('gpx', $newFileName);
 }
 
 if (!function_exists('getFullUrl')) {

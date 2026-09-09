@@ -10811,3 +10811,12 @@
 {"time":"2026-09-09T12:50:06+02:00","context":"create-event.php","message":"Organizer select rendered","extra":{"draft_id":null,"selected_organizer_id":null,"organisation":null}}
 {"time":"2026-09-09T12:50:08+02:00","context":"create-event.php","message":"Organizer select rendered","extra":{"draft_id":null,"selected_organizer_id":null,"organisation":null}}
 {"time":"2026-09-09T12:50:08+02:00","context":"create-event.php","message":"Organizer select rendered","extra":{"draft_id":null,"selected_organizer_id":null,"organisation":null}}
+{"time":"2026-09-09T11:19:47+00:00","context":"organizer_profile_upload","message":"Corruption de src/Models/organizer_profile.php détectée après édition de uploadLogo (lignes 98-110). Caractères parasites générés, la méthode est invalide.","extra":{"file":"src/Models/organizer_profile.php","lines":"98-110"}}
+{"time":"2026-09-09T13:26:35+02:00","context":"create-event.php","message":"Organizer select rendered","extra":{"draft_id":null,"selected_organizer_id":null,"organisation":null}}
+{"time":"2026-09-09T13:26:36+02:00","context":"create-event.php","message":"Organizer select rendered","extra":{"draft_id":null,"selected_organizer_id":null,"organisation":null}}
+{"time":"2026-09-09T13:55:57+02:00","context":"create-event.php","message":"Organizer select rendered","extra":{"draft_id":null,"selected_organizer_id":null,"organisation":null}}
+{"time":"2026-09-09T13:55:58+02:00","context":"create-event.php","message":"Organizer select rendered","extra":{"draft_id":null,"selected_organizer_id":null,"organisation":null}}
+{"time":"2026-09-09T14:27:02+02:00","context":"create-event.php","message":"Organizer select rendered","extra":{"draft_id":null,"selected_organizer_id":null,"organisation":null}}
+{"time":"2026-09-09T14:27:05+02:00","context":"create-event.php","message":"Organizer select rendered","extra":{"draft_id":null,"selected_organizer_id":null,"organisation":null}}
+{"time":"2026-09-09T14:27:16+02:00","context":"create-event.php","message":"Organizer select rendered","extra":{"draft_id":null,"selected_organizer_id":null,"organisation":null}}
+{"time":"2026-09-09T14:27:16+02:00","context":"create-event.php","message":"Organizer select rendered","extra":{"draft_id":null,"selected_organizer_id":null,"organisation":null}}

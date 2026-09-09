@@ -1,4 +1,10 @@
 <?php
+/**
+ * src/Services/Storage.php
+ * Role: Service centralisé pour la gestion des chemins, URLs et sauvegardes de fichiers.
+ * Usage: Storage::getStoragePath($type, $filename), Storage::saveUploadedFile($file, $type, $filename)
+ * Dépendances: config/storage.php
+ */
 
 class Storage {
     private static $config;

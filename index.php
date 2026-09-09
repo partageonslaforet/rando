@@ -1,4 +1,11 @@
 <?php
+/**
+ * index.php
+ * Role: Point d'entrée principal. Gère le routage, l'authentification et l'affichage des pages.
+ * Usage: Requête racine /.
+ * Dépendances: config/database.php, includes/functions.php, src/Models/Event.php, templates/
+ */
+
 // Activation de l'affichage des erreurs pour le débogage
 ini_set('display_errors', 1);
 error_reporting(E_ALL);

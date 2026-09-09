@@ -1,4 +1,10 @@
 <?php
+/**
+ * localisation: templates/auth/profile.php
+ * Role: Authentification : Profile
+ * Usage: Page liee au compte utilisateur
+ * Dépendances: Aucune
+ */
 session_start();
 
 // Vérifier si l'utilisateur est connecté

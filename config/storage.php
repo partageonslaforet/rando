@@ -16,10 +16,10 @@ return [
                 'public_path' => '/events'
             ]
         ],
-        'organizers' => [
+        'organizer_logos' => [
             'images' => [
-                'storage_path' => '/organizers',
-                'public_path' => '/organizers'
+                'storage_path' => '/organizer_logos',
+                'public_path' => '/organizer_logos'
             ]
         ],
         'gpx' => [

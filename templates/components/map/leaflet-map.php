@@ -1,6 +1,9 @@
 <?php
 /**
- * Carte Leaflet affichant les événements.
+ * localisation: templates/components/map/leaflet-map.php
+ * Role: Composant : Leaflet Map
+ * Usage: Carte Leaflet affichant les evenements
+ * Dépendances: Aucune
  */
 require_once __DIR__ . '/../../../includes/functions.php';
 require_once __DIR__ . '/../../../logs/error.log.php';

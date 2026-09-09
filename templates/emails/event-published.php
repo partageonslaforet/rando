@@ -1,3 +1,11 @@
+<?php
+/**
+ * localisation: templates/emails/event-published.php
+ * Role: Email : Event Published
+ * Usage: Corps du mail envoye
+ * Dépendances: Aucune
+ */
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -43,19 +51,19 @@
         
         <p>Bonjour,</p>
         
-        <p>Votre événement "<?php echo htmlspecialchars($data['title']); ?>" a été soumis avec succès pour validation.</p>
+        <p>Votre événement "<?php echo htmlspecialchars($data['title'] ?? ''); ?>" a été soumis avec succès pour validation.</p>
         
         <p>Détails de l'événement :</p>
         <ul>
-            <li>Date : <?php echo date('d/m/Y', strtotime($data['date'])); ?></li>
-            <li>Horaires : <?php echo $data['start_time']; ?> à <?php echo $data['end_time']; ?></li>
-            <li>Lieu : <?php echo htmlspecialchars($data['location']); ?></li>
+            <li>Date : <?php echo isset($data['date']) && $data['date'] ? date('d/m/Y', strtotime($data['date'])) : ''; ?></li>
+            <li>Horaires : <?php echo $data['start_time'] ?? ''; ?> à <?php echo $data['end_time'] ?? ''; ?></li>
+            <li>Lieu : <?php echo htmlspecialchars($data['location'] ?? ''); ?></li>
         </ul>
         
         <p>Notre équipe va examiner votre demande dans les plus brefs délais. Vous recevrez une notification par email dès que votre événement sera validé et publié sur le site.</p>
         
         <div class="button-container">
-            <a href="<?php echo APP_URL; ?>/events/<?php echo $data['eventId']; ?>" class="button">
+            <a href="<?php echo APP_URL; ?>/events/<?php echo $data['eventId'] ?? ''; ?>" class="button">
                 Voir mon événement
             </a>
         </div>

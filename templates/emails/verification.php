@@ -1,3 +1,11 @@
+<?php
+/**
+ * localisation: templates/emails/verification.php
+ * Role: Email : Verification
+ * Usage: Corps du mail envoye
+ * Dépendances: Aucune
+ */
+?>
 <!doctype html>
 <html lang="fr">
 <head>

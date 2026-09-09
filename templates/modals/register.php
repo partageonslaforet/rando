@@ -1,4 +1,11 @@
-<?php require_once __DIR__ . '/../../includes/csrf.php'; ?>
+<?php
+/**
+ * localisation: templates/modals/register.php
+ * Role: Modale : Register
+ * Usage: Fenetre modale d inscription
+ * Dépendances: includes/csrf.php
+ */
+require_once __DIR__ . '/../../includes/csrf.php'; ?>
 <!-- Modal d'inscription -->
 <div class="modal fade auth-modal" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">

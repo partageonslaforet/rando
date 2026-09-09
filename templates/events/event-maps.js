@@ -1,3 +1,9 @@
+/**
+ * localisation: templates/events/event-maps.js
+ * Role: Script client evenement : Event Maps
+ * Usage: Gestion de la carte et traces GPX
+ * Dépendances: Leaflet, DOM
+ */
 // Variables globales pour la carte
 if (typeof window.mainMap === 'undefined') {
     window.mainMap = null;

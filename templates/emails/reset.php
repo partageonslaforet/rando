@@ -1,3 +1,11 @@
+<?php
+/**
+ * localisation: templates/emails/reset.php
+ * Role: Email : Reset
+ * Usage: Corps du mail envoye
+ * Dépendances: Aucune
+ */
+?>
 <!doctype html>
 <html lang="fr">
 <head>

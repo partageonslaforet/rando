@@ -8,6 +8,7 @@
 
 require_once __DIR__ . '/../../includes/init.php';
 require_once __DIR__ . '/../../includes/auth_check.php';
+require_once __DIR__ . '/../../src/Services/Storage.php';
 
 header('Content-Type: application/json');
 
@@ -38,30 +39,25 @@ try {
         throw new Exception('Type de fichier non autorisé');
     }
 
-    // Créer le dossier de destination s'il n'existe pas
-    $upload_dir = $_SERVER['DOCUMENT_ROOT'] . '/uploads/gpx/temp';
-    if (!file_exists($upload_dir)) {
-        mkdir($upload_dir, 0755, true);
-    }
-
     // Générer un nom de fichier unique
     $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
-    $filename = uniqid('gpx_') . '_' . $route_index . '.' . $extension;
-    $filepath = $upload_dir . '/' . $filename;
+    $filename = 'temp/' . uniqid('gpx_') . '_' . $route_index . '.' . $extension;
+    $filepath = Storage::getStoragePath('gpx', $filename);
+
+    // Créer le dossier de destination s'il n'existe pas
+    Storage::ensureDirectoryExists(dirname($filepath));
 
     // Déplacer le fichier
     if (!move_uploaded_file($file['tmp_name'], $filepath)) {
         throw new Exception('Erreur lors du déplacement du fichier');
     }
 
-    // Déterminer l'URL de base selon l'environnement
-    $isProduction = strpos($_SERVER['HTTP_HOST'], 'rando.partageonslaforet.be') !== false;
-    $baseUrl = $isProduction 
-        ? 'https://rando.partageonslaforet.be'
-        : 'http://' . $_SERVER['HTTP_HOST'];
+    // Déterminer l'URL de base
+    $scheme = $_SERVER['REQUEST_SCHEME'] ?? 'https';
+    $baseUrl = $scheme . '://' . $_SERVER['HTTP_HOST'];
 
     // Construire l'URL complète
-    $relativePath = '/uploads/gpx/temp/' . $filename;
+    $relativePath = Storage::getPublicUrl('gpx', $filename);
     $fullUrl = $baseUrl . $relativePath;
 
     echo json_encode([

@@ -1,6 +1,9 @@
 <?php
 /**
- * En-tête du site.
+ * localisation: templates/components/header/header.php
+ * Role: Composant : Header
+ * Usage: En-tete du site
+ * Dépendances: Aucune
  */
 function render_header() {
     global $pageTitle, $additionalStyles, $bodyClass;

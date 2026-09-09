@@ -1,6 +1,13 @@
 <?php
+/**
+ * update_event_status.php
+ * Role: Mettre à jour le statut d'un événement (approuver, refuser, expirer, etc.).
+ * Usage: Requête /update_event_status.php?id=X.
+ * Dépendances: includes/config.php
+ */
+
 header('Content-Type: application/json');
-require_once '/home/cool5792/rando.partageonslaforet.be/includes/config.php';
+require_once __DIR__ . '/includes/config.php';
 
 // Initialiser le tableau des logs
 $logs = [];

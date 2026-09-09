@@ -1,4 +1,11 @@
 <?php
+/**
+ * localisation: templates/modals/create-event.php
+ * Role: Modale : Create Event
+ * Usage: Fenetre modale de creation d evenement
+ * Dépendances: Aucune
+ */
+
 // Activer l'affichage des erreurs
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);

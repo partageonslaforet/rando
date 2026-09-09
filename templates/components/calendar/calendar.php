@@ -1,6 +1,9 @@
 <?php
 /**
- * Affichage du calendrier FullCalendar.
+ * localisation: templates/components/calendar/calendar.php
+ * Role: Composant : Calendar
+ * Usage: Affichage du calendrier FullCalendar
+ * Dépendances: Aucune
  */
 function render_calendar($pdo) {
     ?>

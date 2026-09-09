@@ -1,4 +1,10 @@
 <?php
+/**
+ * localisation: templates/events/event-card.php
+ * Role: Template evenement : Event Card
+ * Usage: Carte evenement
+ * Dépendances: Aucune
+ */
 
 // Logs de débogage détaillés
 

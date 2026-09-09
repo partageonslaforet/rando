@@ -1,11 +1,17 @@
 <?php
+/**
+ * templates/home.php
+ * Role: Template de la page d'accueil. Charge les composants filtres, calendrier, carte et liste d'événements.
+ * Usage: Inclus par index.php pour afficher la home.
+ * Dépendances: vendor/autoload.php, includes/init.php, src/Models/EventManager.php, composants dans templates/components/
+ */
+
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../includes/init.php';
-
-use App\Models\EventManager;
+require_once __DIR__ . '/../src/Models/EventManager.php';
 
 try {
     if (!isset($pdo) || !($pdo instanceof PDO)) {

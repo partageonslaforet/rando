@@ -1,3 +1,11 @@
+<?php
+/**
+ * localisation: templates/modals/contact.php
+ * Role: Modale : Contact
+ * Usage: Fenetre modale de contact
+ * Dépendances: Aucune
+ */
+?>
 <!-- Contact Modal -->
 <div class="modal fade" id="contactModal" tabindex="-1" aria-labelledby="contactModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">

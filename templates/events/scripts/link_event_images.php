@@ -1,6 +1,12 @@
 <?php
+/**
+ * localisation: templates/events/scripts/link_event_images.php
+ * Role: Lier manuellement des images a des evenements (one-time / migration)
+ * Usage: Modifier le tableau $eventImages puis lancer en CLI
+ * Dépendances: config/database.php, constante APP_URL
+ */
 
-require_once __DIR__ . '/../config/database.php';
+require_once __DIR__ . '/../../../config/database.php';
 
 try {
     // Connexion à la base de données
@@ -36,7 +42,7 @@ try {
         // Insérer chaque image
         foreach ($eventImages as $eventId => $filename) {
             $storagePath = '/uploads/events/' . $filename;
-            $imagePath = 'https://rando.partageonslaforet.be/uploads/events/' . $filename;
+            $imagePath = APP_URL . '/uploads/events/' . $filename;
 
             echo "Liaison de l'image pour l'événement #$eventId:\n";
             echo "Fichier: $filename\n";

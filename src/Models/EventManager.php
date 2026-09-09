@@ -1,10 +1,10 @@
 <?php
-
-namespace App\Models;
-
-use PDO;
-use DateTime;
-use Exception;
+/**
+ * src/Models/EventManager.php
+ * Role: Gestionnaire de la liste, du filtrage et du comptage des événements.
+ * Usage: new EventManager($db)
+ * Dépendances: PDO, DateTime
+ */
 
 class EventManager {
     private PDO $db;

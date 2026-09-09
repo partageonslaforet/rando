@@ -3,6 +3,8 @@
  * Classe de gestion du profil organisateur.
  */
 
+require_once __DIR__ . '/../Services/Storage.php';
+
 class OrganizerProfile {
     private $db;
     private $user_id;
@@ -95,25 +97,16 @@ class OrganizerProfile {
             throw new Exception('Le fichier est trop volumineux (max 5MB)');
         }
 
-        $uploadDir = $_SERVER['DOCUMENT_ROOT'] . '/uploads/organizer_logos/';
-        if (!file_exists($uploadDir)) {
-            mkdir($uploadDir, 0777, true);
-        }
-
         $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
         $filename = 'logo_' . $profile_id . '_' . uniqid() . '.' . $extension;
-        $storagePath = $uploadDir . $filename;
-        $logoPath = '/uploads/organizer_logos/' . $filename;
 
-        if (!move_uploaded_file($file['tmp_name'], $storagePath)) {
-            throw new Exception('Erreur lors de l\'enregistrement du fichier');
-        }
+        $result = Storage::saveUploadedFile($file, 'organizer_logos', $filename);
 
         // Mettre à jour les chemins dans la base de données
         $stmt = $this->db->prepare("UPDATE organizer_profiles SET logo_path = ?, storage_path = ? WHERE id = ? AND user_id = ?");
-        $stmt->execute([$logoPath, $storagePath, $profile_id, $this->user_id]);
+        $stmt->execute([$result['public_url'], $result['storage_path'], $profile_id, $this->user_id]);
 
-        return $logoPath;
+        return $result['public_url'];
     }
 
     public function createOrUpdate($data, $profile_id = null) {

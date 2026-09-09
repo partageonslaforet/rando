@@ -1,3 +1,11 @@
+<?php
+/**
+ * localisation: templates/emails/layout.php
+ * Role: Email : Layout
+ * Usage: Layout de base des emails
+ * Dépendances: Aucune
+ */
+?>
 <!DOCTYPE html>
 <html>
 <head>

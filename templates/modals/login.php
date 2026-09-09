@@ -1,4 +1,11 @@
-<?php require_once __DIR__ . '/../../includes/csrf.php'; ?>
+<?php
+/**
+ * localisation: templates/modals/login.php
+ * Role: Modale : Login
+ * Usage: Fenetre modale de connexion
+ * Dépendances: includes/csrf.php
+ */
+require_once __DIR__ . '/../../includes/csrf.php'; ?>
 <!-- Modal de connexion -->
 <div class="modal fade auth-modal" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">

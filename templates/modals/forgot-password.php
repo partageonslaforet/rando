@@ -1,4 +1,11 @@
-<?php require_once __DIR__ . '/../../includes/csrf.php'; ?>
+<?php
+/**
+ * localisation: templates/modals/forgot-password.php
+ * Role: Modale : Forgot Password
+ * Usage: Fenetre modale de mot de passe oublie
+ * Dépendances: includes/csrf.php
+ */
+require_once __DIR__ . '/../../includes/csrf.php'; ?>
 <!-- Modal de récupération de mot de passe -->
 <div class="modal fade auth-modal" id="forgotPasswordModal" tabindex="-1" aria-labelledby="forgotPasswordModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">

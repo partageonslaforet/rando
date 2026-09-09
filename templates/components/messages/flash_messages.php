@@ -1,6 +1,9 @@
 <?php
 /**
- * Gestion et affichage des messages flash.
+ * localisation: templates/components/messages/flash_messages.php
+ * Role: Composant : Flash Messages
+ * Usage: Gestion et affichage des messages flash
+ * Dépendances: Aucune
  */
 if (!function_exists('addFlashMessage')) {
     // Fonction pour ajouter un message flash

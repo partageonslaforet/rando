@@ -1,10 +1,16 @@
 <?php
+/**
+ * src/Models/EventCategory.php
+ * Role: Modèle de gestion des catégories d'événements.
+ * Usage: new EventCategory($db)
+ * Dépendances: Aucune
+ */
 
 class EventCategory {
-    private $db;
-    private $logger;
+    private PDO $db;
+    private Closure $logger;
 
-    public function __construct($db) {
+    public function __construct(PDO $db) {
         $this->db = $db;
         $this->logger = function($message) {
             error_log("[EventCategory] " . $message);

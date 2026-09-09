@@ -1,4 +1,10 @@
 <?php
+/**
+ * localisation: templates/events/events.php
+ * Role: Template evenement : Events
+ * Usage: Logique de listing et affichage des evenements
+ * Dépendances: Aucune
+ */
 function events_log($message) {
     error_log("[EVENTS.PHP] " . $message);
     echo "<!-- DEBUG: " . htmlspecialchars($message) . " -->\n";

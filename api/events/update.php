@@ -9,6 +9,7 @@
 header('Content-Type: application/json');
 require_once $_SERVER['DOCUMENT_ROOT'] . '/config/database.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/functions.php';
+require_once __DIR__ . '/../../src/Services/Storage.php';
 
 // Vérifier la session
 session_start();
@@ -169,17 +170,17 @@ try {
         $oldImages = $stmt->fetchAll(PDO::FETCH_ASSOC);
         
         // Traiter les nouvelles images
-        $uploadDir = $_SERVER['DOCUMENT_ROOT'] . '/uploads/events/';
         $newImages = [];
         
         foreach ($_FILES['images']['tmp_name'] as $key => $tmp_name) {
             if ($_FILES['images']['error'][$key] === UPLOAD_ERR_OK) {
                 $filename = uniqid() . '_' . $_FILES['images']['name'][$key];
-                $uploadFile = $uploadDir . $filename;
+                $uploadFile = Storage::getStoragePath('events', $filename);
+                Storage::ensureDirectoryExists(dirname($uploadFile));
                 
                 if (move_uploaded_file($tmp_name, $uploadFile)) {
                     $newImages[] = [
-                        'path' => '/uploads/events/' . $filename,
+                        'path' => Storage::getPublicUrl('events', $filename),
                         'is_main' => isset($_POST['main_image']) && $_POST['main_image'] == $key ? 1 : 0
                     ];
                 }
@@ -189,8 +190,9 @@ try {
         if (!empty($newImages)) {
             // Supprimer les anciennes images qui ne sont plus utilisées
             foreach ($oldImages as $oldImage) {
-                if (file_exists($_SERVER['DOCUMENT_ROOT'] . $oldImage['image_path'])) {
-                    unlink($_SERVER['DOCUMENT_ROOT'] . $oldImage['image_path']);
+                $oldFile = Storage::getStoragePath('events', basename($oldImage['image_path']));
+                if (file_exists($oldFile)) {
+                    unlink($oldFile);
                 }
             }
             

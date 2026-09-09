@@ -1,6 +1,9 @@
 <?php
 /**
- * Bannière héro de la page d'accueil.
+ * localisation: templates/components/hero-section/hero-section.php
+ * Role: Composant : Hero Section
+ * Usage: Banniere hero de la page d accueil
+ * Dépendances: Aucune
  */
 function render_hero_section() {
     ?>

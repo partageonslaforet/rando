@@ -1,3 +1,11 @@
+<?php
+/**
+ * localisation: templates/emails/event_published_user.php
+ * Role: Email : Event Published User
+ * Usage: Corps du mail envoye
+ * Dépendances: Aucune
+ */
+?>
 <!doctype html>
 <html lang="fr">
 <head>

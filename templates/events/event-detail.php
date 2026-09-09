@@ -1,7 +1,9 @@
 <?php
 /**
- * Contrôleur / page d'affichage d'un événement (publié ou en prévisualisation).
- * Inclut le header/footer complets et réutilise event-display.php.
+ * localisation: templates/events/event-detail.php
+ * Role: Template evenement : Event Detail
+ * Usage: Controleur / page d affichage d un evenement (publie ou en previsualisation)
+ * Dépendances: includes/init.php, src/Services/EventDisplayBuilder.php
  */
 require_once __DIR__ . '/../../includes/init.php';
 require_once __DIR__ . '/../../src/Services/EventDisplayBuilder.php';
