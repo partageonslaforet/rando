@@ -1056,7 +1056,7 @@ function initializeProfileToggle() {
     // Charger les informations d'un organisateur
     async function loadOrganizerInfo(organizerId) {
         try {
-            const response = await fetch(`/api/organizer/get_profile.php?id=${organizerId}`);
+            const response = await fetch(`/api/organization-profil/get_profile.php?id=${organizerId}`);
             const data = await response.json();
             
             if (data.success && data.profile) {
@@ -1070,7 +1070,7 @@ function initializeProfileToggle() {
     // Charger le profil par défaut de l'utilisateur
     async function loadDefaultProfile() {
         try {
-            const response = await fetch('/api/organizer/get_profile.php');
+            const response = await fetch('/api/organization-profil/get_profile.php');
             const data = await response.json();
             
             if (data.success && data.profile) {

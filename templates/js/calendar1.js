@@ -79,7 +79,7 @@ document.addEventListener('DOMContentLoaded', function() {
         currentMonthElement.textContent = `${monthName} ${year}`;
 
         // Récupération des événements pour ce mois
-        const apiUrl = `/api/events.php?month=${month + 1}&year=${year}`;
+        const apiUrl = `/api/events/events-counts.php?month=${month + 1}&year=${year}`;
 
         fetch(apiUrl)
             .then(response => response.json())
@@ -160,7 +160,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function loadEvents(month, year) {
         console.group('Loading Events');
         
-        fetch(`/api/events.php?month=${month}&year=${year}`)
+        fetch(`/api/events/events-counts.php?month=${month}&year=${year}`)
             .then(response => response.json())
             .then(events => {
                 updateCalendar(month, year, events);

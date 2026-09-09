@@ -1,4 +1,7 @@
 <?php
+/**
+ * Filtres de catégories d'événements.
+ */
 function render_category_filters($pdo) {
     // Récupération des catégories depuis la table event_categories
     $stmt = $pdo->query("

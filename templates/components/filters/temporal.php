@@ -1,4 +1,7 @@
 <?php
+/**
+ * Filtres temporels des événements.
+ */
 function render_temporal_filters($pdo) {
     ?>
     <div class="temporal-filter-group" role="group" aria-label="Filtres temporels">

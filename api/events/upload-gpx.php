@@ -1,4 +1,11 @@
 <?php
+/**
+ * Upload et validation d'un fichier GPX pour un parcours.
+ * Contrôle le type MIME, enregistre le fichier et retourne son chemin.
+ *
+ * Utilisé par : public/assets/js/event-edit.js, public/assets/js/event-gpx.js, public/assets/js/event-validation.js
+ */
+
 require_once __DIR__ . '/../../includes/init.php';
 require_once __DIR__ . '/../../includes/auth_check.php';
 

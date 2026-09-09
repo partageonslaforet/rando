@@ -41,7 +41,7 @@ try {
 $pageTitle = "Mon Profil";
 
 // Inclure l'en-tête
-include '../../includes/header.php';
+include '../../templates/layouts/header.php';
 ?>
 
 <div class="container my-5">
@@ -139,4 +139,4 @@ include '../../includes/header.php';
     </div>
 </div>
 
-<?php include '../../includes/footer.php'; ?>
+<?php include '../../templates/layouts/footer.php'; ?>

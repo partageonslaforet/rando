@@ -23,7 +23,7 @@ try {
     require_once __DIR__ . '/../../src/Models/EventCategory.php';
     error_log("✅ EventCategory.php chargé");
 
-    require_once __DIR__ . '/../../includes/organizer_profile.php';
+    require_once __DIR__ . '/../../src/Models/organizer_profile.php';
     error_log("✅ organizer_profile.php chargé");
 } catch (Throwable $e) {
     error_log("❌ Erreur lors du chargement des dépendances : " . $e->getMessage());
@@ -219,7 +219,7 @@ if (!empty($draft['meeting_coordinates'])) {
 <!-- Dépendances JavaScript -->
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="https://npmcdn.com/flatpickr/dist/l10n/fr.js"></script>
-<script src="/assets/js/event-images.js"></script>
+<script src="/assets/js/events/event-images.js"></script>
 
 
 <script>
@@ -446,6 +446,11 @@ document.addEventListener('DOMContentLoaded', function() {
                                             </select>
                                         </div>
                                         <div class="row">
+                                            <div class="mb-2">
+                                                <label class="form-label">GPX <small class="form-text text-muted">(Importer un GPX rempli automatiquement la distance et le dénivelé)</small></label>
+                                                <input type="file" class="form-control" name="routes[<?= (int) $index ?>][gpx]" accept=".gpx" onchange="handleGpxUpload(this, <?= (int) $index ?>)">
+                                                <input type="hidden" name="routes[<?= (int) $index ?>][gpx_file]" value="<?= htmlspecialchars($route['gpx_file'] ?? '') ?>">
+                                            </div>
                                             <div class="col-md-4">
                                                 <div class="mb-2">
                                                     <label class="form-label required-field">Distance (km)</label>
@@ -464,11 +469,6 @@ document.addEventListener('DOMContentLoaded', function() {
                                                     <input type="number" step="0.01" class="form-control" name="routes[<?= (int) $index ?>][price]" value="<?= $routePrice ?>">
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="mb-2">
-                                            <label class="form-label">GPX</label>
-                                            <input type="file" class="form-control" name="routes[<?= (int) $index ?>][gpx]" accept=".gpx" onchange="handleGpxUpload(this, <?= (int) $index ?>)">
-                                            <input type="hidden" name="routes[<?= (int) $index ?>][gpx_file]" value="<?= htmlspecialchars($route['gpx_file'] ?? '') ?>">
                                         </div>
                                         <div class="mb-2">
                                             <label class="form-label">Description du parcours</label>
@@ -676,7 +676,7 @@ document.addEventListener('DOMContentLoaded', function() {
 </div>
 
 <?php if (empty($createModalOnly) || !$createModalOnly): ?>
-<?php require_once __DIR__ . '/../../includes/footer.php'; ?>
+<?php require_once __DIR__ . '/../../templates/layouts/footer.php'; ?>
 <?php endif; ?>
 
 <script>
@@ -686,9 +686,9 @@ const routeCategories = <?= json_encode(array_map(function($c) { return ['id' =>
 <!-- Scripts -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-gpx/1.7.0/gpx.min.js"></script>
-<script src="/assets/js/event-validation.js"></script>
-<script src="/assets/js/event-display.js"></script>
-<script src="/assets/js/event-maps.js"></script>
+<script src="/assets/js/events/event-validation.js"></script>
+<script src="/assets/js/events/event-display.js"></script>
+<script src="/assets/js/events/event-maps.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // Configuration des champs d'heure avec Flatpickr

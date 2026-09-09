@@ -1,4 +1,7 @@
 <?php
+/**
+ * Gestion des messages flash (ajout, affichage, récupération).
+ */
 // Démarrer la session si elle n'est pas déjà active
 // if (session_status() === PHP_SESSION_NONE) {
 //     session_start();

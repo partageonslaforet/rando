@@ -1,0 +1,103 @@
+/* Footer top styles (palette existante) */
+.footer-top {
+  background: var(--profile-background);
+  color: var(--profile-text);
+  border-top: 2px solid var(--border-color);
+  padding-top: 2rem !important;
+  padding-bottom: 0rem !important;
+}
+.footer-top a { color: var(--profile-text); text-decoration: none; }
+.footer-top a:hover { color: var(--secondary-color); }
+.footer-logo { height: 40px; width: auto; display: block; }
+.footer-brand-name { font-weight: 700; color: var(--profile-text); font-size: 1.125rem; }
+.footer-tagline { color: var(--profile-muted); font-size: .95rem; }
+.footer-title { color: var(--profile-text); font-weight: 700; font-size: 1rem; }
+
+/* Spacing container */
+.footer-top .container { padding-top: 0rem; padding-bottom: 0rem; }
+
+/* Grille cohérente (neutralise Bootstrap dans ce scope) */
+.footer-top .row {
+    display: grid !important;
+    gap: 1.25rem; }
+
+.footer-top .row > [class*='col-'] {
+    width: auto !important; 
+    max-width: none !important; 
+    flex: none !important; 
+  }
+
+/* Mobile: 1 colonne */
+@media (max-width: 767.98px) {
+  .footer-top .row { grid-template-columns: 1fr; }
+  .footer-top .col-12 { text-align: center; }
+  .footer-top .row > [class*='col-']:not(:first-child) {
+    background: var(--profile-card);
+    border: 1px solid var(--profile-border);
+    border-radius: var(--profile-radius);
+    padding: 1rem 1.25rem;
+  }
+}
+
+/* Tablette: 2 colonnes (brand pleine largeur) */
+@media (min-width: 768px) and (max-width: 991.98px) {
+  .footer-top .row { grid-template-columns: 1fr 1fr; align-items: stretch; }
+  .footer-top .row > .col-12:first-child { grid-column: 1 / -1; }
+  .footer-top .col-12 { text-align: left; }
+  .footer-top .row > [class*='col-']:not(:first-child) {
+    background: var(--profile-card);
+    border: 1px solid var(--profile-border);
+    border-radius: var(--profile-radius);
+    padding: 1.25rem 1.5rem;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+/* Desktop: 3 colonnes 1.8fr / 1fr / 1fr */
+@media (min-width: 992px) {
+  .footer-top .row { grid-template-columns: repeat(3, 1fr); align-items: stretch; }
+  .footer-top .col-12 { text-align: left; }
+  .footer-top .row > [class*='col-']:not(:first-child) {
+    background: var(--profile-card);
+    border: 1px solid var(--profile-border);
+    border-radius: var(--profile-radius);
+    padding: 1.25rem 1.5rem;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 1px 3px rgba(0,0,0,.04), 0 8px 24px rgba(0,0,0,.05);
+  }
+}
+
+/* Bouton contact plus lisible */
+.footer-top .btn.btn-success.btn-sm {
+  border-radius: 999px;
+  padding: .5rem 1rem;
+  font-weight: 600;
+  background-color: var(--secondary-color) !important;
+  color: white !important;
+}
+
+/* Titre avec accent vertical */
+.footer-title {
+  color: var(--profile-text);
+  font-weight: 700;
+  font-size: .9rem;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  margin-bottom: .75rem;
+  position: relative;
+  padding-left: .75rem;
+}
+.footer-title::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: .2rem;
+  bottom: .2rem;
+  width: 3px;
+  background: var(--secondary-color);
+  border-radius: 2px;
+}

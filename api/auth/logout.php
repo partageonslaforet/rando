@@ -1,4 +1,9 @@
 <?php
+/**
+ * Déconnexion de l'utilisateur.
+ * Détruit la session, supprime le cookie de session et invalide le remember_token côté serveur.
+ */
+
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     header('Content-Type: application/json');
     session_start();

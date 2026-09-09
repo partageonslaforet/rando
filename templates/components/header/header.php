@@ -1,4 +1,7 @@
 <?php
+/**
+ * En-tête du site.
+ */
 function render_header() {
     global $pageTitle, $additionalStyles, $bodyClass;
 
@@ -39,10 +42,10 @@ function render_header() {
         <link rel="stylesheet" href="/assets/css/components/contact-modal.css">
         <!-- <link rel="stylesheet" href="/assets/css/lq.css">
         <link rel="stylesheet" href="/assets/css/lq-dark.css"> -->
-        <link rel="stylesheet" href="/assets/css/components/home.css">
         <link rel="stylesheet" href="/assets/css/components/filtres.css">
         <link rel="stylesheet" href="/assets/css/components/calendar.css">
         <link rel="stylesheet" href="/assets/css/components/events-list.css">
+        <link rel="stylesheet" href="/assets/css/components/footer.css">
         <link rel="stylesheet" href="/assets/css/header.css">
         <link rel="stylesheet" href="/assets/css/calendar.css">
         
@@ -136,7 +139,7 @@ function render_header() {
             });
         </script>
 
-        <?php require_once __DIR__ . '/../../../includes/modals.php';
+        <?php require_once __DIR__ . '/../../../templates/layouts/modals.php';
      
 }
 ?>

@@ -1,4 +1,8 @@
 <?php
+/**
+ * Activation/désactivation d'une catégorie d'événement (admin).
+ * Bascule le flag active d'une catégorie via une requête JSON.
+ */
 require_once $_SERVER['DOCUMENT_ROOT'] . '/config/database.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/auth_check.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/src/Models/EventCategory.php';
@@ -15,6 +19,11 @@ try {
     $data = json_decode(file_get_contents('php://input'), true);
     if (!isset($data['id']) || !isset($data['active'])) {
         throw new Exception('Données manquantes');
+    }
+
+    $db = getConnection();
+    if (!$db) {
+        throw new Exception('Impossible de se connecter à la base de données');
     }
 
     $categoryManager = new EventCategory($db);

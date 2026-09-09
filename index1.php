@@ -51,7 +51,7 @@ try {
 
     // Inclure le header
     debug_log('Chargement du header');
-    require_once __DIR__ . '/includes/header.php';
+    require_once __DIR__ . '/templates/layouts/header.php';
     debug_log('✓ Header chargé');
 
     // Vérification de l'authentification

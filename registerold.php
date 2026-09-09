@@ -7,7 +7,7 @@ if (isset($_SESSION['user_id'])) {
     exit();
 }
 
-include 'includes/header.php';
+include 'templates/layouts/header.php';
 ?>
 
 <main class="auth-page">
@@ -37,4 +37,4 @@ include 'includes/header.php';
     </div>
 </main>
 
-<?php include 'includes/footer.php'; ?>
+<?php include 'templates/layouts/footer.php'; ?>

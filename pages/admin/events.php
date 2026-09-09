@@ -1,4 +1,7 @@
 <?php
+/**
+ * Gestion des événements par l'administrateur.
+ */
 // Activer l'affichage des erreurs
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
@@ -140,7 +143,7 @@ error_log("Page title défini: " . $pageTitle);
 
 // Inclure l'en-tête
 error_log("=== CHARGEMENT DU HEADER DANS EVENTS ===");
-include __DIR__ . '/../../includes/header.php';
+include __DIR__ . '/../../templates/layouts/header.php';
 error_log("Header chargé avec succès dans events");
 ?>
 
@@ -351,5 +354,5 @@ console.log('Page de gestion des événements chargée');
 </script>
 
 <?php
-include __DIR__ . '/../../includes/footer.php';
+include __DIR__ . '/../../templates/layouts/footer.php';
 ?>

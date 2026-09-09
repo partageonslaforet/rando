@@ -1,4 +1,7 @@
 <?php
+/**
+ * Fonctions utilitaires globales de l'application.
+ */
 if (defined('PLF_FUNCTIONS_LOADED')) {
     return;
 }

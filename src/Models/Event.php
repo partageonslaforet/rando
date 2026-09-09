@@ -145,7 +145,7 @@ class Event {
                      c.name as category_name,
                      c.icon as category_icon,
                      c.color as category_color,
-                     (SELECT image_path FROM event_images WHERE event_id = e.id LIMIT 1) as fallback_image
+                     (SELECT image_path FROM event_images WHERE event_id = e.id ORDER BY is_main DESC, id ASC LIMIT 1) as fallback_image
                      FROM events e 
                      LEFT JOIN users u ON e.user_id = u.id 
                      LEFT JOIN event_categories c ON e.category_id = c.id
@@ -820,19 +820,51 @@ class Event {
 
     public function getParticipants($eventId) {
         try {
-            $sql = "SELECT u.* FROM users u 
-                    JOIN event_participants ep ON u.id = ep.user_id 
-                    WHERE ep.event_id = ? AND e.status = 'approved'";
+            $sql = "SELECT u.* FROM users u
+                    JOIN event_participants ep ON u.id = ep.user_id
+                    WHERE ep.event_id = ?";
             $stmt = $this->db->prepare($sql);
             $stmt->execute([$eventId]);
             $participants = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            $this->log("Participants retrieved successfully: " . print_r($participants, true));
-            $this->debug_log("Participants retrieved successfully: " . print_r($participants, true));
+            $this->log("Participants retrieved successfully for event #" . $eventId);
+            $this->debug_log("Participants retrieved successfully for event #" . $eventId);
             return $participants;
         } catch (PDOException $e) {
             $this->log("Database error in getParticipants method: " . $e->getMessage());
             $this->debug_log("Database error in getParticipants method: " . $e->getMessage());
             throw new Exception("Une erreur est survenue lors de la récupération des participants.");
+        }
+    }
+
+    public function getOrganizer($organizerId) {
+        try {
+            $sql = "SELECT * FROM organizer_profiles WHERE id = ?";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute([$organizerId]);
+            $organizer = $stmt->fetch(PDO::FETCH_ASSOC);
+            $this->log("Organizer retrieved successfully: #" . $organizerId);
+            $this->debug_log("Organizer retrieved successfully: #" . $organizerId);
+            return $organizer ?: null;
+        } catch (PDOException $e) {
+            $this->log("Database error in getOrganizer method: " . $e->getMessage());
+            $this->debug_log("Database error in getOrganizer method: " . $e->getMessage());
+            throw new Exception("Une erreur est survenue lors de la récupération de l'organisateur.");
+        }
+    }
+
+    public function isUserParticipating($eventId, $userId) {
+        try {
+            $sql = "SELECT COUNT(*) FROM event_participants WHERE event_id = ? AND user_id = ?";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute([$eventId, $userId]);
+            $isParticipating = (bool) $stmt->fetchColumn();
+            $this->log("isUserParticipating for event #" . $eventId . ", user #" . $userId . ": " . ($isParticipating ? 'yes' : 'no'));
+            $this->debug_log("isUserParticipating for event #" . $eventId . ", user #" . $userId . ": " . ($isParticipating ? 'yes' : 'no'));
+            return $isParticipating;
+        } catch (PDOException $e) {
+            $this->log("Database error in isUserParticipating method: " . $e->getMessage());
+            $this->debug_log("Database error in isUserParticipating method: " . $e->getMessage());
+            throw new Exception("Une erreur est survenue lors de la vérification de la participation.");
         }
     }
 
@@ -888,6 +920,91 @@ class Event {
             $this->log("Database error in countComments method: " . $e->getMessage());
             $this->debug_log("Database error in countComments method: " . $e->getMessage());
             return 0;
+        }
+    }
+
+    public function getComments($eventId) {
+        try {
+            $sql = "SELECT c.*, u.name as user_name
+                    FROM event_comments c
+                    JOIN users u ON c.user_id = u.id
+                    WHERE c.event_id = ?
+                    ORDER BY c.created_at DESC";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute([$eventId]);
+            $comments = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $this->log("Comments retrieved successfully for event #" . $eventId);
+            $this->debug_log("Comments retrieved successfully for event #" . $eventId);
+            return $comments;
+        } catch (PDOException $e) {
+            $this->log("Database error in getComments method: " . $e->getMessage());
+            $this->debug_log("Database error in getComments method: " . $e->getMessage());
+            throw new Exception("Une erreur est survenue lors de la récupération des commentaires.");
+        }
+    }
+
+    public function addComment(array $data) {
+        try {
+            $sql = "INSERT INTO event_comments (event_id, user_id, content) VALUES (?, ?, ?)";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute([$data['event_id'], $data['user_id'], $data['content']]);
+            $commentId = (int) $this->db->lastInsertId();
+            $this->log("Comment added successfully: " . $commentId);
+            $this->debug_log("Comment added successfully: " . $commentId);
+            return $commentId;
+        } catch (PDOException $e) {
+            $this->log("Database error in addComment method: " . $e->getMessage());
+            $this->debug_log("Database error in addComment method: " . $e->getMessage());
+            throw new Exception("Une erreur est survenue lors de l'ajout du commentaire.");
+        }
+    }
+
+    public function getCommentById($id) {
+        try {
+            $sql = "SELECT c.*, u.name as user_name
+                    FROM event_comments c
+                    JOIN users u ON c.user_id = u.id
+                    WHERE c.id = ?";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute([$id]);
+            $comment = $stmt->fetch(PDO::FETCH_ASSOC);
+            $this->log("Comment retrieved successfully: #" . $id);
+            $this->debug_log("Comment retrieved successfully: #" . $id);
+            return $comment;
+        } catch (PDOException $e) {
+            $this->log("Database error in getCommentById method: " . $e->getMessage());
+            $this->debug_log("Database error in getCommentById method: " . $e->getMessage());
+            throw new Exception("Une erreur est survenue lors de la récupération du commentaire.");
+        }
+    }
+
+    public function updateComment($id, array $data) {
+        try {
+            $sql = "UPDATE event_comments SET content = ? WHERE id = ?";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute([$data['content'], $id]);
+            $this->log("Comment updated successfully: #" . $id);
+            $this->debug_log("Comment updated successfully: #" . $id);
+            return true;
+        } catch (PDOException $e) {
+            $this->log("Database error in updateComment method: " . $e->getMessage());
+            $this->debug_log("Database error in updateComment method: " . $e->getMessage());
+            throw new Exception("Une erreur est survenue lors de la mise à jour du commentaire.");
+        }
+    }
+
+    public function deleteComment($id) {
+        try {
+            $sql = "DELETE FROM event_comments WHERE id = ?";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute([$id]);
+            $this->log("Comment deleted successfully: #" . $id);
+            $this->debug_log("Comment deleted successfully: #" . $id);
+            return true;
+        } catch (PDOException $e) {
+            $this->log("Database error in deleteComment method: " . $e->getMessage());
+            $this->debug_log("Database error in deleteComment method: " . $e->getMessage());
+            throw new Exception("Une erreur est survenue lors de la suppression du commentaire.");
         }
     }
 

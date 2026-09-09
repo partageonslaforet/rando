@@ -1,10 +1,4 @@
 /* Style spécifique pour le header solide */
-:root {
-    --primary-color: #990047;
-    --secondary-color: #3A8A3D;
-    --secondary-hover: #3A8A3D;
-    --text-color: #333;
-}
 
 /* Styles de base de la navbar */
 .navbar {

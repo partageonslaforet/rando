@@ -1,4 +1,7 @@
 <?php
+/**
+ * Liste des événements de l'utilisateur connecté.
+ */
 // Inclure les fonctions
 require_once __DIR__ . '/../../includes/functions.php';
 require_once __DIR__ . '/../../includes/flash_messages.php';
@@ -17,6 +20,7 @@ $approvedEvents = [];
 $pendingEvents = [];
 $draftEvents = [];
 $rejectedEvents = [];
+$expiredEvents = [];
 $currentTab = 'all';
 $filteredEvents = [];
 
@@ -197,7 +201,7 @@ function formatTime($time) {
 
 // Inclure l'en-tête
 $pageTitle = "Mes Événements";
-require_once __DIR__ . '/../../includes/header-solid.php';
+require_once __DIR__ . '/../../templates/layouts/header-solid.php';
 ?>
 
 <link rel="stylesheet" href="/assets/css/my-events.css">
@@ -368,6 +372,6 @@ require_once __DIR__ . '/../../includes/header-solid.php';
     </div>
 </div>
 
-<script src="/assets/js/my-events.js"></script>
+<script src="/assets/js/user/my-events.js"></script>
 
-<?php require_once __DIR__ . '/../../includes/footer.php'; ?>
+<?php require_once __DIR__ . '/../../templates/layouts/footer.php'; ?>

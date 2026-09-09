@@ -1,18 +1,4 @@
-/* Couleurs principales */
-:root {
-    --primary-color: #990047;
-    --primary-hover: #7d003a;
-    --secondary-color: #3A8A3D;
-    --secondary-hover: #2d6c2f;
-    --success-color: #3A8A3D;
-    --danger-color: #990047;
-    --text-color: #333;
-    --light-text: #fff;
-    --filter-bg: #fff;
-    --filter-active: #990047;
-    --filter-hover: #f3f4f6;
-    --background-color: #dfe2e6;
-}
+/* Formulaire de création et d'édition d'un événement. */
 
 .modal-content{
    background-color: var(--profile-background); 
@@ -1387,6 +1373,17 @@ input[type="time"]:focus {
     color: #333;
 }
 
+#events-per-page{
+    padding: 0.25rem 0.5rem;
+    color: #333;
+    text-align: center;
+    height: auto;
+    width: auto;
+}
+
+
+
+
 .form-control::placeholder,
 .form-select:invalid {
     color: #95A198;
@@ -1469,7 +1466,7 @@ input[type="time"]:focus {
     margin-top: 1rem;
 }
 
-.spinner-border {
+#loading-overlay .spinner-border {
     width: 3rem;
     height: 3rem;
 }

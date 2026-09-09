@@ -51,5 +51,5 @@ render_footer();
 ?>
 </div>
 <?php
-require_once __DIR__ . '/../../includes/footer.php';
+require_once __DIR__ . '/../../templates/layouts/footer.php';
 ?>

@@ -1,4 +1,9 @@
 <?php
+/**
+ * Création d'une nouvelle catégorie d'événement (admin).
+ * Récupère les données POST, valide le code/nom et insère en base.
+ */
+
 // Activer l'affichage des erreurs en mode debug
 if (defined('DEBUG') && DEBUG) {
     ini_set('display_errors', 1);

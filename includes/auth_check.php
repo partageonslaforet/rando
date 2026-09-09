@@ -1,4 +1,7 @@
 <?php
+/**
+ * Vérification de l'authentification et des autorisations des utilisateurs.
+ */
 require_once __DIR__ . '/functions.php';
 require_once __DIR__ . '/../logs/error.log.php';
 

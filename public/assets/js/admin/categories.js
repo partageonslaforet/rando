@@ -1,3 +1,9 @@
+/**
+ * Fichier: /assets/js/admin/categories.js
+ * Rôle: Gestion CRUD des catégories côté admin (soumission formulaire, feedback, rechargement UI).
+ * Utilisation: onglet/section Catégories dans l’admin.
+ * Dépendances: Fetch API (/api/admin/categories/create.php, /api/admin/categories/update.php), Bootstrap Modal.
+ */
 document.addEventListener('DOMContentLoaded', function() {
     // Initialisation de Sortable pour le réordonnancement
     // Tri alphabétique côté serveur: tri manuel par glisser désactivé

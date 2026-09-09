@@ -1,4 +1,9 @@
 <?php
+/**
+ * Envoi du formulaire de contact.
+ * Valide les champs, construit l'e-mail HTML à destination de l'administrateur,
+ * envoie une copie à l'expéditeur si demandé, avec fallback mail().
+ */
 require_once __DIR__ . '/../../includes/init.php';
 require_once __DIR__ . '/../../includes/mailer.php';
 require_once __DIR__ . '/../../logs/error.log.php';

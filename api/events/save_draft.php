@@ -1,6 +1,13 @@
 <?php
+/**
+ * Sauvegarde d'un brouillon (création ou mise à jour).
+ * Gère le contenu, les images, les parcours GPX et le storage associé.
+ *
+ * Utilisé par : public/assets/js/event-images.js, public/assets/js/event-validation.js
+ */
+
 require_once __DIR__ . '/../../includes/config.php';
-require_once __DIR__ . '/../../includes/classes/Storage.php';
+require_once __DIR__ . '/../../src/Services/Storage.php';
 
 // Configuration des erreurs et logs
 ini_set('display_errors', 0);
@@ -199,7 +206,7 @@ try {
             $eventFields['organizer_id'] = null;
             $eventFields['organisation'] = $_POST['organizerName'];
         } else {
-            require_once __DIR__ . '/../../includes/organizer_profile.php';
+            require_once __DIR__ . '/../../src/Models/organizer_profile.php';
             $organizerProfile = new OrganizerProfile($pdo, $_SESSION['user_id'] ?? null);
             $organizerName = $_POST['organizerName'];
 

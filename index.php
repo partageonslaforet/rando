@@ -94,7 +94,7 @@ try {
 
     // 9. Affichage du footer
     render_footer();
-    require_once __DIR__ . '/includes/footer.php';
+    require_once __DIR__ . '/templates/layouts/footer.php';
     debug_log('✓ Footer affiché');
     
 } catch (Exception $e) {

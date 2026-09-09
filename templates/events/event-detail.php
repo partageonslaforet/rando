@@ -4,7 +4,7 @@
  * Inclut le header/footer complets et réutilise event-display.php.
  */
 require_once __DIR__ . '/../../includes/init.php';
-require_once __DIR__ . '/../../includes/EventDisplayBuilder.php';
+require_once __DIR__ . '/../../src/Services/EventDisplayBuilder.php';
 require_once __DIR__ . '/../components/header/header.php';
 require_once __DIR__ . '/../components/footer/footer.php';
 
@@ -62,8 +62,8 @@ try {
     // Leaflet-gpx et script d'affichage partagé
     echo '<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>' . "\n";
     echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-gpx/1.7.0/gpx.min.js"></script>' . "\n";
-    echo '<script src="/assets/js/event-display.js"></script>' . "\n";
-    require_once __DIR__ . '/../../includes/footer.php';
+    echo '<script src="/assets/js/events/event-display.js"></script>' . "\n";
+    require_once __DIR__ . '/../../templates/layouts/footer.php';
 
 } catch (Exception $e) {
     error_log('[event-detail] ' . $e->getMessage());

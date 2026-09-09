@@ -1,4 +1,9 @@
 <?php
+/**
+ * Mise à jour d'une catégorie d'événement existante (admin).
+ * Récupère les données POST, valide l'ID et modifie les champs.
+ */
+
 // Démarrer la capture de sortie immédiatement
 ob_start();
 

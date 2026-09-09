@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 async function fetchOrganizerDetails(organizerId) {
     try {
-        const response = await fetch(`/api/organizer/get_profile.php?id=${organizerId}`);
+        const response = await fetch(`/api/organization-profil/get_profile.php?id=${organizerId}`);
         if (!response.ok) throw new Error('Erreur réseau');
         
         const organizer = await response.json();
@@ -117,7 +117,7 @@ function resetOrganizerFields() {
 // Gestion du profil organisateur
 async function loadOrganizerProfile() {
     try {
-        const response = await fetch('/api/organizer/get_profile.php', {
+        const response = await fetch('/api/organization-profil/get_profile.php', {
             method: 'GET',
             headers: {
                 'Cache-Control': 'no-cache',

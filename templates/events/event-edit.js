@@ -366,7 +366,7 @@ async function saveEvent() {
             showToast('Événement mis à jour avec succès', 'success');
             // Rediriger vers la page de l'événement après un court délai
             setTimeout(() => {
-                window.location.href = `/pages/events/event.php?id=${window.eventId}`;
+                window.location.href = `/events/event-detail.php?id=${window.eventId}`;
             }, 1500);
         } else {
             throw new Error(result.message || 'Erreur lors de la mise à jour');
@@ -1226,7 +1226,7 @@ async function saveEvent() {
             showToast('Événement mis à jour avec succès', 'success');
             // Rediriger vers la page de l'événement après un court délai
             setTimeout(() => {
-                window.location.href = `/pages/events/event.php?id=${window.eventId}`;
+                window.location.href = `/events/event-detail.php?id=${window.eventId}`;
             }, 1500);
         } else {
             throw new Error(result.message || 'Erreur lors de la mise à jour');

@@ -1,4 +1,7 @@
 <?php
+/**
+ * Affichage du calendrier FullCalendar.
+ */
 function render_calendar($pdo) {
     ?>
     <!-- FullCalendar Dependencies -->
@@ -23,7 +26,7 @@ function render_calendar($pdo) {
 
     <!-- Styles et Scripts -->
     <link rel="stylesheet" href="/assets/css/components/calendar.css">
-    <script src="/assets/js/calendar.js"></script>
+    <script src="/assets/js/home/calendar.js"></script>
     <?php
 }
 ?>

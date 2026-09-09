@@ -1,7 +1,12 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/config/database.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/auth_check.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/src/Models/EventCategory.php';
+/**
+ * Suppression d'une catégorie d'événement (admin).
+ * Vérifie les permissions, s'assure que la catégorie n'est pas utilisée,
+ * puis la supprime de la base de données.
+ */
+require_once __DIR__ . '/../../../config/database.php';
+require_once __DIR__ . '/../../../includes/auth_check.php';
+require_once __DIR__ . '/../../../src/Models/EventCategory.php';
 
 // Vérifier les permissions d'administrateur
 if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
@@ -15,6 +20,11 @@ try {
     $data = json_decode(file_get_contents('php://input'), true);
     if (!isset($data['id'])) {
         throw new Exception('ID de catégorie manquant');
+    }
+
+    $db = getConnection();
+    if (!$db) {
+        throw new Exception('Impossible de se connecter à la base de données');
     }
 
     $categoryManager = new EventCategory($db);

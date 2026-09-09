@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         // Récupérer les événements pour ce mois
-        fetch(`/api/events.php?month=${month + 1}&year=${year}`)
+        fetch(`/api/events/events-counts.php?month=${month + 1}&year=${year}`)
             .then(response => response.json())
             .then(events => {
 

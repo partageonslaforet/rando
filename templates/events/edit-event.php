@@ -38,7 +38,7 @@ require_once ROOT_PATH . '/src/Models/User.php';
 require_once ROOT_PATH . '/src/Models/Organization.php';
 require_once ROOT_PATH . '/src/Models/EventCategory.php';
 require_once ROOT_PATH . '/src/Models/Event.php';
-require_once ROOT_PATH . '/includes/organizer_profile.php';
+require_once ROOT_PATH . '/src/Models/organizer_profile.php';
 
 // Vérifier si la session n'est pas déjà démarrée
 if (session_status() === PHP_SESSION_NONE) {
@@ -340,7 +340,7 @@ try {
 }
 
 // Inclure l'en-tête
-require_once ROOT_PATH . '/includes/header-solid.php';
+require_once ROOT_PATH . '/templates/layouts/header-solid.php';
 ?>
 
 <!-- Dépendances CSS -->
@@ -362,8 +362,8 @@ require_once ROOT_PATH . '/includes/header-solid.php';
     window.eventId = <?php echo json_encode($event['id']); ?>;
 </script>
 
-<script src="/assets/js/event-maps.js"></script>
-<script src="/assets/js/event-display.js"></script>
+<script src="/assets/js/events/event-maps.js"></script>
+<script src="/assets/js/events/event-display.js"></script>
 
 <!-- Modal de prévisualisation -->
 <div class="modal fade" id="previewModal" tabindex="-1" aria-labelledby="previewModalLabel" aria-hidden="true">
@@ -379,7 +379,7 @@ require_once ROOT_PATH . '/includes/header-solid.php';
             <div class="modal-body" id="previewContent">
                 <?php
                     // Prévisualisation avec le template public
-                    require_once ROOT_PATH . '/includes/EventDisplayBuilder.php';
+                    require_once ROOT_PATH . '/src/Services/EventDisplayBuilder.php';
                     $builder = new EventDisplayBuilder($db);
                     $eventDisplay = $builder->build('published', (int)$event['id']);
                     if ($eventDisplay) {
@@ -774,7 +774,7 @@ require_once ROOT_PATH . '/includes/header-solid.php';
     </div>
 </div>
 
-<?php require_once __DIR__ . '/../../includes/footer.php'; ?>
+<?php require_once __DIR__ . '/../../templates/layouts/footer.php'; ?>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -817,7 +817,7 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 <!-- Charger uniquement le script d'édition -->
-<script src="/assets/js/event-edit.js"></script>
+<script src="/assets/js/events/event-edit.js"></script>
 
 <script>
     // Configuration de la carte

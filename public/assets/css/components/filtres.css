@@ -12,6 +12,7 @@
     margin: 1rem 0;
     border-bottom: 1px solid #e0e0e0; 
     padding-bottom: 1rem;
+   
 }
 
 .temporal-filter-group {
@@ -34,6 +35,8 @@
     gap: 1rem;
     width: 100%;
     margin-bottom: 1rem;
+    border-top: 1px solid var(--border-color);
+    padding-top: 0.8rem;
 
 }
 
@@ -58,7 +61,7 @@
 .btn-primary {
     background-color: transparent ;
     border-color: var(--secondary-color) ;
-    color: var(--secondary-color) ;
+    color: white !important ;
 }
 
 .btn-primary:hover {
@@ -201,6 +204,67 @@
 .event-filters .btn-primary::after {
     background: white;
     color: var(--secondary-color);
+}
+
+/* Temporal filters: use the real <span class="badge">, not the ::after overlay */
+.temporal-filters .btn-light::after {
+    content: none !important;
+}
+
+/* Ensure white text for inactive temporal badges */
+.temporal-filters .btn .badge {
+    background-color: var(--secondary-color) !important;
+    color: white !important;
+}
+
+/* Active temporal badge inverted (white bg, green text) */
+.temporal-filters .btn-primary.active .badge {
+    background-color: white !important;
+    color: var(--secondary-hover) !important;
+}
+
+/* Attribute-targeted rules to avoid any cascade flicker on temporal buttons */
+.filter-group [data-period] .badge,
+.temporal-filter-group [data-period] .badge,
+.temporal-filters [data-period] .badge {
+    background-color: var(--secondary-color) !important;
+    color: #fff !important;
+}
+
+.filter-group [data-period].btn-primary .badge,
+.temporal-filter-group [data-period].btn-primary .badge,
+.temporal-filters [data-period].btn-primary .badge {
+    background-color: #fff !important;
+    color: var(--secondary-hover) !important;
+}
+
+.filter-group [data-period].btn-light::after,
+.temporal-filter-group [data-period].btn-light::after,
+.temporal-filters [data-period].btn-light::after {
+    content: none !important;
+}
+
+/* Category filters: use the real <span class="badge">, not ::after */
+.filter-group [data-category].btn-light::after,
+.category-filter-group [data-category].btn-light::after,
+.event-filters [data-category].btn-light::after {
+    content: none !important;
+}
+
+/* Ensure white text for inactive category badges */
+.filter-group [data-category] .badge,
+.category-filter-group [data-category] .badge,
+.event-filters [data-category] .badge {
+    background-color: var(--secondary-color) !important;
+    color: #fff !important;
+}
+
+/* Active category badge inverted (white bg, green text) */
+.filter-group [data-category].btn-primary .badge,
+.category-filter-group [data-category].btn-primary .badge,
+.event-filters [data-category].btn-primary .badge {
+    background-color: #fff !important;
+    color: var(--secondary-hover) !important;
 }
 
 .filter-group:last-child {

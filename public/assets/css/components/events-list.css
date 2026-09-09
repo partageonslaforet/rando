@@ -27,6 +27,15 @@
     color: #2E8338;
 }
 
+/* Titre de section par jour */
+.events-day-title {
+    background-color: rgba(58, 138, 61, 0.5);
+    padding: 0.7rem;
+    border-radius: 10px;
+    font-size: 1.3rem;
+    color: white;
+}
+
 /* Grille de cartes */
 .events-list-grid {
     --bs-gutter-x: 1.25rem;
@@ -63,7 +72,7 @@
     position: relative;
     width: 160px;
     min-width: 160px;
-    height: 120px;
+    height: 140px;
     align-self: center;
     background: #eef4ee;
     overflow: hidden;
@@ -241,6 +250,33 @@
 
 .summary-card {
     border-color: #E5EBE5 !important;
+}
+
+/* Contrôle Par page (bas de liste) */
+.events-page-size {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+.events-page-size .form-label {
+    margin-bottom: 0;
+    font-weight: 500;
+}
+.events-page-size .form-select {
+    min-width: 80px;
+    width: auto;
+    display: inline-block;
+    height:auto;
+}
+
+#events-pagination .page-item.active .page-link {
+  background-color: var(--secondary-color) !important;
+  border-color: var(--secondary-color) !important;
+  color: #fff !important;
+}
+
+#events-pagination .pagination {
+  --bs-pagination-color: var(--secondary-color);
 }
 
 /* Responsive */

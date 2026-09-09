@@ -1,4 +1,11 @@
 <?php
+/**
+ * Mise à jour d'un événement publié par son propriétaire.
+ * Modifie le contenu, les images et les parcours en base.
+ *
+ * Utilisé par : public/assets/js/event-edit.js, public/assets/js/event-validation.js, templates/events/event-edit.js
+ */
+
 header('Content-Type: application/json');
 require_once $_SERVER['DOCUMENT_ROOT'] . '/config/database.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/functions.php';

@@ -311,9 +311,10 @@
 }
 
 .auth-modal .auth-alert-danger {
-    color: #842029 !important;
-    background-color: #f8d7da !important;
-    border: 1px solid #f5c2c7 !important;
+    color: #fff !important;
+    background-color: var(--primary-color) !important;
+    border: 1px solid var(--profile-border7) !important;
+    text-align : center;
 }
 
 .auth-modal .auth-alert-success {

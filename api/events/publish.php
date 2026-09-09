@@ -1,4 +1,11 @@
 <?php
+/**
+ * Publication définitive d'un événement à partir d'un brouillon.
+ * Valide, persiste et active l'événement, images et parcours associés.
+ *
+ * Utilisé par : public/assets/js/event-validation.js
+ */
+
 error_reporting(E_ALL);
 ini_set('display_errors', 0); // Désactiver l'affichage des erreurs
 ini_set('log_errors', 1);
@@ -87,7 +94,7 @@ try {
         // Créer le profil organisateur si un nom personnalisé a été saisi en brouillon
         $organizerId = $draftData['organizer_id'] ?? null;
         if (empty($organizerId) && !empty($draftData['organisation'])) {
-            require_once __DIR__ . '/../../includes/organizer_profile.php';
+            require_once __DIR__ . '/../../src/Models/organizer_profile.php';
             $organizerProfile = new OrganizerProfile($pdo, $_SESSION['user_id']);
             $organizerId = $organizerProfile->createOrUpdate([
                 'name' => $draftData['organisation'],

@@ -59,7 +59,7 @@ try {
     exit;
 }
 
-require_once '../includes/header.php';
+require_once '../templates/layouts/header.php';
 ?>
 
 <div class="container py-4">
@@ -88,7 +88,7 @@ require_once '../includes/header.php';
                         <i class="bi bi-pencil"></i> Modifier
                     </a>
                 <?php else: ?>
-                    <form action="/api/events.php" method="POST" class="d-inline-block">
+                    <form action="/api/events/participants.php" method="POST" class="d-inline-block">
                         <input type="hidden" name="action" 
                                value="<?php echo $isParticipating ? 'leave' : 'join'; ?>">
                         <input type="hidden" name="event_id" value="<?php echo $eventId; ?>">
@@ -313,7 +313,7 @@ require_once '../includes/header.php';
 <?php if (!empty($event['gpx_file'])): ?>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-<script src="/assets/js/leaflet-gpx.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-gpx/1.7.0/gpx.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // Initialiser la carte
@@ -346,7 +346,7 @@ document.addEventListener('DOMContentLoaded', function() {
             e.preventDefault();
             
             try {
-                const response = await fetch('/api/comments.php', {
+                const response = await fetch('/api/events/comments.php', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -373,4 +373,4 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-<?php require_once '../includes/footer.php'; ?>
+<?php require_once '../templates/layouts/footer.php'; ?>

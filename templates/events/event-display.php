@@ -411,4 +411,4 @@ function attrValue($value): string
 
 </article>
 
-<script src="/assets/js/event-display.js"></script>
+<script src="/assets/js/events/event-display.js"></script>

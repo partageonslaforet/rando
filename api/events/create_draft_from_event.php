@@ -1,4 +1,11 @@
 <?php
+/**
+ * Création d'un brouillon à partir d'un événement existant.
+ * Duplique l'événement, ses parcours et ses images vers un brouillon utilisateur.
+ *
+ * Utilisé par : public/assets/js/my-events.js
+ */
+
 header('Content-Type: application/json');
 
 try {

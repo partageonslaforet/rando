@@ -1,4 +1,7 @@
 <?php
+/**
+ * Bannière héro de la page d'accueil.
+ */
 function render_hero_section() {
     ?>
     <section class="hero" style="background-image: url('/assets/images/main-hero.jpg');">

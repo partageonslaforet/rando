@@ -1,4 +1,10 @@
 <?php
+/**
+ * Suppression définitive d'un événement (admin).
+ * Vérifie les droits admin, supprime les contacts, images, parcours GPX
+ * puis l'événement en base, dans une transaction PDO.
+ */
+
 header('Content-Type: application/json');
 
 // Activer le logging des erreurs

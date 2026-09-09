@@ -1,4 +1,7 @@
 <?php
+/**
+ * Gestion et affichage des messages flash.
+ */
 if (!function_exists('addFlashMessage')) {
     // Fonction pour ajouter un message flash
     function addFlashMessage($type, $message) {

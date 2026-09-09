@@ -1,4 +1,7 @@
 <?php
+/**
+ * Affichage et édition du profil organisateur.
+ */
 // Activer l'affichage des erreurs
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
@@ -62,7 +65,7 @@ try {
 $pageTitle = "Administration - Mon Profil";
 
 // Inclure l'en-tête
-include __DIR__ . '/../../includes/header.php';
+include __DIR__ . '/../../templates/layouts/header.php';
 ?>
 
 <div class="container my-5">
@@ -164,4 +167,4 @@ include __DIR__ . '/../../includes/header.php';
     </div>
 </div>
 
-<?php include __DIR__ . '/../../includes/footer.php'; ?>
+<?php include __DIR__ . '/../../templates/layouts/footer.php'; ?>

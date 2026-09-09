@@ -1,4 +1,7 @@
 <?php
+/**
+ * Chargement de la configuration, des constantes de chemin et de l'environnement.
+ */
 // Définition des chemins
 define('ROOT_PATH', dirname(__DIR__));
 define('INCLUDES_PATH', ROOT_PATH . '/includes');

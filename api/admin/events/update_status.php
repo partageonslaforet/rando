@@ -1,4 +1,10 @@
 <?php
+/**
+ * Mise à jour du statut d'un événement (admin).
+ * Change le statut (pending/approved/rejected), enregistre la raison du rejet
+ * et envoie un e-mail à l'organisateur si approuvé ou rejeté.
+ */
+
 header('Content-Type: application/json');
 
 require_once __DIR__ . '/../../../includes/functions.php';

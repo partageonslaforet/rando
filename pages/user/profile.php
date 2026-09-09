@@ -1,4 +1,7 @@
 <?php
+/**
+ * Profil et édition du compte utilisateur.
+ */
 // Inclure les fonctions
 require_once __DIR__ . '/../../includes/functions.php';
 
@@ -42,7 +45,7 @@ try {
     }
 
     // Récupérer le profil organisateur
-    require_once __DIR__ . '/../../includes/organizer_profile.php';
+    require_once __DIR__ . '/../../src/Models/organizer_profile.php';
     $organizerProfile = new OrganizerProfile($db, getCurrentUserId());
     $profiles = $organizerProfile->getAll();
 
@@ -53,7 +56,7 @@ try {
 
 // Inclure l'en-tête
 $pageTitle = "Mon Profil";
-require_once __DIR__ . '/../../includes/header-solid.php';
+require_once __DIR__ . '/../../templates/layouts/header-solid.php';
 ?>
 
 <link rel="stylesheet" href="/assets/css/profile.css">
@@ -345,5 +348,5 @@ require_once __DIR__ . '/../../includes/header-solid.php';
     </div>
 </div>
 
-<script src="/assets/js/profile.js"></script>
-<?php require_once __DIR__ . '/../../includes/footer.php'; ?>
+<script src="/assets/js/user/profile.js"></script>
+<?php require_once __DIR__ . '/../../templates/layouts/footer.php'; ?>

@@ -1,4 +1,7 @@
 <?php
+/**
+ * Tableau de bord administrateur.
+ */
 // Activer l'affichage des erreurs
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
@@ -17,7 +20,7 @@ if (!isset($_SESSION['user_id'])) {
 // Inclure la configuration et les dépendances
 require_once __DIR__ . '/../../includes/config.php';
 require_once __DIR__ . '/../../src/Models/EventCategory.php';
-require_once __DIR__ . '/../../includes/helpers.php';
+require_once __DIR__ . '/../../src/Utils/helpers.php';
 
 try {
     // Connexion à la base de données
@@ -99,7 +102,7 @@ $additionalStyles = '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/a
                   . '<link rel="stylesheet" href="/assets/css/admin-dashboard.css">';
 
 // Inclure l'en-tête
-include __DIR__ . '/../../includes/header-solid.php';
+include __DIR__ . '/../../templates/layouts/header-solid.php';
 ?>
 
 <div class="container mt-4">
@@ -358,7 +361,7 @@ include __DIR__ . '/../../includes/header-solid.php';
     <!-- Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js"></script>
     <script src="/assets/js/admin/categories.js"></script>
-    <script src="/assets/js/admin-dashboard.js"></script>
+    <script src="/assets/js/admin/admin-dashboard.js"></script>
     <script>
     function updateEventStatus(eventId, status) {
         if (!confirm('Êtes-vous sûr de vouloir ' + (status === 'approved' ? 'approuver' : 'rejeter') + ' cet événement ?')) {
@@ -421,4 +424,4 @@ include __DIR__ . '/../../includes/header-solid.php';
     </script>
 
 </div>
-    <?php include __DIR__ . '/../../includes/footer.php'; ?>
+    <?php include __DIR__ . '/../../templates/layouts/footer.php'; ?>

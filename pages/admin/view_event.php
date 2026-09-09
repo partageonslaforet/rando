@@ -1,4 +1,7 @@
 <?php
+/**
+ * Consultation détaillée d'un événement en administration.
+ */
 // Activer l'affichage des erreurs
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
@@ -28,7 +31,7 @@ $eventId = (int)$_GET['id'];
 
 // Inclure la configuration
 require_once __DIR__ . '/../../includes/config.php';
-require_once __DIR__ . '/../../includes/helpers.php';
+require_once __DIR__ . '/../../src/Utils/helpers.php';
 
 try {
     // Connexion à la base de données
@@ -111,7 +114,7 @@ try {
     }
 
     // Charger l'événement normalisé pour l'affichage public (colonne de droite)
-    require_once __DIR__ . '/../../includes/EventDisplayBuilder.php';
+    require_once __DIR__ . '/../../src/Services/EventDisplayBuilder.php';
     $builder = new EventDisplayBuilder($pdo);
     $eventDisplay = $builder->build('published', $eventId);
     if (!$eventDisplay) {
@@ -168,7 +171,7 @@ try {
 }
 
 // Inclure l'en-tête (intègre $additionalStyles dans <head>)
-include __DIR__ . '/../../includes/header.php';
+include __DIR__ . '/../../templates/layouts/header.php';
 ?>
 
 <div class="container mt-5 pt-4">
@@ -351,7 +354,7 @@ function editViaModal(eventId) {
 <!-- Scripts d'affichage de l'événement (carte, traces GPX) -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-gpx/1.7.0/gpx.min.js"></script>
-<script src="/assets/js/event-display.js"></script>
+<script src="/assets/js/events/event-display.js"></script>
 
 <!-- Modale de confirmation & Toasts -->
 <div class="modal fade modal-confirm" id="confirmActionModal" tabindex="-1" aria-hidden="true">
@@ -375,8 +378,8 @@ function editViaModal(eventId) {
 <div class="toast-container position-fixed bottom-0 end-0 p-3" id="adminToastContainer" style="z-index:1080;"></div>
 
 <!-- Actions admin (confirmations et toasts) -->
-<script src="/assets/js/admin-actions.js"></script>
+<script src="/assets/js/admin/admin-actions.js"></script>
 
 <?php
-include __DIR__ . '/../../includes/footer.php';
+include __DIR__ . '/../../templates/layouts/footer.php';
 ?>

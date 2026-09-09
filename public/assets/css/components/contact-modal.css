@@ -1,6 +1,19 @@
 /* Contact modal – scoped to avoid side effects */
+
 #contactModal .modal-dialog {
-  max-width: 470px; /* align with auth-modal */
+  /* Valeur par défaut (sera surclassée sur desktop) */
+  --bs-modal-width: 560px;
+}
+
+
+/* IMPORTANT: connexion.css impose .auth-modal .modal-dialog { max-width: 470px !important; }
+   On surclasse ici spécifiquement la modale de contact. Utilise un pourcentage souhaité sur desktop. */
+@media (min-width: 576px) {
+  #contactModal .modal-dialog {
+    --bs-modal-width: 70%;
+    width: 50% !important;
+    max-width: 70% !important;
+  }
 }
 
 /* Align contact modal icon with auth modal icon */
@@ -36,7 +49,6 @@
   color: #2c3e2d; /* like auth-modal */
   font-weight: 700;
   font-size: 1.75rem; /* like auth-modal */
-  margin: 0 0 0.5rem 0;
 }
 
 #contactModal .contact-subtitle {
@@ -81,7 +93,7 @@
 }
 
 #contactModal .modal-body {
-  padding: 1rem 1.25rem .5rem;
+  padding: 0rem 1.25rem .5rem;
 }
 
 #contactModal .form-label {
@@ -198,6 +210,5 @@ body.dark-theme #contactModal .btn-secondary { color: #e0e0e0; border-color: #5a
 
 
 .form-check.mb-3{
-    padding-bottom: 1rem !important;
     padding-left: 1.5rem !important;
 }

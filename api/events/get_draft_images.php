@@ -1,4 +1,11 @@
 <?php
+/**
+ * Renvoie la liste des images d'un brouillon au format JSON.
+ * Vérifie que l'utilisateur est propriétaire du brouillon.
+ *
+ * Utilisé par : public/assets/js/event-images.js
+ */
+
 header('Content-Type: application/json');
 
 try {

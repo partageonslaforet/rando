@@ -1,7 +1,10 @@
 <?php
 require_once __DIR__ . '/../../config/database.php';
+require_once __DIR__ . '/../../includes/functions.php';
 require_once __DIR__ . '/../../includes/flash_messages.php';
 require_once __DIR__ . '/../../logs/error.log.php';
+
+initSession();
 
 try {
     if (empty($_GET['token']) || empty($_GET['email'])) {
@@ -14,7 +17,7 @@ try {
     $tokenHash = hash('sha256', $_GET['token']);
 
     $stmt = $db->prepare('
-        SELECT u.id, u.email
+        SELECT u.id, u.email, u.name, u.role
         FROM users u
         JOIN email_verification_tokens t ON u.id = t.user_id
         WHERE u.email = ?
@@ -50,8 +53,14 @@ try {
 
     $db->commit();
 
-    addFlashMessage('success', 'Votre compte a été vérifié avec succès ! Vous pouvez maintenant vous connecter.');
-    header('Location: /?login=required');
+    // Connexion automatique après vérification et redirection vers le profil
+    $_SESSION['user_id'] = (int) $row['id'];
+    $_SESSION['user_email'] = $row['email'];
+    $_SESSION['user_role'] = $row['role'];
+    $_SESSION['user_name'] = $row['name'];
+
+    addFlashMessage('success', 'Votre compte a été vérifié avec succès !');
+    header('Location: /pages/user/profile.php');
     exit();
 
 } catch (Exception $e) {

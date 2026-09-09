@@ -1,6 +1,8 @@
 <?php
 /**
  * Retourne le HTML de la prévisualisation d'un événement/brouillon pour injection AJAX.
+ *
+ * Utilisé par : public/assets/js/event-validation.js
  */
 
 // Définir le chemin racine et charger l'initialisation si nécessaire
@@ -19,7 +21,7 @@ register_shutdown_function(function () {
 });
 
 require_once $rootDir . '/includes/init.php';
-require_once $rootDir . '/includes/EventDisplayBuilder.php';
+require_once $rootDir . '/src/Services/EventDisplayBuilder.php';
 
 header('Content-Type: application/json; charset=utf-8');
 
