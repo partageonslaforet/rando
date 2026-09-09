@@ -98,6 +98,7 @@ CREATE TABLE IF NOT EXISTS `events` (
     `has_gpx` TINYINT(1) DEFAULT 0,
     `gpx_path` VARCHAR(255) DEFAULT NULL,
     `gpx_downloadable` TINYINT(1) DEFAULT 0,
+    `view_count` INT(11) DEFAULT 0,
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at` TIMESTAMP NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`),

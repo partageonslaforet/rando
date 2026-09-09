@@ -13,9 +13,31 @@
 .dash-hero .hero-actions .btn { border-radius: 999px; font-weight: 600; }
 
 /* KPIs */
-.kpi-grid { display: grid; grid-template-columns: repeat(5, minmax(0,1fr)); gap: 16px; margin-bottom: 24px; }
-.kpi-card { background: #fff; border: 1px solid var(--profile-border); border-radius: 16px; box-shadow: 0 8px 24px rgba(0,0,0,0.08); padding: 18px; display: flex; align-items: center; gap: 14px; }
-.kpi-icon { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; color: #fff; font-size: 20px; }
+.kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0,1fr));
+    gap: 16px; margin-bottom: 24px;
+}
+.kpi-card {
+    background: #fff;
+    border: 1px solid var(--profile-border);
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    padding: 18px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+.kpi-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    color: #fff;
+    font-size: 20px;
+}
+
 .kpi-icon.users { background: var(--primary-color); }
 .kpi-icon.events { background: var(--auth-green); }
 .kpi-icon.pending { background: var(--filter-hover); color: var(--text-color); }
@@ -23,6 +45,16 @@
 .kpi-icon.categories { background: var(--filter-active); }
 .kpi-label { font-size: .8rem; color: var(--profile-muted); letter-spacing: .06em; }
 .kpi-value { font-weight: 800; font-size: 1.3rem; line-height: 1.1; }
+
+/* Summary tiles */
+.summary-tiles { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 16px; margin-bottom: 24px;border-bottom: 1px solid var(--profile-muted); padding-bottom: 2rem; }
+.summary-card { background: #fff; border: 1px solid var(--profile-border); border-radius: 16px; box-shadow: 0 8px 24px rgba(0,0,0,0.08); padding: 24px; display: flex; align-items: center; gap: 16px; }
+.summary-icon { width: 56px; height: 56px; border-radius: 14px; display: grid; place-items: center; color: #fff; font-size: 24px; flex-shrink: 0; }
+.summary-icon.users { background: var(--primary-color); }
+.summary-icon.orgs { background: var(--auth-green); }
+.summary-icon.views { background: var(--secondary-color); }
+.summary-label { font-size: .85rem; color: var(--profile-muted); letter-spacing: .07em; text-transform: uppercase; }
+.summary-value { font-weight: 800; font-size: 1.75rem; line-height: 1.1; color: var(--text-color); }
 
 /* Toolbar */
 .dash-toolbar { display: flex; justify-content: space-between; align-items: center; margin: 14px 0 10px; }

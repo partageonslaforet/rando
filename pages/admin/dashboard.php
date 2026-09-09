@@ -64,6 +64,20 @@ try {
         ];
     }
 
+    try {
+        $stats['total_organizations'] = $pdo->query("SELECT COUNT(*) FROM organizer_profiles")->fetchColumn();
+    } catch (PDOException $e) {
+        error_log("Erreur total_organizations : " . $e->getMessage());
+        $stats['total_organizations'] = 0;
+    }
+
+    try {
+        $stats['total_event_views'] = $pdo->query("SELECT COALESCE(SUM(view_count), 0) FROM events")->fetchColumn();
+    } catch (PDOException $e) {
+        error_log("Erreur total_event_views : " . $e->getMessage());
+        $stats['total_event_views'] = 0;
+    }
+
     // Récupérer les événements récents avec leurs catégories
     try {
         $recentEvents = $pdo->query("
@@ -112,6 +126,31 @@ include __DIR__ . '/../../templates/layouts/header-solid.php';
     <div class="hero-actions">
       <!-- <a href="/?create=1" class="btn btn-success btn-pill"><i class="bi bi-plus-lg"></i> Créer un événement</a>
       <a href="/pages/admin/events.php" class="btn btn-outline-secondary btn-pill ms-2"><i class="bi bi-list-ul"></i> Tous les événements</a> -->
+    </div>
+  </div>
+
+  <!-- Summary tiles -->
+  <div class="summary-tiles">
+    <div class="summary-card">
+      <div class="summary-icon users"><i class="bi bi-people-fill"></i></div>
+      <div>
+        <div class="summary-label">UTILISATEURS INSCRITS</div>
+        <div class="summary-value"><?php echo (int)$stats['total_users']; ?></div>
+      </div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-icon orgs"><i class="bi bi-building-fill"></i></div>
+      <div>
+        <div class="summary-label">ORGANISATIONS INSCRITES</div>
+        <div class="summary-value"><?php echo (int)$stats['total_organizations']; ?></div>
+      </div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-icon views"><i class="bi bi-eye-fill"></i></div>
+      <div>
+        <div class="summary-label">PAGES ÉVÉNEMENTS VUES</div>
+        <div class="summary-value"><?php echo (int)$stats['total_event_views']; ?></div>
+      </div>
     </div>
   </div>
 
