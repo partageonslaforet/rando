@@ -12,6 +12,13 @@ function render_header() {
         session_start();
     }
 
+    require_once __DIR__ . '/../../../logs/error.log.php';
+    logError('header.php', 'Menu auth check', [
+        'session_id' => session_id(),
+        'user_id' => $_SESSION['user_id'] ?? null,
+        'user_role' => $_SESSION['user_role'] ?? null,
+    ]);
+
     // Inclure les messages flash après le démarrage de la session
     require_once __DIR__ . '/../messages/flash_messages.php';
     render_flash_messages();
@@ -23,6 +30,7 @@ function render_header() {
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title><?= isset($pageTitle) ? htmlspecialchars($pageTitle) . ' - ' : '' ?>Partageons La Forêt</title>
+        <link rel="icon" type="image/png" href="/assets/images/logoplfrond.png">
         
         <!-- Bootstrap CSS -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -41,7 +49,7 @@ function render_header() {
         
         <!-- Custom CSS -->
         <link rel="stylesheet" href="/assets/css/style.css">
-        <link rel="stylesheet" href="/assets/css/components/connexion.css?v=2">
+        <link rel="stylesheet" href="/assets/css/components/connexion.css?v=3">
         <link rel="stylesheet" href="/assets/css/components/contact-modal.css">
         <!-- <link rel="stylesheet" href="/assets/css/lq.css">
         <link rel="stylesheet" href="/assets/css/lq-dark.css"> -->
@@ -123,18 +131,13 @@ function render_header() {
             document.addEventListener('DOMContentLoaded', function () {
                 const toggler = document.querySelector('.navbar-toggler');
                 const navCollapse = document.getElementById('navbarNav');
-                console.log('[hamburger] toggler:', toggler);
-                console.log('[hamburger] navCollapse:', navCollapse);
-                console.log('[hamburger] bootstrap.Collapse:', typeof bootstrap !== 'undefined' ? typeof bootstrap.Collapse : 'no bootstrap');
                 if (toggler && navCollapse && typeof bootstrap !== 'undefined' && bootstrap.Collapse) {
                     // On retire les attributs data-bs pour ne pas avoir 2 toggles en concurrence
                     toggler.removeAttribute('data-bs-toggle');
                     toggler.removeAttribute('data-bs-target');
                     const bsCollapse = bootstrap.Collapse.getOrCreateInstance(navCollapse, { toggle: false });
                     toggler.addEventListener('click', function () {
-                        console.log('[hamburger] click');
                         bsCollapse.toggle();
-                        console.log('[hamburger] show after toggle:', navCollapse.classList.contains('show'));
                     });
                 } else {
                     console.warn('[hamburger] élément manquant');

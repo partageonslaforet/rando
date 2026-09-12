@@ -4,7 +4,6 @@
  * Utilisation: /pages/user/profile.php.
  * Dépendances: Fetch API (/api/user-profil/*, /api/organization-profil/*), DOM (#profileForm...).
  */
-console.log(' Chargement de profile.js');
 
 // Variable globale pour éviter la double soumission
 let isSubmitting = false;
@@ -108,7 +107,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Gestion du formulaire organisateur
     const organizerForm = document.getElementById('organizerProfileForm');
     if (organizerForm) {
-        console.log(' Initialisation du formulaire organisateur');
         
         // Gestion de la prévisualisation du logo
         const logoPreview = document.getElementById('logo_preview');
@@ -179,7 +177,6 @@ document.addEventListener('DOMContentLoaded', function() {
             button.addEventListener('click', async function(e) {
                 e.preventDefault();
                 const profileId = this.getAttribute('data-profile-id');
-                console.log('[Delete] Tentative de suppression du profil:', profileId);
 
                 if (!profileId) {
                     console.error('[Delete] ID du profil manquant');
@@ -188,12 +185,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
 
                 if (!confirm('Êtes-vous sûr de vouloir supprimer ce profil ?')) {
-                    console.log('[Delete] Suppression annulée par l\'utilisateur');
                     return;
                 }
 
                 try {
-                    console.log('[Delete] Envoi de la requête de suppression');
                     const response = await fetch('/api/organization-profil/delete_profile.php', {
                         method: 'POST',
                         headers: {
@@ -202,14 +197,11 @@ document.addEventListener('DOMContentLoaded', function() {
                         body: JSON.stringify({ profile_id: profileId })
                     });
 
-                    console.log('[Delete] Réponse reçue, status:', response.status);
                     const text = await response.text();
-                    console.log('[Delete] Réponse texte:', text);
 
                     let data;
                     try {
                         data = text ? JSON.parse(text) : {};
-                        console.log('[Delete] Données parsées:', data);
                     } catch (e) {
                         console.error('[Delete] Erreur de parsing JSON:', e);
                         throw new Error('Erreur lors de la communication avec le serveur');
@@ -219,7 +211,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         throw new Error(data.message || 'Une erreur est survenue lors de la suppression');
                     }
 
-                    console.log('[Delete] Suppression réussie, redirection vers l\'onglet Profils Organisateur');
                     window.location.href = window.location.pathname + '?tab=organizer';
                 } catch (error) {
                     console.error('[Delete] Erreur lors de la suppression:', error);
@@ -233,9 +224,7 @@ document.addEventListener('DOMContentLoaded', function() {
             event.preventDefault();
             event.stopPropagation();
             
-            console.log(' [Submit] État isSubmitting:', isSubmitting);
             if (isSubmitting) {
-                console.log(' [Submit] Soumission déjà en cours, abandon');
                 return false;
             }
 
@@ -250,7 +239,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 const formEl = event.target;
                 formEl.classList.add('was-validated');
                 if (!formEl.checkValidity()) {
-                    console.log(' [Submit] Validation HTML5 invalide');
                     submitBtn.disabled = false;
                     isSubmitting = false;
                     return false;
@@ -277,9 +265,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
 
                 // Log des données pour debug
-                console.log(' [Submit] Données à envoyer:');
                 for (let [key, value] of formData.entries()) {
-                    console.log(`  ${key}:`, value instanceof File ? `File: ${value.name}` : value);
                 }
 
                 const response = await fetch('/api/organization-profil/update_profile.php', {
@@ -287,15 +273,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     body: formData
                 });
 
-                console.log(' [Submit] Réponse reçue, status:', response.status);
                 const data = await response.json();
-                console.log(' [Submit] Données reçues:', data);
 
                 if (!data.success) {
                     throw new Error(data.message || 'Une erreur est survenue');
                 }
 
-                console.log(' [Submit] Succès, redirection vers l\'onglet Profils Organisateur');
                 window.location.href = window.location.pathname + '?tab=organizer';
             } catch (error) {
                 console.error(' [Submit] Erreur:', error);

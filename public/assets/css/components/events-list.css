@@ -47,7 +47,7 @@
     background: #ffffff;
     border: 1px solid #e8efe8;
     border-radius: 15px;
-    overflow: hidden;
+    overflow: visible;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
     height: auto;
     display: flex;
@@ -55,6 +55,7 @@
     align-items: stretch;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     text-decoration: none;
+    position: relative;
 }
 
 .summary-card a {
@@ -76,6 +77,7 @@
     align-self: center;
     background: #eef4ee;
     overflow: hidden;
+    border-radius: 15px 0 0 15px;
 }
 
 .summary-card-image img {
@@ -316,4 +318,35 @@
     .summary-card-action {
         font-size: 0.9rem;
     }
+}
+
+.cancelled-sticker {
+    display: none;
+    position: absolute;
+    top: 12px;
+    right: -30px;
+    background-color: #dc3545;
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.7rem;
+    padding: 0.2rem 2rem;
+    transform: rotate(45deg);
+    z-index: 3;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    pointer-events: none;
+}
+
+.summary-card {
+    position: relative;
+}
+
+.summary-card.is-cancelled .cancelled-sticker {
+    display: block;
+}
+
+.summary-card.is-cancelled .summary-card-image img,
+.summary-card.is-cancelled .summary-card-body {
+    opacity: 0.85;
 }

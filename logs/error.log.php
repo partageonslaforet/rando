@@ -26,5 +26,7 @@ function logError(string $context, string $message, array $extra = []): void {
     ];
 
     $line = json_encode($entry, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . PHP_EOL;
-    error_log($line, 3, $logFile);
+    if (!error_log($line, 3, $logFile)) {
+        error_log($line);
+    }
 }

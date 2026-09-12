@@ -1,0 +1,16 @@
+# Fichier d'index par defaut
+DirectoryIndex index.php
+
+# Alias interne /assets vers /public/assets et /uploads vers /public/uploads
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^assets/(.*)$ /public/assets/$1 [L]
+    RewriteRule ^uploads/(.*)$ /public/uploads/$1 [L]
+</IfModule>
+
+# Redirige toutes les requetes vers index.php sauf si le fichier ou dossier existe
+<IfModule mod_rewrite.c>
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)$ /index.php [QSA,L]
+</IfModule>

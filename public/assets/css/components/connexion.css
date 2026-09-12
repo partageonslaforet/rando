@@ -151,6 +151,10 @@
     transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease !important;
 }
 
+.auth-modal .input-group .toggle-password i {
+    pointer-events: none !important;
+}
+
 .bi.bi-eye {
     color: rgba(58, 138, 61, 0.5) !important;
 }

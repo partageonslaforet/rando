@@ -14,7 +14,6 @@ const EventsAPI = {
 
     // Fonction pour charger les événements avec des filtres
     async getAllEvents(filters = {}) {
-        console.log('📡 Chargement des événements depuis l\'API avec filtres:', filters);
         try {
             const params = new URLSearchParams();
             
@@ -24,7 +23,6 @@ const EventsAPI = {
             }
         
             const url = `${this.baseUrl}?${params}`;
-            console.log('🔗 URL de l\'API:', url);
             
             const response = await fetch(url);
             if (!response.ok) {
@@ -32,12 +30,6 @@ const EventsAPI = {
             }
         
             const result = await response.json();
-            console.log('📦 Réponse brute de l\'API:', result);
-            console.log('🔍 Structure de la réponse:', {
-                hasData: 'data' in result,
-                hasEvents: 'events' in result,
-                type: result.data ? 'data' : (result.events ? 'events' : 'unknown')
-            });
             
             return result.data || result.events || [];
         } catch (error) {
@@ -48,7 +40,6 @@ const EventsAPI = {
 
     // Fonction pour charger un événement spécifique
     async getEventById(eventId) {
-        console.log('📡 Chargement de l\'événement:', eventId);
         try {
             const response = await fetch(`${this.baseUrl}?id=${eventId}`);
             if (!response.ok) {
@@ -56,7 +47,6 @@ const EventsAPI = {
             }
 
             const result = await response.json();
-            console.log('✅ Événement chargé:', result);
             return result.data;
 
         } catch (error) {
@@ -68,11 +58,9 @@ const EventsAPI = {
     // Fonction pour charger les compteurs d'événements
     async loadEventCounts() {
         if (this._cachedCounts && (Date.now() - this._cachedCounts.timestamp) < 30000) {
-            console.log('📡 Utilisation des compteurs en cache');
             return this._cachedCounts.data;
         }
 
-        console.log('📡 Chargement des compteurs d\'événements');
         try {
             const response = await fetch(`${this.baseUrl}?count=true`);
             if (!response.ok) {
@@ -91,7 +79,6 @@ const EventsAPI = {
             }
 
             const result = await response.json();
-            console.log('✅ Compteurs chargés:', result);
             
             this._cachedCounts = {
                 data: result.counts || {},
@@ -138,7 +125,6 @@ const EventsAPI = {
 
     // Nouvelle méthode paginée: retourne { data, pagination }
     async getAllEventsPaged(filters = {}, page = 1, limit = 12) {
-        console.log('📡 Chargement paginé des événements', { filters, page, limit });
         const params = new URLSearchParams();
         // Support minimal des filtres utiles
         if (filters.category && filters.category !== 'all') params.append('category', filters.category);

@@ -61,7 +61,8 @@ try {
 
         require_once __DIR__ . '/../../includes/mailer.php';
         $mailer = new Mailer();
-        $mailer->sendPasswordResetEmail($email, $user['name'], $token);
+        $mailSent = $mailer->sendPasswordResetEmail($email, $user['name'], $token);
+        logError('api/auth/forgot-password.php', 'Resultat envoi mail reset', ['sent' => $mailSent, 'email' => $email]);
     }
 
     // Réponse neutre

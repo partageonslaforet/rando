@@ -131,6 +131,8 @@ class Event {
                      e.difficulty,
                      e.max_participants,
                      e.user_id,
+                     e.is_cancelled,
+                     e.cancellation_reason,
                      e.main_image_path,
                      u.name as creator_name,
                      c.name as category_name,

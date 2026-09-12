@@ -17,6 +17,7 @@ displayFlashMessages();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= isset($pageTitle) ? htmlspecialchars($pageTitle) . ' - ' : '' ?>Partageons La Forêt</title>
+    <link rel="icon" type="image/png" href="/assets/images/logoplfrond.png">
     
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -45,32 +46,23 @@ displayFlashMessages();
 
     <!-- Custom JS -->
     <script>
-        console.log('=== DÉBUT INITIALISATION DROPDOWN HEADER-SOLID ===');
         
         $(document).ready(function() {
-            console.log('jQuery prêt dans header-solid.php');
             
             // Écouter les événements sur le menu lui-même
             $('.dropdown-menu').on('show.bs.dropdown', function () {
-                console.log('Menu en cours d\'ouverture');
             }).on('shown.bs.dropdown', function () {
-                console.log('Menu ouvert');
             }).on('hide.bs.dropdown', function () {
-                console.log('Menu en cours de fermeture');
             }).on('hidden.bs.dropdown', function () {
-                console.log('Menu fermé');
             });
 
             // Écouter le clic sur le bouton
             $('#navbarDropdown').on('click', function(e) {
-                console.log('Clic sur le bouton dropdown');
-                console.log('État aria-expanded:', $(this).attr('aria-expanded'));
                 // Forcer l'ouverture/fermeture
                 $(this).dropdown('toggle');
             });
         });
 
-        console.log('=== FIN INITIALISATION DROPDOWN HEADER-SOLID ===');
     </script>
 </head>
 <body> 

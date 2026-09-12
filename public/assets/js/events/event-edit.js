@@ -49,7 +49,6 @@ async function saveEvent() {
 
         // Lire la réponse
         const responseText = await response.text();
-        console.log('Réponse brute:', responseText);
 
         // Vérifier si la réponse est vide
         if (!responseText.trim()) {
@@ -98,38 +97,29 @@ async function saveEvent() {
 
 // Fonction pour changer d'étape
 function switchStep(direction) {
-    console.log('⏩ switchStep - Direction:', direction);
     
     const currentStep = getCurrentStep();
-    console.log('⏩ switchStep - Étape actuelle:', currentStep);
     
     const newStep = currentStep + direction;
-    console.log('⏩ switchStep - Nouvelle étape:', newStep);
     
     // Vérifier si l'étape est valide
     if (newStep < 1 || newStep > 2) {
-        console.log('❌ switchStep - Étape invalide:', newStep);
         return;
     }
 
     // Validation avant de passer à l'étape suivante
     if (direction > 0) {
-        console.log('🔍 switchStep - Validation de l\'étape actuelle...');
         if (!validateCurrentStep(currentStep)) {
-            console.log('❌ switchStep - Validation échouée pour l\'étape', currentStep);
             return;
         }
-        console.log('✅ switchStep - Validation réussie pour l\'étape', currentStep);
     }
 
     // Changer l'étape active
-    console.log('🔄 switchStep - Changement vers l\'étape:', newStep);
     setStep(newStep);
 }
 
 // Fonction pour définir l'étape active
 function setStep(stepNumber) {
-    console.log('Définition de l\'étape active:', stepNumber);
     
     // Masquer toutes les étapes
     document.querySelectorAll('.step-content').forEach(content => {
@@ -153,7 +143,6 @@ function setStep(stepNumber) {
     // Mettre à jour les boutons de navigation
     updateNavigationButtons(stepNumber);
     
-    console.log('Étape active mise à jour:', stepNumber);
 }
 
 // Fonction pour obtenir l'étape courante
@@ -161,23 +150,15 @@ function getCurrentStep() {
     const step1Content = document.getElementById('step1');
     const step2Content = document.getElementById('step2');
     
-    console.log('getCurrentStep - Elements:', {
-        step1: step1Content,
-        step2: step2Content,
-        step2Hidden: step2Content ? step2Content.classList.contains('d-none') : 'N/A'
-    });
     
     if (step2Content && !step2Content.classList.contains('d-none')) {
-        console.log('getCurrentStep - Returning step 2');
         return 2;
     }
-    console.log('getCurrentStep - Returning step 1');
     return 1;
 }
 
 // Fonction pour valider l'étape courante
 function validateCurrentStep(step) {
-    console.log('Validation de l\'étape:', step);
     
     if (!step) {
         console.error('Étape non définie');
@@ -271,11 +252,9 @@ function validateCurrentStep(step) {
 
 // Fonction pour sauvegarder l'événement
 async function saveEvent() {
-    console.log('Début saveEvent');
     try {
         const form = document.getElementById('createEventForm');
         if (!form || !validateCurrentStep(2)) {
-            console.log('Formulaire non trouvé ou validation échouée');
             return;
         }
 
@@ -319,7 +298,6 @@ async function saveEvent() {
         });
 
         const result = await response.json();
-        console.log('Réponse du serveur:', result);
         if (result.success) {
             showToast('Événement mis à jour avec succès', 'success');
             // Rediriger vers la page de l'événement après un court délai
@@ -412,12 +390,9 @@ function validateStep1() {
 
 // Fonction pour mettre à jour la distance d'un parcours
 function updateRouteDistance(routeIndex, distance) {
-    console.log('updateRouteDistance appelé pour le parcours', routeIndex);
     const distanceField = document.querySelector(`input[name="routes[${routeIndex}][distance]"]`);
     if (distanceField) {
-        console.log('Champ distance trouvé, valeur avant:', distanceField.value);
         distanceField.value = distance;
-        console.log('Nouvelle valeur:', distanceField.value);
         
         // Déclencher l'événement change manuellement
         const event = new Event('change', { bubbles: true });
@@ -429,12 +404,9 @@ function updateRouteDistance(routeIndex, distance) {
 
 // Fonction pour mettre à jour le dénivelé d'un parcours
 function updateRouteElevation(routeIndex, elevation) {
-    console.log('updateRouteElevation appelé pour le parcours', routeIndex);
     const elevationField = document.querySelector(`input[name="routes[${routeIndex}][elevation]"]`);
     if (elevationField) {
-        console.log('Champ dénivelé trouvé, valeur avant:', elevationField.value);
         elevationField.value = elevation;
-        console.log('Nouvelle valeur:', elevationField.value);
         
         // Déclencher l'événement change manuellement
         const event = new Event('change', { bubbles: true });
@@ -496,8 +468,6 @@ function showFieldError(field, message) {
 }
 
 function hideFieldError(field) {
-    console.log('hideFieldError appelé pour:', field?.name);
-    console.log('Classes avant:', field?.className);
     
     if (!field) {
         console.error('Champ non trouvé');
@@ -510,7 +480,6 @@ function hideFieldError(field) {
         feedback.style.display = 'none';
     }
     
-    console.log('Classes après:', field.className);
 }
 
 function isValidEmail(email) {
@@ -576,11 +545,9 @@ let currentGpxLayers = {};
 
 // Fonction pour initialiser la carte GPX
 async function initializeGpxMap() {
-    console.log('🔄 Initialisation de la carte GPX');
     
     // Vérifier si le plugin GPX est chargé, sinon le charger
     if (typeof L.GPX === 'undefined') {
-        console.log('📥 Chargement du plugin GPX...');
         try {
             await new Promise((resolve, reject) => {
                 const script = document.createElement('script');
@@ -589,7 +556,6 @@ async function initializeGpxMap() {
                 script.onerror = () => reject(new Error('Échec du chargement du plugin Leaflet-GPX'));
                 document.head.appendChild(script);
             });
-            console.log('✅ Plugin GPX chargé avec succès');
         } catch (error) {
             console.error('❌ Erreur lors du chargement du plugin Leaflet-GPX:', error);
             return;
@@ -599,7 +565,6 @@ async function initializeGpxMap() {
     try {
         // Initialiser la carte si ce n'est pas déjà fait
         if (!gpxMap) {
-            console.log('🗺️ Création de la carte GPX...');
             const mapElement = document.getElementById('gpxMap');
             if (!mapElement) {
                 console.error('❌ Élément gpxMap non trouvé');
@@ -614,7 +579,6 @@ async function initializeGpxMap() {
 
         // Charger les GPX existants
         const gpxInputs = document.querySelectorAll('input[type="hidden"][name$="[gpx_file]"]');
-        console.log('🔍 GPX trouvés:', gpxInputs.length);
         
         for (const input of gpxInputs) {
             const routeIndex = input.name.match(/routes\[(\d+)\]/)[1];
@@ -622,7 +586,6 @@ async function initializeGpxMap() {
             
             if (gpxPath && !currentGpxLayers[routeIndex]) {
                 try {
-                    console.log(`📥 Chargement du fichier GPX ${routeIndex}:`, gpxPath);
                     const response = await fetch(gpxPath);
                     if (!response.ok) throw new Error('Erreur lors du chargement du GPX');
                     const gpxData = await response.text();
@@ -641,7 +604,6 @@ async function initializeGpxMap() {
                     });
 
                     gpxLayer.on('loaded', function(e) {
-                        console.log('✅ GPX chargé avec succès');
                         if (gpxMap) gpxMap.fitBounds(e.target.getBounds());
                         
                         // Mettre à jour les champs de distance et dénivelé
@@ -661,7 +623,6 @@ async function initializeGpxMap() {
 
                     currentGpxLayers[routeIndex] = gpxLayer;
                     gpxLayer.addTo(gpxMap);
-                    console.log('✅ Couche GPX ajoutée à la carte');
                 } catch (error) {
                     console.error('❌ Erreur lors du chargement du GPX:', error);
                     showToast('Erreur lors du chargement du GPX', 'error');
@@ -702,7 +663,6 @@ function initializeLocationMap() {
 
 // Fonction pour supprimer un GPX
 function removeGpx(routeIndex) {
-    console.log('🗑️ Suppression du GPX', routeIndex);
     
     // Supprimer la couche de la carte
     if (currentGpxLayers[routeIndex]) {
@@ -720,47 +680,40 @@ function removeGpx(routeIndex) {
         // Réinitialiser le nom du parcours
         const nameInput = routesContainer.querySelector(`input[name="routes[${routeIndex}][name]"]`);
         if (nameInput) {
-            console.log('Réinitialisation du nom:', nameInput.value);
             nameInput.value = '';
         }
 
         // Réinitialiser la distance
         const distanceInput = routesContainer.querySelector(`input[name="routes[${routeIndex}][distance]"]`);
         if (distanceInput) {
-            console.log('Réinitialisation de la distance:', distanceInput.value);
             distanceInput.value = '';
         }
 
         // Réinitialiser le dénivelé
         const elevationInput = routesContainer.querySelector(`input[name="routes[${routeIndex}][elevation]"]`);
         if (elevationInput) {
-            console.log('Réinitialisation du dénivelé:', elevationInput.value);
             elevationInput.value = '';
         }
 
         // Réinitialiser le prix
         const priceInput = routesContainer.querySelector(`input[name="routes[${routeIndex}][price]"]`);
         if (priceInput) {
-            console.log('Réinitialisation du prix:', priceInput.value);
             priceInput.value = '';
         }
 
         // Réinitialiser le fichier GPX
         const gpxInput = routesContainer.querySelector(`input[name="routes[${routeIndex}][gpx_file]"]`);
         if (gpxInput) {
-            console.log('Réinitialisation du fichier GPX:', gpxInput.value);
             gpxInput.value = '';
         }
 
         // Supprimer le conteneur du parcours
         const routeContainer = routesContainer.querySelector(`.route-container[data-index="${routeIndex}"]`);
         if (routeContainer) {
-            console.log('Suppression du conteneur');
             routeContainer.remove();
         }
     }
 
-    console.log('✅ Parcours supprimé avec succès');
 }
 
 // Fonction pour réinitialiser la carte GPX
@@ -828,19 +781,6 @@ async function handleGpxUpload(input, routeIndex) {
             if (!gpxResponse.ok) throw new Error('Erreur lors du chargement du GPX');
             const gpxData = await gpxResponse.text();
             
-            // Créer une nouvelle couche GPX avec debug
-            console.log('📥 Création de la couche GPX avec options:', {
-                async: true,
-                marker_options: {
-                    startIconUrl: 'https://rando.partageonslaforet.be/assets/images/gpx/pin-icon-start.png',
-                    endIconUrl: 'https://rando.partageonslaforet.be/assets/images/gpx/pin-icon-end.png',
-                    shadowUrl: 'https://rando.partageonslaforet.be/assets/images/gpx/pin-shadow.png',
-                    iconSize: [33, 50],
-                    shadowSize: [50, 50],
-                    iconAnchor: [16, 45],
-                    shadowAnchor: [16, 47]
-                }
-            });
 
             const gpx = new L.GPX(gpxData, {
                 async: true,
@@ -861,40 +801,16 @@ async function handleGpxUpload(input, routeIndex) {
             });
 
             // Debug des événements GPX
-            gpx.on('addpoint', function(e) {
-                console.log('📍 Point GPX ajouté:', {
-                    type: e.point_type,
-                    point: e.point,
-                    marker: e.marker
-                });
-            });
 
             gpx.on('loaded', function(e) {
-                console.log('✅ GPX chargé avec succès');
                 
                 // Debug des couches
                 const layers = e.target.getLayers();
-                console.log('🗺️ Couches GPX:', layers);
                 
                 // Debug des marqueurs
                 const markers = layers.filter(layer => layer instanceof L.Marker);
-                console.log('📌 Marqueurs trouvés:', markers.length);
                 
-                markers.forEach((marker, index) => {
-                    console.log(`📍 Marqueur ${index}:`, {
-                        position: marker.getLatLng(),
-                        options: marker.options
-                    });
-                });
 
-                // Debug du contenu GPX
-                console.log('📊 Métadonnées GPX:', {
-                    name: e.target.get_name(),
-                    distance: e.target.get_distance(),
-                    elevation_gain: e.target.get_elevation_gain(),
-                    elevation_loss: e.target.get_elevation_loss(),
-                    total_time: e.target.get_total_time()
-                });
 
                 // Mettre à jour les champs
                 const distance = (e.target.get_distance() / 1000).toFixed(1);
@@ -909,7 +825,6 @@ async function handleGpxUpload(input, routeIndex) {
                 // Ajouter des flèches de direction
                 const track = layers.find(layer => layer instanceof L.Polyline);
                 if (track) {
-                    console.log('🛣️ Parcours trouvé, ajout des flèches');
                     
                     const arrows = L.polylineDecorator(track, {
                         patterns: [
@@ -1032,11 +947,9 @@ function validateStep1() {
 
 // Fonction pour initialiser les event listeners des champs de parcours
 function initializeRouteFieldListeners(routeElement) {
-    console.log('Initialisation des listeners pour:', routeElement);
     
     // Ajouter les event listeners pour tous les champs du parcours
     routeElement.querySelectorAll('input').forEach(input => {
-        console.log('Ajout listener pour:', input.name);
         
         // Event listener pour l'input
         input.addEventListener('input', function() {
@@ -1047,9 +960,7 @@ function initializeRouteFieldListeners(routeElement) {
 
         // Event listener spécial pour la distance
         if (input.name.includes('[distance]')) {
-            console.log('Ajout listener distance pour:', input.name);
             input.addEventListener('change', function() {
-                console.log('Distance changée:', this.value);
                 // Revalider la distance
                 if (this.value && parseFloat(this.value) > 0) {
                     hideFieldError(this);
@@ -1059,9 +970,7 @@ function initializeRouteFieldListeners(routeElement) {
 
         // Event listener spécial pour le dénivelé
         if (input.name.includes('[elevation]')) {
-            console.log('Ajout listener dénivelé pour:', input.name);
             input.addEventListener('change', function() {
-                console.log('Dénivelé changé:', this.value);
                 // Revalider le dénivelé
                 if (this.value && parseFloat(this.value) > 0) {
                     hideFieldError(this);
@@ -1071,7 +980,6 @@ function initializeRouteFieldListeners(routeElement) {
 
         // Event listener pour le GPX
         if (input.name.includes('[gpx]')) {
-            console.log('Ajout listener GPX pour:', input.name);
             const routeIndex = input.name.match(/routes\[(\d+)\]/)[1];
             input.addEventListener('change', function() {
                 handleGpxUpload(this, routeIndex);
@@ -1082,7 +990,6 @@ function initializeRouteFieldListeners(routeElement) {
 
 // Initialiser les event listeners pour les parcours existants
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('Initialisation de la page edit-event.js');
     
     // Initialiser les event listeners pour les parcours existants
     const existingRoutes = document.querySelectorAll('.route-item');
@@ -1159,11 +1066,9 @@ function setStep(stepNumber) {
 // Fonction d'initialisation principale
 function initPage() {
     if (isInitialized) {
-        console.log('🔄 La page est déjà initialisée');
         return;
     }
     
-    console.log('🔵 Initialisation de la page edit-event.js');
     
     try {
         initializeButtonHandlers();
@@ -1171,7 +1076,6 @@ function initPage() {
         // Initialiser le gestionnaire d'upload de logo
         const logoInput = document.getElementById('logoInput');
         if (logoInput) {
-            console.log('⚙️ Configuration du gestionnaire d\'upload de logo');
             logoInput.addEventListener('change', function() {
                 handleLogoUpload(this);
             });
@@ -1184,7 +1088,6 @@ function initPage() {
         setStep(1);
         
         isInitialized = true;
-        console.log('✅ Initialisation terminée avec succès');
     } catch (error) {
         console.error('❌ Erreur lors de l\'initialisation:', error);
     }
@@ -1205,7 +1108,6 @@ async function saveEvent() {
     try {
         const form = document.getElementById('createEventForm');
         if (!form || !validateCurrentStep(2)) {
-            console.log('Formulaire non trouvé ou validation échouée');
             return;
         }
 
@@ -1249,7 +1151,6 @@ async function saveEvent() {
         });
 
         const result = await response.json();
-        console.log('Réponse du serveur:', result);
         if (result.success) {
             showToast('Événement mis à jour avec succès', 'success');
             // Rediriger vers la page de l'événement après un court délai
@@ -1358,19 +1259,6 @@ async function handleGpxUpload(input, routeIndex) {
             if (!gpxResponse.ok) throw new Error('Erreur lors du chargement du GPX');
             const gpxData = await gpxResponse.text();
             
-            // Créer une nouvelle couche GPX avec debug
-            console.log('📥 Création de la couche GPX avec options:', {
-                async: true,
-                marker_options: {
-                    startIconUrl: 'https://rando.partageonslaforet.be/assets/images/gpx/pin-icon-start.png',
-                    endIconUrl: 'https://rando.partageonslaforet.be/assets/images/gpx/pin-icon-end.png',
-                    shadowUrl: 'https://rando.partageonslaforet.be/assets/images/gpx/pin-shadow.png',
-                    iconSize: [33, 50],
-                    shadowSize: [50, 50],
-                    iconAnchor: [16, 45],
-                    shadowAnchor: [16, 47]
-                }
-            });
             
             const gpx = new L.GPX(gpxData, {
                 async: true,
@@ -1391,40 +1279,16 @@ async function handleGpxUpload(input, routeIndex) {
             });
 
             // Debug des événements GPX
-            gpx.on('addpoint', function(e) {
-                console.log('📍 Point GPX ajouté:', {
-                    type: e.point_type,
-                    point: e.point,
-                    marker: e.marker
-                });
-            });
 
             gpx.on('loaded', function(e) {
-                console.log('✅ GPX chargé avec succès');
                 
                 // Debug des couches
                 const layers = e.target.getLayers();
-                console.log('🗺️ Couches GPX:', layers);
                 
                 // Debug des marqueurs
                 const markers = layers.filter(layer => layer instanceof L.Marker);
-                console.log('📌 Marqueurs trouvés:', markers.length);
                 
-                markers.forEach((marker, index) => {
-                    console.log(`📍 Marqueur ${index}:`, {
-                        position: marker.getLatLng(),
-                        options: marker.options
-                    });
-                });
 
-                // Debug du contenu GPX
-                console.log('📊 Métadonnées GPX:', {
-                    name: e.target.get_name(),
-                    distance: e.target.get_distance(),
-                    elevation_gain: e.target.get_elevation_gain(),
-                    elevation_loss: e.target.get_elevation_loss(),
-                    total_time: e.target.get_total_time()
-                });
 
                 // Mettre à jour les champs
                 const distance = (e.target.get_distance() / 1000).toFixed(1);
@@ -1439,7 +1303,6 @@ async function handleGpxUpload(input, routeIndex) {
                 // Ajouter des flèches de direction
                 const track = layers.find(layer => layer instanceof L.Polyline);
                 if (track) {
-                    console.log('🛣️ Parcours trouvé, ajout des flèches');
                     
                     const arrows = L.polylineDecorator(track, {
                         patterns: [
@@ -1593,7 +1456,6 @@ function setStep(stepNumber) {
 
 // Initialisation au chargement de la page
 document.addEventListener('DOMContentLoaded', async function() {
-    console.log('Initialisation de la page edit-event.js');
     
     // Initialiser la carte de localisation
     initializeLocationMap();
@@ -1610,12 +1472,10 @@ document.addEventListener('DOMContentLoaded', async function() {
         logoInput.addEventListener('change', function() {
             handleLogoUpload(this);
         });
-        console.log('Event handler configuré pour l\'upload du logo');
     }
 
     // Initialiser l'étape courante
     setStep(1);
-    console.log('Étape initiale configurée');
 });
 
 // Fonction pour initialiser le sélecteur d'organisateur
@@ -1701,7 +1561,6 @@ function handleLogoUpload(input) {
 
 // Fonction pour initialiser les gestionnaires de boutons
 function initializeButtonHandlers() {
-    console.log('🔵 Début initialisation des boutons...');
     
     // Récupérer les références des boutons
     nextButton = document.getElementById('nextButton');
@@ -1709,12 +1568,6 @@ function initializeButtonHandlers() {
     step1Text = document.getElementById('step1Text');
     step2Text = document.getElementById('step2Text');
 
-    console.log('🔍 Éléments trouvés:', {
-        nextButton: nextButton ? 'trouvé' : 'non trouvé',
-        prevButton: prevButton ? 'trouvé' : 'non trouvé',
-        step1Text: step1Text ? 'trouvé' : 'non trouvé',
-        step2Text: step2Text ? 'trouvé' : 'non trouvé'
-    });
 
     if (!nextButton || !step1Text || !step2Text) {
         throw new Error('Certains éléments de boutons sont manquants');
@@ -1723,15 +1576,11 @@ function initializeButtonHandlers() {
     // Configurer le gestionnaire d'événements pour le bouton suivant
     nextButton.addEventListener('click', (e) => {
         e.preventDefault();
-        console.log('🖱️ Clic sur le bouton suivant');
         const currentStep = getCurrentStep();
-        console.log('📍 Étape actuelle:', currentStep);
         
         if (currentStep === 2) {
-            console.log('💾 Appel de saveEvent()');
             saveEvent();
         } else {
-            console.log('➡️ Appel de switchStep(1)');
             switchStep(1);
         }
     });
@@ -1740,10 +1589,8 @@ function initializeButtonHandlers() {
     if (prevButton) {
         prevButton.addEventListener('click', (e) => {
             e.preventDefault();
-            console.log('🖱️ Clic sur le bouton précédent');
             switchStep(-1);
         });
     }
 
-    console.log('✅ Initialisation des boutons terminée');
 }

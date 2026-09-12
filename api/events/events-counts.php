@@ -321,6 +321,17 @@ try {
             $totalStmt = $pdo->query("SELECT COUNT(*) FROM events WHERE status = 'approved'");
             $counts['all'] = (int)$totalStmt->fetchColumn();
 
+            // Log de diagnostic des événements annulés
+            $cancelledEvents = array_filter($events, fn($e) => (int)($e['is_cancelled'] ?? 0) === 1);
+            if (!empty($cancelledEvents)) {
+                logError('api/events-counts', 'Evénements annulés retournés', [
+                    'ids' => array_column($cancelledEvents, 'id'),
+                    'titles' => array_column($cancelledEvents, 'title'),
+                    'count' => count($events),
+                    'params' => $params
+                ]);
+            }
+
             // Préparation de la réponse
             $response = [
                 'status' => 'success',
@@ -346,14 +357,33 @@ try {
         }
     }
 
-} catch (Exception $e) {
-    error_log("Erreur dans events.php: " . $e->getMessage());
-    error_log("Trace: " . $e->getTraceAsString());
+} catch (Throwable $e) {
+    $msg = $e->getMessage();
+    $file = $e->getFile();
+    $line = $e->getLine();
+    $trace = $e->getTraceAsString();
+
+    if (function_exists('logError')) {
+        logError('api/events-counts', 'Unhandled error', [
+            'message' => $msg,
+            'file' => $file,
+            'line' => $line,
+            'trace' => $trace
+        ]);
+    }
+    error_log("Erreur dans events.php: " . $msg . " | " . $file . ":" . $line);
+    error_log("Trace: " . $trace);
+
     http_response_code(500);
     echo json_encode([
         'status' => 'error',
-        'message' => 'Une erreur est survenue lors de la récupération des événements'
-    ]);
+        'message' => 'Une erreur est survenue lors de la récupération des événements',
+        'debug' => [
+            'error' => $msg,
+            'file' => $file,
+            'line' => $line
+        ]
+    ], JSON_HEX_QUOT | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS);
     exit;
 }
 ?>

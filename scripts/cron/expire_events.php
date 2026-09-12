@@ -7,6 +7,15 @@ try {
     require_once __DIR__ . '/../../config/database.php';
     require_once __DIR__ . '/../../logs/error.log.php';
 
+    // Vérification de la clé de sécurité (HTTP ?key=... ou 1er argument CLI)
+    $expectedKey = $_ENV['CRON_KEY'] ?? $_ENV['MIGRATE_KEY'] ?? '';
+    $providedKey = $_GET['key'] ?? ($_SERVER['argv'][1] ?? '');
+    if ($expectedKey === '' || !hash_equals($expectedKey, (string)$providedKey)) {
+        http_response_code(403);
+        echo json_encode(['success' => false, 'message' => 'Clé invalide ou manquante'], JSON_UNESCAPED_UNICODE);
+        exit();
+    }
+
     $db = getConnection();
 
     $db->beginTransaction();

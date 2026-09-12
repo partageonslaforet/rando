@@ -32,7 +32,7 @@ return [
     
     // Types de fichiers autorisés
     'allowed_extensions' => [
-        'images' => ['jpg', 'jpeg', 'png', 'gif', 'webp'],
+        'images' => ['jpg', 'jpeg', 'png', 'gif', 'webp', 'avif'],
         'gpx' => ['gpx', 'xml'] 
     ],
 

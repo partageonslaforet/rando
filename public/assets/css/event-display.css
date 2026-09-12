@@ -898,3 +898,29 @@ body.event-detail-page {
   border-radius: 0.25rem;
   padding: 0.25rem 0.5rem;
 }
+
+.event-cancelled-banner {
+  background-color: #dc3545;
+  color: #fff;
+  border-radius: var(--ed-radius, 8px);
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  font-weight: 600;
+}
+
+.event-cancelled-banner i {
+  font-size: 1.1rem;
+}
+
+.event-cancelled-banner .cancelled-reason {
+  width: 100%;
+  margin: 0.5rem 0 0 0;
+  font-weight: 400;
+  font-size: 0.95rem;
+  color: #fff;
+  opacity: 0.95;
+}

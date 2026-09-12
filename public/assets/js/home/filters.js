@@ -29,7 +29,6 @@ async function loadEvents() {
 async function filterEvents() {
     try {
         const events = await loadEvents();
-        console.log('📊 Événements chargés:', events);
         
         // 1. D'abord, filtrer par recherche si elle existe
         let filteredEvents = events;
@@ -81,13 +80,6 @@ async function filterEvents() {
         // 4. Appliquer les autres filtres
         filteredEvents = filteredEvents.filter(event => applyFilters(event, currentFilters));
         
-        console.log('🔍 Après filtrage:', {
-            total: events.length,
-            filtered: filteredEvents.length,
-            filters: currentFilters,
-            events: filteredEvents
-        });
-        
         updateUI(filteredEvents);
         return filteredEvents;
     } catch (error) {
@@ -98,12 +90,6 @@ async function filterEvents() {
 
 // Application des filtres
 function applyFilters(event, filters) {
-    console.log('🔍 Valeurs des filtres:', filters);
-    console.log('⚡ Application des filtres sur:', {
-        event,
-        filters,
-        date: new Date(event.date)
-    });
     
     const eventDate = new Date(event.date);
     const today = new Date();
@@ -123,23 +109,12 @@ function applyFilters(event, filters) {
                     return true;
             }
         })();
-        console.log('🕒 Filtre temporel:', {
-            period: filters.period,
-            eventDate,
-            today,
-            passed: result
-        });
         if (!result) return false;
     }
 
     if (filters.category && filters.category !== 'all') {
         const eventCategories = event.category_ids || (event.category_id ? [event.category_id] : []);
         const result = eventCategories.includes(parseInt(filters.category));
-        console.log('📑 Filtre catégorie:', {
-            category: filters.category,
-            eventCategory: eventCategories,
-            passed: result
-        });
         if (!result) return false;
     }
 
@@ -234,12 +209,8 @@ function updateCounters(allEvents) {
 
 // Mise à jour de l'interface
 async function updateUI(filteredEvents) {
-    console.log('🎨 Mise à jour UI avec:', filteredEvents);
-    console.log('🎯 updateUI appelée avec:', filteredEvents); // Ajout de ce log
-    console.log('🎨 Mise à jour UI avec:', filteredEvents);
     
     if (window.mapFunctions && window.mapFunctions.updateMapMarkers) {
-        console.log('🗺️ Mise à jour carte...');
         window.mapFunctions.updateMapMarkers(filteredEvents);
     }
 
@@ -268,7 +239,6 @@ async function updateUI(filteredEvents) {
             }
             return Promise.resolve();
         }
-        console.log('� Chargement liste paginée avec filtres', { apiFilters, page, limit });
         return window.EventsAPI.getAllEventsPaged(apiFilters, page, limit).then(({ data, pagination }) => {
             if (window.eventListFunctions && typeof window.eventListFunctions.updateEventsList === 'function') {
                 window.eventListFunctions.updateEventsList(data || []);
@@ -296,7 +266,6 @@ async function updateUI(filteredEvents) {
     const eventsContainer = document.querySelector('#eventsList');
     if (eventsContainer) {
         try {
-            console.log('📝 Envoi au template PHP...');
             const response = await fetch('/templates/components/events/events-list.php', {
                 method: 'POST',
                 headers: {
@@ -310,7 +279,6 @@ async function updateUI(filteredEvents) {
 
             if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
             const html = await response.text();
-            console.log('✅ HTML reçu:', html.substring(0, 100) + '...');
             eventsContainer.innerHTML = html;
         } catch (error) {
             console.error('❌ Erreur mise à jour liste:', error);
@@ -344,7 +312,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             
             const category = button.dataset.category;
             currentFilters.category = category === currentFilters.category ? null : category;
-            console.log('🎯 Catégorie sélectionnée:', currentFilters.category); 
             await filterEvents();
         });
     });

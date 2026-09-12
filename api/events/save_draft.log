@@ -1,77 +1,68 @@
-[2026-09-08 14:23:16] INFO:  Début de l'enregistrement du brouillon
-[2026-09-08 14:23:16] INFO: POST data: Array
+[2026-09-11 14:54:38] INFO:  Début de l'enregistrement du brouillon
+[2026-09-11 14:54:38] INFO: POST data: Array
 (
-    [draftId] => 120
-    [title] => hgjhgjhgjh
-    [description] => sdc<c<wcs
-    [date] => 19/09/2026
-    [registrationOpens] => 09:00
-    [registrationCloses] => 10:00
-    [meeting_name] => scqcdqsedc
+    [draftId] => 4
+    [title] => dhdydh
+    [description] => dhdhgdhd
+    [categories] => Array
+        (
+            [0] => 3
+        )
+
+    [date] => 12/09/2026
+    [registrationOpens] => 07:00
+    [registrationCloses] => 09:00
+    [meeting_name] => 
     [meeting_address] => virton
     [meeting_city] => Virton
     [meeting_coordinates] => 49.5677263,5.5329559
-    [routes] => Array
-        (
-            [0] => Array
-                (
-                    [name] => 
-                    [category_id] => 
-                    [gpx_file] => 
-                    [distance] => 
-                    [elevation] => 
-                    [price] => 
-                    [description] => 
-                )
-
-        )
-
+    [routes] => [{"name":"","category_id":"1","distance":"10","elevation":"","price":"","description":"","gpx_file":"","gpx_downloadable":false}]
     [organizerId] => 
     [organizerName] => 
-    [saveReason] => step-next
+    [saveReason] => before-publish
 )
 
-[2026-09-08 14:23:16] INFO: FILES data: Array
+[2026-09-11 14:54:38] INFO: FILES data: Array
 (
 )
 
-[2026-09-08 14:23:16] INFO:  Utilisation du brouillon existant: 120
-[2026-09-08 14:23:16] INFO: 📝 Champs de l'événement:
-[2026-09-08 14:23:16] INFO: title: hgjhgjhgjh
-[2026-09-08 14:23:16] INFO: description: sdc<c<wcs
-[2026-09-08 14:23:16] INFO: date: 2026-09-19
-[2026-09-08 14:23:16] INFO: registration_opens: 09:00:00
-[2026-09-08 14:23:16] INFO: registration_closes: 10:00:00
-[2026-09-08 14:23:16] INFO: location: scqcdqsedc
-[2026-09-08 14:23:16] INFO: venue: virton
-[2026-09-08 14:23:16] INFO: coordinates: 49.5677263,5.5329559
-[2026-09-08 14:23:16] INFO: meeting_name: scqcdqsedc
-[2026-09-08 14:23:16] INFO: meeting_address: virton
-[2026-09-08 14:23:16] INFO: meeting_city: Virton
-[2026-09-08 14:23:16] INFO: meeting_coordinates: 49.5677263,5.5329559
-[2026-09-08 14:23:16] INFO: updated_at: 2026-09-08 14:23:16
-[2026-09-08 14:23:16] INFO: organizer_id: 
-[2026-09-08 14:23:16] INFO: organisation: 
-[2026-09-08 14:23:16] INFO: ℹ️ Aucun organisateur reçu depuis le formulaire événement
-[2026-09-08 14:23:16] INFO: Requête SQL: UPDATE draft_events SET title = ?, description = ?, date = ?, registration_opens = ?, registration_closes = ?, location = ?, venue = ?, coordinates = ?, meeting_name = ?, meeting_address = ?, meeting_city = ?, meeting_coordinates = ?, updated_at = ?, organizer_id = ? WHERE id = ?
-[2026-09-08 14:23:16] INFO: Paramètres: Array
+[2026-09-11 14:54:38] INFO:  Utilisation du brouillon existant: 4
+[2026-09-11 14:54:38] INFO: 📝 Champs de l'événement:
+[2026-09-11 14:54:38] INFO: title: dhdydh
+[2026-09-11 14:54:38] INFO: description: dhdhgdhd
+[2026-09-11 14:54:38] INFO: date: 2026-09-12
+[2026-09-11 14:54:38] INFO: registration_opens: 07:00:00
+[2026-09-11 14:54:38] INFO: registration_closes: 09:00:00
+[2026-09-11 14:54:38] INFO: location: 
+[2026-09-11 14:54:38] INFO: venue: virton
+[2026-09-11 14:54:38] INFO: coordinates: 49.5677263,5.5329559
+[2026-09-11 14:54:38] INFO: meeting_name: 
+[2026-09-11 14:54:38] INFO: meeting_address: virton
+[2026-09-11 14:54:38] INFO: meeting_city: Virton
+[2026-09-11 14:54:38] INFO: meeting_coordinates: 49.5677263,5.5329559
+[2026-09-11 14:54:38] INFO: updated_at: 2026-09-11 14:54:38
+[2026-09-11 14:54:38] INFO: organizer_id: 
+[2026-09-11 14:54:38] INFO: organisation: 
+[2026-09-11 14:54:38] INFO: ℹ️ Aucun organisateur reçu depuis le formulaire événement
+[2026-09-11 14:54:38] INFO: Requête SQL: UPDATE draft_events SET title = ?, description = ?, date = ?, registration_opens = ?, registration_closes = ?, venue = ?, coordinates = ?, meeting_name = ?, meeting_address = ?, meeting_city = ?, meeting_coordinates = ?, updated_at = ?, organizer_id = ? WHERE id = ?
+[2026-09-11 14:54:38] INFO: Paramètres: Array
 (
-    [0] => hgjhgjhgjh
-    [1] => sdc<c<wcs
-    [2] => 2026-09-19
-    [3] => 09:00:00
-    [4] => 10:00:00
-    [5] => scqcdqsedc
-    [6] => virton
-    [7] => 49.5677263,5.5329559
-    [8] => scqcdqsedc
-    [9] => virton
-    [10] => Virton
-    [11] => 49.5677263,5.5329559
-    [12] => 2026-09-08 14:23:16
-    [13] => 
-    [14] => 120
+    [0] => dhdydh
+    [1] => dhdhgdhd
+    [2] => 2026-09-12
+    [3] => 07:00:00
+    [4] => 09:00:00
+    [5] => virton
+    [6] => 49.5677263,5.5329559
+    [7] => 
+    [8] => virton
+    [9] => Virton
+    [10] => 49.5677263,5.5329559
+    [11] => 2026-09-11 14:54:38
+    [12] => 
+    [13] => 4
 )
 
-[2026-09-08 14:23:16] INFO: Informations principales de l'événement mises à jour avec succès
-[2026-09-08 14:23:16] INFO:  Transaction validée avec succès
+[2026-09-11 14:54:38] INFO: Informations principales de l'événement mises à jour avec succès
+[2026-09-11 14:54:38] INFO: ✅ Tags d'activité enregistrés : 3
+[2026-09-11 14:54:38] INFO:  Transaction validée avec succès

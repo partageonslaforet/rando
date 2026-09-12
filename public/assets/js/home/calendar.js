@@ -69,7 +69,6 @@ document.addEventListener('DOMContentLoaded', function() {
     if (typeof EventsAPI !== 'undefined') {
         EventsAPI.getAllEvents().then(events => {
             window.allEvents = events;
-            console.log('Events reçus:', events); // Debug
             // Mettre à jour les marqueurs de la carte si disponible
             if (window.mapFunctions && typeof window.mapFunctions.updateMapMarkers === 'function') {
                 try { window.mapFunctions.updateMapMarkers(window.allEvents); } catch (e) { /* no-op */ }
@@ -85,12 +84,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 return acc;
             }, {});
     
-            console.log('Events groupés:', eventsByDate); // Debug
     
             // Créer les événements du calendrier avec les badges groupés
             const calendarEvents = Object.entries(eventsByDate).map(([date, dayEvents]) => {
                 const categories = [...new Set(dayEvents.map(event => event.category))];
-                console.log(`Catégories pour ${date}:`, categories); // Debug
                 
                 return {
                     start: date,
@@ -99,7 +96,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 };
             });
     
-            console.log('Events calendrier:', calendarEvents); // Debug
             window.calendar.removeAllEvents();
             window.calendar.addEventSource(calendarEvents);
         });

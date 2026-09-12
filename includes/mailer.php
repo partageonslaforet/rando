@@ -65,11 +65,16 @@ class Mailer {
 
             $this->mailer = new PHPMailer(true);
 
+            // Limite le timeout de connexion fsockopen pour eviter un blocage de 60s
+            ini_set('default_socket_timeout', '10');
+
             // Choisir dynamiquement le transport
             $useSMTP = false;
             if (!empty(MAIL_HOST) && strtolower(MAIL_HOST) !== 'mail()' && (!empty(MAIL_USERNAME) && !empty(MAIL_PASSWORD))) {
                 $useSMTP = true;
             }
+
+            $this->mailer->Timeout = 10;
 
             if ($useSMTP) {
                 $this->mailer->isSMTP();
@@ -88,8 +93,17 @@ class Mailer {
                     $this->mailer->SMTPAutoTLS = false;
                 }
             } else {
-                // Pas de credentials fournis -> utiliser mail() natif
-                $this->mailer->isMail();
+                // En prod sans credentials SMTP, mail() natif est souvent bloque/plante sur l'hebergement mutualise
+                $isProd = (($_ENV['APP_ENV'] ?? '') === 'production') || (strpos($_SERVER['HTTP_HOST'] ?? '', 'rando.partageonslaforet.be') !== false);
+                $isMailFunction = function_exists('mail') && !in_array('mail', array_map('trim', explode(',', ini_get('disable_functions'))), true);
+                if ($isProd && !$isMailFunction) {
+                    throw new \Exception('Aucun transport e-mail configure (SMTP credentials manquants et mail() desactive).');
+                } elseif ($isProd) {
+                    throw new \Exception('Aucun compte SMTP configure. mail() natif est instable en production et a ete desactive.');
+                } else {
+                    // Dev : utiliser mail() natif (MailHog, sendmail local)
+                    $this->mailer->isMail();
+                }
             }
 
             if (function_exists('logError')) {
@@ -163,7 +177,26 @@ class Mailer {
                 }
             }
 
-            return $this->mailer->send();
+            $result = $this->mailer->send();
+            if (!$result) {
+                if (function_exists('logError')) {
+                    logError('includes/mailer.php', 'Envoi e-mail a retourne false', [
+                        'errorInfo' => $this->mailer->ErrorInfo,
+                        'to' => $to,
+                        'subject' => $subject,
+                        'transport' => $this->mailer->Mailer,
+                        'host' => $this->mailer->Host ?? null,
+                        'port' => $this->mailer->Port ?? null,
+                    ]);
+                }
+            } elseif (defined('DEBUG') && DEBUG && function_exists('logError')) {
+                logError('includes/mailer.php', 'Envoi e-mail reussi', [
+                    'to' => $to,
+                    'subject' => $subject,
+                    'transport' => $this->mailer->Mailer,
+                ]);
+            }
+            return $result;
         } catch (\Exception $e) {
             require_once __DIR__ . '/../logs/error.log.php';
             logError('includes/mailer.php', 'Envoi e-mail échoué', ['exception' => $e->getMessage()]);
@@ -193,7 +226,7 @@ class Mailer {
     }
 
     public function sendPasswordResetEmail(string $to, string $name, string $token): bool {
-        $link = rtrim(APP_URL, '/') . '/templates/modals/reset-password.php?token=' . urlencode($token) . '&email=' . urlencode($to);
+        $link = rtrim(APP_URL, '/') . '/?reset=1&token=' . urlencode($token) . '&email=' . urlencode($to);
         $subject = 'Réinitialisation de votre mot de passe - ' . APP_NAME;
 
         $cssPath = __DIR__ . '/../public/assets/css/email-styles.css';

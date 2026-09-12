@@ -72,13 +72,32 @@ try {
         $db->beginTransaction();
 
         // Email déjà utilisé ?
-        $stmt = $db->prepare('SELECT id, email_verified FROM users WHERE email = ?');
+        $stmt = $db->prepare('SELECT id, email_verified, name FROM users WHERE email = ?');
         $stmt->execute([$input['email']]);
         $existing = $stmt->fetch();
 
         if ($existing) {
-            // Réponse neutre : ne pas révéler l'existence du compte
-            $db->rollBack();
+            if ((int)$existing['email_verified'] === 0) {
+                // Le compte existe mais n'est pas vérifié : renvoyer le mail de confirmation
+                $token = bin2hex(random_bytes(32));
+                $tokenHash = hash('sha256', $token);
+                $expiresAt = date('Y-m-d H:i:s', strtotime('+24 hours'));
+
+                $stmt = $db->prepare('INSERT INTO email_verification_tokens (user_id, token_hash, expires_at) VALUES (?, ?, ?)');
+                $stmt->execute([$existing['id'], $tokenHash, $expiresAt]);
+                $db->commit();
+
+                require_once __DIR__ . '/../../includes/mailer.php';
+                $mailer = new Mailer();
+                $name = !empty($existing['name']) ? $existing['name'] : $input['name'];
+                $mailSent = $mailer->sendVerificationEmail($input['email'], $name, $token);
+                logError('api/auth/register.php', 'Renvoi mail verification (compte non verifie)', ['sent' => $mailSent, 'email' => $input['email']]);
+            } else {
+                // Réponse neutre : ne pas révéler l'existence du compte
+                $db->rollBack();
+                logError('api/auth/register.php', 'Email deja enregistre et verifie', ['email' => $input['email']]);
+            }
+
             echo json_encode([
                 'success' => true,
                 'message' => 'Si cette adresse email est disponible, un e-mail de confirmation a été envoyé.'
@@ -95,6 +114,7 @@ try {
         ');
         $stmt->execute([$input['email'], $hashedPassword, $input['name']]);
         $userId = (int) $db->lastInsertId();
+        logError('api/auth/register.php', 'User cree', ['user_id' => $userId, 'email' => $input['email']]);
 
         // Jeton brut (connu uniquement du mail)
         $token = bin2hex(random_bytes(32));
@@ -112,7 +132,8 @@ try {
         // Envoi de l'e-mail de confirmation
         require_once __DIR__ . '/../../includes/mailer.php';
         $mailer = new Mailer();
-        $mailer->sendVerificationEmail($input['email'], $input['name'], $token);
+        $mailSent = $mailer->sendVerificationEmail($input['email'], $input['name'], $token);
+        logError('api/auth/register.php', 'Resultat envoi mail verification', ['sent' => $mailSent, 'email' => $input['email']]);
 
     } catch (PDOException $e) {
         $db->rollBack();

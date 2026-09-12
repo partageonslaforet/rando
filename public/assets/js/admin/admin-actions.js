@@ -46,6 +46,9 @@
     const container = document.getElementById('adminToastContainer');
     if (!container) return;
 
+    // Supprimer les toasts précédents pour éviter la superposition
+    container.querySelectorAll('.toast').forEach(t => t.remove());
+
     const toastEl = document.createElement('div');
     toastEl.className = 'toast align-items-center ' + (variant === 'success' ? 'toast-success' : 'toast-error');
     toastEl.role = 'status';

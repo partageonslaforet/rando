@@ -16,7 +16,6 @@ if (typeof window.geocodeCache === 'undefined') {
 }
 
 // Initialisation de la carte
-console.log(' map.js chargé.');
 
 document.addEventListener('DOMContentLoaded', function() {
     // Vérifier si le conteneur de carte existe
@@ -61,11 +60,9 @@ if (typeof window.geocodeCache === 'undefined') {
 
 // Fonction pour géocoder une adresse avec cache
 async function geocodeAddress(address) {
-    console.log(' [geocodeAddress] Début du géocodage pour:', address);
     try {
         // Vérifier le cache
         if (window.geocodeCache.has(address)) {
-            console.log(' [geocodeAddress] Résultat trouvé dans le cache');
             return window.geocodeCache.get(address);
         }
 
@@ -90,7 +87,6 @@ async function geocodeAddress(address) {
 
 // Fonction pour le géocodage inverse
 async function reverseGeocode(lat, lng) {
-    console.log(' [reverseGeocode] Début du géocodage inverse pour:', lat, lng);
     try {
         const response = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&zoom=18&format=json`);
         const result = await response.json();
@@ -162,9 +158,11 @@ async function updateMapMarkers(events) {
                 let coordinates = getCoordinates(event);
 
                 if (coordinates && coordinates.lat && coordinates.lng) {
+                    const isCancelled = /^(1|t|true|yes|on)$/i.test(String(event.is_cancelled));
                     const popupContent = `
                         <div class="event-popup">
                             <div class="event-popup-image">
+                                ${isCancelled ? '<span class="event-popup-cancelled">Annulé</span>' : ''}
                                 <img src="${event.main_image_path || '/assets/images/events/default-event.jpg'}" 
                                      alt="${event.title}"
                                      style="width: 100%; height: 120px; object-fit: cover;">
@@ -252,4 +250,3 @@ window.mapFunctions = {
     }
 };
 
-console.log(' map.js chargé.');

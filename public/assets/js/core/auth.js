@@ -248,8 +248,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 submitBtn.disabled = true;
 
                 const form = event.target;
-                const password = form.querySelector('#password').value;
-                const passwordConfirm = form.querySelector('#password_confirm').value;
+                const password = form.querySelector('input[name="password"]').value;
+                const passwordConfirm = form.querySelector('input[name="password_confirm"]').value;
 
                 if (password.length < 8) {
                     throw new Error('Le mot de passe doit contenir au moins 8 caractères');
@@ -282,7 +282,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (msg) {
                     msg.className = 'alert alert-success';
                     msg.textContent = data.message;
-                    msg.classList.remove('d-none');
+                    msg.style.display = 'block';
                 }
 
                 setTimeout(() => window.location.href = '/', 2000);
@@ -291,7 +291,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (msg) {
                     msg.className = 'alert alert-danger';
                     msg.textContent = error.message;
-                    msg.classList.remove('d-none');
+                    msg.style.display = 'block';
                 }
             } finally {
                 submitBtn.disabled = false;
@@ -304,12 +304,10 @@ document.addEventListener('DOMContentLoaded', function() {
 // Fonction de déconnexion
 window.logout = async function() {
     try {
-        console.log(' Tentative de déconnexion');
         const response = await fetch('/api/auth/logout.php');
         const data = await response.json();
         
         if (data.success) {
-            console.log(' Déconnexion réussie');
             window.location.href = '/';
         } else {
             console.error(' Erreur lors de la déconnexion:', data.message);
@@ -361,14 +359,6 @@ function logEyeButtons(label) {
         const inputId = btn.getAttribute('data-target');
         const input = inputId ? document.getElementById(inputId) : null;
         const cs = window.getComputedStyle(btn);
-        console.log('[auth.js eye]', label, 'button#' + i, {
-            inputId,
-            inputFound: !!input,
-            display: cs.display,
-            visibility: cs.visibility,
-            opacity: cs.opacity,
-            rect: btn.getBoundingClientRect()
-        });
     });
 }
 
@@ -381,7 +371,6 @@ document.addEventListener('click', function(e) {
     const input = document.getElementById(inputId);
     const icon = button.querySelector('i');
 
-    console.log('[auth.js] click oeil', { inputId, inputFound: !!input, iconFound: !!icon, inputValueLen: input ? input.value.length : 0 });
 
     if (!input) {
         console.warn('[auth.js] champ mot de passe non trouvé pour', inputId);
@@ -406,13 +395,10 @@ document.addEventListener('click', function(e) {
 });
 
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('[auth.js] DOMContentLoaded, auth.js v3');
     logEyeButtons('DOMContentLoaded');
 });
 
 document.addEventListener('shown.bs.modal', function(e) {
-    console.log('[auth.js] modal shown', e.target.id);
     logEyeButtons('modal shown');
 });
 
-console.log(' Fin du chargement de auth.js');

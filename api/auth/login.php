@@ -4,8 +4,10 @@
  * N'accepte que les comptes confirmés (email_verified = 1) et actifs.
  */
 
+require_once __DIR__ . '/../../includes/functions.php';
+initSession();
+
 header('Content-Type: application/json');
-session_start();
 require_once __DIR__ . '/../../config/database.php';
 require_once __DIR__ . '/../../includes/csrf.php';
 require_once __DIR__ . '/../../includes/rate_limit.php';
@@ -92,9 +94,11 @@ try {
 
 } catch (Exception $e) {
     logError('api/auth/login.php', 'Échec de connexion', ['exception' => $e->getMessage()]);
+    $knownMessages = ['Données invalides', 'Email ou mot de passe incorrect', 'Veuillez vérifier votre compte avant de vous connecter'];
+    $message = in_array($e->getMessage(), $knownMessages, true) ? $e->getMessage() : 'Une erreur est survenue';
     http_response_code(400);
     echo json_encode([
         'success' => false,
-        'message' => 'Email ou mot de passe incorrect'
+        'message' => $message
     ]);
 }

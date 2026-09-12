@@ -6,9 +6,12 @@
  * Dépendances: config/database.php, includes/functions.php, src/Models/Event.php, templates/
  */
 
-// Activation de l'affichage des erreurs pour le débogage
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
+// Mise en tampon de la sortie pour permettre les redirections depuis les templates
+ob_start();
+
+// 1. Démarrage de la session AVANT tout header
+require_once __DIR__ . '/includes/functions.php';
+initSession();
 
 // Fonction de log détaillée
 function debug_log($message, $data = null) {
@@ -22,11 +25,8 @@ function debug_log($message, $data = null) {
 }
 
 try {
-    // 1. Headers HTTP et session (AVANT toute sortie)
+    // Headers HTTP (AVANT toute sortie)
     header('Content-Type: text/html; charset=utf-8');
-    if (session_status() === PHP_SESSION_NONE) {
-        session_start();
-    }
     
     // 2. Logs initiaux
     debug_log('🚀 Démarrage de index.php');
@@ -39,7 +39,6 @@ try {
     // 3. Chargement des dépendances essentielles
     debug_log('Chargement des dépendances');
     require_once __DIR__ . '/config/database.php';
-    require_once __DIR__ . '/includes/functions.php';
     require_once __DIR__ . '/src/Models/Event.php';
     require_once __DIR__ . '/templates/components/header/header.php';
     require_once __DIR__ . '/templates/components/footer/footer.php'; 

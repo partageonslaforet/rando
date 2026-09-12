@@ -78,7 +78,7 @@ function attrValue($value): string
         </button>
 
         <!-- Bouton Retour aux événements, en bas à droite du hero -->
-        <a href="http://localhost:9999/" class="ehm-share btn-share hero-back-btn" aria-label="Retour aux événements">
+        <a href="/" class="ehm-share btn-share hero-back-btn" aria-label="Retour aux événements">
             <i class="bi bi-arrow-left"></i>
         </a>
 
@@ -88,6 +88,15 @@ function attrValue($value): string
         </button>
 
         <div class="event-hero-overlay">
+            <?php if (filter_var($event['is_cancelled'] ?? false, FILTER_VALIDATE_BOOLEAN)): ?>
+                <div class="event-cancelled-banner">
+                    <i class="bi bi-x-circle-fill"></i>
+                    <span>Événement annulé</span>
+                    <?php if (!empty($event['cancellation_reason'])): ?>
+                        <p class="cancelled-reason">Motif : <?= displayValue($event['cancellation_reason']) ?></p>
+                    <?php endif; ?>
+                </div>
+            <?php endif; ?>
             
     
             <!-- Ligne 2 : titre centré -->
@@ -142,7 +151,7 @@ function attrValue($value): string
 
         <!-- Barre réduite affichée quand le hero est fermé -->
         <div class="event-hero-collapsed" aria-hidden="true">
-            <a href="http://localhost:9999/" class="btn-share hero-back-link" aria-label="Retour aux événements">
+            <a href="/" class="btn-share hero-back-link" aria-label="Retour aux événements">
                 <i class="bi bi-arrow-left"></i>
             </a>
             <div class="hero-collapsed-center">

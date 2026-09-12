@@ -125,14 +125,27 @@
 
 /* --- Toast admin --- */
 #adminToastContainer {
+    position: fixed !important;
     z-index: 2000 !important;
-    top: 50% !important;
-    left: 50% !important;
-    right: auto !important;
+    top: 1rem !important;
+    right: 1rem !important;
+    left: auto !important;
     bottom: auto !important;
-    transform: translate(-50%, -50%) !important;
+    transform: none !important;
+    width: auto !important;
+    max-width: calc(100% - 2rem) !important;
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+    align-items: flex-end;
 }
-#adminToastContainer .toast { border-radius: 12px; box-shadow: 0 6px 20px rgba(0,0,0,0.18); }
+#adminToastContainer .toast {
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.18);
+    width: max-content;
+    max-width: 90vw;
+    text-align: left;
+}
 #adminToastContainer .toast-header { font-weight: 700; }
 .toast-success { border-left: 5px solid #3A8A3D; }
 .toast-error { border-left: 5px solid #C0392B; }

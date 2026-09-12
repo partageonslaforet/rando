@@ -1,18 +1,28 @@
 <?php
+require_once __DIR__ . '/../logs/error.log.php';
+
 // Chargement des variables d'environnement
 $dotenvPath = __DIR__ . '/../.env';
 
-// Timezone par défaut pour aligner PHP et MySQL (peut être surchargée via .env)
-date_default_timezone_set($_ENV['APP_TIMEZONE'] ?? 'Europe/Brussels');
+// Timezone par défaut (sera surchargée après lecture du .env)
+date_default_timezone_set('Europe/Brussels');
 if (file_exists($dotenvPath)) {
     if (file_exists(__DIR__ . '/../vendor/autoload.php')) {
         require_once __DIR__ . '/../vendor/autoload.php';
-        $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/..');
-        $dotenv->load();
+        try {
+            $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/..');
+            $dotenv->load();
+        } catch (Throwable $e) {
+            logError(__FILE__, 'Dotenv loader failed', ['error' => $e->getMessage()]);
+        }
     } elseif (function_exists('parse_ini_file')) {
         $ini = parse_ini_file($dotenvPath, false, INI_SCANNER_RAW);
         if ($ini !== false) {
             foreach ($ini as $key => $value) {
+                if (is_string($value)) {
+                    $value = trim($value);
+                    $value = trim($value, "\"'");
+                }
                 $_ENV[$key] = $value;
                 $_SERVER[$key] = $value;
             }
@@ -20,8 +30,14 @@ if (file_exists($dotenvPath)) {
     }
 }
 
+// Timezone réelle après chargement .env
+if (!empty($_ENV['APP_TIMEZONE'])) {
+    date_default_timezone_set($_ENV['APP_TIMEZONE']);
+}
+
 // Détection de l'environnement
-$isProduction = strpos($_SERVER['HTTP_HOST'] ?? '', 'rando.partageonslaforet.be') !== false;
+$appEnv = strtolower($_ENV['APP_ENV'] ?? '');
+$isProduction = $appEnv === 'production' || strpos($_SERVER['HTTP_HOST'] ?? '', 'rando.partageonslaforet.be') !== false;
 
 // Configuration de la base de données
 define('DB_HOST', $_ENV['DB_HOST'] ?? 'localhost');
@@ -68,10 +84,12 @@ function getConnection() {
         
         return $pdo;
     } catch (PDOException $e) {
-        error_log("Erreur de connexion à la base de données: " . $e->getMessage());
-        error_log("DSN: " . $dsn);
-        error_log("Host: " . DB_HOST);
-        error_log("Port: " . DB_PORT);
+        logError(__FILE__, 'PDO connection failed', [
+            'message' => $e->getMessage(),
+            'dsn' => $dsn,
+            'host' => DB_HOST,
+            'port' => DB_PORT
+        ]);
         throw new PDOException("Erreur de connexion à la base de données");
     }
 }
@@ -84,20 +102,21 @@ try {
         error_log("Connexion à la base de données réussie (" . DB_NAME . ")");
     }
 } catch (PDOException $e) {
-    // Log détaillé de l'erreur
-    error_log("Erreur de connexion à la base de données : " . $e->getMessage());
-    error_log("DSN : " . getDsn());
-    error_log("Utilisateur : " . DB_USER);
-    error_log("Environnement : " . ($isProduction ? 'production' : 'développement'));
-    
-    if (DEBUG) {
-        // Affichage des détails de l'erreur
+    // Log sécurisé des détails
+    logError(__FILE__, 'Database connection error', [
+        'message' => $e->getMessage(),
+        'dsn' => getDsn(),
+        'user' => DB_USER,
+        'env' => $isProduction ? 'production' : 'development'
+    ]);
+
+    // Affichage des détails en local uniquement, jamais en prod
+    if (DEBUG && !$isProduction) {
         echo "Erreur de connexion à la base de données : " . $e->getMessage() . "\n";
         echo "DSN : " . getDsn() . "\n";
         echo "Utilisateur : " . DB_USER . "\n";
         echo "Environnement : " . ($isProduction ? 'production' : 'développement') . "\n";
     } else {
-        // En production, ne pas afficher les détails de l'erreur
         echo "Une erreur est survenue lors de la connexion à la base de données.";
     }
     exit;

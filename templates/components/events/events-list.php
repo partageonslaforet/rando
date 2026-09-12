@@ -31,6 +31,9 @@ if (!function_exists('render_events_list')) {
                     <a href="" class="summary-card-image" target="_blank" rel="noopener" aria-label="Afficher l'image">
                         <img src="" alt="" loading="lazy">
                     </a>
+                    <div class="cancelled-sticker">
+                        <span>ANNULÉ</span>
+                    </div>
                     <a href="" class="summary-card-body" aria-label="Voir l'événement">
                         <h3 class="summary-card-title"></h3>
                             <!-- Ligne 1: Lieu | Adresse (à droite) -->
@@ -277,6 +280,13 @@ if (!function_exists('render_events_list')) {
                     byDate[dayKey].forEach(event => {
                         const eventElement = template.content.cloneNode(true);
 
+                        const summaryCard = eventElement.querySelector('.summary-card');
+                        console.warn('[events-list]', event.id, event.title, 'is_cancelled=', event.is_cancelled);
+                        if (summaryCard && /^(1|t|true|yes|on)$/i.test(String(event.is_cancelled))) {
+                            console.warn('[events-list] ajout is-cancelled pour', event.id);
+                            summaryCard.classList.add('is-cancelled');
+                        }
+
                         const img = eventElement.querySelector('.summary-card-image img');
                         const placeholderSvg = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%23a8d5a2'/%3E%3Cstop offset='100%25' stop-color='%235d8c5f'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='400' height='300' fill='url(%23g)'/%3E%3C/svg%3E";
                         img.src = event.main_image_path || event.main_image || (event.event_image ? `/uploads/events/${event.event_image}` : placeholderSvg);
@@ -470,13 +480,10 @@ if (!function_exists('render_events_list')) {
                             if (String(selectEl.value) !== String(currentPerPage)) {
                                 selectEl.value = String(currentPerPage);
                             }
-                            if (!selectEl.dataset.bound) {
-                                selectEl.addEventListener('change', function(e) {
-                                    const v = parseInt(e.target.value, 10);
-                                    if (!Number.isNaN(v) && v > 0) onChange(v);
-                                });
-                                selectEl.dataset.bound = '1';
-                            }
+                            selectEl.onchange = function(e) {
+                                const v = parseInt(e.target.value, 10);
+                                if (!Number.isNaN(v) && v > 0) onChange(v);
+                            };
                         }
                     } catch (e) {
                         console.warn('renderPerPageControl error:', e);

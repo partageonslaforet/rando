@@ -34,8 +34,8 @@
 <script src="/assets/js/home/map.js"></script>
 <script src="/assets/js/home/calendar.js"></script>
 <script src="/assets/js/home/filters.js"></script>
-<script src="/assets/js/core/modals.js"></script>
-<script src="/assets/js/core/auth.js?v=5"></script>
+<script src="/assets/js/core/modals.js?v=2"></script>
+<script src="/assets/js/core/auth.js?v=6"></script>
 <script src="/assets/js/core/header.js?v=2"></script>
 <script src="/assets/js/core/contact.js?v=1"></script>
 <script src="/assets/js/core/init.js"></script>

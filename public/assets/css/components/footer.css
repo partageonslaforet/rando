@@ -101,3 +101,10 @@
   background: var(--secondary-color);
   border-radius: 2px;
 }
+
+.hunting-dates {
+  border: 2px solid var(--primary-color);
+  padding: .35rem .75rem;
+  border-radius: .25rem;
+  display: inline-block;
+}

@@ -52,13 +52,9 @@ try {
         throw new Exception('Erreur lors du déplacement du fichier');
     }
 
-    // Déterminer l'URL de base
-    $scheme = $_SERVER['REQUEST_SCHEME'] ?? 'https';
-    $baseUrl = $scheme . '://' . $_SERVER['HTTP_HOST'];
-
     // Construire l'URL complète
     $relativePath = Storage::getPublicUrl('gpx', $filename);
-    $fullUrl = $baseUrl . $relativePath;
+    $fullUrl = getFullUrl($relativePath);
 
     echo json_encode([
         'success' => true,

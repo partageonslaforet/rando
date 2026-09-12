@@ -15,19 +15,22 @@ function render_footer() {
                 <div class="col-12 col-lg-4">
                     <div class="footer-brand d-flex align-items-center gap-2">
                         <img src="/assets/images/logoplfrond.png" alt="Partageons la Forêt" class="footer-logo">
-                        <span class="footer-brand-name">Partageons la Forêt</span>
+                        <a href="https://partageonslaforet.be" target="_blank" rel="noopener noreferrer" class="footer-brand-name text-decoration-none">Partageons la Forêt</a>
                     </div>
                     <p class="footer-tagline mt-3 mb-0">
                         Événements nature, marche, cyclo, VTT, trail… près de chez vous. </br> Partageons La Forêt est une initiative pour promouvoir le partage respectueux des espaces naturels.
                     </p>
                 </div>
 
-                <!-- Col 2: À propos (pas de lien) -->
+                <!-- Col 2: À propos -->
                 <div class="col-12 col-lg-4">
                     <h6 class="footer-title mb-3">À propos</h6>
-                    <p class="mb-0">
+                    <p class="mb-3">
                         Nous rassemblons les événements outdoor pour faciliter la découverte de la nature et des territoires.
                     </p>
+                    <a href="https://partageonslaforet.be" class="hunting-dates" target="_blank" rel="noopener noreferrer" title="Dates de chasse 2026/2027">
+                        <i class="bi bi-calendar3 me-2"></i>Saison 2026/2027 Consultez les dates de chasse
+                    </a>
                 </div>
 
                 <!-- Col 3: Contact -->

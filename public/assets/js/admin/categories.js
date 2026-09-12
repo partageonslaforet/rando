@@ -20,7 +20,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const isEdit = categoryId && categoryId !== '';
             
             try {
-                console.log('Envoi des données:', Object.fromEntries(formData.entries()));
                 
                 const response = await fetch(`/api/admin/categories/${isEdit ? 'update' : 'create'}.php`, {
                     method: 'POST',
@@ -34,7 +33,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
 
                 const data = await response.json();
-                console.log('Réponse du serveur:', data);
 
                 if (data.success) {
                     // Fermer le modal si présent puis recharger la page actuelle

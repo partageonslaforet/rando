@@ -17,6 +17,21 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    const cancelModal = document.getElementById('cancelEventModal');
+    if (cancelModal) {
+        cancelModal.addEventListener('show.bs.modal', function(event) {
+            const button = event.relatedTarget;
+            const eventId = button ? button.getAttribute('data-cancel-id') : '';
+            const eventTitle = button ? button.getAttribute('data-cancel-title') : '';
+            const idInput = cancelModal.querySelector('#cancelEventId');
+            const titleEl = cancelModal.querySelector('#cancelEventTitle');
+            const reasonInput = cancelModal.querySelector('#cancellationReason');
+            if (idInput) idInput.value = eventId;
+            if (titleEl) titleEl.textContent = eventTitle || '';
+            if (reasonInput) reasonInput.value = '';
+        });
+    }
+
     // Auto-dismiss flash messages after 5 seconds
     const flashMessages = document.querySelector('.flash-messages');
     if (flashMessages) {

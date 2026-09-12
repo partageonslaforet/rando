@@ -59,13 +59,35 @@ window.showForgotPasswordModal = function() {
     }
 };
 
+window.showResetPasswordModal = function() {
+    const modalElement = document.getElementById('resetPasswordModal');
+    if (!modalElement) {
+        console.error('❌ Modal de réinitialisation du mot de passe non trouvé!');
+        return;
+    }
+
+    try {
+        ['loginModal', 'registerModal', 'forgotPasswordModal'].forEach(id => {
+            const m = bootstrap.Modal.getInstance(document.getElementById(id));
+            if (m) m.hide();
+        });
+
+        const modal = new bootstrap.Modal(modalElement);
+        modal.show();
+    } catch (error) {
+        console.error('❌ Erreur lors de l\'affichage du modal de réinitialisation:', error);
+    }
+};
+
 // Initialisation au chargement du DOM
 document.addEventListener('DOMContentLoaded', function() {
-    // Ouvrir automatiquement la modale de login si demandé via l'URL
     try {
         const url = new URL(window.location.href);
         if (url.searchParams.get('showLogin') === '1') {
             window.showLoginModal();
+        }
+        if (url.searchParams.get('reset') === '1') {
+            window.showResetPasswordModal();
         }
     } catch (_) {}
 });

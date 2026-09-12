@@ -45451,3 +45451,407 @@ Le port du casque est obligatoire
 [08-Sep-2026 12:46:51 Europe/Brussels] [2026-09-08 12:46:51] ✅ Email admin de validation envoyé à rando@partageonslaforet.be
 
 [2026-09-08 12:46:51] ✅ Email admin de validation envoyé à rando@partageonslaforet.be
+[11-Sep-2026 14:54:38 Europe/Brussels] Connexion à la base de données réussie (cool5792_sports_events)
+[11-Sep-2026 14:54:38 Europe/Brussels] [2026-09-11 14:54:38] === Début de la requête ===
+
+[2026-09-11 14:54:38] === Début de la requête ===
+[11-Sep-2026 14:54:38 Europe/Brussels] [2026-09-11 14:54:38] 📝 POST data: Array
+(
+    [draftId] => 4
+    [title] => dhdydh
+    [description] => dhdhgdhd
+    [categories] => Array
+        (
+            [0] => 3
+        )
+
+    [date] => 12/09/2026
+    [registrationOpens] => 07:00
+    [registrationCloses] => 09:00
+    [meeting_name] => 
+    [meeting_address] => virton
+    [meeting_city] => Virton
+    [meeting_coordinates] => 49.5677263,5.5329559
+    [routes] => Array
+        (
+            [0] => Array
+                (
+                    [name] => 
+                    [category_id] => 1
+                    [gpx_file] => 
+                    [distance] => 10
+                    [elevation] => 
+                    [price] => 
+                    [description] => 
+                )
+
+        )
+
+    [organizerId] => 
+    [organizerName] => 
+)
+
+
+[2026-09-11 14:54:38] 📝 POST data: Array
+(
+    [draftId] => 4
+    [title] => dhdydh
+    [description] => dhdhgdhd
+    [categories] => Array
+        (
+            [0] => 3
+        )
+
+    [date] => 12/09/2026
+    [registrationOpens] => 07:00
+    [registrationCloses] => 09:00
+    [meeting_name] => 
+    [meeting_address] => virton
+    [meeting_city] => Virton
+    [meeting_coordinates] => 49.5677263,5.5329559
+    [routes] => Array
+        (
+            [0] => Array
+                (
+                    [name] => 
+                    [category_id] => 1
+                    [gpx_file] => 
+                    [distance] => 10
+                    [elevation] => 
+                    [price] => 
+                    [description] => 
+                )
+
+        )
+
+    [organizerId] => 
+    [organizerName] => 
+)
+
+[11-Sep-2026 14:54:38 Europe/Brussels] [2026-09-11 14:54:38] 📝 SESSION data: Array
+(
+    [csrf_token] => 4a50545812b5fb2c69b32e72af33af6f8cbe73356a1f34dcb8fcfb6e392adfc3
+    [rate_limit_login] => Array
+        (
+            [count] => 2
+            [first] => 1789065544
+        )
+
+    [user_id] => 2
+    [user_email] => jarodhc4@gmail.com
+    [user_role] => user
+    [user] => Array
+        (
+            [id] => 2
+            [email] => jarodhc4@gmail.com
+            [role] => user
+        )
+
+)
+
+
+[2026-09-11 14:54:38] 📝 SESSION data: Array
+(
+    [csrf_token] => 4a50545812b5fb2c69b32e72af33af6f8cbe73356a1f34dcb8fcfb6e392adfc3
+    [rate_limit_login] => Array
+        (
+            [count] => 2
+            [first] => 1789065544
+        )
+
+    [user_id] => 2
+    [user_email] => jarodhc4@gmail.com
+    [user_role] => user
+    [user] => Array
+        (
+            [id] => 2
+            [email] => jarodhc4@gmail.com
+            [role] => user
+        )
+
+)
+
+[11-Sep-2026 14:54:38 Europe/Brussels] [2026-09-11 14:54:38] 📝 SERVER data: Array
+(
+    [DOCUMENT_ROOT] => /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/public
+    [REMOTE_ADDR] => ::1
+    [REMOTE_PORT] => 51819
+    [SERVER_SOFTWARE] => PHP/8.4.14 (Development Server)
+    [SERVER_PROTOCOL] => HTTP/1.1
+    [SERVER_NAME] => localhost
+    [SERVER_PORT] => 9999
+    [REQUEST_URI] => /api/events/publish.php
+    [REQUEST_METHOD] => POST
+    [SCRIPT_NAME] => /index.php
+    [SCRIPT_FILENAME] => /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/public/index.php
+    [PATH_INFO] => /api/events/publish.php
+    [PHP_SELF] => /index.php/api/events/publish.php
+    [HTTP_HOST] => localhost:9999
+    [HTTP_USER_AGENT] => Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:154.0) Gecko/20100101 Firefox/154.0
+    [HTTP_ACCEPT] => */*
+    [HTTP_ACCEPT_LANGUAGE] => fr-BE
+    [HTTP_ACCEPT_ENCODING] => gzip, deflate, br, zstd
+    [HTTP_REFERER] => http://localhost:9999/?create=1
+    [CONTENT_TYPE] => multipart/form-data; boundary=----geckoformboundary92a8eb635bcad1672a66611ac3d7fa5c
+    [HTTP_CONTENT_TYPE] => multipart/form-data; boundary=----geckoformboundary92a8eb635bcad1672a66611ac3d7fa5c
+    [CONTENT_LENGTH] => 3074
+    [HTTP_CONTENT_LENGTH] => 3074
+    [HTTP_ORIGIN] => http://localhost:9999
+    [HTTP_CONNECTION] => keep-alive
+    [HTTP_COOKIE] => plf_lang=fr; _pk_id.1.1fff=b7ece2f8575a3f81.1759054166.; PMSESSID=4e6fd1e73fb6e61f96671dfa61be65cb; phpMyAdmin=cgovf1vdtpkbpvlmup8glvqu5p; pma_lang=fr; PHPSESSID=8f54f773085a8366596a1b83a713b34f
+    [HTTP_SEC_FETCH_DEST] => empty
+    [HTTP_SEC_FETCH_MODE] => cors
+    [HTTP_SEC_FETCH_SITE] => same-origin
+    [HTTP_PRIORITY] => u=4
+    [REQUEST_TIME_FLOAT] => 1789131278.6662
+    [REQUEST_TIME] => 1789131278
+    [DB_HOST] => localhost
+    [DB_PORT] => 3306
+    [DB_NAME] => cool5792_sports_events
+    [DB_USER] => root
+    [DB_PASS] => root
+    [APP_URL] => https://rando.partageonslaforet.be
+    [APP_NAME] => Partageons La Forêt
+    [DEBUG] => true
+    [MAIL_HOST] => localhost
+    [MAIL_PORT] => 1025
+    [MAIL_USERNAME] => 
+    [MAIL_PASSWORD] => 
+    [MAIL_ENCRYPTION] => 
+    [MAIL_FROM_EMAIL] => noreply@partageonslaforet.be
+    [MAIL_FROM_NAME] => Partageons La Forêt
+)
+
+
+[2026-09-11 14:54:38] 📝 SERVER data: Array
+(
+    [DOCUMENT_ROOT] => /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/public
+    [REMOTE_ADDR] => ::1
+    [REMOTE_PORT] => 51819
+    [SERVER_SOFTWARE] => PHP/8.4.14 (Development Server)
+    [SERVER_PROTOCOL] => HTTP/1.1
+    [SERVER_NAME] => localhost
+    [SERVER_PORT] => 9999
+    [REQUEST_URI] => /api/events/publish.php
+    [REQUEST_METHOD] => POST
+    [SCRIPT_NAME] => /index.php
+    [SCRIPT_FILENAME] => /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/public/index.php
+    [PATH_INFO] => /api/events/publish.php
+    [PHP_SELF] => /index.php/api/events/publish.php
+    [HTTP_HOST] => localhost:9999
+    [HTTP_USER_AGENT] => Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:154.0) Gecko/20100101 Firefox/154.0
+    [HTTP_ACCEPT] => */*
+    [HTTP_ACCEPT_LANGUAGE] => fr-BE
+    [HTTP_ACCEPT_ENCODING] => gzip, deflate, br, zstd
+    [HTTP_REFERER] => http://localhost:9999/?create=1
+    [CONTENT_TYPE] => multipart/form-data; boundary=----geckoformboundary92a8eb635bcad1672a66611ac3d7fa5c
+    [HTTP_CONTENT_TYPE] => multipart/form-data; boundary=----geckoformboundary92a8eb635bcad1672a66611ac3d7fa5c
+    [CONTENT_LENGTH] => 3074
+    [HTTP_CONTENT_LENGTH] => 3074
+    [HTTP_ORIGIN] => http://localhost:9999
+    [HTTP_CONNECTION] => keep-alive
+    [HTTP_COOKIE] => plf_lang=fr; _pk_id.1.1fff=b7ece2f8575a3f81.1759054166.; PMSESSID=4e6fd1e73fb6e61f96671dfa61be65cb; phpMyAdmin=cgovf1vdtpkbpvlmup8glvqu5p; pma_lang=fr; PHPSESSID=8f54f773085a8366596a1b83a713b34f
+    [HTTP_SEC_FETCH_DEST] => empty
+    [HTTP_SEC_FETCH_MODE] => cors
+    [HTTP_SEC_FETCH_SITE] => same-origin
+    [HTTP_PRIORITY] => u=4
+    [REQUEST_TIME_FLOAT] => 1789131278.6662
+    [REQUEST_TIME] => 1789131278
+    [DB_HOST] => localhost
+    [DB_PORT] => 3306
+    [DB_NAME] => cool5792_sports_events
+    [DB_USER] => root
+    [DB_PASS] => root
+    [APP_URL] => https://rando.partageonslaforet.be
+    [APP_NAME] => Partageons La Forêt
+    [DEBUG] => true
+    [MAIL_HOST] => localhost
+    [MAIL_PORT] => 1025
+    [MAIL_USERNAME] => 
+    [MAIL_PASSWORD] => 
+    [MAIL_ENCRYPTION] => 
+    [MAIL_FROM_EMAIL] => noreply@partageonslaforet.be
+    [MAIL_FROM_NAME] => Partageons La Forêt
+)
+
+[11-Sep-2026 14:54:38 Europe/Brussels] [2026-09-11 14:54:38] ✅ Utilisateur connecté (ID: 2)
+
+[2026-09-11 14:54:38] ✅ Utilisateur connecté (ID: 2)
+[11-Sep-2026 14:54:38 Europe/Brussels] [2026-09-11 14:54:38] Draft ID: 4
+
+[2026-09-11 14:54:38] Draft ID: 4
+[11-Sep-2026 14:54:38 Europe/Brussels] [2026-09-11 14:54:38] ✅ Données du brouillon trouvées
+
+[2026-09-11 14:54:38] ✅ Données du brouillon trouvées
+[11-Sep-2026 14:54:38 Europe/Brussels] [2026-09-11 14:54:38] 📝 Informations de l'événement:
+
+[2026-09-11 14:54:38] 📝 Informations de l'événement:
+[11-Sep-2026 14:54:38 Europe/Brussels] [2026-09-11 14:54:38] - Titre: dhdydh
+
+[2026-09-11 14:54:38] - Titre: dhdydh
+[11-Sep-2026 14:54:38 Europe/Brussels] [2026-09-11 14:54:38] - Date: 2026-09-12
+
+[2026-09-11 14:54:38] - Date: 2026-09-12
+[11-Sep-2026 14:54:38 Europe/Brussels] [2026-09-11 14:54:38] - Heures d'inscription: 07:00:00 à 09:00:00
+
+[2026-09-11 14:54:38] - Heures d'inscription: 07:00:00 à 09:00:00
+[11-Sep-2026 14:54:38 Europe/Brussels] [2026-09-11 14:54:38] - Lieu: Non défini
+
+[2026-09-11 14:54:38] - Lieu: Non défini
+[11-Sep-2026 14:54:38 Europe/Brussels] [2026-09-11 14:54:38] - Adresse: virton
+
+[2026-09-11 14:54:38] - Adresse: virton
+[11-Sep-2026 14:54:38 Europe/Brussels] [2026-09-11 14:54:38] - Coordonnées: 49.5677263,5.5329559
+
+[2026-09-11 14:54:38] - Coordonnées: 49.5677263,5.5329559
+[11-Sep-2026 14:54:38 Europe/Brussels] [2026-09-11 14:54:38] 🔄 Copie des informations principales de l'événement (INSERT)
+
+[2026-09-11 14:54:38] 🔄 Copie des informations principales de l'événement (INSERT)
+[11-Sep-2026 14:54:38 Europe/Brussels] [2026-09-11 14:54:38] ✅ Événement créé avec l'ID: 1
+
+[2026-09-11 14:54:38] ✅ Événement créé avec l'ID: 1
+[11-Sep-2026 14:54:38 Europe/Brussels] [2026-09-11 14:54:38] 🔄 Association des tags d'activité
+
+[2026-09-11 14:54:38] 🔄 Association des tags d'activité
+[11-Sep-2026 14:54:38 Europe/Brussels] [2026-09-11 14:54:38] ✅ Tags associés
+
+[2026-09-11 14:54:38] ✅ Tags associés
+[11-Sep-2026 14:54:38 Europe/Brussels] [2026-09-11 14:54:38] ✅ Category_id synchronisé
+
+[2026-09-11 14:54:38] ✅ Category_id synchronisé
+[11-Sep-2026 14:54:38 Europe/Brussels] [2026-09-11 14:54:38] 🔄 Copie des images
+
+[2026-09-11 14:54:38] 🔄 Copie des images
+[11-Sep-2026 14:54:38 Europe/Brussels] [2026-09-11 14:54:38] ✅ Images copiées
+
+[2026-09-11 14:54:38] ✅ Images copiées
+[11-Sep-2026 14:54:38 Europe/Brussels] [2026-09-11 14:54:38] 🔄 Copie des contacts
+
+[2026-09-11 14:54:38] 🔄 Copie des contacts
+[11-Sep-2026 14:54:38 Europe/Brussels] [2026-09-11 14:54:38] ✅ Contacts copiés
+
+[2026-09-11 14:54:38] ✅ Contacts copiés
+[11-Sep-2026 14:54:38 Europe/Brussels] [2026-09-11 14:54:38] 🔄 Copie des parcours
+
+[2026-09-11 14:54:38] 🔄 Copie des parcours
+[11-Sep-2026 14:54:38 Europe/Brussels] [2026-09-11 14:54:38] ✅ Parcours copiés
+
+[2026-09-11 14:54:38] ✅ Parcours copiés
+[11-Sep-2026 14:54:38 Europe/Brussels] [2026-09-11 14:54:38] 🔄 Mise à jour du statut du brouillon
+
+[2026-09-11 14:54:38] 🔄 Mise à jour du statut du brouillon
+[11-Sep-2026 14:54:38 Europe/Brussels] [2026-09-11 14:54:38] ✅ Statut du brouillon mis à jour
+
+[2026-09-11 14:54:38] ✅ Statut du brouillon mis à jour
+[11-Sep-2026 14:54:38 Europe/Brussels] [2026-09-11 14:54:38] ✅ Transaction validée avec succès
+
+[2026-09-11 14:54:38] ✅ Transaction validée avec succès
+[11-Sep-2026 14:54:38 Europe/Brussels] [2026-09-11 14:54:38] 🔄 Récupération des données pour l'email
+
+[2026-09-11 14:54:38] 🔄 Récupération des données pour l'email
+[11-Sep-2026 14:54:38 Europe/Brussels] [2026-09-11 14:54:38] ✅ Données trouvées pour l'email
+
+[2026-09-11 14:54:38] ✅ Données trouvées pour l'email
+[11-Sep-2026 14:54:38 Europe/Brussels] [2026-09-11 14:54:38] 📝 Données de l'événement: {
+    "id": 1,
+    "title": "dhdydh",
+    "description": "dhdhgdhd",
+    "category": "cycling",
+    "category_id": 3,
+    "date": "2026-09-12",
+    "start_time": "07:00:00",
+    "end_time": "09:00:00",
+    "location": null,
+    "venue": "virton",
+    "coordinates": "49.5677263,5.5329559",
+    "difficulty": null,
+    "max_participants": null,
+    "status": "pending",
+    "submitted_at": null,
+    "validated_at": null,
+    "validated_by": null,
+    "rejection_reason": null,
+    "main_image_path": null,
+    "main_image": null,
+    "user_id": 2,
+    "organizer_id": null,
+    "created_by": null,
+    "organisation": null,
+    "has_gpx": 0,
+    "gpx_path": null,
+    "gpx_downloadable": 0,
+    "view_count": 0,
+    "created_at": "2026-09-11 14:54:38",
+    "updated_at": "2026-09-11 14:54:38",
+    "registration_opens": "07:00:00",
+    "registration_closes": "09:00:00",
+    "meeting_name": "",
+    "meeting_address": "virton",
+    "meeting_city": "Virton",
+    "meeting_coordinates": "49.5677263,5.5329559",
+    "is_cancelled": 0,
+    "cancelled_at": null,
+    "cancellation_reason": null,
+    "user_email": "jarodhc4@gmail.com"
+}
+
+[2026-09-11 14:54:38] 📝 Données de l'événement: {
+    "id": 1,
+    "title": "dhdydh",
+    "description": "dhdhgdhd",
+    "category": "cycling",
+    "category_id": 3,
+    "date": "2026-09-12",
+    "start_time": "07:00:00",
+    "end_time": "09:00:00",
+    "location": null,
+    "venue": "virton",
+    "coordinates": "49.5677263,5.5329559",
+    "difficulty": null,
+    "max_participants": null,
+    "status": "pending",
+    "submitted_at": null,
+    "validated_at": null,
+    "validated_by": null,
+    "rejection_reason": null,
+    "main_image_path": null,
+    "main_image": null,
+    "user_id": 2,
+    "organizer_id": null,
+    "created_by": null,
+    "organisation": null,
+    "has_gpx": 0,
+    "gpx_path": null,
+    "gpx_downloadable": 0,
+    "view_count": 0,
+    "created_at": "2026-09-11 14:54:38",
+    "updated_at": "2026-09-11 14:54:38",
+    "registration_opens": "07:00:00",
+    "registration_closes": "09:00:00",
+    "meeting_name": "",
+    "meeting_address": "virton",
+    "meeting_city": "Virton",
+    "meeting_coordinates": "49.5677263,5.5329559",
+    "is_cancelled": 0,
+    "cancelled_at": null,
+    "cancellation_reason": null,
+    "user_email": "jarodhc4@gmail.com"
+}
+[11-Sep-2026 14:54:38 Europe/Brussels] [2026-09-11 14:54:38] ✅ Classe Mailer chargée
+
+[2026-09-11 14:54:38] ✅ Classe Mailer chargée
+[11-Sep-2026 14:54:38 Europe/Brussels] [2026-09-11 14:54:38] 🔄 Création de l'instance Mailer
+
+[2026-09-11 14:54:38] 🔄 Création de l'instance Mailer
+[11-Sep-2026 14:54:38 Europe/Brussels] [2026-09-11 14:54:38] ✅ Instance Mailer créée
+
+[2026-09-11 14:54:38] ✅ Instance Mailer créée
+[11-Sep-2026 14:54:38 Europe/Brussels] [2026-09-11 14:54:38] 🔄 Envoi de l'email à jarodhc4@gmail.com
+
+[2026-09-11 14:54:38] 🔄 Envoi de l'email à jarodhc4@gmail.com
+[11-Sep-2026 14:54:40 Europe/Brussels] [2026-09-11 14:54:40] ✅ Email de confirmation envoyé à jarodhc4@gmail.com
+
+[2026-09-11 14:54:40] ✅ Email de confirmation envoyé à jarodhc4@gmail.com
+[11-Sep-2026 14:54:41 Europe/Brussels] [2026-09-11 14:54:41] ✅ Email admin de validation envoyé à rando@partageonslaforet.be
+
+[2026-09-11 14:54:41] ✅ Email admin de validation envoyé à rando@partageonslaforet.be

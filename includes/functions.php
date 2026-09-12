@@ -250,6 +250,9 @@ function processGpxFile($file) {
 
 if (!function_exists('getFullUrl')) {
     function getFullUrl($path) {
+        if (defined('APP_URL') && !empty(APP_URL)) {
+            return rtrim(APP_URL, '/') . '/' . ltrim($path, '/');
+        }
         $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') ? 'https://' : 'http://';
         $domain = $_SERVER['HTTP_HOST'] ?? 'localhost';
         return $protocol . $domain . '/' . ltrim($path, '/');

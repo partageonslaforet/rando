@@ -215,6 +215,7 @@
     text-transform: uppercase;
     letter-spacing: 0.03em;
     background: #fbfdfc;
+    text-align: center !important;
 }
 
 .tab-content .table tbody tr:hover,

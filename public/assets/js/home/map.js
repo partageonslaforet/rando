@@ -115,28 +115,23 @@ if (typeof window.geocodeCache === 'undefined') {
 
 // Fonction pour géocoder une adresse avec cache
 async function geocodeAddress(address) {
-    console.log(' [geocodeAddress] Début du géocodage pour:', address);
     try {
         // Vérifier le cache
         if (window.geocodeCache.has(address)) {
-            console.log(' [geocodeAddress] Résultat trouvé dans le cache');
             return window.geocodeCache.get(address);
         }
 
         const response = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(address)}&limit=5&format=json&addressdetails=1`);
         const results = await response.json();
-        console.log(' [geocodeAddress] Résultats bruts:', results);
 
         if (results && results.length > 0) {
             const coords = {
                 lat: parseFloat(results[0].lat),
                 lng: parseFloat(results[0].lon)
             };
-            console.log(' [geocodeAddress] Coordonnées trouvées:', coords);
             window.geocodeCache.set(address, coords);
             return coords;
         } else {
-            console.log(' [geocodeAddress] Aucun résultat trouvé');
             throw new Error('Aucune coordonnée trouvée pour cette adresse');
         }
     } catch (error) {
@@ -147,11 +142,9 @@ async function geocodeAddress(address) {
 
 // Fonction pour le géocodage inverse
 async function reverseGeocode(lat, lng) {
-    console.log(' [reverseGeocode] Début du géocodage inverse pour:', lat, lng);
     try {
         const response = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&zoom=18&format=json`);
         const result = await response.json();
-        console.log(' [reverseGeocode] Résultat brut:', result);
 
         if (result && result.display_name) {
             // Formater l'adresse de manière plus lisible
@@ -168,7 +161,6 @@ async function reverseGeocode(lat, lng) {
             }
             
             const formattedAddress = parts.length > 0 ? parts.join(', ') : result.display_name;
-            console.log(' [reverseGeocode] Adresse formatée:', formattedAddress);
             return formattedAddress;
         } else {
             console.error(' [reverseGeocode] Aucun résultat trouvé');
@@ -229,6 +221,8 @@ async function updateMapMarkers(events) {
                 if (coordinates && coordinates.lat && coordinates.lng) {
                     const isDefaultSrc = (src) => !src || src.toLowerCase().includes('default');
                     const popupImage = !isDefaultSrc(event.main_image_path) ? event.main_image_path : (event.fallback_image || '/assets/images/events/default-event.jpg');
+                    const isCancelled = /^(1|t|true|yes|on)$/i.test(String(event.is_cancelled));
+                    const cancelledBadge = isCancelled ? '<span class="event-popup-cancelled">Annulé</span>' : '';
 
                     // Rendu des chips catégories (priorité aux categories[] de l'API, fallback sur category)
                     const renderCategoriesChips = (e) => {
@@ -247,6 +241,7 @@ async function updateMapMarkers(events) {
                         <a href="${detailUrl}" class="event-popup-link" aria-label="Voir l'événement">
                             <div class="event-popup">
                                 <div class="event-popup-image">
+                                    ${cancelledBadge}
                                     <img src="${popupImage}" 
                                          alt="${event.title}"
                                          style="width: 100%; height: 120px; object-fit: cover;">

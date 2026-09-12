@@ -230,7 +230,7 @@ include __DIR__ . '/../../templates/layouts/header-solid.php';
                     <th>TITRE</th>
                     <th>ORGANISATEUR</th>
                     <th>STATUT</th>
-                    <th class="text-end">ACTIONS</th>
+                    <th class="text-end actions-col">ACTIONS</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -264,8 +264,8 @@ include __DIR__ . '/../../templates/layouts/header-solid.php';
                     </td>
                     <td><?= $orgTxt ?></td>
                     <td><span class="status-badge <?= $badgeClass ?>"><?php if ($status === 'approved'): ?>Actif<?php elseif ($status === 'rejected'): ?>Rejeté<?php else: ?>En attente<?php endif; ?></span></td>
-                    <td class="text-end">
-                      <a href="/pages/admin/view_event.php?id=<?= (int)$event['id'] ?>" class="btn btn-sm btn-view btn-pill me-2"><i class="bi bi-eye"></i> Voir</a>
+                    <td class="text-end actions-cell">
+                      <a href="/pages/admin/view_event.php?id=<?= (int)$event['id'] ?>" class="btn btn-sm btn-view btn-pill"><i class="bi bi-eye"></i> Voir</a>
                       <button type="button" class="btn btn-sm btn-delete btn-pill" onclick="deleteEvent(<?= (int)$event['id'] ?>)"><i class="bi bi-trash"></i> Suppr.</button>
                     </td>
                   </tr>

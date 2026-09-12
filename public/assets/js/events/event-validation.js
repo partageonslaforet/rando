@@ -59,7 +59,6 @@ const _saveDraftRaw = async (reason = 'auto') => {
             window.draftId = data.draftId;
             updateRouteFieldsFromServer(data);
         }
-        console.log(`💾 Auto-save (${reason})`, data);
         return data;
     } catch (e) {
         console.warn('Auto-save échoué:', e);
@@ -192,12 +191,30 @@ function updateRouteFieldsFromServer(data) {
         } else if (label) {
             label.textContent = '';
         }
+        updateGpxDownloadable(index, !!route.gpx_file);
+    });
+}
+
+function updateGpxDownloadable(routeIndex, hasGpx) {
+    const checkbox = document.querySelector(`input[name="routes[${routeIndex}][gpx_downloadable]"]`);
+    if (!checkbox) return;
+    checkbox.disabled = !hasGpx;
+    if (!hasGpx) {
+        checkbox.checked = false;
+    }
+}
+
+function initGpxDownloadableStates() {
+    document.querySelectorAll('input[type="hidden"][name$="[gpx_file]"]').forEach(input => {
+        const match = input.name.match(/routes\[(\d+)\]\[gpx_file\]/);
+        if (!match) return;
+        const index = match[1];
+        updateGpxDownloadable(index, !!input.value);
     });
 }
 
 // Fonction pour initialiser la modale de prévisualisation
 function initPreviewModal() {
-    console.log(" Initialisation de la modale de prévisualisation");
     const previewModal = document.getElementById('previewModal');
     
     if (!previewModal) {
@@ -214,7 +231,6 @@ function initPreviewModal() {
         // Vérifier si une instance existe déjà
         const existingModal = bootstrap.Modal.getInstance(previewModal);
         if (existingModal) {
-            console.log(" Instance de modale existante trouvée");
             return existingModal;
         }
 
@@ -225,7 +241,6 @@ function initPreviewModal() {
             focus: true
         });
 
-        console.log(" Nouvelle instance de modale créée");
         return modalInstance;
     } catch (error) {
         console.error(" Erreur lors de l'initialisation de la modale:", error);
@@ -249,16 +264,13 @@ async function showPreview() {
         let apiUrl;
         if (window.isEditMode && window.eventId) {
             apiUrl = `../../templates/events/edit-event.php?id=${window.eventId}`;
-            console.log(" 📝 Mode édition - Mise à jour directe de l'événement", window.eventId);
         } else {
             apiUrl = '../../api/events/save_draft.php';
-            console.log(" 📝 Mode création - Sauvegarde d'un brouillon");
             
             // Ajouter l'ID du brouillon si disponible
             const hiddenDraftId = document.getElementById('draftId');
             if (hiddenDraftId && hiddenDraftId.value) {
                 formData.append('draftId', hiddenDraftId.value);
-                console.log(" ℹ️ Utilisation du brouillon existant:", hiddenDraftId.value);
             }
         }
         
@@ -277,7 +289,6 @@ async function showPreview() {
         }
 
         const saveData = await saveResponse.json();
-        console.log(" Réponse du serveur:", saveData);
         
         if (!saveData.success) {
             throw new Error(saveData.message || "Erreur lors de l'enregistrement");
@@ -291,7 +302,6 @@ async function showPreview() {
                 throw new Error("ID du brouillon manquant dans la réponse");
             }
             
-            console.log(" ✓ Brouillon enregistré avec ID:", draftId);
             
             // Mettre à jour le champ caché
             let hiddenDraftId = document.getElementById('draftId');
@@ -309,7 +319,6 @@ async function showPreview() {
         }
         
         // 2. Récupérer la prévisualisation
-        console.log(" Récupération de la prévisualisation...");
         let requestData;
         
         if (window.isEditMode && window.eventId) {
@@ -317,7 +326,6 @@ async function showPreview() {
         } else {
             requestData = { draftId: saveData.draftId };
         }
-        console.log(" Données envoyées:", requestData);
         
         const previewResponse = await fetch('../../api/events/preview.php', {
             method: 'POST',
@@ -336,7 +344,6 @@ async function showPreview() {
         }
 
         const previewData = await previewResponse.json();
-        console.log(" Réponse de prévisualisation:", previewData);
         
         if (!previewData.success) {
             throw new Error(previewData.message || "Erreur lors de la prévisualisation");
@@ -355,7 +362,6 @@ async function showPreview() {
             window.initEventDisplay(previewContent);
         }
 
-        console.log(" ✓ Prévisualisation affichée avec succès");
 
     } catch (error) {
         console.error(" Erreur:", error);
@@ -382,8 +388,6 @@ function ensureGpxMapVisible() {
 
 // Fonction pour passer à l'étape suivante
 async function nextStep() {
-    console.log('🔄 nextStep - Étape actuelle:', currentStep);
-    console.log('🔍 Validation de l\'étape', currentStep);
 
     if (currentStep < totalSteps) {
         if (validateStep(currentStep)) {
@@ -393,36 +397,29 @@ async function nextStep() {
                 await maybeSaveDraft('step-next');
                 // Si on passe à l'étape 3 (prévisualisation)
                 if (currentStep === 2) {
-                    console.log('📝 Préparation de la prévisualisation');
                     
                     // Cacher l'étape actuelle
                     const currentStepElement = document.getElementById(`step${currentStep}`);
-                    console.log('🔍 Élément actuel:', currentStepElement);
                     if (currentStepElement) {
                         currentStepElement.classList.add('d-none');
-                        console.log('✓ Étape actuelle masquée');
                     }
                     
                     // Afficher l'étape suivante
                     currentStep++;
                     const nextStepElement = document.getElementById(`step${currentStep}`);
-                    console.log('🔍 Prochain élément:', nextStepElement);
                     if (nextStepElement) {
                         nextStepElement.classList.remove('d-none');
-                        console.log('✓ Nouvelle étape affichée');
                         
                         // S'assurer que le conteneur de prévisualisation est visible
                         const previewContainer = document.getElementById('eventPreview');
                         if (previewContainer) {
                             previewContainer.classList.remove('d-none');
-                            console.log('✓ Conteneur de prévisualisation affiché');
                         }
                         
                         // Afficher le bouton de publication
                         const publishButton = document.getElementById('publishButton');
                         if (publishButton) {
                             publishButton.classList.remove('d-none');
-                            console.log('✓ Bouton de publication affiché');
                         }
                     }
                     
@@ -434,25 +431,19 @@ async function nextStep() {
                     updateButtons();
                     hideGlobalErrors();
                     scrollStepToTop();
-                    console.log('✅ Navigation vers prévisualisation terminée');
                     return;
                 }
                 
                 // Pour les autres étapes
-                console.log('➡️ Navigation standard entre étapes');
                 const currentStepElement = document.getElementById(`step${currentStep}`);
-                console.log('🔍 Élément actuel:', currentStepElement);
                 if (currentStepElement) {
                     currentStepElement.classList.add('d-none');
-                    console.log('✓ Étape actuelle masquée');
                 }
                 
                 currentStep++;
                 const nextStepElement = document.getElementById(`step${currentStep}`);
-                console.log('🔍 Prochain élément:', nextStepElement);
                 if (nextStepElement) {
                     nextStepElement.classList.remove('d-none');
-                    console.log('✓ Nouvelle étape affichée');
                 }
                 
                 updateProgress();
@@ -462,7 +453,6 @@ async function nextStep() {
                 if (currentStep === 2) {
                     ensureGpxMapVisible();
                 }
-                console.log('✅ Navigation standard terminée');
             } catch (error) {
                 console.error('❌ Erreur lors de la navigation:', error);
                 showToast(`Erreur passage étape ${fromStep} → ${fromStep + 1} : ${error.message || 'problème inconnu'}`, "error");
@@ -479,7 +469,6 @@ async function nextStep() {
             showToast(`Erreur sur le champ ${label}`, 'error');
         }
     } else {
-        console.log('⚠️ Déjà à la dernière étape');
     }
 }
 
@@ -520,29 +509,24 @@ function prevStep() {
 
 // Initialisation au chargement de la page
 document.addEventListener('DOMContentLoaded', function() {
-    console.log(" Chargement de la page");
     
     // Vérifier que nous sommes sur la bonne page
     const createEventForm = document.getElementById('createEventForm');
     if (!createEventForm) {
-        console.log(" Pas sur la page de création d'événement");
         return;
     }
 
-    console.log(" Page de création d'événement détectée");
     
+    initGpxDownloadableStates();
+
     // Pré-initialiser la modale
     previewModalInstance = initPreviewModal();
     if (previewModalInstance) {
-        console.log(" Modale de prévisualisation initialisée");
     }
 
     // Initialiser le bouton de publication
     const publishButton = document.getElementById('publishButton');
     if (publishButton) {
-        console.log(" ✅ Bouton de publication trouvé");
-        console.log("- Type:", publishButton.type);
-        console.log("- HTML:", publishButton.outerHTML);
         
         // Supprimer les anciens listeners pour éviter les doublons
         publishButton.replaceWith(publishButton.cloneNode(true));
@@ -550,10 +534,6 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Ajouter le nouveau listener
         newPublishButton.addEventListener('click', async function(e) {
-            console.log(" 🖱️ Clic sur le bouton de publication");
-            console.log("- Event:", e);
-            console.log("- Target:", e.target);
-            console.log("- Current Target:", e.currentTarget);
             
             // Empêcher tout comportement par défaut
             e.preventDefault();
@@ -570,7 +550,6 @@ document.addEventListener('DOMContentLoaded', function() {
             
             try {
                 // Appel direct de submitEvent
-                console.log(" 🚀 Appel de submitEvent");
                 await submitEvent();
             } catch (error) {
                 console.error(" ❌ Erreur attrapée dans le handler de clic:", error);
@@ -584,12 +563,10 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
         
-        console.log(" ✅ Listener ajouté au bouton");
     }
 
     // Validation à la soumission
     createEventForm.addEventListener('submit', function(event) {
-        console.log(" ⚡ Événement submit déclenché");
         if (!validateForm()) {
             event.preventDefault();
             event.stopPropagation();
@@ -632,7 +609,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Fonction pour gérer l'upload d'images
 function handleImageUpload(input, previewId, maxSize = 5) {
-    console.log('🎯 Début de l\'upload d\'image');
     
     if (!input.files || input.files.length === 0) {
         console.error('❌ Aucun fichier sélectionné');
@@ -796,10 +772,15 @@ function addRoute() {
             </div>
         </div>
         <div class="mb-2">
-            <label class="form-label">GPX</label>
-            <input type="file" class="form-control" name="routes[${newIndex}][gpx]" accept=".gpx" onchange="handleGpxUpload(this, ${newIndex})">
+            <label class="form-label">GPX <small class="form-text text-muted">(Importer un GPX rempli automatiquement la distance et le dénivelé)</small></label>
+            <div class="input-group">
+                <input type="file" class="form-control" name="routes[${newIndex}][gpx]" accept=".gpx" onchange="handleGpxUpload(this, ${newIndex})">
+                <button type="button" class="btn btn-outline-danger" onclick="removeGpx(${newIndex})" title="Supprimer le GPX">
+                    <i class="bi bi-trash"></i>
+                </button>
+            </div>
             <input type="hidden" name="routes[${newIndex}][gpx_file]" value="">
-            <div class="gpx-file-label" id="gpxFileLabel${newIndex}" style="font-size: 0.85em; color: #666;"></div>
+            <div class="gpx-file-label" id="gpxFileLabel${newIndex}"></div>
         </div>
         <div class="mb-2 form-check">
             <input type="checkbox" class="form-check-input" id="gpxDownloadable${newIndex}" name="routes[${newIndex}][gpx_downloadable]" value="1" checked>
@@ -811,6 +792,7 @@ function addRoute() {
         </div>`;
 
     container.appendChild(newRoute);
+    updateGpxDownloadable(newIndex, false);
 }
 
 // Fonction pour supprimer un parcours
@@ -823,13 +805,11 @@ function removeRoute(button) {
     if (window.currentGpxLayers[routeIndex] && window.gpxMap && typeof window.gpxMap.removeLayer === 'function') {
         window.gpxMap.removeLayer(window.currentGpxLayers[routeIndex]);
         delete window.currentGpxLayers[routeIndex];
-        console.log('GPX supprimé de la carte pour le parcours', routeIndex);
     }
 
     // Supprimer le conteneur du parcours
     if (routeContainer) {
         routeContainer.remove();
-        console.log('Conteneur supprimé pour le parcours', routeIndex);
     }
 
     // Mettre à jour les numéros des parcours restants
@@ -883,7 +863,6 @@ function removeRoute(button) {
 
 // Fonction pour valider tout le formulaire
 function validateForm() {
-    console.log(" Début de la validation du formulaire");
     const errors = [];
     
     // Liste des champs requis avec leurs messages d'erreur
@@ -898,7 +877,6 @@ function validateForm() {
     // Vérifier chaque champ requis
     for (const [fieldId, fieldName] of Object.entries(requiredFields)) {
         const field = document.querySelector(`[name="${fieldId}"]`);
-        console.log(`Vérification du champ ${fieldId}:`, field);
         if (!field || !field.value) {
             errors.push(`Le champ "${fieldName}" est requis`);
         }
@@ -907,16 +885,12 @@ function validateForm() {
     // Vérifier qu'au moins une catégorie est cochée
     const allCategoryInputs = document.querySelectorAll('input[name="categories[]"]');
     const checkedCategories = document.querySelectorAll('input[name="categories[]"]:checked');
-    console.log('🔎 Diagnostic catégories — total inputs:', allCategoryInputs.length);
-    console.log('🔎 Diagnostic catégories — checked count:', checkedCategories.length);
     if (allCategoryInputs.length > 0) {
         try {
-            console.log('🔎 IDs catégories présentes:', Array.from(allCategoryInputs).map(i => i.id));
         } catch (e) {}
     }
     if (checkedCategories.length > 0) {
         try {
-            console.log('🔎 Catégories cochées (values):', Array.from(checkedCategories).map(i => i.value));
         } catch (e) {}
     }
     if (checkedCategories.length === 0) {
@@ -924,21 +898,17 @@ function validateForm() {
     }
 
     if (errors.length > 0) {
-        console.log(" Validation échouée avec les erreurs:", errors);
         showGlobalErrors(errors);
         return false;
     }
 
-    console.log(" Validation réussie");
     return true;
 }
 
 // Fonction pour valider une étape
 function validateStep(stepNumber) {
-    console.log('🔍 Début de la validation de l\'étape', stepNumber);
     
     const stepContent = document.querySelector(`#step${stepNumber}`);
-    console.log("📄 Élément étape trouvé:", stepContent);
     
     if (!stepContent) {
         console.error("❌ Étape non trouvée");
@@ -960,10 +930,8 @@ function validateStep(stepNumber) {
         const routesContainer = document.getElementById('routes-container');
         if (routesContainer) {
             const routeInputs = routesContainer.querySelectorAll('input[required]');
-            console.log("🛣️ Nombre de champs de parcours requis:", routeInputs.length);
             
             routeInputs.forEach((input) => {
-                console.log(`🔍 Vérification du champ de parcours ${input.name}:`, input.value);
                 input.classList.remove('is-invalid', 'is-valid');
                 
                 if (!input.value.trim()) {
@@ -981,13 +949,11 @@ function validateStep(stepNumber) {
 
     // Validation générale des champs requis
     const requiredFields = stepContent.querySelectorAll('[required]');
-    console.log("📝 Nombre de champs requis trouvés:", requiredFields.length);
 
     requiredFields.forEach((field) => {
         // Ne pas revalider les champs déjà vérifiés
         if (field.classList.contains('is-valid')) return;
 
-        console.log("\n🔍 Vérification du champ:", field.name);
         field.classList.remove('is-invalid', 'is-valid');
         
         // Récupérer le label du champ
@@ -1023,7 +989,6 @@ function validateStep(stepNumber) {
         }
         
         if (!fieldValid) {
-            console.log("❌ Champ invalide:", label);
             field.classList.add('is-invalid');
             
             // Message d'erreur spécifique selon le type
@@ -1045,11 +1010,9 @@ function validateStep(stepNumber) {
     });
 
     if (!isValid) {
-        console.log("❌ Validation échouée");
         return false;
     }
 
-    console.log("✅ Validation réussie");
     return true;
 }
 
@@ -1153,7 +1116,6 @@ async function saveDraft() {
 
 // Fonction pour mettre à jour l'affichage des boutons
 function updateButtons() {
-    console.log(" Mise à jour des boutons. Étape actuelle:", currentStep);
     const nextButton = document.getElementById('nextButton');
     const prevButton = document.getElementById('prevButton');
     const publishButton = document.getElementById('publishButton');
@@ -1191,14 +1153,11 @@ function updateButtons() {
     }
 
     if (publishButton) {
-        console.log(" Gestion du bouton de publication à l'étape:", currentStep);
         if (currentStep === 3) {
             publishButton.classList.remove('d-none');
             publishButton.className = 'btn btn-primary';
-            console.log(" Affichage du bouton de publication");
         } else {
             publishButton.classList.add('d-none');
-            console.log(" Masquage du bouton de publication");
         }
     } else {
         console.error(" Bouton de publication non trouvé dans le DOM");
@@ -1272,21 +1231,18 @@ function showToast(message, type = 'success') {
 
 // Fonction pour initialiser les gestionnaires d'upload d'images
 function initializeImageUploads() {
-    console.log(" Initialisation des gestionnaires d'upload d'images");
     // NOTE : les listeners mainImage/secondaryImages sont définis dans event-images.js
     // (single source of truth) pour éviter les doubles soumissions.
 }
 
 // Fonction pour initialiser les événements du formulaire
 function initializeFormEvents() {
-    console.log(" Initialisation des événements du formulaire");
     
     // Initialiser les boutons suivant
     const nextButtons = document.querySelectorAll('.btn-next');
     nextButtons.forEach(button => {
         button.addEventListener('click', (e) => {
             e.preventDefault();
-            console.log(" Clic sur le bouton suivant");
             nextStep();
         });
     });
@@ -1309,7 +1265,6 @@ function initializeProfileToggle() {
     const newOrganizerToggle = document.getElementById('newOrganizerToggle');
     
     if (!organizerFields) {
-        console.log(" Éléments du profil organisateur non trouvés");
         return;
     }
 
@@ -1354,18 +1309,14 @@ function initializeProfileToggle() {
     // Charger les informations d'un organisateur
     async function loadOrganizerInfo(organizerId) {
         try {
-            console.log("Chargement des informations de l'organisateur:", organizerId);
             const response = await fetch(`/api/organization-profil/get_profile.php?id=${organizerId}`);
             const data = await response.json();
             
             if (data.success && data.profile) {
-                console.log("Profil chargé:", data.profile);
                 fillOrganizerFields(data.profile);
                 if (data.profile.logo_path) {
-                    console.log("Logo trouvé:", data.profile.logo_path);
                     displayLogo(data.profile.logo_path);
                 } else {
-                    console.log("Pas de logo trouvé");
                     resetLogo();
                 }
             } else {
@@ -1398,12 +1349,10 @@ function initializeProfileToggle() {
 
     // Afficher le logo
     function displayLogo(logoPath) {
-        console.log("Affichage du logo:", logoPath);
         const logoPreview = document.getElementById('logoPreview');
         if (logoPreview) {
             logoPreview.src = logoPath;
             logoPreview.style.display = 'block';
-            console.log("Logo affiché");
         } else {
             console.error("Élément logoPreview non trouvé");
         }
@@ -1411,7 +1360,6 @@ function initializeProfileToggle() {
 
     // Réinitialiser le logo
     function resetLogo() {
-        console.log("Réinitialisation du logo");
         const logoPreview = document.getElementById('logoPreview');
         const logoInput = document.getElementById('organizerLogo');
         if (logoPreview) {
@@ -1421,7 +1369,6 @@ function initializeProfileToggle() {
         if (logoInput) {
             logoInput.value = '';
         }
-        console.log("Logo réinitialisé");
     }
 
     // Remplir les champs avec les informations
@@ -1497,7 +1444,6 @@ function setupAddressSearch() {
         const address = addressInput.value.trim();
         if (!address) return;
 
-        console.log('Recherche de l\'adresse:', address);
 
         // Utiliser l'API Nominatim pour la recherche
         fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}&limit=1`)
@@ -1507,7 +1453,6 @@ function setupAddressSearch() {
                     const result = data[0];
                     const latlng = { lat: parseFloat(result.lat), lng: parseFloat(result.lon) };
                     
-                    console.log('Résultat trouvé:', result);
                     
                     // Mettre à jour le marqueur et la carte
                     window.locationMarker.setLatLng(latlng);
@@ -1538,7 +1483,6 @@ function setupAddressSearch() {
 
 // Fonction pour traiter le fichier GPX
 function handleGpxUpload(input, routeIndex) {
-    console.log('Traitement du fichier GPX pour le parcours', routeIndex);
 
     const fileLabel = document.getElementById(`gpxFileLabel${routeIndex}`);
     if (input.files && input.files[0]) {
@@ -1555,7 +1499,6 @@ function handleGpxUpload(input, routeIndex) {
     
     const file = input.files[0];
     if (!file) {
-        console.log('Aucun fichier sélectionné');
         return;
     }
     input.value = '';
@@ -1658,7 +1601,7 @@ function handleGpxUpload(input, routeIndex) {
                 duration: 0.5
             });
 
-            console.log(`Parcours ${routeIndex} chargé avec succès`);
+            updateGpxDownloadable(routeIndex, true);
             uploadGpxToServer(file, routeIndex);
         } catch (error) {
             console.error('Erreur lors du traitement du fichier GPX:', error);
@@ -1675,6 +1618,7 @@ function handleGpxUpload(input, routeIndex) {
 }
 
 async function uploadGpxToServer(file, routeIndex) {
+    const hiddenInput = document.querySelector(`input[name="routes[${routeIndex}][gpx_file]"]`);
     try {
         const formData = new FormData();
         formData.append('gpx_file', file);
@@ -1689,20 +1633,66 @@ async function uploadGpxToServer(file, routeIndex) {
             throw new Error(data.error || 'Upload échoué');
         }
 
-        const hiddenInput = document.querySelector(`input[name="routes[${routeIndex}][gpx_file]"]`);
+        const oldPath = hiddenInput ? hiddenInput.value : '';
         if (hiddenInput) {
             hiddenInput.value = data.gpx_path;
         }
-        console.log(`✅ GPX parcours ${routeIndex} uploadé :`, data.gpx_path);
+        updateGpxDownloadable(routeIndex, true);
+        if (oldPath && oldPath !== data.gpx_path) {
+            deleteGpxFile(oldPath);
+        }
     } catch (error) {
-        console.error('❌ Erreur upload GPX:', error);
         showToast('La trace est affichée mais n\'a pas pu être enregistrée. Veuillez réessayer.', 'warning');
+        updateGpxDownloadable(routeIndex, !!(hiddenInput && hiddenInput.value));
     }
+}
+
+// Fonction pour supprimer un GPX côté serveur
+async function deleteGpxFile(gpxPath) {
+    if (!gpxPath) return;
+    try {
+        const response = await fetch('/api/events/delete-gpx.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ gpx_path: gpxPath })
+        });
+        if (!response.ok) throw new Error('Erreur réseau');
+        const data = await response.json();
+        if (!data.success) throw new Error(data.error || 'Échec');
+    } catch (error) {
+        showToast('Impossible de supprimer l\'ancien GPX du serveur', 'warning');
+    }
+}
+
+// Fonction pour supprimer un GPX du formulaire
+function removeGpx(routeIndex) {
+    const hiddenInput = document.querySelector(`input[name="routes[${routeIndex}][gpx_file]"]`);
+    if (hiddenInput && hiddenInput.value) {
+        deleteGpxFile(hiddenInput.value);
+    }
+
+    if (window.currentGpxLayers && window.currentGpxLayers[routeIndex] && window.gpxMap) {
+        window.gpxMap.removeLayer(window.currentGpxLayers[routeIndex]);
+        delete window.currentGpxLayers[routeIndex];
+    }
+
+    const fileInput = document.querySelector(`input[type="file"][name="routes[${routeIndex}][gpx]"]`);
+    if (fileInput) fileInput.value = '';
+    if (hiddenInput) hiddenInput.value = '';
+
+    const fileLabel = document.getElementById(`gpxFileLabel${routeIndex}`);
+    if (fileLabel) fileLabel.textContent = '';
+
+    const distanceInput = document.querySelector(`input[name="routes[${routeIndex}][distance]"]`);
+    const elevationInput = document.querySelector(`input[name="routes[${routeIndex}][elevation]"]`);
+    if (distanceInput) distanceInput.value = '';
+    if (elevationInput) elevationInput.value = '';
+
+    updateGpxDownloadable(routeIndex, false);
 }
 
 // Fonction pour calculer la distance d'un parcours GPX
 function calculateDistance(gpxData) {
-    console.log('Calcul de la distance du parcours...');
     
     try {
         const parser = new DOMParser();
@@ -1727,7 +1717,6 @@ function calculateDistance(gpxData) {
             distance += calculateHaversineDistance(lat1, lon1, lat2, lon2);
         }
         
-        console.log(`Distance calculée: ${distance.toFixed(2)} km`);
         return distance;
     } catch (error) {
         console.error('Erreur lors du calcul de la distance:', error);
@@ -1807,7 +1796,6 @@ function hideFieldError(field) {
 
 // Réinitialiser le logo
 function resetLogo() {
-    console.log('Réinitialisation du logo');
     const logoPreview = document.getElementById('logoPreview');
     const logoInput = document.getElementById('organizerLogo');
     if (logoPreview) {
@@ -1817,12 +1805,10 @@ function resetLogo() {
     if (logoInput) {
         logoInput.value = '';
     }
-    console.log('Logo réinitialisé');
 }
 
 // Réinitialiser les champs de l'organisateur
 function resetOrganizerFields() {
-    console.log('Réinitialisation des champs de l\'organisateur');
     const organizerFields = document.getElementById('organizerFields');
     if (!organizerFields) {
         console.error('Élément organizerFields non trouvé');
@@ -1834,13 +1820,11 @@ function resetOrganizerFields() {
     fields.forEach(field => {
         field.value = '';
         field.disabled = false;
-        console.log('Champ réinitialisé:', field.name);
     });
 
     // Réinitialiser le logo
     resetLogo();
     
-    console.log('Tous les champs ont été réinitialisés');
 }
 
 // Fonction pour publier l'événement
@@ -1962,32 +1946,25 @@ function validateGpxFiles() {
 
 // Fonction pour initialiser les cartes
 function initializeMaps() {
-    console.log('Initialisation des cartes...');
     
     // Initialiser la carte de localisation
     const locationMapElement = document.getElementById('locationMap');
-    console.log('Élément locationMap:', locationMapElement);
 
     if (locationMapElement) {
-        console.log('Création de la carte de localisation');
         initLocationMap();
     }
 
     // Initialiser la carte GPX
     const gpxMapElement = document.getElementById('gpxMap');
-    console.log('Élément gpxMap:', gpxMapElement);
 
     if (gpxMapElement) {
-        console.log('Création de la carte GPX');
         initGpxMap();
     } else {
-        console.log(' Élément gpxMap non trouvé');
     }
 }
 
 // Fonction pour initialiser la carte de localisation
 async function initLocationMap() {
-    console.log('Initialisation de la carte...');
     try {
         const mapElement = document.getElementById('locationMap');
         if (!mapElement) {
@@ -2050,7 +2027,6 @@ async function initLocationMap() {
         // Configurer la recherche d'adresse
         setupAddressSearch();
 
-        console.log('Carte initialisée');
     } catch (error) {
         console.error('Erreur lors de l\'initialisation de la carte:', error);
         showToast('Erreur lors de l\'initialisation de la carte', 'error');
@@ -2059,7 +2035,6 @@ async function initLocationMap() {
 
 // Fonction pour initialiser la carte GPX
 function initGpxMap() {
-    console.log('Initialisation de la carte GPX...');
     
     const mapContainer = document.getElementById('gpxMap');
     if (!mapContainer) {
@@ -2073,7 +2048,6 @@ function initGpxMap() {
     }
 
     if (window.gpxMap && typeof window.gpxMap.invalidateSize === 'function') {
-        console.log('Carte GPX déjà initialisée');
         return;
     }
 
@@ -2089,7 +2063,6 @@ function initGpxMap() {
         // Initialiser le conteneur des couches GPX
         window.currentGpxLayers = window.currentGpxLayers || {};
 
-        console.log('Carte GPX initialisée avec succès');
     } catch (error) {
         console.error('Erreur lors de l\'initialisation de la carte GPX:', error);
         showToast('Erreur lors de l\'initialisation de la carte GPX', 'error');

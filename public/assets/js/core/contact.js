@@ -74,10 +74,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 const rect = dialog.getBoundingClientRect();
 
                 console.group('[ContactModal] Diagnostics largeur');
-                console.log('Computed --bs-modal-width:', varWidth);
-                console.log('Computed max-width:', maxWidth);
-                console.log('Computed width:', width);
-                console.log('Rect width(px):', rect.width);
 
                 // Rechercher les règles CSS pertinentes dans les styles chargés
                 const targets = [
@@ -92,7 +88,6 @@ document.addEventListener('DOMContentLoaded', function() {
                             try { rules = sheet.cssRules || []; } catch (e) { return; } // CORS
                             Array.from(rules).forEach((rule) => {
                                 if (rule.selectorText && rule.selectorText.includes(t)) {
-                                    console.log('Rule match:', t, 'from', sheet.href || 'inline', '=>', rule.cssText);
                                 }
                             });
                         });

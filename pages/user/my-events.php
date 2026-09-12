@@ -6,6 +6,7 @@
 require_once __DIR__ . '/../../includes/functions.php';
 require_once __DIR__ . '/../../includes/flash_messages.php';
 require_once __DIR__ . '/../../includes/csrf.php';
+require_once __DIR__ . '/../../logs/error.log.php';
 
 // Démarrer la session et vérifier la connexion
 if (session_status() === PHP_SESSION_NONE) {
@@ -42,6 +43,55 @@ try {
         exit;
     }
 
+    // Annulation d'un événement publié (propriétaire)
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cancel_event_id'])) {
+        if (verifyCsrf($_POST['csrf_token'] ?? '')) {
+            $reason = trim($_POST['cancellation_reason'] ?? '');
+            $eventId = (int)$_POST['cancel_event_id'];
+            $userId = (int)$_SESSION['user_id'];
+
+            try {
+                $stmt = $db->prepare("UPDATE events SET is_cancelled = 1, cancelled_at = NOW(), cancellation_reason = ? WHERE id = ? AND user_id = ? AND status IN ('approved', 'expired') AND (is_cancelled = 0 OR is_cancelled IS NULL)");
+                $stmt->execute([$reason, $eventId, $userId]);
+
+                $rowCount = $stmt->rowCount();
+                if ($rowCount > 0) {
+                    $check = $db->prepare('SELECT id, status, is_cancelled, cancellation_reason FROM events WHERE id = ?');
+                    $check->execute([$eventId]);
+                    $eventState = $check->fetch(PDO::FETCH_ASSOC);
+                    logError('pages/user/my-events.php', 'Annulation réussie', [
+                        'event_id' => $eventId,
+                        'rowCount' => $rowCount,
+                        'event_state' => $eventState
+                    ]);
+                    addFlashMessage('success', 'L\'événement a été annulé.');
+                } else {
+                    $check = $db->prepare('SELECT id, user_id, status, is_cancelled FROM events WHERE id = ?');
+                    $check->execute([$eventId]);
+                    $eventState = $check->fetch(PDO::FETCH_ASSOC) ?: ['not_found' => true];
+                    logError('pages/user/my-events.php', 'Annulation impossible', [
+                        'event_id' => $eventId,
+                        'user_id' => $userId,
+                        'event_state' => $eventState,
+                        'reason' => $reason
+                    ]);
+                    addFlashMessage('danger', 'Impossible d\'annuler cet événement.');
+                }
+            } catch (Throwable $e) {
+                logError('pages/user/my-events.php', 'Erreur annulation', [
+                    'event_id' => $eventId,
+                    'user_id' => $userId,
+                    'exception' => $e->getMessage()
+                ]);
+                addFlashMessage('danger', 'Impossible d\'annuler cet événement.');
+            }
+        } else {
+            addFlashMessage('danger', 'Token de sécurité invalide.');
+        }
+        header('Location: /pages/user/my-events.php' . (isset($_GET['status']) ? '?status=' . $_GET['status'] : ''));
+        exit;
+    }
+
     // Récupérer les informations de l'utilisateur
     $stmt = $db->prepare('SELECT * FROM users WHERE id = ?');
     $stmt->execute([getCurrentUserId()]);
@@ -71,14 +121,25 @@ try {
     $stmt->execute([$user['id']]);
     $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // Récupérer les brouillons
+    // Récupérer les brouillons (non encore publies)
     $stmt2 = $db->prepare('
-        SELECT * FROM draft_events 
-        WHERE user_id = ? 
-        ORDER BY date DESC, updated_at DESC
+        SELECT d.* FROM draft_events d
+        WHERE d.user_id = ? 
+          AND (d.status IS NULL OR d.status != \'published\')
+          AND NOT (
+              d.original_event_id IS NULL
+              AND EXISTS (
+                  SELECT 1 FROM events e
+                  WHERE e.user_id = d.user_id
+                    AND e.title = d.title
+                    AND e.date = d.date
+              )
+          )
+        ORDER BY d.updated_at DESC
     ');
     $stmt2->execute([$user['id']]);
     $drafts = $stmt2->fetchAll(PDO::FETCH_ASSOC);
+
     foreach ($drafts as &$draft) {
         $draft['status'] = 'draft';
     }
@@ -143,7 +204,10 @@ try {
 }
 
 // Fonction pour obtenir le badge selon le statut (+ affichage "Échu" J+1 pour approuvé)
-function getStatusBadge($status, $eventDate = null) {
+function getStatusBadge($status, $isCancelled = false, $eventDate = null) {
+    if ($isCancelled) {
+        return '<span class="badge bg-cancelled">Annulé</span>';
+    }
     // Si approuvé mais date passée (J+1), afficher Échu
     if ($status === 'approved' && !empty($eventDate)) {
         try {
@@ -298,7 +362,7 @@ require_once __DIR__ . '/../../templates/layouts/header-solid.php';
                                         if ($eventDateStr) { $eventDateEpoch = strtotime($eventDateStr) ?: ''; }
                                         $statusText = (string)($event['status'] ?? '');
                                     ?>
-                                    <tr data-title="<?= htmlspecialchars($titleText) ?>" data-date-ts="<?= htmlspecialchars($eventDateEpoch) ?>" data-status="<?= htmlspecialchars($statusText) ?>" data-recorded-ts="<?= htmlspecialchars($tsEpoch) ?>">
+                                    <tr class="<?= filter_var($event['is_cancelled'] ?? false, FILTER_VALIDATE_BOOLEAN) ? 'event-cancelled' : '' ?>" data-title="<?= htmlspecialchars($titleText) ?>" data-date-ts="<?= htmlspecialchars($eventDateEpoch) ?>" data-status="<?= htmlspecialchars($statusText) ?>" data-recorded-ts="<?= htmlspecialchars($tsEpoch) ?>">
                                         <td class="cell-title">
                                             <?php if ($event['status'] === 'draft'): ?>
                                                 <a href="/?create=1&draft_id=<?= (int)$event['id'] ?>" class="draft-title">
@@ -315,7 +379,7 @@ require_once __DIR__ . '/../../templates/layouts/header-solid.php';
                                                 <?= formatEventDate($event['date']) ?>
                                             <?php endif; ?>
                                         </td>
-                                        <td class="cell-status"><?= getStatusBadge($event['status'], $event['date'] ?? null) ?></td>
+                                        <td class="cell-status"><?= getStatusBadge($event['status'], filter_var($event['is_cancelled'] ?? false, FILTER_VALIDATE_BOOLEAN), $event['date'] ?? null) ?></td>
                                         <td class="cell-recorded"><span class="myev-recorded"><?= htmlspecialchars($tsOut) ?></span></td>
                                         <td class="text-start ps-1">
                                             <?php if ($event['status'] === 'draft'): ?>
@@ -334,6 +398,17 @@ require_once __DIR__ . '/../../templates/layouts/header-solid.php';
                                                                 data-event-id="<?= (int)$event['id'] ?>" title="Modifier">
                                                             <i class="bi bi-pencil"></i><span>Modifier</span>
                                                         </button>
+                                                        <?php if (!filter_var($event['is_cancelled'] ?? false, FILTER_VALIDATE_BOOLEAN)): ?>
+                                                            <button type="button"
+                                                                    class="btn btn-sm btn-action btn-cancel"
+                                                                    data-bs-toggle="modal"
+                                                                    data-bs-target="#cancelEventModal"
+                                                                    data-cancel-id="<?= (int)$event['id'] ?>"
+                                                                    data-cancel-title="<?= htmlspecialchars($event['title'] ?? '') ?>"
+                                                                    title="Annuler l'événement">
+                                                                <i class="bi bi-x-circle"></i><span>Annuler</span>
+                                                            </button>
+                                                        <?php endif; ?>
                                                     <?php endif; ?>
                                                 </div>
                                             <?php endif; ?>
@@ -368,6 +443,33 @@ require_once __DIR__ . '/../../templates/layouts/header-solid.php';
                     <button type="submit" class="btn btn-danger">Supprimer</button>
                 </form>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal d'annulation d'événement -->
+<div class="modal fade" id="cancelEventModal" tabindex="-1" aria-labelledby="cancelEventModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form method="POST" action="/pages/user/my-events.php<?= $currentTab !== 'all' ? '?status=' . $currentTab : '' ?>">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="cancelEventModalLabel">Annuler l'événement</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Es-tu sûr de vouloir annuler <strong id="cancelEventTitle"></strong> ?</p>
+                    <div class="mb-3">
+                        <label for="cancellationReason" class="form-label">Motif d'annulation (optionnel)</label>
+                        <textarea class="form-control" id="cancellationReason" name="cancellation_reason" rows="3" maxlength="500" placeholder="Expliquez rapidement pourquoi l'événement est annulé"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Retour</button>
+                    <?= csrfField() ?>
+                    <input type="hidden" id="cancelEventId" name="cancel_event_id" value="">
+                    <button type="submit" class="btn btn-cancel-confirm">Confirmer l'annulation</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

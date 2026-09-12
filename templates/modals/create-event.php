@@ -45,7 +45,7 @@ try {
 // Vérifier si l'utilisateur est connecté
 if (!isset($_SESSION['user_id'])) {
     error_log("❌ Utilisateur non connecté");
-    header('Location: /login.php?redirect=' . urlencode($_SERVER['REQUEST_URI']));
+    header('Location: /?showLogin=1&redirect=' . urlencode($_SERVER['REQUEST_URI']));
     exit;
 }
 error_log("✅ Utilisateur connecté (ID: " . $_SESSION['user_id'] . ")");
@@ -63,14 +63,14 @@ if ($draft_id) {
         $stmt->execute([$draft_id, $_SESSION['user_id']]);
         if (!$stmt->fetch()) {
             error_log("❌ Brouillon non trouvé ou non autorisé");
-            header('Location: /events/drafts.php?error=' . urlencode('Brouillon non trouvé ou non autorisé'));
+            header('Location: /?login=required&error=' . urlencode('Brouillon non trouvé ou non autorisé'));
             exit;
         }
         error_log("✅ Brouillon vérifié (ID: $draft_id)");
         $isEditMode = true;
     } catch (Exception $e) {
         error_log("❌ Erreur lors de la vérification du brouillon : " . $e->getMessage());
-        header('Location: /events/drafts.php?error=' . urlencode('Erreur lors de la vérification du brouillon'));
+        header('Location: /?login=required&error=' . urlencode('Erreur lors de la vérification du brouillon'));
         exit;
     }
 }
@@ -87,7 +87,11 @@ try {
 
     if (!$user) {
         error_log("❌ Utilisateur non trouvé en base de données");
-        header('Location: /login.php');
+        $_SESSION = [];
+        if (session_status() === PHP_SESSION_ACTIVE) {
+            session_destroy();
+        }
+        header('Location: /?showLogin=1');
         exit;
     }
 
@@ -455,8 +459,24 @@ document.addEventListener('DOMContentLoaded', function() {
                                         <div class="row">
                                             <div class="mb-2">
                                                 <label class="form-label">GPX <small class="form-text text-muted">(Importer un GPX rempli automatiquement la distance et le dénivelé)</small></label>
-                                                <input type="file" class="form-control" name="routes[<?= (int) $index ?>][gpx]" accept=".gpx" onchange="handleGpxUpload(this, <?= (int) $index ?>)">
+                                                <div class="input-group">
+                                                    <input type="file" class="form-control" name="routes[<?= (int) $index ?>][gpx]" accept=".gpx" onchange="handleGpxUpload(this, <?= (int) $index ?>)">
+                                                    <button type="button" class="btn btn-outline-danger" onclick="removeGpx(<?= (int) $index ?>)" title="Supprimer le GPX">
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+                                                </div>
                                                 <input type="hidden" name="routes[<?= (int) $index ?>][gpx_file]" value="<?= htmlspecialchars($route['gpx_file'] ?? '') ?>">
+                                                <div class="gpx-file-label" id="gpxFileLabel<?= (int) $index ?>">
+                                                    <?php if (!empty($route['gpx_file'])): ?>
+                                                        Fichier : <?= htmlspecialchars(basename($route['gpx_file'])) ?>
+                                                    <?php endif; ?>
+                                                </div>
+                                            </div>
+                                            <div class="mb-2">
+                                                <div class="form-check">
+                                                    <input type="checkbox" class="form-check-input" id="gpx_downloadable_<?= (int) $index ?>" name="routes[<?= (int) $index ?>][gpx_downloadable]" value="1" <?= $routeDownloadable ? 'checked' : '' ?>>
+                                                    <label class="form-check-label" for="gpx_downloadable_<?= (int) $index ?>">Autoriser le téléchargement du GPX</label>
+                                                </div>
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="mb-2">
@@ -480,12 +500,6 @@ document.addEventListener('DOMContentLoaded', function() {
                                         <div class="mb-2">
                                             <label class="form-label">Description du parcours</label>
                                             <textarea class="form-control" name="routes[<?= (int) $index ?>][description]" rows="3"><?= $routeDesc ?></textarea>
-                                        </div>
-                                        <div class="mb-2">
-                                            <div class="form-check">
-                                                <input type="checkbox" class="form-check-input" id="gpx_downloadable_<?= (int) $index ?>" name="routes[<?= (int) $index ?>][gpx_downloadable]" value="1" <?= $routeDownloadable ? 'checked' : '' ?>>
-                                                <label class="form-check-label" for="gpx_downloadable_<?= (int) $index ?>">Autoriser le téléchargement du GPX</label>
-                                            </div>
                                         </div>
                                     </div>
                                     <?php endforeach; ?>

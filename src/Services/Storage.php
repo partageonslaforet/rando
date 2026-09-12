@@ -6,6 +6,8 @@
  * Dépendances: config/storage.php
  */
 
+require_once __DIR__ . '/../../logs/error.log.php';
+
 class Storage {
     private static $config;
     
@@ -142,6 +144,33 @@ class Storage {
         }
         
         error_log("✅ Fichier déplacé avec succès");
+
+        // Convertir AVIF en JPEG pour une compatibilité navigateur maximale
+        if ($extension === 'avif') {
+            $baseName = pathinfo($filename, PATHINFO_FILENAME);
+            $convertedFilename = $baseName . '.jpg';
+            $convertedPath = $storagePath . '/' . $convertedFilename;
+
+            logError('Storage::saveUploadedFile', 'Conversion AVIF demandee', [
+                'original' => $finalPath,
+                'target' => $convertedPath,
+                'has_imagecreatefromavif' => function_exists('imagecreatefromavif'),
+                'has_imagick' => class_exists('Imagick')
+            ]);
+
+            $converted = self::convertToJpeg($finalPath, $convertedPath);
+            if ($converted) {
+                @unlink($finalPath);
+                $finalPath = $convertedPath;
+                $filename = $convertedFilename;
+                $extension = 'jpg';
+                logError('Storage::saveUploadedFile', 'AVIF converti en JPEG', ['path' => $convertedPath]);
+            } else {
+                @unlink($finalPath);
+                logError('Storage::saveUploadedFile', 'Echec conversion AVIF', ['original' => $finalPath]);
+                throw new Exception("Format AVIF non supporté par ce serveur pour la conversion");
+            }
+        }
         
         // Vérifier que le fichier a bien été créé
         if (!file_exists($finalPath)) {
@@ -161,6 +190,43 @@ class Storage {
         return $result;
     }
     
+    private static function convertToJpeg($sourcePath, $targetPath, $quality = 90) {
+        if (function_exists('imagecreatefromavif')) {
+            $src = @imagecreatefromavif($sourcePath);
+            if ($src) {
+                $width = imagesx($src);
+                $height = imagesy($src);
+                $dst = imagecreatetruecolor($width, $height);
+                if ($dst) {
+                    $white = imagecolorallocate($dst, 255, 255, 255);
+                    imagefill($dst, 0, 0, $white);
+                    imagecopy($dst, $src, 0, 0, 0, 0, $width, $height);
+                    imagejpeg($dst, $targetPath, $quality);
+                    imagedestroy($dst);
+                }
+                imagedestroy($src);
+                return file_exists($targetPath);
+            }
+        }
+
+        if (class_exists('Imagick')) {
+            try {
+                $imagick = new Imagick($sourcePath);
+                $imagick->setImageFormat('jpeg');
+                $imagick->setImageCompressionQuality($quality);
+                $imagick->writeImage($targetPath);
+                $imagick->clear();
+                $imagick->destroy();
+                return file_exists($targetPath);
+            } catch (Exception $e) {
+                error_log("❌ Erreur Imagick AVIF -> JPEG: " . $e->getMessage());
+                return false;
+            }
+        }
+
+        return false;
+    }
+
     public static function deleteFile($type, $filename) {
         $path = self::getStoragePath($type, $filename);
         if (file_exists($path)) {

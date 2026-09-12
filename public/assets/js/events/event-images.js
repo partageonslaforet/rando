@@ -6,8 +6,8 @@
  */
 const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
 const MAX_SECONDARY_IMAGES = 3;
-const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
-const ACCEPTED_IMAGE_EXTENSIONS = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp', 'image/avif', 'image/avif-sequence'];
+const ACCEPTED_IMAGE_EXTENSIONS = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'avif'];
 
 function updateDraftId(draftId) {
     if (!draftId) return;
@@ -22,8 +22,8 @@ function validateImageFile(file) {
         return `L'image ${file.name} dépasse la taille maximale de 5 Mo`;
     }
     const ext = file.name.split('.').pop().toLowerCase();
-    if (!ACCEPTED_IMAGE_EXTENSIONS.includes(ext) || !ACCEPTED_IMAGE_TYPES.includes(file.type)) {
-        return `Le fichier ${file.name} n'est pas une image autorisée (jpg, png, gif, webp)`;
+    if (!ACCEPTED_IMAGE_EXTENSIONS.includes(ext) || (file.type && !ACCEPTED_IMAGE_TYPES.includes(file.type))) {
+        return `Le fichier ${file.name} n'est pas une image autorisée (jpg, png, gif, webp, avif)`;
     }
     return null;
 }
@@ -93,7 +93,6 @@ async function removeSecondaryImage(event, imageId) {
     event?.preventDefault();
     event?.stopPropagation();
     
-    console.log('🔄 Tentative de suppression de l\'image secondaire:', imageId);
     
     if (!imageId) {
         console.error('❌ Erreur: ID de l\'image non fourni');
@@ -102,47 +101,36 @@ async function removeSecondaryImage(event, imageId) {
     }
     
     try {
-        console.log('📝 Préparation du FormData pour la suppression');
         const formData = new FormData(document.getElementById('createEventForm'));
         formData.append('deleteImage', imageId);
         
-        console.log('🌐 Envoi de la requête de suppression');
         const response = await fetch('/api/events/save_draft.php', {
             method: 'POST',
             body: formData
         });
         
         const result = await response.json();
-        console.log('📥 Réponse reçue:', result);
         
         if (!result.success) {
             throw new Error(result.message || 'Erreur lors de la suppression');
         }
         
         // Mise à jour de l'interface
-        console.log('🔍 Recherche des éléments DOM à mettre à jour');
         const previewContainer = document.getElementById('secondaryImagesPreview');
-        console.log('Container de prévisualisation trouvé:', previewContainer);
         
         const imageContainer = document.querySelector(`img[data-image-id="${imageId}"]`);
-        console.log('Image container trouvé:', imageContainer);
         
         const secondaryContainer = imageContainer?.closest('.secondary-image-container');
-        console.log('Secondary container trouvé:', secondaryContainer);
         
         const parentCol = secondaryContainer?.closest('.col-md-4');
-        console.log('Parent column trouvé:', parentCol);
         
         if (parentCol) {
-            console.log('🗑️ Suppression de l\'élément du DOM');
             parentCol.remove();
             
             // Vérifier s'il reste des images
             const remainingImages = previewContainer?.querySelectorAll('.col-md-4');
-            console.log('Images restantes:', remainingImages?.length);
             
             if (previewContainer && (!remainingImages || remainingImages.length === 0)) {
-                console.log('📦 Masquage du conteneur de prévisualisation');
                 previewContainer.style.display = '';
             }
             
@@ -152,7 +140,6 @@ async function removeSecondaryImage(event, imageId) {
                 secondaryImagesInput.value = '';
             }
             
-            console.log('✅ Suppression terminée avec succès');
         } else {
             console.warn('⚠️ Container de l\'image non trouvé dans le DOM');
             throw new Error('Container de l\'image non trouvé');
@@ -166,7 +153,6 @@ async function removeSecondaryImage(event, imageId) {
 
 // Fonction pour mettre à jour la prévisualisation de l'image principale
 function updateMainImagePreview(result) {
-    console.log('🔍 Début updateMainImagePreview avec:', result);
     
     if (!result) {
         console.error('❌ Pas de données reçues dans updateMainImagePreview');
@@ -182,7 +168,6 @@ function updateMainImagePreview(result) {
     }
     
     if (result.mainImage) {
-        console.log('🖼️ Mise à jour de l\'image principale');
         mainPreview.src = result.mainImage.path || result.mainImage;
         mainPreview.style.display = 'block';
 
@@ -191,7 +176,6 @@ function updateMainImagePreview(result) {
 
         // Ajouter le bouton de suppression s'il n'existe pas déjà
         if (!mainImageContainer.querySelector('.remove-image-btn')) {
-            console.log('➕ Ajout du bouton de suppression');
             const removeBtn = document.createElement('button');
             removeBtn.type = 'button';
             removeBtn.className = 'remove-image-btn';
@@ -204,7 +188,6 @@ function updateMainImagePreview(result) {
 
 // Fonction pour mettre à jour la prévisualisation des images secondaires
 function updateSecondaryImagesPreview(result) {
-    console.log('🔍 Début updateSecondaryImagesPreview avec:', result);
     
     // Vérifier que nous avons bien les données attendues
     if (!result) {
@@ -213,7 +196,6 @@ function updateSecondaryImagesPreview(result) {
     }
     
     const container = document.getElementById('secondaryImagesPreview');
-    console.log('📌 Container images secondaires trouvé:', container);
     
     if (!container) {
         console.error('❌ Container des images secondaires non trouvé');
@@ -225,10 +207,8 @@ function updateSecondaryImagesPreview(result) {
         id: String(img.dataset.imageId || ''),
         url: img.src
     }));
-    console.log('📌 Images secondaires existantes:', existingImages);
 
     if (result.secondaryImages && result.secondaryImages.length > 0) {
-        console.log('🖼️ Nouvelles images secondaires reçues:', result.secondaryImages);
 
         // Fusionner les nouvelles images avec les existantes
         const allImages = [...existingImages];
@@ -238,14 +218,12 @@ function updateSecondaryImagesPreview(result) {
                 allImages.push({ ...newImage, id: newId });
             }
         });
-        console.log('📌 Images après fusion:', allImages);
 
         // Mettre à jour l'affichage
         allImages.forEach(image => {
             // Vérifier si l'image existe déjà
             const existingImage = container.querySelector(`img[data-image-id="${image.id}"]`);
             if (!existingImage) {
-                console.log('➕ Ajout d\'une nouvelle image:', image.id);
                 
                 const col = document.createElement('div');
                 col.className = 'col-md-4 mb-3';
@@ -272,7 +250,6 @@ function updateSecondaryImagesPreview(result) {
         });
     }
     
-    console.log('✅ Fin updateSecondaryImagesPreview');
 }
 
 // Fonction pour gérer l'upload de l'image principale
@@ -420,7 +397,6 @@ async function handleMainImageDelete(event) {
 
 // Initialisation
 document.addEventListener('DOMContentLoaded', async function() {
-    console.log('🔄 Initialisation des gestionnaires d\'événements');
     // Pré-chargement des images d'un brouillon existant
     try {
         const draftIdInput = document.getElementById('draftId');

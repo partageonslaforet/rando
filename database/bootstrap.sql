@@ -8,15 +8,15 @@ SET FOREIGN_KEY_CHECKS = 0;
 
 -- Utilisateurs
 CREATE TABLE IF NOT EXISTS `users` (
-    `id` INT(11) NOT NULL AUTO_INCREMENT,
+    `id` INT NOT NULL AUTO_INCREMENT,
     `email` VARCHAR(255) NOT NULL,
     `password` VARCHAR(255) DEFAULT NULL,
     `name` VARCHAR(255) DEFAULT NULL,
     `first_name` VARCHAR(255) DEFAULT NULL,
     `last_name` VARCHAR(255) DEFAULT NULL,
     `role` ENUM('admin','organizer','user') DEFAULT 'user',
-    `is_active` TINYINT(1) DEFAULT 1,
-    `email_verified` TINYINT(1) DEFAULT 0,
+    `is_active` TINYINT DEFAULT 1,
+    `email_verified` TINYINT DEFAULT 0,
     `remember_token` VARCHAR(100) DEFAULT NULL,
     `remember_token_expires_at` DATETIME DEFAULT NULL,
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -27,8 +27,8 @@ CREATE TABLE IF NOT EXISTS `users` (
 
 -- Tokens "Se souvenir de moi"
 CREATE TABLE IF NOT EXISTS `remember_tokens` (
-    `id` INT(11) NOT NULL AUTO_INCREMENT,
-    `user_id` INT(11) NOT NULL,
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `user_id` INT NOT NULL,
     `token` VARCHAR(255) NOT NULL,
     `expires_at` DATETIME NOT NULL,
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -39,13 +39,13 @@ CREATE TABLE IF NOT EXISTS `remember_tokens` (
 
 -- Catégories d'événements
 CREATE TABLE IF NOT EXISTS `event_categories` (
-    `id` INT(11) NOT NULL AUTO_INCREMENT,
+    `id` INT NOT NULL AUTO_INCREMENT,
     `code` VARCHAR(50) NOT NULL,
     `name` VARCHAR(255) NOT NULL,
     `icon` VARCHAR(255) DEFAULT NULL,
     `color` VARCHAR(50) DEFAULT NULL,
-    `active` TINYINT(1) DEFAULT 1,
-    `sort_order` INT(11) DEFAULT 0,
+    `active` TINYINT DEFAULT 1,
+    `sort_order` INT DEFAULT 0,
     PRIMARY KEY (`id`),
     UNIQUE KEY `code` (`code`),
     KEY `active_sort` (`active`, `sort_order`)
@@ -53,8 +53,8 @@ CREATE TABLE IF NOT EXISTS `event_categories` (
 
 -- Profils d'organisateurs (utilisé par event-detail.php)
 CREATE TABLE IF NOT EXISTS `organizer_profiles` (
-    `id` INT(11) NOT NULL AUTO_INCREMENT,
-    `user_id` INT(11) DEFAULT NULL,
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `user_id` INT DEFAULT NULL,
     `name` VARCHAR(255) NOT NULL,
     `description` TEXT,
     `address` TEXT,
@@ -62,6 +62,7 @@ CREATE TABLE IF NOT EXISTS `organizer_profiles` (
     `email` VARCHAR(255),
     `website` VARCHAR(255),
     `logo_path` VARCHAR(255),
+    `storage_path` VARCHAR(255),
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at` TIMESTAMP NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`),
@@ -71,34 +72,40 @@ CREATE TABLE IF NOT EXISTS `organizer_profiles` (
 
 -- Événements
 CREATE TABLE IF NOT EXISTS `events` (
-    `id` INT(11) NOT NULL AUTO_INCREMENT,
+    `id` INT NOT NULL AUTO_INCREMENT,
     `title` VARCHAR(255) NOT NULL,
     `description` TEXT,
     `category` VARCHAR(50) DEFAULT NULL,
-    `category_id` INT(11) DEFAULT NULL,
+    `category_id` INT DEFAULT NULL,
     `date` DATE NOT NULL,
     `start_time` TIME NOT NULL,
     `end_time` TIME DEFAULT NULL,
+    `registration_opens` TIME DEFAULT NULL,
+    `registration_closes` TIME DEFAULT NULL,
     `location` VARCHAR(255) DEFAULT NULL,
     `venue` VARCHAR(255) DEFAULT NULL,
     `coordinates` VARCHAR(255) DEFAULT NULL,
+    `meeting_name` VARCHAR(255) DEFAULT NULL,
+    `meeting_address` VARCHAR(255) DEFAULT NULL,
+    `meeting_city` VARCHAR(255) DEFAULT NULL,
+    `meeting_coordinates` VARCHAR(255) DEFAULT NULL,
     `difficulty` ENUM('easy','medium','hard') DEFAULT NULL,
-    `max_participants` INT(11) DEFAULT NULL,
+    `max_participants` INT DEFAULT NULL,
     `status` ENUM('draft','published','approved','pending','rejected','expired') DEFAULT 'draft',
     `submitted_at` DATETIME DEFAULT NULL,
     `validated_at` DATETIME DEFAULT NULL,
-    `validated_by` INT(11) DEFAULT NULL,
+    `validated_by` INT DEFAULT NULL,
     `rejection_reason` VARCHAR(1000) DEFAULT NULL,
     `main_image_path` VARCHAR(255) DEFAULT NULL,
     `main_image` VARCHAR(255) DEFAULT NULL,
-    `user_id` INT(11) DEFAULT NULL,
-    `organizer_id` INT(11) DEFAULT NULL,
-    `created_by` INT(11) DEFAULT NULL,
+    `user_id` INT DEFAULT NULL,
+    `organizer_id` INT DEFAULT NULL,
+    `created_by` INT DEFAULT NULL,
     `organisation` VARCHAR(40) DEFAULT NULL,
-    `has_gpx` TINYINT(1) DEFAULT 0,
+    `has_gpx` TINYINT DEFAULT 0,
     `gpx_path` VARCHAR(255) DEFAULT NULL,
-    `gpx_downloadable` TINYINT(1) DEFAULT 0,
-    `view_count` INT(11) DEFAULT 0,
+    `gpx_downloadable` TINYINT DEFAULT 0,
+    `view_count` INT DEFAULT 0,
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at` TIMESTAMP NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`),
@@ -113,11 +120,11 @@ CREATE TABLE IF NOT EXISTS `events` (
 
 -- Images d'événements
 CREATE TABLE IF NOT EXISTS `event_images` (
-    `id` INT(11) NOT NULL AUTO_INCREMENT,
-    `event_id` INT(11) NOT NULL,
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `event_id` INT NOT NULL,
     `image_path` VARCHAR(255) NOT NULL,
     `storage_path` VARCHAR(255) DEFAULT NULL,
-    `is_main` TINYINT(1) NOT NULL DEFAULT 0,
+    `is_main` TINYINT NOT NULL DEFAULT 0,
     `storage_type` VARCHAR(50) DEFAULT 'local',
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`),
@@ -128,9 +135,9 @@ CREATE TABLE IF NOT EXISTS `event_images` (
 
 -- Participants aux événements
 CREATE TABLE IF NOT EXISTS `event_participants` (
-    `id` INT(11) NOT NULL AUTO_INCREMENT,
-    `event_id` INT(11) NOT NULL,
-    `user_id` INT(11) NOT NULL,
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `event_id` INT NOT NULL,
+    `user_id` INT NOT NULL,
     `registered_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`),
     KEY `event_id` (`event_id`),
@@ -141,12 +148,12 @@ CREATE TABLE IF NOT EXISTS `event_participants` (
 
 -- Parcours / routes (modèle Event.php)
 CREATE TABLE IF NOT EXISTS `event_routes` (
-    `id` INT(11) NOT NULL AUTO_INCREMENT,
-    `event_id` INT(11) NOT NULL,
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `event_id` INT NOT NULL,
     `name` VARCHAR(255) NOT NULL,
-    `category_id` INT(11) DEFAULT NULL,
+    `category_id` INT DEFAULT NULL,
     `distance` DECIMAL(10,2) DEFAULT NULL,
-    `elevation` INT(11) DEFAULT NULL,
+    `elevation` INT DEFAULT NULL,
     `gpx_file` VARCHAR(255) DEFAULT NULL,
     `price` DECIMAL(10,2) DEFAULT 0.00,
     PRIMARY KEY (`id`),
@@ -156,8 +163,8 @@ CREATE TABLE IF NOT EXISTS `event_routes` (
 
 -- Contacts des événements
 CREATE TABLE IF NOT EXISTS `event_contacts` (
-    `id` INT(11) NOT NULL AUTO_INCREMENT,
-    `event_id` INT(11) NOT NULL,
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `event_id` INT NOT NULL,
     `name` VARCHAR(255) NOT NULL,
     `email` VARCHAR(255) DEFAULT NULL,
     `phone` VARCHAR(50) DEFAULT NULL,
@@ -169,15 +176,15 @@ CREATE TABLE IF NOT EXISTS `event_contacts` (
 
 -- Parcours / parcours (template event-detail.php)
 CREATE TABLE IF NOT EXISTS `event_parcours` (
-    `id` INT(11) NOT NULL AUTO_INCREMENT,
-    `event_id` INT(11) NOT NULL,
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `event_id` INT NOT NULL,
     `name` VARCHAR(255) NOT NULL,
-    `category_id` INT(11) DEFAULT NULL,
+    `category_id` INT DEFAULT NULL,
     `distance` DECIMAL(10,2) DEFAULT NULL,
-    `elevation_gain` INT(11) DEFAULT NULL,
+    `elevation_gain` INT DEFAULT NULL,
     `description` TEXT DEFAULT NULL,
     `gpx_file` VARCHAR(255) DEFAULT NULL,
-    `gpx_downloadable` TINYINT(1) DEFAULT 0,
+    `gpx_downloadable` TINYINT DEFAULT 0,
     `price` DECIMAL(10,2) DEFAULT 0.00,
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at` TIMESTAMP NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
@@ -188,11 +195,11 @@ CREATE TABLE IF NOT EXISTS `event_parcours` (
 
 -- Commentaires (compteur et API)
 CREATE TABLE IF NOT EXISTS `event_comments` (
-    `id` INT(11) NOT NULL AUTO_INCREMENT,
-    `event_id` INT(11) NOT NULL,
-    `user_id` INT(11) NOT NULL,
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `event_id` INT NOT NULL,
+    `user_id` INT NOT NULL,
     `content` TEXT NOT NULL,
-    `rating` TINYINT(1) DEFAULT NULL,
+    `rating` TINYINT DEFAULT NULL,
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at` TIMESTAMP NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`),
@@ -200,6 +207,124 @@ CREATE TABLE IF NOT EXISTS `event_comments` (
     KEY `user_id` (`user_id`),
     CONSTRAINT `event_comments_ibfk_1` FOREIGN KEY (`event_id`) REFERENCES `events` (`id`) ON DELETE CASCADE,
     CONSTRAINT `event_comments_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Brouillons d'événements
+CREATE TABLE IF NOT EXISTS `draft_events` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `user_id` INT DEFAULT NULL,
+    `title` VARCHAR(255) DEFAULT NULL,
+    `description` TEXT,
+    `category` VARCHAR(50) DEFAULT NULL,
+    `category_id` INT DEFAULT NULL,
+    `date` DATE DEFAULT NULL,
+    `start_time` TIME DEFAULT NULL,
+    `end_time` TIME DEFAULT NULL,
+    `registration_opens` TIME DEFAULT NULL,
+    `registration_closes` TIME DEFAULT NULL,
+    `location` VARCHAR(255) DEFAULT NULL,
+    `venue` VARCHAR(255) DEFAULT NULL,
+    `coordinates` VARCHAR(255) DEFAULT NULL,
+    `meeting_name` VARCHAR(255) DEFAULT NULL,
+    `meeting_address` VARCHAR(255) DEFAULT NULL,
+    `meeting_city` VARCHAR(255) DEFAULT NULL,
+    `meeting_coordinates` VARCHAR(255) DEFAULT NULL,
+    `difficulty` ENUM('easy','medium','hard') DEFAULT NULL,
+    `max_participants` INT DEFAULT NULL,
+    `status` ENUM('draft','published') DEFAULT 'draft',
+    `submitted_at` DATETIME DEFAULT NULL,
+    `validated_at` DATETIME DEFAULT NULL,
+    `validated_by` INT DEFAULT NULL,
+    `rejection_reason` VARCHAR(1000) DEFAULT NULL,
+    `main_image_path` VARCHAR(255) DEFAULT NULL,
+    `main_image` VARCHAR(255) DEFAULT NULL,
+    `organizer_id` INT DEFAULT NULL,
+    `created_by` INT DEFAULT NULL,
+    `organisation` VARCHAR(40) DEFAULT NULL,
+    `has_gpx` TINYINT DEFAULT 0,
+    `gpx_path` VARCHAR(255) DEFAULT NULL,
+    `gpx_downloadable` TINYINT DEFAULT 0,
+    `original_event_id` INT DEFAULT NULL,
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` TIMESTAMP NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`),
+    KEY `user_id` (`user_id`),
+    KEY `original_event_id` (`original_event_id`),
+    KEY `status` (`status`),
+    CONSTRAINT `draft_events_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+    CONSTRAINT `draft_events_ibfk_2` FOREIGN KEY (`original_event_id`) REFERENCES `events` (`id`) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Images des brouillons
+CREATE TABLE IF NOT EXISTS `draft_images` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `event_id` INT NOT NULL,
+    `image_path` VARCHAR(255) NOT NULL,
+    `storage_path` VARCHAR(255) DEFAULT NULL,
+    `is_main` TINYINT NOT NULL DEFAULT 0,
+    `storage_type` VARCHAR(50) DEFAULT 'local',
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`),
+    KEY `event_id` (`event_id`),
+    CONSTRAINT `draft_images_ibfk_1` FOREIGN KEY (`event_id`) REFERENCES `draft_events` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Parcours des brouillons
+CREATE TABLE IF NOT EXISTS `draft_parcours` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `event_id` INT NOT NULL,
+    `name` VARCHAR(255) NOT NULL,
+    `category_id` INT DEFAULT NULL,
+    `distance` DECIMAL(10,2) DEFAULT NULL,
+    `elevation_gain` INT DEFAULT NULL,
+    `description` TEXT DEFAULT NULL,
+    `gpx_file` VARCHAR(255) DEFAULT NULL,
+    `gpx_downloadable` TINYINT DEFAULT 0,
+    `price` DECIMAL(10,2) DEFAULT 0.00,
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` TIMESTAMP NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`),
+    KEY `event_id` (`event_id`),
+    CONSTRAINT `draft_parcours_ibfk_1` FOREIGN KEY (`event_id`) REFERENCES `draft_events` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Contacts des brouillons
+CREATE TABLE IF NOT EXISTS `draft_contacts` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `event_id` INT NOT NULL,
+    `name` VARCHAR(255) NOT NULL,
+    `email` VARCHAR(255) DEFAULT NULL,
+    `phone` VARCHAR(50) DEFAULT NULL,
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`),
+    KEY `event_id` (`event_id`),
+    CONSTRAINT `draft_contacts_ibfk_1` FOREIGN KEY (`event_id`) REFERENCES `draft_events` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Liens événements ↔ catégories (tags)
+CREATE TABLE IF NOT EXISTS `event_category_links` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `event_id` INT NOT NULL,
+    `category_id` INT NOT NULL,
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`),
+    KEY `event_id` (`event_id`),
+    KEY `category_id` (`category_id`),
+    CONSTRAINT `event_category_links_ibfk_1` FOREIGN KEY (`event_id`) REFERENCES `events` (`id`) ON DELETE CASCADE,
+    CONSTRAINT `event_category_links_ibfk_2` FOREIGN KEY (`category_id`) REFERENCES `event_categories` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Liens brouillons ↔ catégories (tags)
+CREATE TABLE IF NOT EXISTS `draft_event_category_links` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `draft_event_id` INT NOT NULL,
+    `category_id` INT NOT NULL,
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`),
+    KEY `draft_event_id` (`draft_event_id`),
+    KEY `category_id` (`category_id`),
+    CONSTRAINT `draft_event_category_links_ibfk_1` FOREIGN KEY (`draft_event_id`) REFERENCES `draft_events` (`id`) ON DELETE CASCADE,
+    CONSTRAINT `draft_event_category_links_ibfk_2` FOREIGN KEY (`category_id`) REFERENCES `event_categories` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 SET FOREIGN_KEY_CHECKS = 1;
