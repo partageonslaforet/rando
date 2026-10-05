@@ -30,3 +30,23 @@ function logError(string $context, string $message, array $extra = []): void {
         error_log($line);
     }
 }
+
+/**
+ * Log de debug conditionnel pour le périmètre abonnements.
+ * Utiliser debugLog() pour les traces non critiques; elles ne s'écrivent que si DEBUG_SUBSCRIBERS est actif
+ * et que le contexte est lié aux abonnements.
+ */
+function debugLog(string $context, string $message, array $extra = []): void {
+    if (!defined('DEBUG_SUBSCRIBERS') || !DEBUG_SUBSCRIBERS) {
+        return;
+    }
+    // Canaux acceptés
+    $isSubscribersScope = (
+        strpos($context, 'subscribers/') === 0 ||
+        strpos($context, 'api/subscribers/') === 0 ||
+        $context === 'Subscribers.php'
+    );
+    if ($isSubscribersScope) {
+        logError($context, $message, $extra);
+    }
+}

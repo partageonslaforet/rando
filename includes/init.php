@@ -11,6 +11,17 @@ error_reporting(E_ALL);
 
 // Charger les fonctions utilitaires
 require_once __DIR__ . '/functions.php';
+// Logger central
+require_once dirname(__DIR__) . '/logs/error.log.php';
+
+// Trace d'entrée globale (une par requête)
+if (function_exists('logError')) {
+    logError('bootstrap/init', 'request enter', [
+        'request_uri' => $_SERVER['REQUEST_URI'] ?? null,
+        'script' => $_SERVER['SCRIPT_FILENAME'] ?? ($_SERVER['SCRIPT_NAME'] ?? null),
+        'method' => $_SERVER['REQUEST_METHOD'] ?? null
+    ]);
+}
 
 // Initialiser la session de manière sécurisée
 initSession();

@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../../logs/error.log.php';
 /**
  * Construit une représentation normalisée d'un événement (publié ou brouillon)
  * pour être affichée de manière identique par event-detail.php et preview.php.
@@ -65,8 +66,37 @@ class EventDisplayBuilder
         }
 
         // Image principale déjà dans $event['images']['main']
-        $event['main_image'] = $event['images']['main'] ?? '/assets/images/events/default-event.jpg';
+        $categoryCode = strtolower($event['category'] ?? '');
+        $categoryName = strtolower($event['category_name'] ?? '');
+        $isCourseAPied = (
+            $categoryCode === 'running'
+            || $categoryCode === 'course-a-pied'
+            || $categoryCode === 'courseapied'
+            || strpos($categoryName, 'course à pied') !== false
+        );
+        $defaultImage = $isCourseAPied
+            ? getCourseAPiedFallbackImage()
+            : '/assets/images/events/default-event.jpg';
+
+        $mainImage = $event['images']['main'] ?? null;
+        $isGeneric = !$mainImage
+            || !isRealEventImage($mainImage)
+            || stripos($mainImage, 'default-event.jpg') !== false
+            || stripos($mainImage, 'main-hero.jpg') !== false
+            || stripos($mainImage, 'map-hero.jpg') !== false
+            || stripos($mainImage, 'coursea') !== false;
+        if ($isCourseAPied && $isGeneric) {
+            $mainImage = $defaultImage;
+        }
+        $event['main_image'] = $mainImage ?: $defaultImage;
         $event['secondary_images'] = $event['images']['secondary'] ?? [];
+
+        // Vues totales (tous trafics) depuis site_visits pour /event?id=ID et /event/ID
+        try {
+            $event['views_total'] = $this->fetchViewsTotal($id);
+        } catch (\Throwable $e) {
+            $event['views_total'] = null;
+        }
 
         return $event;
     }
@@ -74,7 +104,12 @@ class EventDisplayBuilder
     private function fetchEvent(string $mode, int $id, ?int $userId): ?array
     {
         if ($mode === 'published') {
-            $stmt = $this->pdo->prepare("SELECT * FROM events WHERE id = :id");
+            $stmt = $this->pdo->prepare("
+                SELECT e.*, c.code as category, c.name as category_name, c.icon as category_icon, c.color as category_color
+                FROM events e
+                LEFT JOIN event_categories c ON e.category_id = c.id
+                WHERE e.id = :id
+            ");
             $stmt->execute(['id' => $id]);
         } else {
             $stmt = $this->pdo->prepare("SELECT * FROM draft_events WHERE id = :id AND user_id = :user_id");
@@ -83,6 +118,27 @@ class EventDisplayBuilder
 
         $event = $stmt->fetch(PDO::FETCH_ASSOC);
         return $event ?: null;
+    }
+
+    /**
+     * Nombre total de vues (humains et non-humains) sans période, à partir de site_visits
+     */
+    private function fetchViewsTotal(int $eventId): int
+    {
+        // Entrée dans le calcul des vues
+        if (function_exists('logError')) {
+            logError('src/Services/EventDisplayBuilder.php', 'fetchViewsTotal enter', ['event_id' => $eventId]);
+        }
+        // Utilise la fonction factorisée pour le compteur
+        $total = getEventTotalViews($this->pdo, $eventId);
+        if (function_exists('logError')) {
+            logError('src/Services/EventDisplayBuilder.php', 'fetchViewsTotal total', [
+                'event_id' => $eventId,
+                'total' => $total
+            ]);
+        }
+
+        return $total;
     }
 
     private function fetchRoutes(string $mode, int $id): array
@@ -154,23 +210,7 @@ class EventDisplayBuilder
 
     private function resolveImagePath(array $row): ?string
     {
-        $imagePath = $row['image_path'] ?? null;
-        $storagePath = $row['storage_path'] ?? null;
-
-        if (!empty($imagePath)) {
-            return $imagePath;
-        }
-
-        if (empty($storagePath)) {
-            return null;
-        }
-
-        $docRoot = realpath($_SERVER['DOCUMENT_ROOT'] ?? '');
-        if ($docRoot && strpos($storagePath, $docRoot) === 0) {
-            return '/' . ltrim(str_replace($docRoot, '', $storagePath), '/');
-        }
-
-        return $storagePath;
+        return resolveImagePublicUrl($row['image_path'] ?? null, $row['storage_path'] ?? null);
     }
 
     private function getPublishedMainImageFallback(int $eventId): ?string
@@ -178,7 +218,9 @@ class EventDisplayBuilder
         $stmt = $this->pdo->prepare("SELECT main_image_path, main_image FROM events WHERE id = :id");
         $stmt->execute(['id' => $eventId]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $row['main_image_path'] ?? $row['main_image'] ?? null;
+        return resolveImagePublicUrl($row['main_image_path'] ?? null, null)
+            ?? resolveImagePublicUrl($row['main_image'] ?? null, null)
+            ?? null;
     }
 
     private function fetchOrganizer(string $mode, array $event): ?array
@@ -196,7 +238,7 @@ class EventDisplayBuilder
         }
 
         // Nom d'organisateur personnalisé stocké dans le brouillon/événement
-        if (!empty($event['organisation'])) {
+        if (!empty($event['organisation']) && !is_numeric($event['organisation'])) {
             return [
                 'name' => $event['organisation'],
                 'email' => null,

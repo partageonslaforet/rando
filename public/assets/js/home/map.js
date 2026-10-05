@@ -80,8 +80,8 @@ function initMap() {
         }).addTo(window.mainMap);
         // console.log('Couche de tuiles ajoutée'); // Log de l'ajout de la couche de tuiles
 
-        // Initialiser la couche des marqueurs
-        window.markersLayer = L.layerGroup().addTo(window.mainMap);
+        // Initialiser la couche des marqueurs (cluster si le plugin est chargé)
+        window.markersLayer = createMarkersLayer().addTo(window.mainMap);
         // console.log('Couche de marqueurs créée:', markersLayer); // Log de la couche de marqueurs créée
 
         // Initialiser les marqueurs avec les événements actuels
@@ -106,6 +106,37 @@ function getCurrentEvents() {
     }
 
     return window.allEvents;
+}
+
+// Icône de marqueur personnalisée (pin Bootstrap Icons en vert primaire)
+const eventPinIcon = L.divIcon({
+    className: 'event-pin',
+    html: '<i class="bi bi-geo-alt-fill" aria-hidden="true"></i>',
+    iconSize: [30, 42],
+    iconAnchor: [15, 42],
+    popupAnchor: [0, -38]
+});
+
+// Icône de cluster (pastille verte avec compteur) pour markercluster
+function eventClusterIcon(cluster) {
+    return L.divIcon({
+        className: 'event-cluster',
+        html: '<div><span>' + cluster.getChildCount() + '</span></div>',
+        iconSize: [40, 40],
+        iconAnchor: [20, 20]
+    });
+}
+
+// Couche de marqueurs : cluster si le plugin est chargé, sinon layerGroup simple
+function createMarkersLayer() {
+    if (typeof L.markerClusterGroup === 'function') {
+        return L.markerClusterGroup({
+            showCoverageOnHover: false,
+            spiderfyOnMaxZoom: true,
+            iconCreateFunction: eventClusterIcon
+        });
+    }
+    return L.layerGroup();
 }
 
 // Cache pour les résultats de géocodage
@@ -199,7 +230,7 @@ async function updateMapMarkers(events) {
         // Vérifier que markersLayer existe
         if (!window.markersLayer) {
             // console.error('markersLayer n\'existe pas!');
-            window.markersLayer = L.layerGroup().addTo(window.mainMap);
+            window.markersLayer = createMarkersLayer().addTo(window.mainMap);
         }
         
         // Supprimer tous les marqueurs existants
@@ -237,32 +268,39 @@ async function updateMapMarkers(events) {
 
                     // Créer le contenu du popup (entièrement cliquable)
                     const detailUrl = `/event?id=${encodeURIComponent(event.id)}`;
+                    const popupViews = (event.views_total != null ? parseInt(event.views_total, 10) : (event.view_count != null ? parseInt(event.view_count, 10) : 0)) || 0;
                     const popupContent = `
                         <a href="${detailUrl}" class="event-popup-link" aria-label="Voir l'événement">
                             <div class="event-popup">
                                 <div class="event-popup-image">
                                     ${cancelledBadge}
                                     <img src="${popupImage}" 
-                                         alt="${event.title}"
-                                         style="width: 100%; height: 120px; object-fit: cover;">
+                                         alt="${event.title}">
                                 </div>
-                                <div class="event-popup-content p-3">
-                                    <h5 class="mb-2">${event.title}</h5>
+                                <div class="event-popup-content">
+                                    <div class="event-popup-head">
+                                        <h5 class="event-popup-title">${event.title}</h5>
+                                        <span class="event-popup-views"><i class="bi bi-eye"></i>${popupViews} vue${popupViews > 1 ? 's' : ''}</span>
+                                    </div>
                                     ${renderCategoriesChips(event)}
-                                    <div class="d-flex align-items-center mb-2">
-                                        <i class="bi bi-calendar-event me-2"></i>
-                                        <span>${formatDateLongFR(event.date)}</span>
+                                    <div class="event-popup-meta">
+                                        <div class="event-popup-meta-row">
+                                            <i class="bi bi-calendar-event"></i>
+                                            <span>${formatDateLongFR(event.date)}</span>
+                                        </div>
+                                        <div class="event-popup-meta-row">
+                                            <i class="bi bi-geo-alt"></i>
+                                            <span>${event.location}</span>
+                                        </div>
                                     </div>
-                                    <div class="d-flex align-items-center">
-                                        <i class="bi bi-geo-alt me-2"></i>
-                                        <span>${event.location}</span>
-                                    </div>
+                                    <div class="event-popup-cta">Voir l'événement <i class="bi bi-arrow-right"></i></div>
                                 </div>
                             </div>
                         </a>`;
 
-                    // Créer le marqueur avec tooltip
+                    // Créer le marqueur avec tooltip et icône pin verte
                     const marker = L.marker([coordinates.lat, coordinates.lng], {
+                        icon: eventPinIcon,
                         title: "Cliquez pour plus d'informations"  // Ajoute le tooltip
                     }).bindPopup(popupContent);
                     

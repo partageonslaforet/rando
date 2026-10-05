@@ -10,7 +10,7 @@
 
 .temporal-filters {
     margin: 1rem 0;
-    border-bottom: 1px solid #e0e0e0; 
+    border-bottom: 1px solid var(--border-color); 
     padding-bottom: 1rem;
    
 }
@@ -47,26 +47,26 @@
 }
    
 .filters {
-    background-color: white;
+    background-color: var(--light-text);
     border-radius: 12px;
     padding: 1rem;
 }
 
 .btn-primary.active {
-    background-color: var(--secondary-color) !important;
-    border-color: var(--secondary-color) !important;
-    color: white;
+    background-color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+    color: var(--light-text);
 }
 
 .btn-primary {
     background-color: transparent ;
-    border-color: var(--secondary-color) ;
-    color: white !important ;
+    border-color: var(--primary-color) ;
+    color: var(--light-text) !important ;
 }
 
 .btn-primary:hover {
-    background-color: var(--secondary-color) !important;
-    border-color: var(--secondary-color) !important;
+    background-color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
 }
 .btn .badge {
     position: absolute;
@@ -84,23 +84,23 @@
 }
 
 .btn .badge {
-    background-color: var(--secondary-color);
-    color: white;
+    background-color: var(--primary-color);
+    color: var(--light-text);
     border-radius: 12px;
     padding: 0.25rem 0.5rem;
 }
 
 .btn-primary.active .badge {
-    background-color: white;
-    color: var(--secondary-hover);
+    background-color: var(--light-text);
+    color: var(--primary-hover);
     border-radius: 12px;
     padding: 0.25rem 0.5rem;
 }
 
 .btn-primary.disabled {
     background-color: transparent ;
-    border-color: var(--secondary-color) ;
-    color: var(--secondary-color) ;
+    border-color: var(--primary-color) ;
+    color: var(--primary-color) ;
     opacity: 0.5;
     pointer-events: none;
     cursor: not-allowed;
@@ -121,8 +121,8 @@
 
 /* Pastille pour bouton actif */
 .btn-primary::after {
-    background: white;
-    color: var(--secondary-color);
+    background: var(--light-text);
+    color: var(--primary-color);
 }
 
 
@@ -144,32 +144,32 @@
     justify-content: center;
     font-size: 0.85rem;
     font-weight: 500;
-    background: var(--secondary-color);
-    color: white;
+    background: var(--primary-color);
+    color: var(--light-text);
 } 
 
 
 
 #resetFilters {
-    color: var(--success-color);
+    color: var(--primary-color);
     text-decoration: none;
 }
 
 #resetFilters:hover {
-    color: var(--success-hover);
+    color: var(--primary-hover));
 }
 
 
 
 .btn-outline-primary {
-    color: var(--secondary-color) !important;
-    border-color: var(--secondary-color) !important;
+    color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
     background-color: transparent !important;
 }
 
 .btn-outline-primary:hover {
-    background-color: var(--secondary-hover) !important;
-    color: white !important;
+    background-color: var(--primary-hover) !important;
+    color: var(--light-text) !important;
 }
 /
 
@@ -197,13 +197,13 @@
 }
 
 .event-filters .btn-light::after {
-    background: var(--secondary-color);
-    color: white;
+    background: var(--primary-color);
+    color: var(--light-text);
 }
 
 .event-filters .btn-primary::after {
-    background: white;
-    color: var(--secondary-color);
+    background: var(--light-text);
+    color: var(--primary-color);
 }
 
 /* Temporal filters: use the real <span class="badge">, not the ::after overlay */
@@ -213,29 +213,29 @@
 
 /* Ensure white text for inactive temporal badges */
 .temporal-filters .btn .badge {
-    background-color: var(--secondary-color) !important;
-    color: white !important;
+    background-color: var(--primary-color) !important;
+    color: var(--light-text) !important;
 }
 
 /* Active temporal badge inverted (white bg, green text) */
 .temporal-filters .btn-primary.active .badge {
-    background-color: white !important;
-    color: var(--secondary-hover) !important;
+    background-color: var(--light-text) !important;
+    color: var(--primary-hover) !important;
 }
 
 /* Attribute-targeted rules to avoid any cascade flicker on temporal buttons */
 .filter-group [data-period] .badge,
 .temporal-filter-group [data-period] .badge,
 .temporal-filters [data-period] .badge {
-    background-color: var(--secondary-color) !important;
-    color: #fff !important;
+    background-color: var(--primary-color) !important;
+    color: var(--light-text) !important;
 }
 
 .filter-group [data-period].btn-primary .badge,
 .temporal-filter-group [data-period].btn-primary .badge,
 .temporal-filters [data-period].btn-primary .badge {
-    background-color: #fff !important;
-    color: var(--secondary-hover) !important;
+    background-color: var(--light-text) !important;
+    color: var(--primary-hover) !important;
 }
 
 .filter-group [data-period].btn-light::after,
@@ -255,16 +255,16 @@
 .filter-group [data-category] .badge,
 .category-filter-group [data-category] .badge,
 .event-filters [data-category] .badge {
-    background-color: var(--secondary-color) !important;
-    color: #fff !important;
+    background-color: var(--primary-color) !important;
+    color: var(--light-text) !important;
 }
 
 /* Active category badge inverted (white bg, green text) */
 .filter-group [data-category].btn-primary .badge,
 .category-filter-group [data-category].btn-primary .badge,
 .event-filters [data-category].btn-primary .badge {
-    background-color: #fff !important;
-    color: var(--secondary-hover) !important;
+    background-color: var(--light-text) !important;
+    color: var(--primary-hover) !important;
 }
 
 .filter-group:last-child {
@@ -279,26 +279,26 @@
 /* Bouton inactif (non sélectionné) */
 .filter-group .btn-light {
     background-color: transparent !important;
-    border-color: var(--secondary-color) !important;
-    color: var(--secondary-color) !important;
+    border-color: var(--primary-color) !important;
+    color: var(--primary-color) !important;
     margin-top: 16px;
 }
 
 .filter-group .btn-light .badge {
-    background-color: var(--secondary-color) !important;
-    color: white !important;
+    background-color: var(--primary-color) !important;
+    color: var(--light-text) !important;
 }
 
 /* Bouton désactivé */
 .filter-group .btn-secondary {
     background-color: transparent !important;
-    border-color: #6c757d !important;
-    color: #6c757d !important;
+    border-color: var(--text-muted) !important;
+    color: var(--text-muted) !important;
 }
 
 .filter-group .btn-secondary .badge {
-    background-color: #6c757d !important;
-    color: white !important;
+    background-color: var(--text-muted) !important;
+    color: var(--light-text) !important;
 }
 
 /* Style commun des badges */
@@ -321,30 +321,30 @@
 
 
 .btn-light {
-    background-color: white;
-    border: 1px solid #dee2e6;
+    background-color: var(--light-text);
+    border: 1px solid var(--border-color);
 }
 
 .btn-light:hover {
-    background-color: var(--filter-hover);
+    background-color: var(--surface);
 }
 
 
 
 .bg-primary{
-    background-color: white !important;
-    color: var(--secondary-color) !important;
+    background-color: var(--light-text) !important;
+    color: var(--primary-color) !important;
     border-radius: 50px;
 
 }
 
 .btn-light{ 
-    border-color : var(--secondary-color) !important;
+    border-color : var(--primary-color) !important;
 }
 
 .btn-outline-primary{
-    color: var(--secondary-color) !important;
-    border-color: var(--secondary-color) !important;
+    color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
 }
 
 .btn-outline-primary:hover{
@@ -352,17 +352,17 @@
 }
 
 .btn-outline-primary .badge{
-    color: white !important;
-    background-color: var(--secondary-color) !important;
+    color: var(--light-text) !important;
+    background-color: var(--primary-color) !important;
 }
 
 .filters {
-    background-color: white;
+    background-color: var(--light-text);
     border-radius: 12px;
     padding: 1rem;
-    background-color: #fff;
+    background-color: var(--light-text);
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 20px color-mix(in srgb, #000 30%, transparent);
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -379,7 +379,7 @@
 
 .temporal-filters .btn {
     width: 100%;
-    border: 1px solid var(--secondary-color);
+    border: 1px solid var(--primary-color);
     border-radius: 25px;
     text-align: left;
     position: relative;

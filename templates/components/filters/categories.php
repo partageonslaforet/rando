@@ -5,7 +5,7 @@
  * Usage: Filtres de categories d evenements
  * Dépendances: Aucune
  */
-function render_category_filters($pdo) {
+function render_category_filters(PDO $pdo) {
     // Récupération des catégories depuis la table event_categories
     $stmt = $pdo->query("
         SELECT id, name, icon, color 

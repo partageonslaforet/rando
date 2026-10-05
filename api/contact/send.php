@@ -34,12 +34,9 @@ try {
     $toEmail = defined('CONTACT_TO_EMAIL') ? CONTACT_TO_EMAIL : 'rando@partageonslaforet.be';
     $toName  = defined('CONTACT_TO_NAME')  ? CONTACT_TO_NAME  : 'Partageons la Forêt';
 
-    $cssPath = __DIR__ . '/../../public/assets/css/email-styles.css';
-    $css = is_readable($cssPath) ? (file_get_contents($cssPath) ?: '') : '';
     $brand = 'Partageons la Forêt';
     $h = static function ($s) { return htmlspecialchars($s, ENT_QUOTES, 'UTF-8'); };
     $vars = [
-        'css' => $css,
         'brand' => $brand,
         'name' => $name,
         'email' => $email,

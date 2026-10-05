@@ -3,7 +3,7 @@
  * Affichage et édition du profil organisateur.
  */
 // Activer l'affichage des erreurs
-ini_set('display_errors', 1);
+ini_set('display_errors', 0);
 error_reporting(E_ALL);
 
 // Démarrer la session
@@ -13,7 +13,7 @@ if (session_status() === PHP_SESSION_NONE) {
 
 // Vérifier si l'utilisateur est connecté
 if (!isset($_SESSION['user_id'])) {
-    header('Location: /');
+    header('Location: /?showLogin=1&redirect=' . urlencode('/pages/admin/profile.php'));
     exit();
 }
 
@@ -43,7 +43,7 @@ try {
 
     // Vérifier si l'utilisateur est bien un admin
     if ($user['role'] !== 'admin') {
-        header('Location: /pages/user/profile.php');
+        header('Location: /?error=admin_required');
         exit();
     }
 

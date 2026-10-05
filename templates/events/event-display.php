@@ -6,18 +6,6 @@
  * Dépendances: Aucune
  */
 
-if (!function_exists('displayValue')) {
-    function displayValue($value) {
-        return htmlspecialchars((string) $value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
-    }
-}
-
-if (!function_exists('attrValue')) {
-    function attrValue($value) {
-        return htmlspecialchars((string) $value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
-    }
-}
-
 if (!isset($event) || !is_array($event)) {
     echo '<div class="alert alert-danger">Événement non disponible.</div>';
     return;
@@ -51,12 +39,12 @@ unset($catRoutes);
 $gpxFiles = array_filter(array_column($routes, 'gpx_file'));
 $hasGpx = !empty($gpxFiles);
 
-function displayValue($value): string
+function displayValue(mixed $value): string
 {
     return htmlspecialchars((string) $value);
 }
 
-function attrValue($value): string
+function attrValue(mixed $value): string
 {
     return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
 }
@@ -70,7 +58,7 @@ function attrValue($value): string
          data-routes="<?= attrValue(json_encode(array_values($gpxFiles))) ?>">
 
     <header class="event-hero">
-        <div class="event-hero-bg" style="background-image: url('<?= htmlspecialchars($mainImage) ?>');"></div>
+        <div class="event-hero-bg" style="--hero-image: url('<?= htmlspecialchars($mainImage) ?>');"></div>
 
         <!-- Ligne 1 : bouton Partager, ancré en haut à droite du hero (indépendant du contenu) -->
         <button id="shareBtn" class="ehm-share btn-share hero-share-btn" type="button" aria-label="Partager l'événement">
@@ -88,23 +76,15 @@ function attrValue($value): string
         </button>
 
         <div class="event-hero-overlay">
-            <?php if (filter_var($event['is_cancelled'] ?? false, FILTER_VALIDATE_BOOLEAN)): ?>
-                <div class="event-cancelled-banner">
-                    <i class="bi bi-x-circle-fill"></i>
-                    <span>Événement annulé</span>
-                    <?php if (!empty($event['cancellation_reason'])): ?>
-                        <p class="cancelled-reason">Motif : <?= displayValue($event['cancellation_reason']) ?></p>
-                    <?php endif; ?>
-                </div>
-            <?php endif; ?>
-            
-    
             <!-- Ligne 2 : titre centré -->
             <div class="ehm-title-wrap">
                 <h1 class="ehm-title"><?= displayValue($event['title'] ?? 'Événement') ?></h1>
-                <?php if (isset($event['view_count'])): ?>
-                    <span class="pill ehm-view-count"><i class="bi bi-eye"></i><?= (int) $event['view_count'] ?> vue<?= ($event['view_count'] ?? 0) > 1 ? 's' : '' ?></span>
-                <?php endif; ?>
+                <?php 
+                    $viewsToShow = isset($event['views_total']) && $event['views_total'] !== null
+                        ? (int)$event['views_total']
+                        : (int)($event['view_count'] ?? 0);
+                ?>
+                <span class="pill ehm-view-count"><i class="bi bi-eye"></i><?= $viewsToShow ?> vue<?= $viewsToShow > 1 ? 's' : '' ?></span>
             </div>
 
             <!-- Ligne 3 : date et heure -->
@@ -137,12 +117,12 @@ function attrValue($value): string
                 <?php endif; ?>
             </div>
 
-            <!-- Ligne 4 : tags catégories -->
+            <!-- Ligne 4 : catégories / tags -->
             <?php if (!empty($categoryList)): ?>
                 <div class="ehm-chips">
-                <?php foreach ($categoryList as $cat): ?>
-                    <span class="chip"><i class="<?= strpos($cat['icon']??'', 'bi-')===0 ? 'bi '.$cat['icon'] : 'bi bi-tree' ?>"></i><?= displayValue($cat['name'] ?? '') ?></span>
-                <?php endforeach; ?>
+                    <?php foreach ($categoryList as $cat): ?>
+                        <span class="chip"><i class="<?= (strpos($cat['icon'] ?? '', 'bi-') === 0 ? 'bi ' . $cat['icon'] : 'bi bi-tree') ?>"></i><?= displayValue($cat['name']) ?></span>
+                    <?php endforeach; ?>
                 </div>
             <?php endif; ?>
 
@@ -156,9 +136,12 @@ function attrValue($value): string
             </a>
             <div class="hero-collapsed-center">
                 <span class="hero-collapsed-title"><?= displayValue($event['title'] ?? 'Événement') ?></span>
-                <?php if (isset($event['view_count'])): ?>
-                    <span class="pill"><i class="bi bi-eye"></i><?= (int) $event['view_count'] ?> vue<?= ($event['view_count'] ?? 0) > 1 ? 's' : '' ?></span>
-                <?php endif; ?>
+                <?php 
+                    $viewsToShow2 = isset($event['views_total']) && $event['views_total'] !== null
+                        ? (int)$event['views_total']
+                        : (int)($event['view_count'] ?? 0);
+                ?>
+                <span class="pill"><i class="bi bi-eye"></i><?= $viewsToShow2 ?> vue<?= $viewsToShow2 > 1 ? 's' : '' ?></span>
             </div>
             <button type="button" class="btn-share hero-reopen-btn" aria-label="Ré-ouvrir le bandeau">
                 <i class="bi bi-chevron-down"></i>
@@ -166,7 +149,7 @@ function attrValue($value): string
         </div>
     </header>
 
-    <div class="event-topbar" id="eventTopbar" style="transform: translateY(-120%); opacity: 0;">
+    <div class="event-topbar" id="eventTopbar">
       <div class="container topbar-row">
         <div class="topbar-left">
           <span class="topbar-title"><?= displayValue($event['title'] ?? 'Événement') ?></span>
@@ -193,6 +176,16 @@ function attrValue($value): string
     <div class="container event-body">
         <div class="row">
             <main class="col-lg-8">
+                <?php if (filter_var($event['is_cancelled'] ?? false, FILTER_VALIDATE_BOOLEAN)): ?>
+                    <div class="event-cancelled-banner" role="alert">
+                        <i class="bi bi-x-circle-fill"></i>
+                        <span>Événement annulé</span>
+                        <?php if (!empty($event['cancellation_reason'])): ?>
+                            <p class="cancelled-reason">Motif : <?= displayValue($event['cancellation_reason']) ?></p>
+                        <?php endif; ?>
+                    </div>
+                <?php endif; ?>
+
                 <section class="event-section desc-card">
                   <div class="section-head">
                     <h2><i class="bi bi-info-circle"></i>Description</h2>
@@ -223,23 +216,27 @@ function attrValue($value): string
                       </div>
                     <?php endif; ?>
 
-                    <?php if (!empty($event['start_time'])): ?>
-                      <div class="info-item">
-                        <i class="bi bi-clock"></i>
-                        <div>
-                          <div class="label">Début</div>
-                          <div class="value"><?= substr($event['start_time'], 0, 5) ?></div>
-                        </div>
-                      </div>
-                    <?php endif; ?>
+                    <?php if (!empty($event['start_time']) || (!empty($event['end_time']) && $event['end_time'] !== '00:00:00')): ?>
+                      <div class="info-times">
+                        <?php if (!empty($event['start_time'])): ?>
+                          <div class="info-item">
+                            <i class="bi bi-clock"></i>
+                            <div>
+                              <div class="label">Début</div>
+                              <div class="value"><?= substr($event['start_time'], 0, 5) ?></div>
+                            </div>
+                          </div>
+                        <?php endif; ?>
 
-                    <?php if (!empty($event['end_time']) && $event['end_time'] !== '00:00:00'): ?>
-                      <div class="info-item">
-                        <i class="bi bi-clock-history"></i>
-                        <div>
-                          <div class="label">Fin</div>
-                          <div class="value"><?= substr($event['end_time'], 0, 5) ?></div>
-                        </div>
+                        <?php if (!empty($event['end_time']) && $event['end_time'] !== '00:00:00'): ?>
+                          <div class="info-item">
+                            <i class="bi bi-clock-history"></i>
+                            <div>
+                              <div class="label">Fin</div>
+                              <div class="value"><?= substr($event['end_time'], 0, 5) ?></div>
+                            </div>
+                          </div>
+                        <?php endif; ?>
                       </div>
                     <?php endif; ?>
                 </div>
@@ -343,11 +340,23 @@ function attrValue($value): string
                     </section>
                 <?php endif; ?> -->
             </main>
+<!-- Lightbox Modal -->
+<div id="image-lightbox" class="lightbox-modal is-hidden">
+  <div class="lightbox-backdrop"></div>
+  <img src="" alt="Image en grand" class="lightbox-img" />
+  <button class="lightbox-close" aria-label="Fermer">&times;</button>
+</div>
 
             <aside class="col-lg-4">
                 <section class="event-section aside-actions">
                     <button class="btn-share w-100" type="button" data-share="event">
                         <i class="bi bi-share"></i><span>Partager cet événement</span>
+                    </button>
+                </section>
+
+                <section class="event-section aside-actions">
+                    <button class="btn-subscribe w-100" type="button" data-bs-toggle="modal" data-bs-target="#subscribersModal" aria-controls="subscribersModal" aria-haspopup="dialog">
+                        <i class="bi bi-bell"></i><span>S'abonner aux événements</span>
                     </button>
                 </section>
 
@@ -404,6 +413,48 @@ function attrValue($value): string
                 <?php endif; ?>
 
                 
+                <?php if ($hasCoords): ?>
+                    <section class="event-section itinerary-card">
+                        <h2><i class="bi bi-signpost-2"></i> Itinéraire</h2>
+
+                        <div class="itinerary-form">
+                            <div class="itinerary-row">
+                                <span class="itinerary-dot itinerary-dot-start" aria-hidden="true"></span>
+                                <input type="text" id="itineraryStart" class="form-control"
+                                       placeholder="Choisissez un point de départ ou cliquez"
+                                       autocomplete="off" aria-label="Point de départ">
+                                <button type="button" id="itineraryGeoloc" class="itinerary-geoloc"
+                                        title="Votre position" aria-label="Utiliser ma position">
+                                    <i class="bi bi-crosshair"></i>
+                                </button>
+                            </div>
+                            <div class="itinerary-row">
+                                <i class="bi bi-geo-alt-fill itinerary-dot itinerary-dot-end" aria-hidden="true"></i>
+                                <input type="text" class="form-control" readonly
+                                       value="<?= attrValue($event['venue'] ?: $event['location']) ?>"
+                                       aria-label="Destination — lieu de rendez-vous">
+                            </div>
+                        </div>
+
+                        <div class="itinerary-profiles" role="group" aria-label="Mode de déplacement">
+                            <button type="button" class="itinerary-profile active" data-profile="driving" title="En voiture" aria-label="En voiture">
+                                <i class="bi bi-car-front"></i>
+                            </button>
+                            <button type="button" class="itinerary-profile" data-profile="cycling" title="À vélo" aria-label="À vélo">
+                                <i class="bi bi-bicycle"></i>
+                            </button>
+                            <button type="button" class="itinerary-profile" data-profile="walking" title="À pied" aria-label="À pied">
+                                <i class="bi bi-person-walking"></i>
+                            </button>
+                            <span id="itinerarySummary" class="itinerary-summary" aria-live="polite"></span>
+                        </div>
+
+                        <div id="itineraryError" class="itinerary-error" role="alert" hidden></div>
+
+                        <div id="itineraryMap" class="itinerary-map" aria-label="Carte de l'itinéraire" hidden></div>
+                    </section>
+                <?php endif; ?>
+
                 <?php if (!empty($galleryImages)): ?>
                     <section class="event-section aside-gallery">
                         <h2><i class="bi bi-images"></i> Galerie</h2>
@@ -416,10 +467,33 @@ function attrValue($value): string
                         </div>
                     </section>
                 <?php endif; ?>
+
+                <?php
+                $sponsors = getActiveSponsors(function_exists('getConnection') ? getConnection() : null);
+                if (!empty($sponsors)):
+                ?>
+                    <section class="event-section sponsor-card">
+                        <h2><i class="bi bi-megaphone"></i> Nos partenaires</h2>
+                        <div class="sponsor-list">
+                            <?php foreach ($sponsors as $ad): ?>
+                                <?php if (!empty($ad['link_url'])): ?>
+                                    <a href="<?= displayValue($ad['link_url']) ?>" target="_blank" rel="noopener sponsored" class="sponsor-item">
+                                        <img src="<?= displayValue($ad['image_path']) ?>" alt="<?= displayValue($ad['alt_text'] ?: $ad['name']) ?>" loading="lazy">
+                                    </a>
+                                <?php else: ?>
+                                    <span class="sponsor-item">
+                                        <img src="<?= displayValue($ad['image_path']) ?>" alt="<?= displayValue($ad['alt_text'] ?: $ad['name']) ?>" loading="lazy">
+                                    </span>
+                                <?php endif; ?>
+                            <?php endforeach; ?>
+                        </div>
+                    </section>
+                <?php endif; ?>
             </aside>
         </div>
     </div>
 
 </article>
 
-<script src="/assets/js/events/event-display.js"></script>
+<script src="/assets/js/events/event-display.js?v=<?= @filemtime((defined('ROOT_PATH') ? ROOT_PATH : dirname(__DIR__, 2)) . '/public/assets/js/events/event-display.js') ?: 1 ?>"></script>
+<script src="/assets/js/events/event-itinerary.js?v=<?= @filemtime((defined('ROOT_PATH') ? ROOT_PATH : dirname(__DIR__, 2)) . '/public/assets/js/events/event-itinerary.js') ?: 1 ?>"></script>

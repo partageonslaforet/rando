@@ -33,7 +33,7 @@ if (strpos($_SERVER['REQUEST_URI'] ?? '', 'reset-password.php') !== false) {
             <div class="modal-body">
                 <h5 class="modal-title" id="resetPasswordModalLabel">Nouveau mot de passe</h5>
                 <p class="auth-intro">Définissez votre nouveau mot de passe.</p>
-                <div class="auth-alert auth-alert-success" id="resetMessage" style="display: none;"></div>
+                <div class="auth-alert auth-alert-success is-hidden" id="resetMessage"></div>
                 <form id="resetPasswordForm" data-token="<?php echo htmlspecialchars($_GET['token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" data-email="<?php echo htmlspecialchars($_GET['email'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
                     <div class="mb-3">
                         <label for="resetPassword" class="form-label">Nouveau mot de passe</label>

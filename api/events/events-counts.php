@@ -41,7 +41,7 @@ try {
         error_log("=== DÉBUT DU TRAITEMENT DE LA REQUÊTE ===");
         
         // Construction de la requête de base
-        $baseQuery = "FROM events e WHERE 1=1";
+        $baseQuery = "FROM events e LEFT JOIN event_categories c ON e.category_id = c.id WHERE 1=1";
         $params = [];
 
         // Ne montrer que les événements approuvés (aligné avec EventManager)
@@ -67,7 +67,7 @@ try {
 
         // Filtre par type
         if ($type && $type !== 'all') {
-            $baseQuery .= " AND e.category = :type";
+            $baseQuery .= " AND c.code = :type";
             $params[':type'] = $type;
         }
 
@@ -154,10 +154,10 @@ try {
             $total_pages = (int)ceil(($total ?: 0) / $limit);
 
             // Requête avec LIMIT/OFFSET
-            $query = "SELECT e.* " . $baseQuery . " ORDER BY e.date ASC LIMIT :limit OFFSET :offset";
+            $query = "SELECT e.*, c.code as category, c.name as category_name, c.icon as category_icon, c.color as category_color " . $baseQuery . " ORDER BY e.date ASC LIMIT :limit OFFSET :offset";
         } else {
             // Requête complète sans pagination
-            $query = "SELECT e.* " . $baseQuery . " ORDER BY e.date ASC";
+            $query = "SELECT e.*, c.code as category, c.name as category_name, c.icon as category_icon, c.color as category_color " . $baseQuery . " ORDER BY e.date ASC";
         }
 
         try {
@@ -173,51 +173,55 @@ try {
             }
             $stmt->execute();
             $events = $stmt->fetchAll();
-            
-            // Récupérer les catégories (tags) pour tous les événements
+
+            // Tags liés à chaque événement (event_category_links)
+            $eventTags = [];
             if (!empty($events)) {
-                $eventIds = array_column($events, 'id');
-                $categoriesQuery = "SELECT ecl.event_id, ecl.category_id, c.name, c.icon, c.color 
-                                FROM event_category_links ecl 
-                                JOIN event_categories c ON ecl.category_id = c.id 
-                                WHERE ecl.event_id IN (" . implode(',', array_fill(0, count($eventIds), '?')) . ")";
-                
-                $categoryStmt = $pdo->prepare($categoriesQuery);
-                $categoryStmt->execute($eventIds);
-                $categories = $categoryStmt->fetchAll(PDO::FETCH_ASSOC);
-                
-                // Associer les catégories aux événements
-                $categoryMap = [];
-                foreach ($categories as $category) {
-                    $eventId = (int)$category['event_id'];
-                    if (!isset($categoryMap[$eventId])) {
-                        $categoryMap[$eventId] = [
-                            // rétrocompatibilité: premières valeurs
-                            'category_name' => $category['name'],
-                            'category_icon' => $category['icon'],
-                            'category_color' => $category['color'],
-                            // agrégation complète
-                            'categories' => [],
-                            'category_ids' => []
-                        ];
+                // Ajouter views_total (toutes sources, sans période) depuis site_visits
+                try {
+                    foreach ($events as &$ev) {
+                        $eid = (int)($ev['id'] ?? 0);
+                        $ev['views_total'] = $eid > 0 ? getEventTotalViews($pdo, $eid) : 0;
                     }
-                    $categoryMap[$eventId]['category_ids'][] = (int)$category['category_id'];
-                    $categoryMap[$eventId]['categories'][] = [
-                        'id' => (int)$category['category_id'],
-                        'name' => $category['name'],
-                        'icon' => $category['icon'],
-                        'color' => $category['color']
-                    ];
+                    unset($ev);
+
+                } catch (Throwable $e) {
+                    if (function_exists('logError')) {
+                        logError('api/events-counts', 'views_total compute failed', ['error' => $e->getMessage()]);
+                    }
+                    foreach ($events as &$ev) { $ev['views_total'] = null; } unset($ev);
                 }
-                
-                // Ajouter les informations de catégorie à chaque événement
+
+                $eventIds = array_column($events, 'id');
+                $tagsStmt = $pdo->prepare("SELECT ecl.event_id, c.id, c.name, c.code, c.icon, c.color
+                    FROM event_category_links ecl
+                    JOIN event_categories c ON ecl.category_id = c.id
+                    WHERE ecl.event_id IN (" . implode(',', array_fill(0, count($eventIds), '?')) . ")
+                    ORDER BY c.name ASC");
+                $tagsStmt->execute($eventIds);
+                foreach ($tagsStmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
+                    $eid = (int)$row['event_id'];
+                    unset($row['event_id']);
+                    $eventTags[$eid][] = $row;
+                }
+            }
+
+            if (!empty($events)) {
                 foreach ($events as &$event) {
                     $eid = (int)$event['id'];
-                    if (isset($categoryMap[$eid])) {
-                        $event = array_merge($event, $categoryMap[$eid]);
-                    } else {
-                        $event['category_ids'] = [];
-                        $event['categories'] = [];
+                    $tags = $eventTags[$eid] ?? [];
+                    $event['category_ids'] = array_map(fn($c) => (int)$c['id'], $tags);
+                    $event['categories'] = $tags;
+                    if (empty($tags)) {
+                        $mainCategoryId = (int) ($event['category_id'] ?? 0);
+                        $event['category_ids'] = $mainCategoryId ? [$mainCategoryId] : [];
+                        $event['categories'] = $mainCategoryId ? [[
+                            'id' => $mainCategoryId,
+                            'name' => $event['category_name'] ?? null,
+                            'icon' => $event['category_icon'] ?? null,
+                            'color' => $event['category_color'] ?? null,
+                            'code' => $event['category'] ?? null
+                        ]] : [];
                     }
                 }
                 unset($event);
@@ -258,9 +262,9 @@ try {
                         $publicUrl = resolveImagePublicUrl($imgRow['image_path'] ?? null, $imgRow['storage_path'] ?? null);
                     }
 
-                    // 2) Fallback: colonnes legacy sur events
+                    // 2) Fallback: colonnes legacy sur events (vérifié existant)
                     if (!$publicUrl && !empty($event['main_image_path'])) {
-                        $publicUrl = $event['main_image_path'];
+                        $publicUrl = resolveImagePublicUrl($event['main_image_path'] ?? null, null);
                     }
 
                     // 3) Normalisation: s'assurer que le chemin est exploitable côté client
@@ -268,14 +272,40 @@ try {
                         $publicUrl = '/' . ltrim($publicUrl, '/');
                     }
 
-                    // 4) Valeur finale avec défaut
-                    $event['main_image_path'] = $publicUrl ?: '/assets/images/events/default-event.jpg';
+                    // 4) Déterminer l'image par défaut de la catégorie
+                    $categoryCode = strtolower($event['category'] ?? '');
+                    $categoryName = strtolower($event['category_name'] ?? '');
+                    $isCourseAPied = (
+                        $categoryCode === 'running'
+                        || $categoryCode === 'course-a-pied'
+                        || $categoryCode === 'courseapied'
+                        || strpos($categoryName, 'course à pied') !== false
+                    );
+                    $categoryFallback = $isCourseAPied
+                        ? getCourseAPiedFallbackImage()
+                        : '/assets/images/events/default-event.jpg';
+
+                    // 5) Si l'image récupérée est une image générique/absente et que la catégorie est course à pied, forcer le fallback
+                    $isGeneric = !$publicUrl
+                        || !isRealEventImage($publicUrl)
+                        || stripos($publicUrl, 'default-event.jpg') !== false
+                        || stripos($publicUrl, 'main-hero.jpg') !== false
+                        || stripos($publicUrl, 'map-hero.jpg') !== false
+                        || stripos($publicUrl, 'coursea') !== false;
+                    if ($isCourseAPied && $isGeneric) {
+                        $publicUrl = $categoryFallback;
+                    }
+
+                    $event['main_image_path'] = $publicUrl ?: $categoryFallback;
 
                     // Log si aucune image réelle trouvée
-                    if ($event['main_image_path'] === '/assets/images/events/default-event.jpg') {
+                    if (!$publicUrl) {
                         logError('api/events-counts', 'Image principale non résolue', [
                             'event_id' => $eid,
-                            'title' => $event['title'] ?? null
+                            'title' => $event['title'] ?? null,
+                            'category' => $event['category'] ?? null,
+                            'category_name' => $event['category_name'] ?? null,
+                            'fallback_used' => $categoryFallback
                         ]);
                     }
                 }

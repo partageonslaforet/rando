@@ -4,7 +4,7 @@
     max-width: 550px;
     margin: 0 auto;
     padding: 1rem;
-    background: white;
+    background: var(--light-text);
     border-radius: 8px;
 }
 
@@ -15,7 +15,7 @@
 
 /* En-tête du calendrier */
 .fc .fc-toolbar-title {
-    color: var(--secondary-color);
+    color: var(--primary-color);
     text-transform: uppercase;
     font-weight: 600;
     letter-spacing: 1px;
@@ -23,15 +23,15 @@
 
 /* Boutons de navigation */
 .fc .fc-button {
-    background: white !important;
-    border: 1px solid var(--secondary-color) !important;
-    color: var(--secondary-color) !important;
+    background: var(--light-text) !important;
+    border: 1px solid var(--primary-color) !important;
+    color: var(--primary-color) !important;
     padding: 6px 12px !important;
 }
 
 .fc .fc-button:hover {
-    background: var(--secondary-color) !important;
-    color: white !important;
+    background: var(--primary-color) !important;
+    color: var(--light-text) !important;
 }
 
 /* En-têtes des jours */
@@ -62,7 +62,7 @@
 }
 /* Forcer le style des cellules */
 .fc .fc-col-header-cell-cushion {
-    color: #444;
+    color: var(--gray-dark);
 }
 
 .fc td,
@@ -92,11 +92,11 @@
 }
 
 .fc .fc-daygrid-day-number {
-    color: #444;
+    color: var(--gray-dark);
 }
 
 .fc-event-main{
-    background-color: white;
+    background-color: var(--light-text);
     border: white;
 }
 
@@ -106,9 +106,9 @@
 }
 
 .fc .fc-day-today .fc-daygrid-day-number {
-    color: white;
+    color: var(--light-text);
     font-weight: 600;
-    background-color: var(--secondary-color);
+    background-color: var(--primary-color);
     border-radius: 5px;
 }
 
@@ -127,8 +127,8 @@
     width: 24px;
     height: 24px;
     border-radius: 50%;
-    background: white;
-    color: var(--secondary-color);
+    background: var(--light-text);
+    color: var(--primary-color);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -153,32 +153,32 @@
 
 /* Événements passés */
 .fc .fc-day-past:has(.event-badge) {
-    background-color: var(--secondary-color) !important;
+    background-color: var(--primary-color) !important;
     border-radius: 5px
 }
 
 .fc .fc-day-past:has(.event-badge) .fc-daygrid-day-number {
-    color: white !important;
+    color: var(--light-text) !important;
 }
 
 /* Événements du jour */
 .fc .fc-day-today:has(.event-badge) {
-    background-color: var(--secondary-color) !important;
+    background-color: var(--primary-color) !important;
     border-radius: 5px
 }
 
 .fc .fc-day-today:has(.event-badge) .fc-daygrid-day-number {
-    color: white !important;
+    color: var(--light-text) !important;
 }
 
 /* Événements futurs */
 .fc .fc-day-future:has(.event-badge) {
-    background-color: var(--secondary-color) !important;
+    background-color: var(--primary-color) !important;
     border-radius: 5px
 }
 
 .fc .fc-day-future:has(.event-badge) .fc-daygrid-day-number {
-    color: white !important;
+    color: var(--light-text) !important;
 }
 
 /* Style pour les jours avec événements */
@@ -245,7 +245,7 @@
     padding: 0.25rem 0 !important;
     font-size: 0.75rem !important;
     font-weight: 500 !important;
-    color: #888 !important;
+    color: var(--gray-light) !important;
     text-transform: uppercase !important;
 }
 
@@ -269,7 +269,7 @@
 
 .fc .fc-daygrid-day-number {
     text-decoration: none !important;
-    color: #444 !important;
+    color: var(--gray-dark) !important;
     font-size: 0.9rem !important;
     display: inline-flex !important;
     align-items: center !important;
@@ -281,13 +281,13 @@
 }
 
 .fc .fc-day-today .fc-daygrid-day-number {
-    background-color: #2E8338 !important;
-    color: #fff !important;
+    background-color: var(--primary-color) !important;
+    color: var(--light-text) !important;
     font-weight: 600 !important;
 }
 
 .fc .fc-day-other .fc-daygrid-day-number {
-    color: #adb5bd !important;
+    color: var(--gray-light) !important;
 }
 
 .fc .fc-daygrid-day:has(.event-badge) {
@@ -298,7 +298,7 @@
     position: relative !important;
     bottom: auto !important;
     left: auto !important;
-    color: #444 !important;
+    color: var(--gray-dark) !important;
 }
 
 .fc .fc-daygrid-day:has(.event-badge) .event-badge {
@@ -311,7 +311,7 @@
     width: 6px !important;
     height: 6px !important;
     border-radius: 50% !important;
-    background-color: var(--secondary-color) !important;
+    background-color: var(--primary-color) !important;
     color: transparent !important;
     font-size: 0 !important;
     border: none !important;
@@ -350,15 +350,15 @@
 .calendar-container {
     padding: 1.5rem !important;
     border-radius: 16px !important;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06) !important;
-    background: #ffffff !important;
+    box-shadow: 0 4px 20px color-mix(in srgb, #000 30%, transparent) !important;
+    background: var(--light-text) !important;
 }
 
 .calendar-label {
     margin: 0 0 0.25rem;
     font-size: 0.75rem;
     font-weight: 700;
-    color: #6b7a6e;
+    color: var(--text-muted);
     text-transform: uppercase;
     letter-spacing: 1.5px;
 }
@@ -369,30 +369,35 @@
     gap: 1.25rem;
     margin-top: 1rem;
     padding-top: 1rem;
-    border-top: 1px solid #e9ecef;
+    border-top: 1px solid var(--surface);
     font-size: 0.85rem;
-    color: #6b7a6e !important;
+    color: var(--text-muted) !important;
 }
 
 .legend-item {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    color: #6b7a6e !important;
+    color: var(--text-muted) !important;
+}
+
+.legend-swatch {
+    width: 20px;
+    height: 3px;
 }
 
 .legend-dot {
     width: 7px;
     height: 7px;
     border-radius: 50%;
-    background-color: var(--secondary-color);
+    background-color: var(--primary-color);
 }
 
 .legend-square {
     width: 14px;
     height: 14px;
     border-radius: 20px;
-    background-color: #2E8338;
+    background-color: var(--primary-color);
 }
 
 .fc .fc-header-toolbar {
@@ -400,7 +405,7 @@
     align-items: center;
     padding-bottom: 0.75rem;
     margin-bottom: 0.75rem;
-    border-bottom: 1px solid #e9ecef;
+    border-bottom: 1px solid var(--surface);
 }
 
 .fc .fc-toolbar-chunk:has(.fc-toolbar-title) {
@@ -415,7 +420,7 @@
 .fc .fc-toolbar-title {
     font-size: 1.6rem !important;
     font-weight: 600 !important;
-    color: var(--secondary-color) !important;
+    color: var(--primary-color) !important;
     text-transform: none !important;
     letter-spacing: 0 !important;
 }
@@ -425,17 +430,17 @@
     height: 40px !important;
     padding: 0 !important;
     border-radius: 12px !important;
-    border: 1px solid var(--secondary-color) !important;
-    background-color: #ffffff !important;
-    color: var(--secondary-color) !important;
+    border: 1px solid var(--primary-color) !important;
+    background-color: var(--light-text) !important;
+    color: var(--primary-color) !important;
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
 }
 
 .fc .fc-button:hover {
-    background-color: var(--secondary-color) !important;
-    color: #ffffff !important;
+    background-color: var(--primary-color) !important;
+    color: var(--light-text) !important;
 }
 
 .fc .fc-button .fc-icon {
@@ -452,7 +457,7 @@
     text-transform: uppercase !important;
     font-size: 0.7rem !important;
     font-weight: 700 !important;
-    color: #888 !important;
+    color: var(--gray-light) !important;
     padding: 0.25rem 0 !important;
 }
 
@@ -462,13 +467,13 @@
 }
 
 .fc .fc-day-today .fc-daygrid-day-number {
-    background-color: #2E8338 !important;
-    color: #ffffff !important;
+    background-color: var(--primary-color) !important;
+    color: var(--light-text) !important;
     border-radius: 12px !important;
 }
 
 .fc .fc-day-today:has(.event-badge) .event-badge {
-    background-color: #ffffff !important;
+    background-color: var(--light-text) !important;
 }
 
 /* ================================================================
@@ -511,12 +516,21 @@
 }
 
 .fc .fc-day-today .fc-daygrid-day-number {
-    min-width: 24px !important;
-    min-height: 24px !important;
+    width: 30px !important;
+    height: 30px !important;
+    min-width: 30px !important;
+    min-height: 30px !important;
+    border-radius: 50% !important;
+    padding: 0 !important;
+}
+
+/* Le chiffre du jour reste blanc même si un badge événement est présent */
+.fc .fc-day-today:has(.event-badge) .fc-daygrid-day-number {
+    color: var(--light-text) !important;
 }
 
 .fc .fc-day-other .fc-daygrid-day-number {
-    color: #adb5bd !important;
+    color: var(--gray-light) !important;
 }
 
 /* Supprimer la barre bleue des jours avec événements */

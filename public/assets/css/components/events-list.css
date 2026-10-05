@@ -1,6 +1,6 @@
 /* Section liste d'événements */
 .events-list {
-    background: #F7FAF7;
+    background: var(--surface-green);
     border-radius: 16px;
     margin: 20px 0;
 }
@@ -14,26 +14,29 @@
     margin-bottom: 1.25rem;
 }
 
+/* État initial masqué : le JS affiche via style.display='flex' */
+.events-list-header.is-hidden { display: none; }
+
 .events-list-title {
     font-size: 1.5rem;
     font-weight: 600;
-    color: #2c3e2d;
+    color: var(--green-dark);
     margin: 0;
 }
 
 .events-list-count {
     font-size: 1rem;
     font-weight: 600;
-    color: #2E8338;
+    color: var(--primary-color);
 }
 
 /* Titre de section par jour */
 .events-day-title {
-    background-color: rgba(58, 138, 61, 0.5);
+    background-color: color-mix(in srgb, var(--primary-color) 12%, transparent);
     padding: 0.7rem;
     border-radius: 10px;
     font-size: 1.3rem;
-    color: white;
+    color: var(--primary-color);
 }
 
 /* Grille de cartes */
@@ -44,18 +47,37 @@
 
 /* Carte individuelle (horizontal) */
 .summary-card {
-    background: #ffffff;
-    border: 1px solid #e8efe8;
+    background: var(--light-text);
+    border: 1px solid var(--surface-green);
     border-radius: 15px;
     overflow: visible;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 1px 3px color-mix(in srgb, #000 6%, transparent);
     height: auto;
     display: flex;
     flex-direction: row;
     align-items: stretch;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     text-decoration: none;
+    color: inherit;
+    cursor: pointer;
     position: relative;
+}
+
+/* plus de summary-card-link */
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2;
+    background: color-mix(in srgb, #000 0.1%, transparent);
+    display: block;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+/* plus de pointer-events sur enfants */
+    pointer-events: none;
 }
 
 .summary-card a {
@@ -65,7 +87,7 @@
 
 .summary-card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 12px color-mix(in srgb, #000 8%, transparent);
 }
 
 /* Image à gauche de la carte */
@@ -73,9 +95,9 @@
     position: relative;
     width: 160px;
     min-width: 160px;
-    height: 140px;
+    height: 160px;
     align-self: center;
-    background: #eef4ee;
+    background: var(--surface-green);
     overflow: hidden;
     border-radius: 15px 0 0 15px;
 }
@@ -90,7 +112,7 @@
 
 .summary-card:hover .summary-card-image img,
 .summary-card-image:focus img {
-    transform: scale(1.03);
+    transform: scale(1.1);
 }
 
 /* Badge catégorie sur l'image */
@@ -101,13 +123,13 @@
     display: inline-flex;
     align-items: center;
     gap: 0.25rem;
-    background: #ffffff;
-    color: #2E8338;
+    background: var(--light-text);
+    color: var(--primary-color);
     padding: 0.25rem 0.5rem;
     border-radius: 20px;
     font-size: 0.75rem;
     font-weight: 600;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 1px 3px color-mix(in srgb, #000 12%, transparent);
 }
 
 .summary-card-badge i {
@@ -129,7 +151,7 @@
     font-size: 1rem;
     font-weight: 700;
     line-height: 1.25;
-    color: #2c3e2d;
+    color: var(--green-dark);
     margin: 0 0 0.35rem;
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -139,12 +161,40 @@
     text-align: left;
 }
 
+/* Ligne titre + badge vues */
+.summary-card-title-row {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+}
+
+.summary-card-title-row .summary-card-title {
+    margin-bottom: 0.35rem;
+    flex: 0 1 auto;
+    min-width: 0;
+}
+
+.meta-views {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    white-space: nowrap;
+    flex-shrink: 0;
+    border: solid 1px var(--primary-color);
+    border-radius: 20px;
+    padding: 2px 5px;
+}
+
+.meta-views i {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
 /* Métadonnées compactes */
 .summary-card-meta {
     display: flex;
     flex-wrap: wrap;
     gap: 0.25rem 0.75rem;
-    color: #6b7a6e;
+    color: var(--text-muted);
     font-size: 0.85rem;
     margin-bottom: 0.35rem;
 }
@@ -157,7 +207,7 @@
     gap: 0.5rem;
     margin-top: 0.25rem;
     padding-top: 0.25rem;
-    border-top: 1px solid #eef4ee;
+    border-top: 1px solid var(--surface-green);
 }
 
 .summary-card-footer .meta-categories {
@@ -169,14 +219,14 @@
 
 .summary-card-footer .meta-category {
     padding: 0.2rem 0.6rem;
-    border: 1px solid #E5EBE5;
+    border: 1px solid var(--border-green);
     border-radius: 999px;
-    background: #fff;
-    color: #2c3e2d;
+    background: var(--light-text);
+    color: var(--green-dark);
     line-height: 1.1;
 }
 .summary-card-footer .meta-category .bi {
-    color: var(--secondary-color);
+    color: var(--primary-color);
 }
 
 /* 3 lignes explicites pour structurer les métadonnées */
@@ -192,22 +242,25 @@
     gap: 0.35rem;
 }
 
+/* État initial masqué : le JS affiche via style.display='inline-flex' */
+.meta-item.is-hidden { display: none; }
+
 .meta-item i {
-    color: #2E8338;
+    color: var(--primary-color);
     font-size: 0.95rem;
 }
 
 /* Catégorie affichée sur la 3e ligne comme badge léger */
 .summary-card-meta .meta-category {
     padding: 0.2rem 0.6rem;
-    border: 1px solid #E5EBE5; /* var(--profile-border) si dispo */
+    border: 1px solid var(--border-green); /* var(--border-green) si dispo */
     border-radius: 999px;
-    background: #fff;
-    color: #2c3e2d; /* var(--profile-text) si dispo */
+    background: var(--light-text);
+    color: var(--green-dark); /* var(--green-dark) si dispo */
     line-height: 1.1;
 }
 .summary-card-meta .meta-category .bi {
-    color: #2E8338; /* var(--secondary-color) */
+    color: var(--primary-color); /* var(--primary-color) */
 }
 
 /* Action Voir l'événement */
@@ -216,11 +269,11 @@
     text-align: right;
     margin-top: 0.5rem;
     padding-top: 0.4rem;
-    color: #2E8338;
+    color: var(--primary-color);
     font-weight: 600;
     font-size: 0.95rem;
     text-decoration: none;
-    border-top: 1px solid #eef4ee;
+    border-top: 1px solid var(--surface-green);
 }
 
 .summary-card:hover .summary-card-action,
@@ -245,13 +298,14 @@
 }
 
 .alert-info {
-    color: #31708f;
-    background-color: #d9edf7;
-    border-color: #bce8f1;
+    color: var(--info-dark);
+    background-color: var(--info-bg);
+    border-color: var(--info-bg);
 }
 
 .summary-card {
-    border-color: #E5EBE5 !important;
+    border-color: var(--border-green) !important;
+    box-shadow: 0 4px 20px color-mix(in srgb, #000 30%, transparent);
 }
 
 /* Contrôle Par page (bas de liste) */
@@ -272,13 +326,13 @@
 }
 
 #events-pagination .page-item.active .page-link {
-  background-color: var(--secondary-color) !important;
-  border-color: var(--secondary-color) !important;
-  color: #fff !important;
+  background-color: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+  color: var(--light-text) !important;
 }
 
 #events-pagination .pagination {
-  --bs-pagination-color: var(--secondary-color);
+  --bs-pagination-color: var(--primary-color);
 }
 
 /* Responsive */
@@ -323,23 +377,30 @@
 .cancelled-sticker {
     display: none;
     position: absolute;
-    top: 12px;
-    right: -30px;
-    background-color: #dc3545;
-    color: #fff;
+    top: 18px;
+    right: -40px;
+    width: 140px;
+    background-color: var(--danger-color);
+    color: var(--light-text);
     font-weight: 700;
     font-size: 0.7rem;
-    padding: 0.2rem 2rem;
+    padding: 0.3rem 0;
+    text-align: center;
     transform: rotate(45deg);
     z-index: 3;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    letter-spacing: 0.08em;
+    box-shadow: 0 2px 8px color-mix(in srgb, #000 25%, transparent);
     pointer-events: none;
 }
 
 .summary-card {
     position: relative;
+}
+
+/* Ruban clippé dans le coin de la carte (suit le border-radius) */
+.summary-card.is-cancelled {
+    overflow: hidden;
 }
 
 .summary-card.is-cancelled .cancelled-sticker {
@@ -349,4 +410,43 @@
 .summary-card.is-cancelled .summary-card-image img,
 .summary-card.is-cancelled .summary-card-body {
     opacity: 0.85;
+}
+
+/* Motif d'annulation : boîte fine à bordure gauche magenta + icône */
+.card-cancelled-reason {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: #fdf0f6;
+    border-left: 3px solid var(--danger-color);
+    padding: 0.35rem 0.6rem;
+    margin: 0.4rem 0 0.2rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    color: #6d0033;
+}
+
+.card-cancelled-reason.is-hidden {
+    display: none;
+}
+
+.card-cancelled-reason i {
+    color: var(--danger-color);
+    font-size: 0.85rem;
+    flex-shrink: 0;
+}
+
+/* Bouton outline magenta "Voir l'événement" sur carte annulée */
+.summary-card.is-cancelled .summary-card-action {
+    color: var(--danger-color);
+    border: 1px solid var(--danger-color);
+    border-radius: 999px;
+    padding: 0.25rem 0.8rem;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.summary-card.is-cancelled:hover .summary-card-action {
+    background-color: var(--danger-color);
+    color: var(--light-text);
+    text-decoration: none;
 }

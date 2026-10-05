@@ -1,17 +1,17 @@
 /* Footer top styles (palette existante) */
 .footer-top {
-  background: var(--profile-background);
-  color: var(--profile-text);
+  background-color: color-mix(in srgb, var(--primary-color) 12%, transparent);
+  color: var(--green-dark);
   border-top: 2px solid var(--border-color);
   padding-top: 2rem !important;
-  padding-bottom: 0rem !important;
+  padding-bottom: 2rem !important;
 }
-.footer-top a { color: var(--profile-text); text-decoration: none; }
-.footer-top a:hover { color: var(--secondary-color); }
+.footer-top a { color: var(--green-dark); text-decoration: none; }
+.footer-top a:hover { color: var(--primary-color); }
 .footer-logo { height: 40px; width: auto; display: block; }
-.footer-brand-name { font-weight: 700; color: var(--profile-text); font-size: 1.125rem; }
-.footer-tagline { color: var(--profile-muted); font-size: .95rem; }
-.footer-title { color: var(--profile-text); font-weight: 700; font-size: 1rem; }
+.footer-brand-name { font-weight: 700; color: var(--green-dark); font-size: 1.125rem; }
+.footer-tagline { color: var(--text-muted); font-size: .9rem; }
+.footer-title { color: var(--green-dark); font-weight: 700; font-size: 1rem; }
 
 /* Spacing container */
 .footer-top .container { padding-top: 0rem; padding-bottom: 0rem; }
@@ -19,21 +19,30 @@
 /* Grille cohérente (neutralise Bootstrap dans ce scope) */
 .footer-top .row {
     display: grid !important;
-    gap: 1.25rem; }
+    gap: 1.25rem;
+    margin-top: 0;
+    margin-right: 0;
+    margin-left: 0;
+}
 
+/* g-4 Bootstrap applique margin-top: 1.5rem aux enfants : combiné à
+   height:100%, les cards débordaient de 24px sous .footer-top. */
 .footer-top .row > [class*='col-'] {
-    width: auto !important; 
-    max-width: none !important; 
-    flex: none !important; 
+    width: auto !important;
+    max-width: none !important;
+    flex: none !important;
+    margin-top: 0;
+    margin-right: 0;
+    margin-left: 0;
   }
 
 /* Mobile: 1 colonne */
 @media (max-width: 767.98px) {
   .footer-top .row { grid-template-columns: 1fr; }
   .footer-top .col-12 { text-align: center; }
-  .footer-top .row > [class*='col-']:not(:first-child) {
-    background: var(--profile-card);
-    border: 1px solid var(--profile-border);
+  .footer-top .row > [class*='col-'] {
+    background: var(--light-text);
+    border: 1px solid var(--border-green);
     border-radius: var(--profile-radius);
     padding: 1rem 1.25rem;
   }
@@ -44,9 +53,9 @@
   .footer-top .row { grid-template-columns: 1fr 1fr; align-items: stretch; }
   .footer-top .row > .col-12:first-child { grid-column: 1 / -1; }
   .footer-top .col-12 { text-align: left; }
-  .footer-top .row > [class*='col-']:not(:first-child) {
-    background: var(--profile-card);
-    border: 1px solid var(--profile-border);
+  .footer-top .row > [class*='col-'] {
+    background: var(--light-text);
+    border: 1px solid var(--border-green);
     border-radius: var(--profile-radius);
     padding: 1.25rem 1.5rem;
     height: 100%;
@@ -58,31 +67,58 @@
 /* Desktop: 3 colonnes 1.8fr / 1fr / 1fr */
 @media (min-width: 992px) {
   .footer-top .row { grid-template-columns: repeat(3, 1fr); align-items: stretch; }
+  .footer-top .row.row--two-cols { grid-template-columns: repeat(2, 1fr); }
   .footer-top .col-12 { text-align: left; }
-  .footer-top .row > [class*='col-']:not(:first-child) {
-    background: var(--profile-card);
-    border: 1px solid var(--profile-border);
+  .footer-top .row > [class*='col-'] {
+    background: var(--light-text);
+    border: 1px solid var(--border-green);
     border-radius: var(--profile-radius);
     padding: 1.25rem 1.5rem;
     height: 100%;
     display: flex;
     flex-direction: column;
-    box-shadow: 0 1px 3px rgba(0,0,0,.04), 0 8px 24px rgba(0,0,0,.05);
+    box-shadow: 0 1px 3px color-mix(in srgb, #000 4%, transparent), 0 8px 24px color-mix(in srgb, #000 5%, transparent);
   }
 }
 
-/* Bouton contact plus lisible */
+/* Boutons conformes à la charte */
 .footer-top .btn.btn-success.btn-sm {
   border-radius: 999px;
   padding: .5rem 1rem;
   font-weight: 600;
-  background-color: var(--secondary-color) !important;
-  color: white !important;
+  background-color: var(--primary-color) !important;
+  color: var(--light-text) !important;
+}
+
+.footer-top .btn.btn-success.btn-sm:hover,
+.footer-top .btn.btn-success.btn-sm:focus {
+  background-color: var(--green-dark) !important;
+  color: var(--light-text) !important;
+}
+
+.footer-top .btn.btn-outline-success.btn-sm {
+  border-radius: 999px;
+  padding: .5rem 1rem;
+  font-weight: 600;
+  color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.footer-top .btn.btn-outline-success.btn-sm:hover,
+.footer-top .btn.btn-outline-success.btn-sm:focus {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+  color: var(--light-text);
+}
+
+/* Corps de texte homogène dans les 3 colonnes */
+.footer-top p {
+  font-size: .9rem;
 }
 
 /* Titre avec accent vertical */
 .footer-title {
-  color: var(--profile-text);
+  color: var(--green-dark);
   font-weight: 700;
   font-size: .9rem;
   text-transform: uppercase;
@@ -98,13 +134,85 @@
   top: .2rem;
   bottom: .2rem;
   width: 3px;
-  background: var(--secondary-color);
+  background: var(--primary-color);
   border-radius: 2px;
 }
 
 .hunting-dates {
-  border: 2px solid var(--primary-color);
-  padding: .35rem .75rem;
-  border-radius: .25rem;
-  display: inline-block;
+  border: 1px solid var(--primary-color);
+  border-left: 3px solid var(--primary-color);
+  background: var(--light-text);
+  padding: .55rem .9rem;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: .6rem;
+  font-size: .85rem;
+  line-height: 1.35;
+}
+.hunting-dates i {
+  color: var(--primary-color);
+  flex-shrink: 0;
+}
+.hunting-dates strong {
+  color: var(--green-dark);
+  white-space: nowrap;
+}
+.hunting-dates {
+  transition: background-color .2s ease, color .2s ease;
+}
+/* .footer-top a:hover (0-2-1) est plus spécifique que .hunting-dates:hover :
+   il faut répéter le scope .footer-top pour recolorer le texte en blanc */
+.footer-top a.hunting-dates:hover {
+  background-color: var(--primary-color);
+  color: var(--light-text);
+}
+.footer-top a.hunting-dates:hover strong,
+.footer-top a.hunting-dates:hover i {
+  color: var(--light-text);
+}
+
+/* Copyright intégré au footer */
+.footer-bottom {
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border-color);
+  text-align: center;
+  color: var(--text-muted);
+  font-size: .85rem;
+}
+
+/* ================================================================
+   Colonne partenaires
+   ================================================================ */
+
+.footer-sponsors-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.25rem 1.75rem;
+}
+
+.footer-sponsor-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.footer-sponsor-item img {
+  max-height: 44px;
+  max-width: 120px;
+  object-fit: contain;
+  display: block;
+  filter: grayscale(30%);
+  transition: filter 0.15s ease;
+}
+
+a.footer-sponsor-item:hover img {
+  filter: none;
+}
+
+@media (max-width: 767.98px) {
+  .footer-sponsors-row { justify-content: center; }
+  .footer-sponsor-item img { max-height: 40px; max-width: 110px; }
 }

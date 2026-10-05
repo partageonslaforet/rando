@@ -38,10 +38,10 @@ displayFlashMessages();
     
     <!-- Custom CSS -->
     <link rel="stylesheet" href="/assets/css/style.css">
-    <link rel="stylesheet" href="/assets/css/header.css">
-    <link rel="stylesheet" href="/assets/css/calendar.css">
+    <link rel="stylesheet" href="/assets/css/layout/header.css">
+    <link rel="stylesheet" href="/assets/css/components/calendar-custom.css">
     <link rel="stylesheet" href="/assets/css/components/contact-modal.css">
-    <link rel="stylesheet" href="/assets/css/components/footer.css">
+    <link rel="stylesheet" href="/assets/css/layout/footer.css">
     
     <!-- Additional Styles -->
     <?= isset($additionalStyles) ? $additionalStyles : '' ?>

@@ -7,7 +7,7 @@
  */
 function render_hero_section() {
     ?>
-    <section class="hero" style="background-image: url('/assets/images/main-hero.jpg');">
+    <section class="hero">
         <div class="hero-content">
             <h1 class="display-2 fw-bold mb-4">Découvrez des événements sportifs près de chez vous</h1>
             <p class="slogan">Trouvez et rejoignez des activités sportives organisées par des passionnés dans votre région.</p>

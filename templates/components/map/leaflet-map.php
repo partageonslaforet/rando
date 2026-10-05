@@ -8,15 +8,14 @@
 require_once __DIR__ . '/../../../includes/functions.php';
 require_once __DIR__ . '/../../../logs/error.log.php';
 
-function render_map() {
-    global $pdo;
-    
+function render_map(PDO $pdo) {
+
     $stmt = $pdo->prepare("
         SELECT 
             e.id,
             e.title,
             e.coordinates,
-            e.category,
+            c.code AS category,
             e.date,
             e.location,
             e.main_image_path AS event_image_path,
@@ -24,6 +23,7 @@ function render_map() {
             (SELECT ei.image_path FROM event_images ei WHERE ei.event_id = e.id ORDER BY ei.is_main DESC, ei.id ASC LIMIT 1) AS image_path,
             (SELECT ei.storage_path FROM event_images ei WHERE ei.event_id = e.id ORDER BY ei.is_main DESC, ei.id ASC LIMIT 1) AS storage_path
         FROM events e
+        LEFT JOIN event_categories c ON e.category_id = c.id
         WHERE e.coordinates IS NOT NULL
     ");
     $stmt->execute();
@@ -60,12 +60,6 @@ function render_map() {
     }
     unset($event);
     ?>
-    <style>
-    .map-container {
-        height: 600px;
-        width: 100%;
-    }
-    </style>
     <div id="map" class="map-container mb-4"></div>
     
     <script>
@@ -75,8 +69,10 @@ function render_map() {
     </script>
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <!-- Regroupement des marqueurs -->
+    <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
     <!-- Notre script de carte -->
-    <script src="<?= APP_URL ?>/assets/js/home/map.js"></script>
+    <script src="<?= APP_URL ?>/assets/js/home/map.js?v=<?= @filemtime(__DIR__ . '/../../../public/assets/js/home/map.js') ?: 1 ?>"></script>
     <?php
 }
 

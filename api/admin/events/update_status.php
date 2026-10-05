@@ -134,6 +134,37 @@ try {
             }
         }
 
+        // Notifier les abonnés lorsque l'événement devient public (nouvel événement
+        // ou modification re-approuvée). Ne doit jamais bloquer la réponse.
+        if ($status === 'approved') {
+            try {
+                // Re-publication après modification (draft avec original_event_id)
+                // → notification 'update' ; sinon 'auto' (détection par l'historique)
+                $repub = $db->prepare('SELECT COUNT(*) FROM draft_events WHERE original_event_id = ?');
+                $repub->execute([$eventId]);
+                $notifContext = ((int) $repub->fetchColumn() > 0) ? 'update' : 'auto';
+
+                require_once __DIR__ . '/../../../src/Services/Subscribers.php';
+                $subscribers = new Subscribers();
+                $notifResult = $subscribers->notifyEvent($eventId, $notifContext);
+                if (function_exists('logError')) {
+                    logError('api/admin/events/update_status.php', 'Notifications abonnés', [
+                        'event_id' => $eventId,
+                        'type' => $notifResult['type'] ?? null,
+                        'sent' => $notifResult['sent'] ?? 0,
+                        'skipped' => $notifResult['skipped'] ?? 0,
+                    ]);
+                }
+            } catch (\Throwable $e) {
+                if (function_exists('logError')) {
+                    logError('api/admin/events/update_status.php', 'Erreur notifications abonnés', [
+                        'event_id' => $eventId,
+                        'exception' => $e->getMessage()
+                    ]);
+                }
+            }
+        }
+
         echo json_encode(['success' => true, 'message' => 'Statut mis à jour avec succès']);
     } else {
         throw new Exception('Erreur lors de la mise à jour');

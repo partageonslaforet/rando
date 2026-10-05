@@ -34,3 +34,13 @@ function formatDateTime($datetime) {
 function sanitize($input) {
     return htmlspecialchars(strip_tags($input), ENT_QUOTES, 'UTF-8');
 }
+
+// Flag debug pour le domaine abonnements (activable via ENV DEBUG_SUBSCRIBERS=1)
+if (!defined('DEBUG_SUBSCRIBERS')) {
+    $envDebug = getenv('DEBUG_SUBSCRIBERS');
+    $debug = false;
+    if ($envDebug !== false) {
+        $debug = filter_var($envDebug, FILTER_VALIDATE_BOOL) || $envDebug === '1';
+    }
+    define('DEBUG_SUBSCRIBERS', $debug);
+}

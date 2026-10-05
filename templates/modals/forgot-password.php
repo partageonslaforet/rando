@@ -19,7 +19,7 @@ require_once __DIR__ . '/../../includes/csrf.php'; ?>
             <div class="modal-body">
                 <h5 class="modal-title" id="forgotPasswordModalLabel">Réinitialiser votre mot de passe</h5>
                 <p class="auth-intro">Indiquez votre adresse e-mail. Nous vous enverrons un lien de réinitialisation.</p>
-                <div class="auth-alert auth-alert-success" id="forgotSuccess" style="display: none;"></div>
+                <div class="auth-alert auth-alert-success is-hidden" id="forgotSuccess"></div>
                 <form id="forgotPasswordForm" method="post" action="api/auth/forgot-password.php">
                     <div class="mb-3">
                         <label for="forgotEmail" class="form-label">Email</label>

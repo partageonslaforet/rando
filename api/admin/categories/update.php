@@ -21,10 +21,12 @@ header('Content-Type: application/json');
 
 function sendJsonResponse($success, $message, $debug = [], $statusCode = 200) {
     http_response_code($statusCode);
+    // $debug reste utilisé pour les logs serveur (logError) mais n'est jamais
+    // renvoyé au client : il contient $_POST, chemins serveur et stack traces.
     echo json_encode([
         'success' => $success,
         'message' => $message,
-        'debug' => $debug
+        'debug' => []
     ]);
     exit;
 }

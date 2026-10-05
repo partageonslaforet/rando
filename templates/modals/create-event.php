@@ -7,8 +7,8 @@
  */
 
 // Activer l'affichage des erreurs
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
+ini_set('display_errors', 0);
+ini_set('display_startup_errors', 0);
 error_reporting(E_ALL);
 
 error_log("🚀 Début create-event.php");
@@ -222,8 +222,8 @@ if (!empty($draft['meeting_coordinates'])) {
 ?>
 
 <!-- Dépendances CSS -->
-<link rel="stylesheet" href="/assets/css/create-event.css">
-<link rel="stylesheet" href="/assets/css/event-display.css">
+<link rel="stylesheet" href="/assets/css/pages/events/create-event.css">
+<link rel="stylesheet" href="/assets/css/pages/events/event-display.css?v=<?= @filemtime((defined('ROOT_PATH') ? ROOT_PATH : dirname(__DIR__, 2)) . '/public/assets/css/pages/events/event-display.css') ?: 1 ?>">
 <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder@2.4.0/dist/Control.Geocoder.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
@@ -277,7 +277,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-<div id="loading-overlay" style="display: none;">
+<div id="loading-overlay">
     <div class="loading-spinner">
         <div class="spinner-border text-primary" role="status">
             <span class="visually-hidden">Chargement...</span>
@@ -327,9 +327,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
 
                 <!-- Progress Bar -->
-                <!-- <div class="progress mb-4">
-                    <div id="progressBar" class="progress-bar" role="progressbar" style="width: 20%;" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
-                </div> -->
 
                 <!-- Form -->
                 <form id="createEventForm" class="needs-validation" enctype="multipart/form-data" novalidate>
@@ -412,7 +409,8 @@ document.addEventListener('DOMContentLoaded', function() {
                                 <input type="hidden" id="meeting_city" name="meeting_city" value="<?= htmlspecialchars($draft['meeting_city'] ?? '') ?>">
                                 <input type="hidden" id="meeting_coordinates" name="meeting_coordinates" value="<?= htmlspecialchars($draft['meeting_coordinates'] ?? '') ?>">
                                 <div class="mb-3">
-                                    <div id="meetingMap" style="height: 300px; border-radius: 8px; width: 100%;"></div>
+                                    <div id="meetingMap"></div>
+                                    <div class="form-text mt-2">Déplacez le marqueur sur la carte pour ajuster le point de rendez-vous.</div>
                                 </div>
                             </div>
                         </div>
@@ -515,7 +513,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             <div class="card-body">
                                 <h3 class="card-title">Aperçu des parcours</h3>
                                 <div class="mb-2">
-                                    <div id="gpxMap" style="height: 400px; margin-bottom: 1rem; border-radius: 0.5rem;"></div>
+                                    <div id="gpxMap"></div>
                                 </div>   
                             </div>
                         </div>
@@ -535,7 +533,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                             <i class="bi bi-star-fill text-warning"></i> Photo de couverture
                                         </label>
                                         <div class="main-image-container">
-                                            <img id="mainImagePreview" class="main-image-preview" style="display: none;">
+                                            <img id="mainImagePreview" class="main-image-preview is-hidden">
                                             <label class="image-upload-button">
                                                 <i class="bi bi-upload"></i>
                                                 <span>Choisir l'image</span>
@@ -706,10 +704,11 @@ const routeCategories = <?= json_encode(array_map(function($c) { return ['id' =>
 
 <!-- Scripts -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-gpx/1.7.0/gpx.min.js"></script>
-<script src="/assets/js/events/event-validation.js"></script>
-<script src="/assets/js/events/event-display.js"></script>
-<script src="/assets/js/events/event-maps.js"></script>
+<script src="/assets/js/events/event-validation.js?v=<?= @filemtime((defined('ROOT_PATH') ? ROOT_PATH : dirname(__DIR__, 2)) . '/public/assets/js/events/event-validation.js') ?: 1 ?>"></script>
+<script src="/assets/js/events/event-display.js?v=<?= @filemtime((defined('ROOT_PATH') ? ROOT_PATH : dirname(__DIR__, 2)) . '/public/assets/js/events/event-display.js') ?: 1 ?>"></script>
+<script src="/assets/js/events/event-maps.js?v=<?= @filemtime((defined('ROOT_PATH') ? ROOT_PATH : dirname(__DIR__, 2)) . '/public/assets/js/events/event-maps.js') ?: 1 ?>"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // Configuration des champs d'heure avec Flatpickr
@@ -777,7 +776,14 @@ document.addEventListener('DOMContentLoaded', function() {
         if (meetingMarker) {
             meetingMap.removeLayer(meetingMarker);
         }
-        meetingMarker = L.marker([lat, lng]).addTo(meetingMap);
+        meetingMarker = L.marker([lat, lng], { draggable: true }).addTo(meetingMap);
+        window.meetingMarker = meetingMarker;
+        meetingMarker.on('dragend', function(e) {
+            const pos = e.target.getLatLng();
+            if (coordsInput) {
+                coordsInput.value = pos.lat + ',' + pos.lng;
+            }
+        });
         meetingMap.setView([lat, lng], 15);
         if (coordsInput) {
             coordsInput.value = lat + ',' + lng;

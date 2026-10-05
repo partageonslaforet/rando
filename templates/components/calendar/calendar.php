@@ -28,7 +28,7 @@ function render_calendar($pdo) {
     </div>
 
     <!-- Styles et Scripts -->
-    <link rel="stylesheet" href="/assets/css/components/calendar.css">
+    <link rel="stylesheet" href="/assets/css/components/calendar.css?v=<?= @filemtime((defined('ROOT_PATH') ? ROOT_PATH : dirname(__DIR__, 3)) . '/public/assets/css/components/calendar.css') ?: 1 ?>">
     <script src="/assets/js/home/calendar.js"></script>
     <?php
 }

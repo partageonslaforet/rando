@@ -188,7 +188,7 @@ try {
             $stmt->execute([$eventId, $draftId]);
             log_message("✅ Tags associés");
 
-            // Synchroniser category et category_id avec le premier tag
+            // Synchroniser category_id avec le premier tag
             $stmt = $pdo->prepare("
                 UPDATE events e
                 SET e.category_id = (
@@ -197,18 +197,10 @@ try {
                     WHERE dcl.draft_event_id = ? 
                     ORDER BY dcl.category_id ASC 
                     LIMIT 1
-                ),
-                e.category = (
-                    SELECT c.code 
-                    FROM draft_event_category_links dcl 
-                    JOIN event_categories c ON dcl.category_id = c.id 
-                    WHERE dcl.draft_event_id = ? 
-                    ORDER BY dcl.category_id ASC 
-                    LIMIT 1
                 )
                 WHERE e.id = ?
             ");
-            $stmt->execute([$draftId, $draftId, $eventId]);
+            $stmt->execute([$draftId, $eventId]);
             log_message("✅ Category_id synchronisé");
         } catch (PDOException $e) {
             log_message("❌ Erreur lors de l'association des tags: " . $e->getMessage(), true);

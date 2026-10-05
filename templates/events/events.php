@@ -5,7 +5,7 @@
  * Usage: Logique de listing et affichage des evenements
  * Dépendances: Aucune
  */
-function events_log($message) {
+function events_log(string $message) {
     error_log("[EVENTS.PHP] " . $message);
     echo "<!-- DEBUG: " . htmlspecialchars($message) . " -->\n";
 }

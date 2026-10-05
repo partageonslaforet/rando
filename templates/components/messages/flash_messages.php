@@ -7,7 +7,7 @@
  */
 if (!function_exists('addFlashMessage')) {
     // Fonction pour ajouter un message flash
-    function addFlashMessage($type, $message) {
+    function addFlashMessage(string $type, string $message) {
         if (!isset($_SESSION['flash_messages'])) {
             $_SESSION['flash_messages'] = [];
         }

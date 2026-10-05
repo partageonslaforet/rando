@@ -14,7 +14,7 @@ require_once __DIR__ . '/includes/functions.php';
 initSession();
 
 // Fonction de log détaillée
-function debug_log($message, $data = null) {
+function debug_log(string $message, mixed $data = null): void {
     $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1)[0];
     $location = basename($trace['file']) . ':' . $trace['line'];
     $log = "[$location] $message";
@@ -73,6 +73,12 @@ try {
     $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
     debug_log('URI analysée: ' . $uri);
 
+    // Route propre /event/{id} -> /event avec $_GET['id']
+    if (preg_match('#^/event/(\d+)$#', $uri, $m)) {
+        $_GET['id'] = (int) $m[1];
+        $uri = '/event';
+    }
+
     if ($uri === '/event') {
         debug_log('🎯 Chargement de la page détail événement');
         require_once __DIR__ . '/templates/events/event-detail.php';
@@ -85,9 +91,11 @@ try {
 
     if ($uri === '/events') {
         debug_log('🎯 Chargement de la page liste des événements');
+        trackVisit($_SERVER['REQUEST_URI'] ?? $uri);
         require_once __DIR__ . '/templates/events/events.php';
     } else {
         debug_log('🎯 Chargement de la page d\'accueil');
+        trackVisit($_SERVER['REQUEST_URI'] ?? $uri);
         require_once __DIR__ . '/templates/home.php';
 
         // Inclure la modale de création d'événement si l'utilisateur est connecté
@@ -98,8 +106,8 @@ try {
     }
     debug_log('✅ Template chargé avec succès');
 
-    // 9. Affichage du footer
-    render_footer();
+    // 9. Affichage du footer (bandeau partenaires : page d'accueil uniquement)
+    render_footer($uri === '/' || $uri === '/index.php');
     require_once __DIR__ . '/templates/layouts/footer.php';
     debug_log('✓ Footer affiché');
     

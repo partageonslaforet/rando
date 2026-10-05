@@ -3,7 +3,7 @@
  * Consultation détaillée d'un événement en administration.
  */
 // Activer l'affichage des erreurs
-ini_set('display_errors', 1);
+ini_set('display_errors', 0);
 error_reporting(E_ALL);
 
 // Démarrer la session
@@ -48,7 +48,7 @@ try {
     $user = $stmt->fetch();
 
     if (!$user || $user['role'] !== 'admin') {
-        header('Location: /pages/user/profile.php');
+        header('Location: /?error=admin_required');
         exit();
     }
 
@@ -127,15 +127,15 @@ try {
     $pageTitle = "Administration - " . h($eventDisplay['title'] ?? $event['title']);
     // Feuille de style spécifique à la page (injectée via header.php)
     $additionalStyles =
-        '<link rel="stylesheet" href="/assets/css/admin-event.css?v=3">' .
-        '<link rel="stylesheet" href="/assets/css/event-display.css?v=1">';
+        '<link rel="stylesheet" href="/assets/css/pages/admin/admin-event.css?v=3">' .
+        '<link rel="stylesheet" href="/assets/css/pages/events/event-display.css?v=' . (@filemtime((defined('ROOT_PATH') ? ROOT_PATH : dirname(__DIR__, 2)) . '/public/assets/css/pages/events/event-display.css') ?: 1) . '">';
 
     // Logs de diagnostic: vérifier la présence du CSS côté serveur
     try {
         require_once __DIR__ . '/../../logs/error.log.php';
         $fsCandidates = [
-            __DIR__ . '/../../public/assets/css/admin-event.css',
-            __DIR__ . '/../../assets/css/admin-event.css',
+            __DIR__ . '/../../public/assets/css/pages/admin/admin-event.css',
+            __DIR__ . '/../../assets/css/pages/admin/admin-event.css',
         ];
         $fsExists = [];
         foreach ($fsCandidates as $p) {
@@ -150,7 +150,7 @@ try {
         if (function_exists('logError')) {
             logError('pages/admin/view_event.php', 'Injection additionalStyles et vérification CSS', [
                 'additionalStyles' => $additionalStyles,
-                'served_url' => '/assets/css/admin-event.css?v=2',
+                'served_url' => '/assets/css/pages/admin/admin-event.css?v=3',
                 'fs_candidates' => $fsExists,
                 'event_status' => $event['status'],
                 'expected_classes' => [
@@ -355,7 +355,7 @@ function editViaModal(eventId) {
 <!-- Scripts d'affichage de l'événement (carte, traces GPX) -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-gpx/1.7.0/gpx.min.js"></script>
-<script src="/assets/js/events/event-display.js"></script>
+<script src="/assets/js/events/event-display.js?v=<?= @filemtime((defined('ROOT_PATH') ? ROOT_PATH : dirname(__DIR__, 2)) . '/public/assets/js/events/event-display.js') ?: 1 ?>"></script>
 
 <!-- Modale de confirmation & Toasts -->
 <div class="modal fade modal-confirm" id="confirmActionModal" tabindex="-1" aria-hidden="true">
@@ -376,7 +376,7 @@ function editViaModal(eventId) {
   </div>
  </div>
 
-<div class="toast-container position-fixed bottom-0 end-0 p-3" id="adminToastContainer" style="z-index:1080;"></div>
+<div class="toast-container position-fixed bottom-0 end-0 p-3" id="adminToastContainer"></div>
 
 <!-- Actions admin (confirmations et toasts) -->
 <script src="/assets/js/admin/admin-actions.js"></script>

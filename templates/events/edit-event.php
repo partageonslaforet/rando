@@ -5,8 +5,8 @@
  * Usage: Formulaire d edition d evenement
  * Dépendances: Aucune
  */
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
+ini_set('display_errors', 0);
+ini_set('display_startup_errors', 0);
 error_reporting(E_ALL);
 
 // Debug des variables serveur
@@ -40,8 +40,6 @@ require_once ROOT_PATH . '/includes/functions.php';
 require_once ROOT_PATH . '/includes/flash_messages.php';
 
 // Modèles & helpers
-require_once ROOT_PATH . '/src/Models/User.php';
-require_once ROOT_PATH . '/src/Models/Organization.php';
 require_once ROOT_PATH . '/src/Models/EventCategory.php';
 require_once ROOT_PATH . '/src/Models/Event.php';
 require_once ROOT_PATH . '/src/Models/organizer_profile.php';
@@ -65,7 +63,7 @@ if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
     exit;
 }
 
-function logEventModification($db, $event_id, $field_name, $old_value, $new_value, $user_id) {
+function logEventModification(PDO $db, int $event_id, string $field_name, mixed $old_value, mixed $new_value, int $user_id): bool {
     $stmt = $db->prepare("
         INSERT INTO event_modifications (
             event_id,
@@ -192,7 +190,7 @@ try {
         error_log("Organizer data from DB: " . print_r($organizer, true));
     }
 
-    if (empty($organizer) && !empty($_SESSION['user_id'])) {
+    if (empty($organizer) && !empty($event['user_id'])) {
         $stmt = $db->prepare("
             SELECT *
             FROM organizer_profiles
@@ -200,9 +198,13 @@ try {
             ORDER BY id ASC
             LIMIT 1
         ");
-        $stmt->execute([$_SESSION['user_id']]);
+        $stmt->execute([$event['user_id']]);
         $organizer = $stmt->fetch(PDO::FETCH_ASSOC);
-        error_log("Organizer fallback from user: " . print_r($organizer, true));
+        if ($organizer) {
+            $event['organisation'] = $organizer['id'];
+            error_log("Organizer ID fallback set to: " . $organizer['id']);
+        }
+        error_log("Organizer fallback from event user: " . print_r($organizer, true));
     }
 
     if ($organizer) {
@@ -267,7 +269,13 @@ try {
     $categories = $categoryManager->getAllActive();
     
     $organizerManager = new OrganizerProfile($db);
-    $organizers = $organizerManager->getByUserId($_SESSION['user_id']);
+    if ($isAdmin) {
+        $stmt = $db->prepare("SELECT * FROM organizer_profiles ORDER BY name ASC");
+        $stmt->execute();
+        $organizers = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } else {
+        $organizers = $organizerManager->getByUserId($_SESSION['user_id']);
+    }
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
         // S'assurer qu'aucun contenu n'a été envoyé avant
@@ -353,11 +361,12 @@ require_once ROOT_PATH . '/templates/layouts/header-solid.php';
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_blue.css">
-<link rel="stylesheet" href="/assets/css/create-event.css">
-<link rel="stylesheet" href="/assets/css/event-display.css">
+<link rel="stylesheet" href="/assets/css/pages/events/create-event.css">
+<link rel="stylesheet" href="/assets/css/pages/events/event-display.css?v=<?= @filemtime((defined('ROOT_PATH') ? ROOT_PATH : dirname(__DIR__, 2)) . '/public/assets/css/pages/events/event-display.css') ?: 1 ?>">
 
 <!-- Scripts -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-gpx/1.7.0/gpx.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/fr.js"></script>
@@ -368,8 +377,8 @@ require_once ROOT_PATH . '/templates/layouts/header-solid.php';
     window.eventId = <?php echo json_encode($event['id']); ?>;
 </script>
 
-<script src="/assets/js/events/event-maps.js"></script>
-<script src="/assets/js/events/event-display.js"></script>
+<script src="/assets/js/events/event-maps.js?v=<?= @filemtime(ROOT_PATH . '/public/assets/js/events/event-maps.js') ?: time() ?>"></script>
+<script src="/assets/js/events/event-display.js?v=<?= @filemtime(ROOT_PATH . '/public/assets/js/events/event-display.js') ?: time() ?>"></script>
 
 <!-- Modal de prévisualisation -->
 <div class="modal fade" id="previewModal" tabindex="-1" aria-labelledby="previewModalLabel" aria-hidden="true">
@@ -437,7 +446,7 @@ require_once ROOT_PATH . '/templates/layouts/header-solid.php';
 
                 <!-- Progress Bar -->
                 <div class="progress mb-4">
-                    <div id="progressBar" class="progress-bar" role="progressbar" style="width: 33%;" aria-valuenow="33" aria-valuemin="0" aria-valuemax="100"></div>
+                    <div id="progressBar" class="progress-bar" role="progressbar" aria-valuenow="33" aria-valuemin="0" aria-valuemax="100"></div>
                 </div>
 
                 <!-- Form -->
@@ -457,7 +466,7 @@ require_once ROOT_PATH . '/templates/layouts/header-solid.php';
                                 <div class="mb-4">
                                     <?php if ($event['main_image']): ?>
                                         <div class="current-image mb-3">
-                                            <img src="<?= $event['main_image'] ?>" alt="Image principale actuelle" class="img-thumbnail" style="max-width: 200px">
+                                            <img src="<?= $event['main_image'] ?>" alt="Image principale actuelle" class="img-thumbnail">
                                             <p class="text-muted">Image actuelle</p>
                                         </div>
                                     <?php endif; ?>
@@ -470,7 +479,7 @@ require_once ROOT_PATH . '/templates/layouts/header-solid.php';
                                     <?php if (!empty($event['secondary_images'])): ?>
                                         <div class="current-images mb-3">
                                             <?php foreach ($event['secondary_images'] as $image): ?>
-                                                <img src="<?= $image ?>" alt="Image secondaire" class="img-thumbnail me-2" style="max-width: 100px">
+                                                <img src="<?= $image ?>" alt="Image secondaire" class="img-thumbnail me-2">
                                             <?php endforeach; ?>
                                         </div>
                                     <?php endif; ?>
@@ -561,7 +570,7 @@ require_once ROOT_PATH . '/templates/layouts/header-solid.php';
                                         </button>
                                     </div>
                                 </div>
-                                <div id="locationMap" style="height: 400px;" class="mb-3"></div>
+                                <div id="locationMap" class="mb-3"></div>
                                 <div class="form-text">Déplacez le marqueur pour ajuster la position exacte</div>
                                 <input type="hidden" id="coordinates" name="coordinates" value="<?= htmlspecialchars($event['coordinates'] ?? '') ?>" required>
                                 <input type="hidden" id="latitude" name="latitude">
@@ -633,7 +642,7 @@ require_once ROOT_PATH . '/templates/layouts/header-solid.php';
                         <div class="card mb-4">
                             <div class="card-body">
                                 <h3 class="card-title">Carte des parcours</h3>
-                                <div id="gpxMap" style="height: 400px; margin-bottom: 1rem; border-radius: 0.5rem;"></div>
+                                <div id="gpxMap"></div>
                                 <div id="gpxLegend" class="gpx-legend"></div>
                             </div>
                         </div>
@@ -700,9 +709,9 @@ require_once ROOT_PATH . '/templates/layouts/header-solid.php';
                                         <label for="organizerLogo" class="form-label">Logo</label>
                                         <div class="logo-upload-container">
                                             <?php if (!empty($organizer_data['logo_path'])): ?>
-                                                <img id="logoPreview" class="logo-preview" src="<?= htmlspecialchars($organizer_data['logo_path']) ?>" alt="Logo preview" style="max-width: 200px; margin-bottom: 10px;">
+                                                <img id="logoPreview" class="logo-preview" src="<?= htmlspecialchars($organizer_data['logo_path']) ?>" alt="Logo preview">
                                             <?php else: ?>
-                                                <img id="logoPreview" class="logo-preview" src="" alt="Logo preview" style="display: none; max-width: 200px; margin-bottom: 10px;">
+                                                <img id="logoPreview" class="logo-preview is-hidden" src="" alt="Logo preview">
                                             <?php endif; ?>
                                             <input type="file" class="form-control" id="organizerLogo" name="organizerLogo" accept="image/*">
                                             <small class="form-text text-muted">Format recommandé : PNG ou JPG, max 2Mo</small>
@@ -759,12 +768,12 @@ require_once ROOT_PATH . '/templates/layouts/header-solid.php';
 
                     <!-- Navigation Buttons -->
                     <div class="d-flex justify-content-between mt-4">
-                        <button type="button" class="btn btn-secondary prev-step" id="prevButton" style="display: none;">
+                        <button type="button" class="btn btn-secondary prev-step d-none" id="prevButton">
                             <i class="bi bi-arrow-left"></i> Précédent
                         </button>
                         <button type="button" class="btn btn-primary next-step" id="nextButton">
                             <span id="step1Text">Suivant</span>
-                            <span id="step2Text" style="display: none;">Enregistrer</span>
+                            <span id="step2Text" class="is-hidden">Enregistrer</span>
                         </button>
                     </div>
                 </form>
@@ -774,7 +783,7 @@ require_once ROOT_PATH . '/templates/layouts/header-solid.php';
 </div>
 
 <!-- Loading Overlay -->
-<div id="loading-overlay" style="display: none;">
+<div id="loading-overlay">
     <div class="spinner-border text-light" role="status">
         <span class="visually-hidden">Chargement...</span>
     </div>
@@ -823,24 +832,4 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 <!-- Charger uniquement le script d'édition -->
-<script src="/assets/js/events/event-edit.js"></script>
-
-<script>
-    // Configuration de la carte
-    const map = L.map('locationMap').setView([46.603354, 1.888334], 6);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: ' OpenStreetMap contributors'
-    }).addTo(map);
-
-    let marker = null;
-    const coordinates = document.querySelector('input[name="coordinates"]');
-
-    // Placer le marqueur selon les coordonnées
-    if (coordinates.value) {
-        const [lat, lng] = coordinates.value.split(',').map(coord => parseFloat(coord.trim()));
-        if (!isNaN(lat) && !isNaN(lng)) {
-            marker = L.marker([lat, lng]).addTo(map);
-            map.setView([lat, lng], 13);
-        }
-    }
-</script>
+<script src="/assets/js/events/event-edit.js?v=<?= @filemtime(ROOT_PATH . '/public/assets/js/events/event-edit.js') ?: time() ?>"></script>

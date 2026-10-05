@@ -19,7 +19,7 @@ require_once __DIR__ . '/../../includes/csrf.php'; ?>
             <div class="modal-body">
                 <h5 class="modal-title" id="registerModalLabel">Créer un compte</h5>
                 <p class="auth-intro">Rejoignez la communauté et publiez vos sorties en quelques clics.</p>
-                <div class="auth-alert auth-alert-danger" id="registerError" style="display: none;"></div>
+                <div class="auth-alert auth-alert-danger is-hidden" id="registerError"></div>
                 <form id="registerForm" method="post">
                     <div class="mb-3">
                         <label for="username" class="form-label">Nom d'utilisateur</label>

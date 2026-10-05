@@ -2,24 +2,24 @@
 
 /* Styles de base de la navbar */
 .navbar {
-    background-color: white !important;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+    background-color: var(--light-text) !important;
+    box-shadow: 0 2px 4px color-mix(in srgb, #000 10%, transparent) !important;
     padding: 0.5rem 0 !important;
     height: 100px !important;
 }
 
 /* Styles des liens de navigation */
 #navbarNav .navbar-nav .nav-item .nav-link:not(.btn-connexion) {
-    color: #333 !important;
+    color: var(--text-color) !important;
     font-weight: 500 !important;
     padding: 0.5rem 0.5rem !important;
 }
 
 /* Style du bouton Mon Compte */
 #navbarNav .navbar-nav .nav-item .nav-link.btn-connexion.dropdown-toggle {
-    background-color: var(--secondary-color) !important;
+    background-color: var(--primary-color) !important;
     border: none !important;
-    color: white !important;
+    color: var(--light-text) !important;
     padding: 0.5rem 1rem !important;
     border-radius: 10px !important;
     transition: all 0.3s ease !important;
@@ -27,9 +27,9 @@
 
 /* Style du bouton Connexion */
 #navbarNav .navbar-nav .nav-item .nav-link.btn-connexion {
-    background-color: var(--secondary-color) !important;
+    background-color: var(--primary-color) !important;
     border: none !important;
-    color: white !important;
+    color: var(--light-text) !important;
     padding: 0.5rem 1rem !important;
     border-radius: 10px !important;
     transition: all 0.3s ease !important;
@@ -39,12 +39,12 @@
 #navbarNav .navbar-nav .nav-item .nav-link.btn-connexion:hover,
 #navbarNav .navbar-nav .nav-item .nav-link.btn-connexion.dropdown-toggle:hover {
     opacity: 0.9 !important;
-    background-color: var(--secondary-hover) !important;
+    background-color: var(--primary-hover) !important;
 }
 
 /* Brand styles */
 .navbar .navbar-brand {
-    color: var(--secondary-color) !important;
+    color: var(--primary-color) !important;
     font-weight: bold !important;
     font-size: 1.5rem !important;
 }
@@ -74,29 +74,29 @@
 /* Dropdown styles */
 .dropdown-menu {
     border: none !important;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+    box-shadow: 0 2px 4px color-mix(in srgb, #000 10%, transparent) !important;
     border-radius: 10px !important;
     margin-top: 0.5rem !important;
-    background-color: white !important;
+    background-color: var(--light-text) !important;
     min-width: 200px !important;
     padding: 0.5rem 0 !important;
 }
 
 .dropdown-item {
     padding: 0.5rem 1rem !important;
-    color: #333 !important;
+    color: var(--text-color) !important;
     transition: all 0.3s ease !important;
     font-weight: 500 !important;
 }
 
 .dropdown-item:hover {
-    background-color: rgba(58, 138, 61, 0.1) !important;
-    color: var(--secondary-color) !important;
+    background-color: color-mix(in srgb, var(--primary-color) 10%, transparent) !important;
+    color: var(--primary-color) !important;
 }
 
 .dropdown-divider {
     margin: 0.5rem 0 !important;
-    border-color: rgba(0,0,0,0.1) !important;
+    border-color: color-mix(in srgb, #000 10%, transparent) !important;
 }
 
 /* Responsive styles */
@@ -112,7 +112,7 @@
     }
 
     .navbar-collapse {
-        background-color: white !important;
+        background-color: var(--light-text) !important;
         padding: 1rem !important;
         border-radius: 10px !important;
         margin-top: 1rem !important;

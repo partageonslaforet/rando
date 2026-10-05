@@ -386,6 +386,17 @@ function ensureGpxMapVisible() {
     }
 }
 
+// S'assurer que la carte du rendez-vous est bien affichée et recentrée
+function ensureMeetingMapVisible() {
+    if (window.meetingMap && window.meetingMarker) {
+        setTimeout(function() {
+            const pos = window.meetingMarker.getLatLng();
+            window.meetingMap.invalidateSize();
+            window.meetingMap.setView(pos, 15);
+        }, 100);
+    }
+}
+
 // Fonction pour passer à l'étape suivante
 async function nextStep() {
 
@@ -500,6 +511,9 @@ function prevStep() {
         scrollStepToTop();
         if (currentStep === 2) {
             ensureGpxMapVisible();
+        }
+        if (currentStep === 1) {
+            ensureMeetingMapVisible();
         }
     } catch (error) {
         console.error(' Erreur lors du retour à l\'étape précédente:', error);
@@ -703,7 +717,7 @@ function updateGpxLegend() {
         const legendItem = document.createElement('div');
         legendItem.className = 'legend-item d-flex align-items-center gap-2 bg-light p-2 rounded';
         legendItem.innerHTML = `
-            <div style="width: 20px; height: 3px; background-color: ${color};"></div>
+            <div class="legend-swatch" style="background-color: ${color};"></div>
             <div>
                 <strong>${routeName}</strong>
                 ${distance && elevation ? `<br><small class="text-muted">${distance} • ${elevation} D+</small>` : ''}
@@ -864,7 +878,8 @@ function removeRoute(button) {
 // Fonction pour valider tout le formulaire
 function validateForm() {
     const errors = [];
-    
+    const form = document.getElementById('createEventForm');
+
     // Liste des champs requis avec leurs messages d'erreur
     const requiredFields = {
         'title': 'Titre de l\'événement',
@@ -874,22 +889,18 @@ function validateForm() {
         'registrationCloses': 'Fermeture des inscriptions'
     };
 
-    // Vérifier chaque champ requis
+    // Vérifier chaque champ requis dans le formulaire
     for (const [fieldId, fieldName] of Object.entries(requiredFields)) {
-        const field = document.querySelector(`[name="${fieldId}"]`);
+        const field = form ? form.querySelector(`[name="${fieldId}"]`) : null;
         if (!field || !field.value) {
             errors.push(`Le champ "${fieldName}" est requis`);
         }
     }
 
     // Vérifier qu'au moins une catégorie est cochée
-    const allCategoryInputs = document.querySelectorAll('input[name="categories[]"]');
-    const checkedCategories = document.querySelectorAll('input[name="categories[]"]:checked');
+    const allCategoryInputs = form ? form.querySelectorAll('input[name="categories[]"]') : [];
+    const checkedCategories = form ? form.querySelectorAll('input[name="categories[]"]:checked') : [];
     if (allCategoryInputs.length > 0) {
-        try {
-        } catch (e) {}
-    }
-    if (checkedCategories.length > 0) {
         try {
         } catch (e) {}
     }
@@ -1831,7 +1842,7 @@ function resetOrganizerFields() {
 async function submitEvent() {
     try {
         hideGlobalErrors();
-        
+
         // Valider le formulaire
         if (!validateForm()) {
             return;
@@ -1846,7 +1857,7 @@ async function submitEvent() {
         // Si on est en mode édition
         if (window.isEditMode && window.eventId) {
             formData.append('eventId', window.eventId);
-            
+
             // Envoyer vers l'endpoint de mise à jour
             const response = await fetch('../../api/events/update.php', {
                 method: 'POST',
@@ -1854,7 +1865,7 @@ async function submitEvent() {
             });
 
             const data = await response.json();
-            
+
             if (!data.success) {
                 throw new Error(data.message || 'Erreur lors de la mise à jour de l\'événement');
             }
@@ -1865,10 +1876,10 @@ async function submitEvent() {
                     sessionStorage.removeItem('adminEdit');
                     window.location.href = '/pages/admin';
                 } else {
-                    window.location.href = '/event?id=' + encodeURIComponent(window.eventId);
+                    window.location.href = '/event/' + encodeURIComponent(window.eventId);
                 }
             } catch (_) {
-                window.location.href = '/event?id=' + encodeURIComponent(window.eventId);
+                window.location.href = '/event/' + encodeURIComponent(window.eventId);
             }
             return;
         }
@@ -1888,7 +1899,7 @@ async function submitEvent() {
         });
 
         const data = await response.json();
-        
+
         if (!data.success) {
             throw new Error(data.message || 'Erreur lors de la publication de l\'événement');
         }
@@ -1899,7 +1910,7 @@ async function submitEvent() {
                 sessionStorage.removeItem('adminEdit');
                 window.location.href = '/pages/admin';
             } else if (data.isUpdate && data.eventId) {
-                window.location.href = '/event?id=' + encodeURIComponent(data.eventId);
+                window.location.href = '/event/' + encodeURIComponent(data.eventId);
             } else {
                 window.location.href = '/pages/user/my-events.php?success=create';
             }
@@ -1980,9 +1991,21 @@ async function initLocationMap() {
             attribution: ' OpenStreetMap contributors'
         }).addTo(window.locationMap);
         
+        // Pin vert partagé (idem map.js / event-maps.js) — gardé contre la redéclaration
+        if (!window.eventPinIcon) {
+            window.eventPinIcon = L.divIcon({
+                className: 'event-pin',
+                html: '<i class="bi bi-geo-alt-fill" aria-hidden="true"></i>',
+                iconSize: [30, 42],
+                iconAnchor: [15, 42],
+                popupAnchor: [0, -38]
+            });
+        }
+
         // Ajouter le marqueur
         window.locationMarker = L.marker([50.4, 4.4], {
-            draggable: true
+            draggable: true,
+            icon: window.eventPinIcon
         }).addTo(window.locationMap);
         
         // Gérer le déplacement du marqueur

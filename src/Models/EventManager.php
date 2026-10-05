@@ -76,7 +76,6 @@ class EventManager {
                 e.end_time,
                 e.location,
                 e.coordinates,
-                e.category,
                 e.status,
                 e.organisation,
                 e.category_id,
@@ -86,6 +85,7 @@ class EventManager {
                 e.is_cancelled,
                 e.cancellation_reason,
                 e.main_image_path,
+                c.code as category,
                 u.name as creator_name,
                 c.name as category_name,
                 c.icon as category_icon,
@@ -156,7 +156,7 @@ class EventManager {
 
     public function getById(int $id): ?array {
         $stmt = $this->db->prepare("
-            SELECT e.*, u.name as creator_name, c.name as category_name
+            SELECT e.*, c.code as category, u.name as creator_name, c.name as category_name
             FROM events e 
             LEFT JOIN users u ON e.user_id = u.id 
             LEFT JOIN event_categories c ON e.category_id = c.id

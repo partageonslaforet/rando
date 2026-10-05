@@ -1,15 +1,33 @@
 # Fichier d'index par defaut
 DirectoryIndex index.php
 
-# Alias interne /assets vers /public/assets et /uploads vers /public/uploads
+# Bloquer l'acces aux fichiers sensibles (dotfiles, logs, docs, config locale)
+<FilesMatch "(^\.|\.(log|md|ini|lock|sql|sh|yml|yaml|dist|bak|example|env)$|^composer\.(json|lock)$)">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
 <IfModule mod_rewrite.c>
     RewriteEngine On
+
+    # Bloquer l'acces aux dossiers internes (includes PHP uniquement, jamais servis en HTTP)
+    RewriteRule ^(logs|config|src|vendor|database|migrations|scripts|actions|includes|templates/events/scripts)(/|$) - [F,L]
+
+    # Interdire l'execution de scripts dans les uploads (fichiers statiques uniquement)
+    RewriteRule ^(uploads|public/uploads)/.*\.(php|phtml|phar|php[0-9]|cgi|pl|py|sh)$ - [F,L,NC]
+
+    # Alias interne /assets vers /public/assets et /uploads vers /public/uploads
     RewriteRule ^assets/(.*)$ /public/assets/$1 [L]
     RewriteRule ^uploads/(.*)$ /public/uploads/$1 [L]
-</IfModule>
+    # Exposer les pages publiques subscribers
+    RewriteRule ^subscribers/(.*)$ /public/subscribers/$1 [L]
 
-# Redirige toutes les requetes vers index.php sauf si le fichier ou dossier existe
-<IfModule mod_rewrite.c>
+    # Redirige toutes les requetes vers index.php sauf si le fichier ou dossier existe
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteRule ^(.*)$ /index.php [QSA,L]

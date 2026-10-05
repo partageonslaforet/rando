@@ -1,4 +1,6 @@
 /* Styles de la page d'administration d'un événement. */
+#adminToastContainer { z-index: 1080; }
+
 .admin-actions .card-title {
   font-weight: 700;
   margin-bottom: 1rem;
@@ -12,7 +14,7 @@
   font-weight: 700 !important;
   font-size: 1.1rem !important;
   margin-bottom: 14px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.06);
+  box-shadow: 0 2px 4px color-mix(in srgb, #000 6%, transparent);
 }
 
 /* Bandeau de debug visuel temporaire pour confirmer que le CSS est chargé */
@@ -22,59 +24,59 @@
 
 /* Mettre à jour chemins (warning) */
 .admin-actions .btn-update {
-  background-color: #F0B323 !important;
-  border-color: #F0B323 !important;
-  color: #1a1a1a !important;
+  background-color: var(--warning) !important;
+  border-color: var(--warning) !important;
+  color: var(--text-color) !important;
 }
 
 /* Approuver (vert) */
 .admin-actions .btn-approve {
-  background-color: #3A8A3D !important;
-  border-color: #3A8A3D !important;
-  color: #fff !important;
+  background-color: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+  color: var(--light-text) !important;
 }
 .admin-actions .btn-approve:hover {
-  background-color: #2f6f32 !important;
-  border-color: #2f6f32 !important;
+  background-color: var(--primary-hover) !important;
+  border-color: var(--primary-hover) !important;
 }
 
 /* Rejeter (rouge) */
 .admin-actions .btn-reject {
-  background-color: #990047 !important;
-  border-color: #990047 !important;
-  color: #fff !important;
+  background-color: var(--danger-color) !important;
+  border-color: var(--danger-color) !important;
+  color: var(--light-text) !important;
 }
 .admin-actions .btn-reject:hover {
-  background-color: #990047 !important;
-  border-color: #990047 !important;
+  background-color: var(--danger-color) !important;
+  border-color: var(--danger-color) !important;
 }
 
 /* Supprimer (rouge foncé) */
 .admin-actions .btn-delete {
-  background-color: #3e4444 !important;
-  border-color: #3e4444 !important;
-  color: #fff !important;
+  background-color: var(--gray-dark) !important;
+  border-color: var(--gray-dark) !important;
+  color: var(--light-text) !important;
 }
 .admin-actions .btn-delete:hover {
-  background-color: #3e4444 !important;
-  border-color: #3e4444 !important;
+  background-color: var(--gray-dark) !important;
+  border-color: var(--gray-dark) !important;
 }
 
 /* Bouton Modifier */
 .admin-actions .btn-edit {
-  background-color: #e3eaa7 !important;
-  border-color: #e3eaa7 !important;
-  color: #fff !important;
+  background-color: color-mix(in srgb, var(--warning) 15%, var(--light-text)) !important;
+  border-color: color-mix(in srgb, var(--warning) 15%, var(--light-text)) !important;
+  color: var(--light-text) !important;
 }
 .admin-actions .btn-edit:hover {
-  background-color: #e3eaa7 !important;
-  border-color: #e3eaa7 !important;
+  background-color: color-mix(in srgb, var(--warning) 15%, var(--light-text)) !important;
+  border-color: color-mix(in srgb, var(--warning) 15%, var(--light-text)) !important;
 }
 
 /* Modal brandé (refus) */
 .modal-brand .modal-content {
   border-radius: 16px;
-  border: 1px solid #E5EBE5;
+  border: 1px solid var(--border-green);
 }
 .modal-brand .modal-header {
   border-bottom: 0;
@@ -82,46 +84,46 @@
 }
 .modal-brand .modal-title {
   font-weight: 800;
-  color: #990047;
+  color: var(--danger-color);
 }
 .modal-brand .modal-body .form-label {
   font-weight: 700;
-  color: #3A8A3D;
+  color: var(--primary-color);
 }
 .modal-brand .form-control {
   border-radius: 12px;
-  border-color: #C8D5CB;
+  border-color: var(--border-green);
 }
 .btn-brand-cancel {
-  background: #6C757D;
-  border-color: #6C757D;
-  color: #fff;
+  background: var(--text-muted);
+  border-color: var(--text-muted);
+  color: var(--light-text);
 }
 .btn-brand-cancel:hover { filter: brightness(0.92); }
 .btn-brand-reject {
-  background: #C0392B;
-  border-color: #C0392B;
-  color: #fff;
+  background: var(--danger-color);
+  border-color: var(--danger-color);
+  color: var(--light-text);
   font-weight: 700;
 }
 .btn-brand-reject:hover {
-  background: #9f2f23;
-  border-color: #9f2f23;
+  background: var(--danger-color);
+  border-color: var(--danger-color);
 }
 
 /* --- Modale de confirmation (brand) --- */
 .modal-confirm .modal-header { border-bottom: 0; }
-.modal-confirm .modal-title { font-weight: 800; color: #990047; }
+.modal-confirm .modal-title { font-weight: 800; color: var(--danger-color); }
 .modal-confirm .modal-body p { 
     margin: 0;
-    color: #333;
+    color: var(--text-color);
     padding-left: 1.5rem;
   }
-.modal-confirm .btn-confirm-approve { background: #3A8A3D; border-color: #3A8A3D; color: #fff; font-weight: 700; }
-.modal-confirm .btn-confirm-approve:hover { background: #2f6f32; border-color: #2f6f32; }
-.modal-confirm .btn-confirm-reject { background: #C0392B; border-color: #C0392B; color: #fff; font-weight: 700; }
-.modal-confirm .btn-confirm-reject:hover { background: #9f2f23; border-color: #9f2f23; }
-.modal-confirm .btn-cancel { background: #6C757D; border-color: #6C757D; color: #fff; }
+.modal-confirm .btn-confirm-approve { background: var(--primary-color); border-color: var(--primary-color); color: var(--light-text); font-weight: 700; }
+.modal-confirm .btn-confirm-approve:hover { background: var(--primary-hover); border-color: var(--primary-hover); }
+.modal-confirm .btn-confirm-reject { background: var(--danger-color); border-color: var(--danger-color); color: var(--light-text); font-weight: 700; }
+.modal-confirm .btn-confirm-reject:hover { background: var(--danger-color); border-color: var(--danger-color); }
+.modal-confirm .btn-cancel { background: var(--text-muted); border-color: var(--text-muted); color: var(--light-text); }
 
 /* --- Toast admin --- */
 #adminToastContainer {
@@ -141,11 +143,11 @@
 }
 #adminToastContainer .toast {
     border-radius: 12px;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.18);
+    box-shadow: 0 6px 20px color-mix(in srgb, #000 18%, transparent);
     width: max-content;
     max-width: 90vw;
     text-align: left;
 }
 #adminToastContainer .toast-header { font-weight: 700; }
-.toast-success { border-left: 5px solid #3A8A3D; }
-.toast-error { border-left: 5px solid #C0392B; }
+.toast-success { border-left: 5px solid var(--primary-color); }
+.toast-error { border-left: 5px solid var(--danger-color); }

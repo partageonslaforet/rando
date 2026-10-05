@@ -31,7 +31,7 @@ displayFlashMessages();
     
     <!-- Custom CSS -->
     <link rel="stylesheet" href="/assets/css/style.css">
-    <link rel="stylesheet" href="/assets/css/header-solid.css">
+    <link rel="stylesheet" href="/assets/css/layout/header-solid.css">
     
     <!-- Additional Styles -->
     <?= isset($additionalStyles) ? $additionalStyles : '' ?>

@@ -59,7 +59,7 @@ $pageTitle = "Mon Profil";
 require_once __DIR__ . '/../../templates/layouts/header-solid.php';
 ?>
 
-<link rel="stylesheet" href="/assets/css/profile.css">
+<link rel="stylesheet" href="/assets/css/pages/user/profile.css">
 
     <?php
     $allowedTabs = ['personal', 'organizer', 'password'];
@@ -287,7 +287,7 @@ require_once __DIR__ . '/../../templates/layouts/header-solid.php';
                     
                     <div class="mb-3">
                         <label for="org_logo" class="form-label">Logo de l'organisation</label>
-                        <div class="logo-preview-container mb-2" style="display: none;">
+                        <div class="logo-preview-container mb-2 is-hidden">
                             <div class="image-container">
                                 <img id="logo_preview" src="" alt="Aperçu du logo">
                                 <button type="button" class="btn-remove" id="remove_logo" title="Supprimer le logo">

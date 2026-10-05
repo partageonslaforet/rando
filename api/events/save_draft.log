@@ -1,68 +1,74 @@
-[2026-09-11 14:54:38] INFO:  Début de l'enregistrement du brouillon
-[2026-09-11 14:54:38] INFO: POST data: Array
+[2026-10-05 15:47:23] INFO:  Début de l'enregistrement du brouillon
+[2026-10-05 15:47:23] INFO: POST data: Array
 (
-    [draftId] => 4
-    [title] => dhdydh
-    [description] => dhdhgdhd
+    [draftId] => 67
+    [title] => Course Marcel KIEFER 
+    [description] => Pas de garderie. Douches et vestiaires.
+10h20 Départ 1 km pour 7/12 ans
     [categories] => Array
         (
-            [0] => 3
+            [0] => 2
         )
 
-    [date] => 12/09/2026
-    [registrationOpens] => 07:00
-    [registrationCloses] => 09:00
-    [meeting_name] => 
-    [meeting_address] => virton
-    [meeting_city] => Virton
-    [meeting_coordinates] => 49.5677263,5.5329559
-    [routes] => [{"name":"","category_id":"1","distance":"10","elevation":"","price":"","description":"","gpx_file":"","gpx_downloadable":false}]
-    [organizerId] => 
+    [date] => 01/11/2026
+    [registrationOpens] => 08:45
+    [registrationCloses] => 10:00
+    [meeting_name] => Salle des sports
+    [meeting_address] => Avenue du Maréchal Foch, Cité Michel, Hussigny-Godbrange
+    [meeting_city] => 
+    [meeting_coordinates] => 49.4947673,5.8686177
+    [routes] => [{"name":"","category_id":"2","distance":"13.13","elevation":"","price":"","description":"Départ 10:00 - 80% chemins forestiers, 20% routes","gpx_file":"","gpx_downloadable":false},{"name":"","category_id":"2","distance":"21.30","elevation":"","price":"","description":"Départ : 10:00 - 80% chemins forestiers, 20% routes","gpx_file":"","gpx_downloadable":false},{"name":"","category_id":"2","distance":"5.50","elevation":"","price":"","description":"Départ 10:15 - 80% chemins forestiers, 20% routes","gpx_file":"","gpx_downloadable":false}]
+    [organizerId] => 1
     [organizerName] => 
+    [contacts] => [{"name":"Jean-Louis PERIN","email":"jean-louis.perin@wanadoo.fr","phone":"+33 6 89 69 05 31"}]
     [saveReason] => before-publish
 )
 
-[2026-09-11 14:54:38] INFO: FILES data: Array
+[2026-10-05 15:47:23] INFO: FILES data: Array
 (
 )
 
-[2026-09-11 14:54:38] INFO:  Utilisation du brouillon existant: 4
-[2026-09-11 14:54:38] INFO: 📝 Champs de l'événement:
-[2026-09-11 14:54:38] INFO: title: dhdydh
-[2026-09-11 14:54:38] INFO: description: dhdhgdhd
-[2026-09-11 14:54:38] INFO: date: 2026-09-12
-[2026-09-11 14:54:38] INFO: registration_opens: 07:00:00
-[2026-09-11 14:54:38] INFO: registration_closes: 09:00:00
-[2026-09-11 14:54:38] INFO: location: 
-[2026-09-11 14:54:38] INFO: venue: virton
-[2026-09-11 14:54:38] INFO: coordinates: 49.5677263,5.5329559
-[2026-09-11 14:54:38] INFO: meeting_name: 
-[2026-09-11 14:54:38] INFO: meeting_address: virton
-[2026-09-11 14:54:38] INFO: meeting_city: Virton
-[2026-09-11 14:54:38] INFO: meeting_coordinates: 49.5677263,5.5329559
-[2026-09-11 14:54:38] INFO: updated_at: 2026-09-11 14:54:38
-[2026-09-11 14:54:38] INFO: organizer_id: 
-[2026-09-11 14:54:38] INFO: organisation: 
-[2026-09-11 14:54:38] INFO: ℹ️ Aucun organisateur reçu depuis le formulaire événement
-[2026-09-11 14:54:38] INFO: Requête SQL: UPDATE draft_events SET title = ?, description = ?, date = ?, registration_opens = ?, registration_closes = ?, venue = ?, coordinates = ?, meeting_name = ?, meeting_address = ?, meeting_city = ?, meeting_coordinates = ?, updated_at = ?, organizer_id = ? WHERE id = ?
-[2026-09-11 14:54:38] INFO: Paramètres: Array
+[2026-10-05 15:47:23] INFO:  Utilisation du brouillon existant: 67
+[2026-10-05 15:47:23] INFO: 🧩 Organizer result - organizer_id=1 | organisation='NOT_SET'
+[2026-10-05 15:47:23] INFO: 📝 Champs de l'événement:
+[2026-10-05 15:47:23] INFO: title: Course Marcel KIEFER 
+[2026-10-05 15:47:23] INFO: description: Pas de garderie. Douches et vestiaires.
+10h20 Départ 1 km pour 7/12 ans
+[2026-10-05 15:47:23] INFO: date: 2026-11-01
+[2026-10-05 15:47:23] INFO: registration_opens: 08:45:00
+[2026-10-05 15:47:23] INFO: registration_closes: 10:00:00
+[2026-10-05 15:47:23] INFO: location: Salle des sports
+[2026-10-05 15:47:23] INFO: venue: Avenue du Maréchal Foch, Cité Michel, Hussigny-Godbrange
+[2026-10-05 15:47:23] INFO: coordinates: 49.4947673,5.8686177
+[2026-10-05 15:47:23] INFO: meeting_name: Salle des sports
+[2026-10-05 15:47:23] INFO: meeting_address: Avenue du Maréchal Foch, Cité Michel, Hussigny-Godbrange
+[2026-10-05 15:47:23] INFO: meeting_city: Hussigny-Godbrange
+[2026-10-05 15:47:23] INFO: meeting_coordinates: 49.4947673,5.8686177
+[2026-10-05 15:47:23] INFO: updated_at: 2026-10-05 15:47:23
+[2026-10-05 15:47:23] INFO: organizer_id: 1
+[2026-10-05 15:47:23] INFO: organisation: 
+[2026-10-05 15:47:23] INFO: ℹ️ Aucun organisateur reçu depuis le formulaire événement
+[2026-10-05 15:47:23] INFO: Requête SQL: UPDATE draft_events SET title = ?, description = ?, date = ?, registration_opens = ?, registration_closes = ?, location = ?, venue = ?, coordinates = ?, meeting_name = ?, meeting_address = ?, meeting_city = ?, meeting_coordinates = ?, updated_at = ?, organizer_id = ? WHERE id = ?
+[2026-10-05 15:47:23] INFO: Paramètres: Array
 (
-    [0] => dhdydh
-    [1] => dhdhgdhd
-    [2] => 2026-09-12
-    [3] => 07:00:00
-    [4] => 09:00:00
-    [5] => virton
-    [6] => 49.5677263,5.5329559
-    [7] => 
-    [8] => virton
-    [9] => Virton
-    [10] => 49.5677263,5.5329559
-    [11] => 2026-09-11 14:54:38
-    [12] => 
-    [13] => 4
+    [0] => Course Marcel KIEFER 
+    [1] => Pas de garderie. Douches et vestiaires.
+10h20 Départ 1 km pour 7/12 ans
+    [2] => 2026-11-01
+    [3] => 08:45:00
+    [4] => 10:00:00
+    [5] => Salle des sports
+    [6] => Avenue du Maréchal Foch, Cité Michel, Hussigny-Godbrange
+    [7] => 49.4947673,5.8686177
+    [8] => Salle des sports
+    [9] => Avenue du Maréchal Foch, Cité Michel, Hussigny-Godbrange
+    [10] => Hussigny-Godbrange
+    [11] => 49.4947673,5.8686177
+    [12] => 2026-10-05 15:47:23
+    [13] => 1
+    [14] => 67
 )
 
-[2026-09-11 14:54:38] INFO: Informations principales de l'événement mises à jour avec succès
-[2026-09-11 14:54:38] INFO: ✅ Tags d'activité enregistrés : 3
-[2026-09-11 14:54:38] INFO:  Transaction validée avec succès
+[2026-10-05 15:47:23] INFO: Informations principales de l'événement mises à jour avec succès
+[2026-10-05 15:47:23] INFO: ✅ Tags d'activité enregistrés : 2
+[2026-10-05 15:47:23] INFO:  Transaction validée avec succès

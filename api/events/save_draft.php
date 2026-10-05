@@ -235,8 +235,8 @@ try {
         $eventFields['organisation'] = null;
     }
 
-    // Log des champs de l'événement
-    customLog("📝 Champs de l'événement:");
+    customLog("🧩 Organizer result - organizer_id=" . var_export($eventFields['organizer_id'] ?? 'NOT_SET', true) . " | organisation=" . var_export($eventFields['organisation'] ?? 'NOT_SET', true));
+customLog("📝 Champs de l'événement:");
     foreach ($eventFields as $field => $value) {
         customLog("$field: $value");
     }

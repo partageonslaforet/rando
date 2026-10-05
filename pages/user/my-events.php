@@ -64,6 +64,26 @@ try {
                         'rowCount' => $rowCount,
                         'event_state' => $eventState
                     ]);
+
+                    // Notifier les abonnés de l'annulation (type 'cancelled'
+                    // détecté via is_cancelled). Ne bloque jamais la redirection.
+                    try {
+                        require_once __DIR__ . '/../../src/Services/Subscribers.php';
+                        $subscribers = new Subscribers();
+                        $notifResult = $subscribers->notifyEvent($eventId);
+                        logError('pages/user/my-events.php', 'Notifications abonnés (annulation)', [
+                            'event_id' => $eventId,
+                            'type' => $notifResult['type'] ?? null,
+                            'sent' => $notifResult['sent'] ?? 0,
+                            'skipped' => $notifResult['skipped'] ?? 0,
+                        ]);
+                    } catch (Throwable $e) {
+                        logError('pages/user/my-events.php', 'Erreur notifications abonnés (annulation)', [
+                            'event_id' => $eventId,
+                            'exception' => $e->getMessage()
+                        ]);
+                    }
+
                     addFlashMessage('success', 'L\'événement a été annulé.');
                 } else {
                     $check = $db->prepare('SELECT id, user_id, status, is_cancelled FROM events WHERE id = ?');
@@ -204,7 +224,7 @@ try {
 }
 
 // Fonction pour obtenir le badge selon le statut (+ affichage "Échu" J+1 pour approuvé)
-function getStatusBadge($status, $isCancelled = false, $eventDate = null) {
+function getStatusBadge(?string $status, bool $isCancelled = false, ?string $eventDate = null): string {
     if ($isCancelled) {
         return '<span class="badge bg-cancelled">Annulé</span>';
     }
@@ -235,7 +255,7 @@ function getStatusBadge($status, $isCancelled = false, $eventDate = null) {
 }
 
 // Fonction pour formater la date
-function formatEventDate($date) {
+function formatEventDate(?string $date): string {
     if (empty($date)) {
         return '—';
     }
@@ -259,7 +279,7 @@ function formatEventDate($date) {
 }
 
 // Fonction pour formater l'heure
-function formatTime($time) {
+function formatTime(?string $time): string {
     return empty($time) ? '—' : substr($time, 0, 5);
 }
 
@@ -268,7 +288,7 @@ $pageTitle = "Mes Événements";
 require_once __DIR__ . '/../../templates/layouts/header-solid.php';
 ?>
 
-<link rel="stylesheet" href="/assets/css/my-events.css">
+<link rel="stylesheet" href="/assets/css/pages/user/my-events.css">
 
 <main class="my-events-container">
     <nav class="my-events-breadcrumb" aria-label="Breadcrumb">
@@ -388,7 +408,7 @@ require_once __DIR__ . '/../../templates/layouts/header-solid.php';
                                                 </button>
                                             <?php else: ?>
                                                 <div class="btn-actions">
-                                                    <a href="/templates/events/event-detail.php?id=<?= $event['id'] ?>"
+                                                    <a href="/event/<?= $event['id'] ?>"
                                                        class="btn btn-sm btn-action btn-view" title="Voir">
                                                         <i class="bi bi-eye"></i><span>Voir</span>
                                                     </a>

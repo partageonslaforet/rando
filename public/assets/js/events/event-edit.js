@@ -11,6 +11,8 @@ let step1Text = null;
 let step2Text = null;
 let isInitialized = false;
 
+console.log('[event-edit.js] Fichier chargé et exécuté');
+
 // Les gestionnaires de boutons sont définis plus bas dans le fichier.
 
 // Fonction pour sauvegarder l'étape 2
@@ -150,15 +152,14 @@ function getCurrentStep() {
     const step1Content = document.getElementById('step1');
     const step2Content = document.getElementById('step2');
     
-    
-    if (step2Content && !step2Content.classList.contains('d-none')) {
-        return 2;
-    }
-    return 1;
+    const step = (step2Content && !step2Content.classList.contains('d-none')) ? 2 : 1;
+    console.log('[getCurrentStep] step=', step);
+    return step;
 }
 
 // Fonction pour valider l'étape courante
 function validateCurrentStep(step) {
+    console.log('[validateCurrentStep] step=', step);
     
     if (!step) {
         console.error('Étape non définie');
@@ -204,34 +205,45 @@ function validateCurrentStep(step) {
 
         case 2:
             // Validation des informations de l'organisateur
-            const organizerNameInput = document.querySelector('input[name="organizerName"]');
-            const contactEmailInput = document.querySelector('input[name="contactEmail"]');
-            const contactPhoneInput = document.querySelector('input[name="contactPhone"]');
-            const websiteInput = document.querySelector('input[name="website"]');
+            const organizerSelect = document.getElementById('organizerSelect');
+            const selectedOrganizerId = organizerSelect?.value || '';
+            console.log('[validateCurrentStep] selectedOrganizerId=', selectedOrganizerId);
 
-            const organizerName = organizerNameInput?.value || '';
-            const contactEmail = contactEmailInput?.value || '';
-            const contactPhone = contactPhoneInput?.value || '';
-            const website = websiteInput?.value || '';
+            if (selectedOrganizerId) {
+                console.log('[validateCurrentStep] organisateur existant sélectionné, validation simplifiée');
+                break;
+            }
+
+            const organizerNameInput = document.querySelector('input[name="organizerName"]');
+            const organizerEmailInput = document.querySelector('input[name="organizerEmail"]');
+            const organizerPhoneInput = document.querySelector('input[name="organizerPhone"]');
+            const organizerWebsiteInput = document.querySelector('input[name="organizerWebsite"]');
+
+            const organizerName = (organizerNameInput?.value || '').trim();
+            const organizerEmail = (organizerEmailInput?.value || '').trim();
+            const organizerPhone = (organizerPhoneInput?.value || '').trim();
+            const organizerWebsite = (organizerWebsiteInput?.value || '').trim();
+
+            console.log('[validateCurrentStep] step2 values:', { organizerName, organizerEmail, organizerPhone, organizerWebsite });
 
             if (!organizerName) {
                 showFieldError(organizerNameInput, 'Le nom de l\'organisateur est requis');
                 errors.push('Le nom de l\'organisateur est requis');
             }
 
-            if (!contactEmail && !contactPhone) {
-                if (contactEmailInput) showFieldError(contactEmailInput, 'Au moins un moyen de contact est requis');
-                if (contactPhoneInput) showFieldError(contactPhoneInput, 'Au moins un moyen de contact est requis');
+            if (!organizerEmail && !organizerPhone) {
+                if (organizerEmailInput) showFieldError(organizerEmailInput, 'Au moins un moyen de contact est requis');
+                if (organizerPhoneInput) showFieldError(organizerPhoneInput, 'Au moins un moyen de contact est requis');
                 errors.push('Au moins un moyen de contact (email ou téléphone) est requis');
             }
 
-            if (contactEmail && !isValidEmail(contactEmail)) {
-                showFieldError(contactEmailInput, 'L\'email n\'est pas valide');
+            if (organizerEmail && !isValidEmail(organizerEmail)) {
+                showFieldError(organizerEmailInput, 'L\'email n\'est pas valide');
                 errors.push('L\'email n\'est pas valide');
             }
 
-            if (website && !isValidUrl(website)) {
-                showFieldError(websiteInput, 'L\'URL du site web n\'est pas valide');
+            if (organizerWebsite && !isValidUrl(organizerWebsite)) {
+                showFieldError(organizerWebsiteInput, 'L\'URL du site web n\'est pas valide');
                 errors.push('L\'URL du site web n\'est pas valide');
             }
             break;
@@ -241,6 +253,7 @@ function validateCurrentStep(step) {
             return false;
     }
 
+    console.log('[validateCurrentStep] errors=', errors);
     if (errors.length > 0) {
         showGlobalErrors(errors);
         return false;
@@ -252,9 +265,12 @@ function validateCurrentStep(step) {
 
 // Fonction pour sauvegarder l'événement
 async function saveEvent() {
+    console.log('[saveEvent] appelé');
     try {
         const form = document.getElementById('createEventForm');
-        if (!form || !validateCurrentStep(2)) {
+        const stepValid = form ? validateCurrentStep(2) : false;
+        console.log('[saveEvent] form=', !!form, 'step2 valide=', stepValid);
+        if (!form || !stepValid) {
             return;
         }
 
@@ -302,7 +318,7 @@ async function saveEvent() {
             showToast('Événement mis à jour avec succès', 'success');
             // Rediriger vers la page de l'événement après un court délai
             setTimeout(() => {
-                window.location.href = `/events/event-detail.php?id=${window.eventId}`;
+                window.location.href = `/event/${window.eventId}`;
             }, 1500);
         } else {
             throw new Error(result.message || 'Erreur lors de la mise à jour');
@@ -373,13 +389,6 @@ function validateStep1() {
     const latitude = document.getElementById('latitude').value;
     const longitude = document.getElementById('longitude').value;
     
-    // Vérifier qu'il y a au moins un GPX
-    const totalGpxLayers = Object.keys(currentGpxLayers).length;
-    if (totalGpxLayers === 0) {
-        showToast('Au moins un parcours GPX doit être présent', 'error');
-        return false;
-    }
-
     if (!title || !description || !startDate || !endDate || !address || !latitude || !longitude) {
         showToast('Veuillez remplir tous les champs obligatoires', 'error');
         return false;
@@ -518,6 +527,15 @@ window.switchStep = function(direction) {
         });
         document.getElementById(`step${newStep}`).classList.remove('d-none');
         
+        // Recadrer la carte de localisation si elle redevient visible
+        if (newStep === 1 && locationMap && locationMarker) {
+            setTimeout(function() {
+                const pos = locationMarker.getLatLng();
+                locationMap.invalidateSize();
+                locationMap.setView(pos, 13);
+            }, 0);
+        }
+        
         // Mettre à jour les boutons
         const prevBtn = document.querySelector('.prev-step');
         const nextBtn = document.querySelector('.next-step');
@@ -540,6 +558,7 @@ window.setStep = function(stepNumber) {
 
 // Variables globales pour la carte GPX
 let locationMap = null;  // Carte pour la sélection de l'emplacement
+let locationMarker = null; // Marqueur de localisation
 let gpxMap = null;      // Carte pour l'affichage des GPX
 let currentGpxLayers = {};
 
@@ -637,27 +656,106 @@ async function initializeGpxMap() {
 
 // Fonction pour initialiser la carte de localisation
 function initializeLocationMap() {
-    if (!locationMap) {
+    console.log('[initializeLocationMap] Appelé. locationMap=', locationMap);
+    if (locationMap) {
+        console.log('[initializeLocationMap] Carte déjà initialisée, on saute.');
+        return;
+    }
+    const mapEl = document.getElementById('locationMap');
+    console.log('[initializeLocationMap] mapEl=', mapEl);
+    if (!mapEl) {
+        console.error('[initializeLocationMap] #locationMap non trouvé dans le DOM');
+        return;
+    }
+    try {
         locationMap = L.map('locationMap').setView([46.603354, 1.888334], 6);
+        console.log('[initializeLocationMap] Carte Leaflet créée.');
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: ' OpenStreetMap contributors'
         }).addTo(locationMap);
 
         // Ajouter un marqueur pour la position actuelle
         const coordinates = document.querySelector('input[name="coordinates"]').value;
+        console.log('[initializeLocationMap] Coordonnées existantes:', coordinates);
+        let startLatLng = null;
         if (coordinates) {
             const [lat, lng] = coordinates.split(',').map(coord => parseFloat(coord.trim()));
             if (!isNaN(lat) && !isNaN(lng)) {
-                const marker = L.marker([lat, lng], { draggable: true }).addTo(locationMap);
-                locationMap.setView([lat, lng], 13);
-                
-                // Mettre à jour les coordonnées lors du déplacement du marqueur
-                marker.on('dragend', function(e) {
-                    const position = e.target.getLatLng();
-                    document.querySelector('input[name="coordinates"]').value = `${position.lat},${position.lng}`;
-                });
+                startLatLng = [lat, lng];
+                locationMap.setView(startLatLng, 13);
             }
         }
+
+        // Pin vert partagé (idem map.js / event-maps.js) — gardé contre la redéclaration
+        if (!window.eventPinIcon) {
+            window.eventPinIcon = L.divIcon({
+                className: 'event-pin',
+                html: '<i class="bi bi-geo-alt-fill" aria-hidden="true"></i>',
+                iconSize: [30, 42],
+                iconAnchor: [15, 42],
+                popupAnchor: [0, -38]
+            });
+        }
+
+        locationMarker = L.marker(startLatLng || locationMap.getCenter(), {
+            draggable: true,
+            icon: window.eventPinIcon
+        }).addTo(locationMap);
+
+        const updateCoordinateFields = (lat, lng) => {
+            document.querySelector('input[name="coordinates"]').value = `${lat},${lng}`;
+            const latField = document.getElementById('latitude');
+            const lngField = document.getElementById('longitude');
+            if (latField) latField.value = lat;
+            if (lngField) lngField.value = lng;
+        };
+
+        // Mettre à jour les coordonnées lors du déplacement du marqueur
+        locationMarker.on('dragend', function(e) {
+            const position = e.target.getLatLng();
+            updateCoordinateFields(position.lat, position.lng);
+        });
+
+        // Déplacer le marqueur au clic sur la carte
+        locationMap.on('click', function(e) {
+            locationMarker.setLatLng(e.latlng);
+            updateCoordinateFields(e.latlng.lat, e.latlng.lng);
+        });
+
+        // Recherche d'adresse : géocode et déplace le marqueur
+        const searchButton = document.getElementById('searchAddressBtn');
+        const addressInput = document.getElementById('address');
+        console.log('[initializeLocationMap] searchButton=', searchButton, 'addressInput=', addressInput, 'window.mapFunctions=', typeof window.mapFunctions, window.mapFunctions);
+        if (searchButton && addressInput && window.mapFunctions) {
+            console.log('[initializeLocationMap] Câblage de la recherche d\'adresse.');
+            const searchAddress = async () => {
+                const address = addressInput.value.trim();
+                console.log('[searchAddress] Adresse saisie:', address);
+                if (!address) return;
+                try {
+                    console.log('[searchAddress] Appel geocodeAddress...');
+                    const coords = await window.mapFunctions.geocodeAddress(address);
+                    console.log('[searchAddress] Coordonnées reçues:', coords);
+                    locationMarker.setLatLng([coords.lat, coords.lng]);
+                    locationMap.flyTo([coords.lat, coords.lng], 13);
+                    updateCoordinateFields(coords.lat, coords.lng);
+                } catch (error) {
+                    console.error('Erreur lors de la recherche d\'adresse:', error);
+                    alert('Aucune adresse trouvée');
+                }
+            };
+            searchButton.addEventListener('click', searchAddress);
+            addressInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    searchAddress();
+                }
+            });
+        } else {
+            console.warn('[initializeLocationMap] Recherche non câblée :', { searchButton: !!searchButton, addressInput: !!addressInput, mapFunctions: !!window.mapFunctions });
+        }
+    } catch (error) {
+        console.error('[initializeLocationMap] Exception lors de l\'initialisation:', error);
     }
 }
 
@@ -930,13 +1028,6 @@ function validateStep1() {
     const latitude = document.getElementById('latitude').value;
     const longitude = document.getElementById('longitude').value;
     
-    // Vérifier qu'il y a au moins un GPX
-    const totalGpxLayers = Object.keys(currentGpxLayers).length;
-    if (totalGpxLayers === 0) {
-        showToast('Au moins un parcours GPX doit être présent', 'error');
-        return false;
-    }
-
     if (!title || !description || !startDate || !endDate || !address || !latitude || !longitude) {
         showToast('Veuillez remplir tous les champs obligatoires', 'error');
         return false;
@@ -1003,14 +1094,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Fonction pour valider la transition d'étape
 function validateStepTransition(currentStep, nextStep) {
-    if (currentStep === 1 && nextStep === 2) {
-        // Vérifier qu'il y a au moins un GPX avant de passer à l'étape 2
-        const totalGpxLayers = Object.keys(currentGpxLayers).length;
-        if (totalGpxLayers === 0) {
-            showToast('Au moins un parcours GPX doit être présent', 'error');
-            return false;
-        }
-    }
     return true;
 }
 
@@ -1035,6 +1118,15 @@ function switchStep(direction) {
             content.classList.add('d-none');
         });
         document.getElementById(`step${newStep}`).classList.remove('d-none');
+        
+        // Recadrer la carte de localisation si elle redevient visible
+        if (newStep === 1 && locationMap && locationMarker) {
+            setTimeout(function() {
+                const pos = locationMarker.getLatLng();
+                locationMap.invalidateSize();
+                locationMap.setView(pos, 13);
+            }, 0);
+        }
         
         // Mettre à jour les boutons
         const prevBtn = document.querySelector('.prev-step');
@@ -1105,9 +1197,12 @@ if (document.readyState === 'complete' || document.readyState === 'interactive')
 
 // Fonction pour sauvegarder l'événement
 async function saveEvent() {
+    console.log('[saveEvent] appelé');
     try {
         const form = document.getElementById('createEventForm');
-        if (!form || !validateCurrentStep(2)) {
+        const stepValid = form ? validateCurrentStep(2) : false;
+        console.log('[saveEvent] form=', !!form, 'step2 valide=', stepValid);
+        if (!form || !stepValid) {
             return;
         }
 
@@ -1155,7 +1250,7 @@ async function saveEvent() {
             showToast('Événement mis à jour avec succès', 'success');
             // Rediriger vers la page de l'événement après un court délai
             setTimeout(() => {
-                window.location.href = `/events/event-detail.php?id=${window.eventId}`;
+                window.location.href = `/event/${window.eventId}`;
             }, 1500);
         } else {
             throw new Error(result.message || 'Erreur lors de la mise à jour');
@@ -1400,14 +1495,6 @@ function addRoute() {
 
 // Fonction pour valider la transition d'étape
 function validateStepTransition(currentStep, nextStep) {
-    if (currentStep === 1 && nextStep === 2) {
-        // Vérifier qu'il y a au moins un GPX avant de passer à l'étape 2
-        const totalGpxLayers = Object.keys(currentGpxLayers).length;
-        if (totalGpxLayers === 0) {
-            showToast('Au moins un parcours GPX doit être présent', 'error');
-            return false;
-        }
-    }
     return true;
 }
 
@@ -1432,6 +1519,15 @@ function switchStep(direction) {
             content.classList.add('d-none');
         });
         document.getElementById(`step${newStep}`).classList.remove('d-none');
+        
+        // Recadrer la carte de localisation si elle redevient visible
+        if (newStep === 1 && locationMap && locationMarker) {
+            setTimeout(function() {
+                const pos = locationMarker.getLatLng();
+                locationMap.invalidateSize();
+                locationMap.setView(pos, 13);
+            }, 0);
+        }
         
         // Mettre à jour les boutons
         const prevBtn = document.querySelector('.prev-step');
@@ -1502,6 +1598,9 @@ function initializeOrganizerSelect() {
                 }
             }
         });
+
+        // Appliquer l'état initial (organisateur déjà sélectionné)
+        organizerSelect.dispatchEvent(new Event('change'));
     }
 
     if (useProfileInfo) {
@@ -1577,6 +1676,7 @@ function initializeButtonHandlers() {
     nextButton.addEventListener('click', (e) => {
         e.preventDefault();
         const currentStep = getCurrentStep();
+        console.log('[nextButton click] step=', currentStep);
         
         if (currentStep === 2) {
             saveEvent();

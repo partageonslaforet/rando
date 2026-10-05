@@ -127,8 +127,19 @@
 
         window.eventDisplayMap = map;
 
+        // Pin vert partagé (idem map.js / event-maps.js) — gardé contre la redéclaration
+        if (!window.eventPinIcon) {
+            window.eventPinIcon = L.divIcon({
+                className: 'event-pin',
+                html: '<i class="bi bi-geo-alt-fill" aria-hidden="true"></i>',
+                iconSize: [30, 42],
+                iconAnchor: [15, 42],
+                popupAnchor: [0, -38]
+            });
+        }
+
         if (coords) {
-            L.marker(coords)
+            L.marker(coords, { icon: window.eventPinIcon })
                 .addTo(map)
                 .bindPopup(escapeHtml(article.dataset.venue || article.dataset.location || 'Lieu de rendez-vous'));
             map.setView(coords, 13);
@@ -238,3 +249,62 @@
         });
     });
 })();
+
+document.addEventListener('DOMContentLoaded', function() {
+  const lightbox = document.getElementById('image-lightbox');
+  if (!lightbox) return;
+  const lightboxImg = lightbox.querySelector('.lightbox-img');
+  const closeBtn = lightbox.querySelector('.lightbox-close');
+  const backdrop = lightbox.querySelector('.lightbox-backdrop');
+
+  function openLightbox(src) {
+    if (!src) return;
+    lightboxImg.src = src;
+    lightbox.style.display = 'flex';
+    setTimeout(() => lightbox.classList.add('active'), 10);
+  }
+
+  // 1. Galerie : .aside-gallery-item et .gallery-item SONT les <a> (pas des parents)
+  document.querySelectorAll('.aside-gallery-item, .gallery-item').forEach(link => {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      const img = this.querySelector('img');
+      openLightbox(img ? img.src : this.href);
+    });
+  });
+
+  // 2. Image principale du hero : c'est un background-image CSS sur .event-hero-bg
+  const hero = document.querySelector('.event-hero');
+  const heroBg = document.querySelector('.event-hero-bg');
+  if (hero && heroBg) {
+    hero.style.cursor = 'zoom-in';
+    hero.addEventListener('click', function(e) {
+      // Ignorer les clics sur les boutons/liens du hero (retour, partager, fermer)
+      if (e.target.closest('a, button')) return;
+      const bg = getComputedStyle(heroBg).backgroundImage;
+      const m = bg.match(/url\(["']?(.*?)["']?\)/);
+      if (m && m[1]) openLightbox(m[1]);
+    });
+  }
+
+  // 3. Logo organisateur (et toute autre <img> directe cliquable)
+  document.querySelectorAll('.organizer-logo').forEach(img => {
+    img.style.cursor = 'zoom-in';
+    img.addEventListener('click', function(e) {
+      e.preventDefault();
+      openLightbox(this.src);
+    });
+  });
+
+  function closeLightbox() {
+    lightbox.classList.remove('active');
+    setTimeout(() => { lightbox.style.display = 'none'; lightboxImg.src = ''; }, 200);
+  }
+
+  closeBtn.addEventListener('click', closeLightbox);
+  backdrop.addEventListener('click', closeLightbox);
+  document.addEventListener('keydown', function(e) {
+    if (lightbox.style.display !== 'none' && (e.key === 'Escape' || e.key === 'Esc')) closeLightbox();
+  });
+});
+

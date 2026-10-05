@@ -3,7 +3,7 @@
  * Gestion des événements par l'administrateur.
  */
 // Activer l'affichage des erreurs
-ini_set('display_errors', 1);
+ini_set('display_errors', 0);
 error_reporting(E_ALL);
 
 // Log pour debug
@@ -20,8 +20,7 @@ error_log("Session data dans events: " . print_r($_SESSION, true));
 
 // Vérifier si l'utilisateur est connecté
 if (!isset($_SESSION['user_id'])) {
-    error_log("ERREUR events: Utilisateur non connecté");
-    header('Location: /');
+    header('Location: /?showLogin=1&redirect=' . urlencode('/pages/admin/events.php'));
     exit();
 }
 
@@ -66,7 +65,7 @@ try {
 
     if ($user['role'] !== 'admin') {
         error_log("ERREUR events: L'utilisateur n'est pas admin (role = " . $user['role'] . ")");
-        header('Location: /pages/user/profile.php');
+        header('Location: /?error=admin_required');
         exit();
     }
 
@@ -92,7 +91,6 @@ try {
             e.location,
             e.venue,
             e.coordinates,
-            e.category,
             e.difficulty,
             e.max_participants,
             e.organisation,
@@ -100,9 +98,11 @@ try {
             e.created_at,
             e.updated_at,
             u.id as user_id,
-            u.name as creator_name
+            u.name as creator_name,
+            c.code as category
         FROM events e
         LEFT JOIN users u ON e.user_id = u.id
+        LEFT JOIN event_categories c ON e.category_id = c.id
         ORDER BY e.date DESC, e.start_time ASC
     ');
     $events = $stmt->fetchAll();

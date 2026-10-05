@@ -23,21 +23,21 @@
     align-items: center;
     gap: 0.5rem;
     font-size: 0.9rem;
-    color: #5a6a5d !important;
+    color: var(--text-muted) !important;
 }
 
 .my-events-breadcrumb li:not(:last-child)::after {
     content: '/';
     margin-left: 0.5rem;
-    color: #5a6a5d;
+    color: var(--text-muted);
 }
 
 .my-events-breadcrumb span {
-    color: #5a6a5d !important;
+    color: var(--text-muted) !important;
 }
 
 .my-events-breadcrumb a {
-    color: #5a6a5d;
+    color: var(--text-muted);
     text-decoration: none;
     font-weight: 500;
 }
@@ -48,8 +48,8 @@
 }
 
 .my-events-hero {
-    background: rgba(58, 138, 61, 0.06);
-    border: var(--profile-muted)!important;
+    background: color-mix(in srgb, var(--primary-color) 6%, transparent);
+    border: var(--text-muted)!important;
     border-radius: 16px;
     padding: 1.5rem 1.5rem;
     margin-bottom: 1.5rem;
@@ -64,12 +64,12 @@
     font-size: 1.5rem;
     font-weight: 700;
     margin: 0 0 0.25rem;
-    color: #2f3e2f;
+    color: var(--green-dark);
 }
 
 .my-events-hero-text p {
     margin: 0;
-    color: #5a6a5d;
+    color: var(--text-muted);
     font-size: 0.95rem;
 }
 
@@ -77,8 +77,8 @@
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    background: var(--secondary-color, #3A8A3D);
-    color: #fff;
+    background: var(--primary-color, var(--primary-color));
+    color: var(--light-text);
     border: none;
     border-radius: 12px;
     padding: 0.85rem 1.25rem;
@@ -92,16 +92,16 @@
 
 .btn-create:hover,
 .btn-create:focus {
-    background: var(--secondary-hover, #2d6c2f);
+    background: var(--primary-hover, var(--primary-hover));
     transform: translateY(-1px);
 }
 
 .my-events-card {
-    background: #ffffff;
-    border: var(--profile-muted)!important;
+    background: var(--light-text);
+    border: var(--text-muted)!important;
     border-radius: 16px;
     padding: 1.25rem;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+    box-shadow: 0 2px 10px color-mix(in srgb, #000 4%, transparent);
 }
 
 .my-events-card-header {
@@ -117,11 +117,11 @@
     font-size: 1.25rem;
     font-weight: 700;
     margin: 0;
-    color: #2f3e2f;
+    color: var(--green-dark);
 }
 
 .my-events-counts span {
-    color: #5a6a5d !important;
+    color: var(--text-muted) !important;
     font-size: 0.9rem;
     align-items: center;
     gap: 0.5rem;
@@ -132,7 +132,7 @@
     width: 4px;
     height: 4px;
     border-radius: 50%;
-    background: #5a6a5d;
+    background: var(--text-muted);
 }
 
 .my-events-tabs {
@@ -140,7 +140,7 @@
     flex-wrap: wrap;
     gap: 0.5rem;
     margin-bottom: 1.25rem;
-    border-bottom: 1px solid var(--profile-border) !important;
+    border-bottom: 1px solid var(--border-green) !important;
     padding-bottom: 1rem;
 }
 
@@ -150,20 +150,20 @@
     text-decoration: none;
     font-size: 0.9rem;
     font-weight: 500;
-    color: #5a6a5d;
+    color: var(--text-muted);
     transition: all 0.2s ease;
-    border: 1px solid var(--profile-border) !important;
+    border: 1px solid var(--border-green) !important;
 }
 
 .my-events-tab:hover,
 .my-events-tab:focus {
-    color: var(--secondary-color, #3A8A3D);
-    background: rgba(58, 138, 61, 0.05);
+    color: var(--primary-color, var(--primary-color));
+    background: color-mix(in srgb, var(--primary-color) 5%, transparent);
 }
 
 .my-events-tab.active {
-    background: rgba(58, 138, 61, 0.12);
-    color: var(--secondary-color, #3A8A3D);
+    background: color-mix(in srgb, var(--primary-color) 12%, transparent);
+    color: var(--primary-color, var(--primary-color));
 }
 
 .my-events-content {
@@ -173,7 +173,7 @@
 .my-events-empty {
     text-align: center;
     padding: 3rem 2rem;
-    border: 2px dashed var(--profile-border) !important;
+    border: 2px dashed var(--border-green) !important;
     border-radius: 12px;
 }
 
@@ -181,8 +181,8 @@
     width: 56px;
     height: 56px;
     border-radius: 50%;
-    background: rgba(58, 138, 61, 0.08);
-    color: var(--secondary-color, #3A8A3D);
+    background: color-mix(in srgb, var(--primary-color) 8%, transparent);
+    color: var(--primary-color, var(--primary-color));
     font-size: 1.5rem;
     font-weight: 600;
     display: inline-flex;
@@ -194,13 +194,13 @@
 .my-events-empty h3 {
     font-size: 2rem;
     font-weight: 700;
-    color: #2f3e2f;
+    color: var(--green-dark);
     justify-content: center;
   margin: 0 auto 1.5rem;
 }
 
 .my-events-empty p {
-    color: #5a6a5d;
+    color: var(--text-muted);
     font-size: 0.9rem;
     max-width: 420px;
     margin: 0 auto 1.5rem;
@@ -250,12 +250,12 @@
 }
 
 .events-header {
-    background: linear-gradient(135deg, var(--primary-color) 0%, #2c5282 100%);
-    color: white;
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--info-dark) 100%);
+    color: var(--light-text);
     padding: 3rem 0;
     margin-bottom: 2rem;
     border-radius: 1rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 6px color-mix(in srgb, #000 10%, transparent);
 }
 
 .events-header h1 {
@@ -277,11 +277,11 @@
 }
 
 .stat-card {
-    background: white;
+    background: var(--light-text);
     padding: 1.5rem;
     border-radius: 0.5rem;
     text-align: center;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 2px 4px color-mix(in srgb, #000 5%, transparent);
     transition: transform 0.2s ease;
 }
 
@@ -296,15 +296,15 @@
 }
 
 .stat-card p {
-    color: #4a5568;
+    color: var(--gray-dark);
     margin: 0.5rem 0 0;
     font-size: 0.9rem;
 }
 
 .events-table {
-    background: white;
+    background: var(--light-text);
     border-radius: 1rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 6px color-mix(in srgb, #000 5%, transparent);
     overflow: visible; /* ne pas bloquer le scroll du conteneur interne */
 }
 
@@ -323,9 +323,9 @@
 }
 
 .events-table th {
-    background: #f8fafc;
-    border-bottom: 2px solid #e2e8f0;
-    color: #4a5568;
+    background: var(--surface);
+    border-bottom: 2px solid var(--border-color);
+    color: var(--gray-dark);
     font-weight: 600;
     padding: 1rem;
 }
@@ -336,7 +336,7 @@
 }
 
 .events-table tr:hover {
-    background-color: #f8fafc;
+    background-color: var(--surface);
 }
 
 .badge {
@@ -347,33 +347,33 @@
 }
 
 .badge.bg-primary {
-    background-color: #ebf5ff !important;
-    color: #2b6cb0;
+    background-color: var(--info-bg) !important;
+    color: var(--info);
     font-size: 0.85rem;
 }
 
 .badge.bg-success {
-    background-color: rgba(58, 138, 61, 0.3)!important;
-    color: var(--secondary-color);
+    background-color: color-mix(in srgb, var(--primary-color) 30%, transparent)!important;
+    color: var(--primary-color);
     font-size: 0.85rem;
 }
 
 .badge.bg-warning {
-    background-color: #fffbeb !important;
-    color: #92400e;
+    background-color: color-mix(in srgb, var(--warning) 10%, var(--light-text)) !important;
+    color: var(--warning-dark);
     font-size: 0.85rem;
 }
 
 .badge.bg-danger {
-    background-color: rgba(153, 0, 71, 0.3) !important;
-    color: #990047;
+    background-color: color-mix(in srgb, var(--danger-color) 30%, transparent) !important;
+    color: var(--danger-color);
     font-size: 0.85rem;
 }
 
 /* Badge Échu */
 .badge.bg-expired {
-    background-color: rgba(255, 165, 0, 0.2) !important; /* orange clair */
-    color: #b45309; /* orange foncé lisible */
+    background-color: color-mix(in srgb, var(--warning) 20%, transparent) !important; /* orange clair */
+    color: var(--warning-dark); /* orange foncé lisible */
     font-size: 0.85rem;
 }
 
@@ -393,20 +393,20 @@
     font-weight: 500;
     border-radius: 0.5rem;
     transition: all 0.2s ease;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 2px 4px color-mix(in srgb, #000 5%, transparent);
 }
 
 .create-event-btn:hover {
     transform: translateY(-1px);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 6px color-mix(in srgb, #000 10%, transparent);
 }
 
 .empty-state {
     text-align: center;
     padding: 3rem;
-    background: white;
+    background: var(--light-text);
     border-radius: 1rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 6px color-mix(in srgb, #000 5%, transparent);
 }
 
 .empty-state i {
@@ -416,12 +416,12 @@
 }
 
 .empty-state h3 {
-    color: #2d3748;
+    color: var(--gray-dark);
     margin-bottom: 1rem;
 }
 
 .empty-state p {
-    color: #4a5568;
+    color: var(--gray-dark);
     margin-bottom: 1.5rem;
 }
 
@@ -462,12 +462,12 @@
 }
 
 .draft-title {
-    color: #333;
+    color: var(--text-color);
     text-decoration: underline;
 }
 
 .draft-title:hover {
-    color: #333;
+    color: var(--text-color);
 }
 
 /* Titres non gras */
@@ -477,7 +477,7 @@
 /* Colonne Enregistré le */
 .myev-recorded {
     white-space: nowrap;
-    color: var(--text-color, #1f2937);
+    color: var(--text-color, var(--gray-dark));
     font-variant-numeric: tabular-nums;
     font-weight: 500;
 }
@@ -488,27 +488,27 @@
 .btn-action i { font-size: 1.15rem; line-height: 1; }
 
 /* Voir: bg secondary + blanc */
-.btn-action.btn-view { background: var(--secondary-color); color: #fff; border-color: var(--secondary-color); }
+.btn-action.btn-view { background: var(--primary-color); color: var(--light-text); border-color: var(--primary-color); }
 .btn-action.btn-view:hover { filter: brightness(0.95); }
 
-/* Modifier: bg remplacé par rgba(58, 138, 61, 0.12) + blanc */
+/* Modifier: bg remplacé par color-mix(in srgb, var(--primary-color) 12%, transparent) + blanc */
 .btn-action.btn-edit { 
-    background: rgba(58, 138, 61, 0.12);
-    color: #333;
-    border-color: rgba(58, 138, 61, 0.12);
+    background: color-mix(in srgb, var(--primary-color) 12%, transparent);
+    color: var(--text-color);
+    border-color: color-mix(in srgb, var(--primary-color) 12%, transparent);
 }
 
 .btn-action.btn-edit:hover { filter: brightness(0.95); }
 
 /* Supprimer: bg primary + blanc */
-.btn-action.btn-delete { background: var(--primary-color); color: #fff; border-color: var(--primary-color); }
+.btn-action.btn-delete { background: var(--danger-color); color: var(--light-text); border-color: var(--danger-color); }
 .btn-action.btn-delete:hover { filter: brightness(0.95); }
 
 /* Tri: en-têtes cliquables avec flèches */
 .table-modern thead th button.sort-toggle {
     background: transparent;
     border: 0;
-    color: #4a5568;
+    color: var(--gray-dark);
     font-weight: 600;
     display: inline-flex;
     align-items: center;
@@ -528,8 +528,8 @@
 
 /* Nouveau style: doubles flèches visibles ▲ ▼ */
 .table-modern thead th .arrows { display:inline-flex; align-items:center; gap:.15rem; }
-.table-modern thead th .caret { display:inline-flex; align-items:center; justify-content:center; width:1rem; height:1rem; border-radius:4px; color:#9ca3af; font-size:.65rem; line-height:1; }
-.table-modern thead th .caret.active { background: var(--secondary-color); color:#fff; }
+.table-modern thead th .caret { display:inline-flex; align-items:center; justify-content:center; width:1rem; height:1rem; border-radius:4px; color:var(--gray-light); font-size:.65rem; line-height:1; }
+.table-modern thead th .caret.active { background: var(--primary-color); color:var(--light-text); }
 
 /* Titre non gras */
 .table-modern tbody.myev-compact .cell-title .title-text { font-weight: 400 !important; }
@@ -561,7 +561,7 @@
 }
 
 .flash-messages .alert {
-    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    box-shadow: 0 10px 25px color-mix(in srgb, #000 15%, transparent);
     pointer-events: auto;
 }
 
@@ -573,7 +573,7 @@
 }
 
 .modal-content {
-    background-color: #F7FAF7;
+    background-color: var(--surface-green);
 }
 
 /* ————— Table responsive improvements ————— */
@@ -595,7 +595,7 @@
   }
   .events-table .table-responsive::-webkit-scrollbar { height: 8px; }
   .events-table .table-responsive::-webkit-scrollbar-thumb {
-    background: rgba(0,0,0,.15);
+    background: color-mix(in srgb, #000 15%, transparent);
     border-radius: 8px;
   }
 
@@ -607,7 +607,7 @@
     position: sticky;
     top: 0;
     z-index: 3;
-    background: #f8fafc;
+    background: var(--surface);
   }
 
   /* compacter un peu les lignes */
@@ -641,33 +641,33 @@
 
 /* Annulation */
 .bg-cancelled {
-    background-color: #dc3545;
-    color: #fff;
+    background-color: var(--danger-color);
+    color: var(--light-text);
 }
 
 .event-cancelled {
-    background-color: rgba(220, 53, 69, 0.08);
+    background-color: color-mix(in srgb, var(--danger-color) 8%, transparent);
     opacity: 0.9;
 }
 
 .btn-cancel {
-    background-color: #fff0f0;
-    color: #dc3545;
-    border: 1px solid #dc3545;
+    background-color: var(--danger-bg);
+    color: var(--danger-color);
+    border: 1px solid var(--danger-color);
 }
 
 .btn-cancel:hover,
 .btn-cancel:focus {
-    background-color: #dc3545;
-    color: #fff;
+    background-color: var(--danger-color);
+    color: var(--light-text);
 }
 
 .btn-cancel-confirm {
-    background-color: #dc3545;
-    color: #fff;
-    border: 1px solid #dc3545;
+    background-color: var(--danger-color);
+    color: var(--light-text);
+    border: 1px solid var(--danger-color);
 }
 
 .btn-cancel-confirm:hover {
-    background-color: #bb2d3b;
+    background-color: var(--danger-color);
 }

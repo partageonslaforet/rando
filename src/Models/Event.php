@@ -124,7 +124,6 @@ class Event {
                      e.location,
                      e.venue,
                      e.coordinates,
-                     e.category,
                      e.status,
                      e.organisation,
                      e.category_id,
@@ -135,6 +134,7 @@ class Event {
                      e.cancellation_reason,
                      e.main_image_path,
                      u.name as creator_name,
+                     c.code as category,
                      c.name as category_name,
                      c.icon as category_icon,
                      c.color as category_color,
@@ -289,9 +289,10 @@ class Event {
             $this->log("Récupération de l'événement #" . $id);
 
             $stmt = $this->db->prepare("
-                SELECT e.*, u.name as organizer_name, u.email as organizer_email
+                SELECT e.*, c.code as category, c.name as category_name, u.name as organizer_name, u.email as organizer_email
                 FROM events e 
                 LEFT JOIN users u ON e.user_id = u.id 
+                LEFT JOIN event_categories c ON e.category_id = c.id
                 WHERE e.id = :id
             ");
             $stmt->execute(['id' => $id]);
@@ -364,6 +365,25 @@ class Event {
         }
     }
 
+    /**
+     * Variantes de requête Nominatim : adresse nettoyée (parenthèses retirées),
+     * puis sans les premiers tokens (nom d'entreprise éventuel absent d'OSM),
+     * en gardant au moins 3 tokens.
+     */
+    private function geocodeQueryVariants($location) {
+        $cleaned = trim(preg_replace('/\s+/', ' ', preg_replace('/\([^)]*\)/', ' ', (string) $location)));
+        $variants = [];
+        if ($cleaned !== '') {
+            $variants[] = $cleaned;
+        }
+        $tokens = explode(' ', $cleaned);
+        while (count($tokens) > 3) {
+            array_shift($tokens);
+            $variants[] = implode(' ', $tokens);
+        }
+        return $variants;
+    }
+
     private function geocodeLocation($location) {
         try {
             // Ajouter un User-Agent comme requis par Nominatim
@@ -377,26 +397,27 @@ class Event {
             ];
             $context = stream_context_create($opts);
 
-            // Encoder l'adresse pour l'URL
-            $encodedLocation = urlencode($location);
-            
-            // Faire la requête à Nominatim
-            $url = "https://nominatim.openstreetmap.org/search?format=json&q={$encodedLocation}";
-            $response = file_get_contents($url, false, $context);
-            
-            if ($response === false) {
-                $this->log("Erreur lors du géocodage de l'adresse: " . $location);
-                $this->debug_log("Erreur lors du géocodage de l'adresse: " . $location);
-                return null;
+            foreach ($this->geocodeQueryVariants($location) as $i => $q) {
+                if ($i > 0) {
+                    // Respecter la limite Nominatim (1 req/s)
+                    sleep(1);
+                }
+                $url = "https://nominatim.openstreetmap.org/search?format=json&q=" . urlencode($q);
+                $response = file_get_contents($url, false, $context);
+
+                if ($response === false) {
+                    $this->log("Erreur lors du géocodage de l'adresse: " . $q);
+                    $this->debug_log("Erreur lors du géocodage de l'adresse: " . $q);
+                    continue;
+                }
+
+                $data = json_decode($response, true);
+                if (!empty($data)) {
+                    // Format: "lat,lng"
+                    return $data[0]['lat'] . ',' . $data[0]['lon'];
+                }
             }
-            
-            $data = json_decode($response, true);
-            
-            if (!empty($data)) {
-                // Format: "lat,lng"
-                return $data[0]['lat'] . ',' . $data[0]['lon'];
-            }
-            
+
             return null;
         } catch (Exception $e) {
             $this->log("Exception lors du géocodage: " . $e->getMessage());

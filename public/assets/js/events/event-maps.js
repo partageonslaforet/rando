@@ -46,8 +46,8 @@ function initMap() {
             attribution: ' OpenStreetMap contributors'
         }).addTo(window.mainMap);
 
-        // Initialiser la couche des marqueurs
-        window.markersLayer = L.layerGroup().addTo(window.mainMap);
+        // Initialiser la couche des marqueurs (cluster si le plugin est chargé)
+        window.markersLayer = window.createMarkersLayer().addTo(window.mainMap);
     } catch (error) {
         console.error('Erreur lors de l\'initialisation de la carte:', error);
     }
@@ -58,16 +58,86 @@ if (typeof window.geocodeCache === 'undefined') {
     window.geocodeCache = new Map();
 }
 
+// Icône/couche partagées avec map.js — gardes anti-redéclaration (les deux scripts peuvent cohabiter)
+if (!window.eventPinIcon) {
+    window.eventPinIcon = L.divIcon({
+        className: 'event-pin',
+        html: '<i class="bi bi-geo-alt-fill" aria-hidden="true"></i>',
+        iconSize: [30, 42],
+        iconAnchor: [15, 42],
+        popupAnchor: [0, -38]
+    });
+}
+if (typeof window.eventClusterIcon !== 'function') {
+    window.eventClusterIcon = function (cluster) {
+        return L.divIcon({
+            className: 'event-cluster',
+            html: '<div><span>' + cluster.getChildCount() + '</span></div>',
+            iconSize: [40, 40],
+            iconAnchor: [20, 20]
+        });
+    };
+}
+if (typeof window.createMarkersLayer !== 'function') {
+    window.createMarkersLayer = function () {
+        if (typeof L.markerClusterGroup === 'function') {
+            return L.markerClusterGroup({
+                showCoverageOnHover: false,
+                spiderfyOnMaxZoom: true,
+                iconCreateFunction: window.eventClusterIcon
+            });
+        }
+        return L.layerGroup();
+    };
+}
+
+// Nettoie une adresse pour Nominatim : retire le contenu entre parenthèses et normalise les espaces
+function cleanAddressForGeocode(address) {
+    return String(address || '')
+        .replace(/\([^)]*\)/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+}
+
+// Variantes de requête : adresse nettoyée, puis sans les premiers tokens
+// (nom d'entreprise éventuel absent d'OSM), en gardant au moins 3 tokens
+function geocodeQueryVariants(address) {
+    const cleaned = cleanAddressForGeocode(address);
+    const variants = [];
+    if (cleaned) variants.push(cleaned);
+    const tokens = cleaned.split(' ');
+    while (tokens.length > 3) {
+        tokens.shift();
+        variants.push(tokens.join(' '));
+    }
+    return variants;
+}
+
 // Fonction pour géocoder une adresse avec cache
 async function geocodeAddress(address) {
+    console.log('[geocodeAddress] Appelé pour:', address);
     try {
         // Vérifier le cache
         if (window.geocodeCache.has(address)) {
+            console.log('[geocodeAddress] Résultat trouvé dans le cache.');
             return window.geocodeCache.get(address);
         }
 
-        const response = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(address)}&limit=5&format=json&addressdetails=1`);
-        const results = await response.json();
+        const variants = geocodeQueryVariants(address);
+        let results = null;
+        for (let i = 0; i < variants.length; i++) {
+            if (i > 0) {
+                // Respecter la limite Nominatim (1 req/s)
+                await new Promise(function (resolve) { setTimeout(resolve, 1100); });
+            }
+            const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(variants[i])}&limit=5&format=json&addressdetails=1`;
+            console.log('[geocodeAddress] Requête Nominatim:', url);
+            const response = await fetch(url);
+            console.log('[geocodeAddress] Réponse HTTP:', response.status, response.statusText);
+            results = await response.json();
+            console.log('[geocodeAddress] Résultats Nominatim:', results);
+            if (results && results.length > 0) break;
+        }
 
         if (results && results.length > 0) {
             const coords = {
@@ -142,7 +212,7 @@ async function updateMapMarkers(events) {
         }
 
         if (!window.markersLayer) {
-            window.markersLayer = L.layerGroup().addTo(window.mainMap);
+            window.markersLayer = window.createMarkersLayer().addTo(window.mainMap);
         }
         
         window.markersLayer.clearLayers();
@@ -164,8 +234,7 @@ async function updateMapMarkers(events) {
                             <div class="event-popup-image">
                                 ${isCancelled ? '<span class="event-popup-cancelled">Annulé</span>' : ''}
                                 <img src="${event.main_image_path || '/assets/images/events/default-event.jpg'}" 
-                                     alt="${event.title}"
-                                     style="width: 100%; height: 120px; object-fit: cover;">
+                                     alt="${event.title}">
                                 <span class="badge-category position-absolute top-0 end-0 m-2">
                                     ${getCategoryLabel(event.category)}
                                 </span>
@@ -184,6 +253,7 @@ async function updateMapMarkers(events) {
                         </div>`;
 
                     const marker = L.marker([coordinates.lat, coordinates.lng], {
+                        icon: window.eventPinIcon,
                         title: "Cliquez pour plus d'informations"
                     }).bindPopup(popupContent);
                     
@@ -232,6 +302,7 @@ function getCategoryLabel(category) {
 }
 
 // Exporter les fonctions
+console.log('[event-maps.js] Exposition de window.mapFunctions');
 window.mapFunctions = {
     updateMapMarkers,
     getCategoryBadgeClass,

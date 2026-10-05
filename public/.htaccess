@@ -2,8 +2,9 @@
 Options +FollowSymLinks
 RewriteEngine On
 
-# Forcer HTTPS
+# Forcer HTTPS (sauf en local)
 RewriteCond %{HTTPS} off
+RewriteCond %{HTTP_HOST} !^(localhost|127\.0\.0\.1)(:[0-9]+)?$
 RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
 # Définir les types MIME

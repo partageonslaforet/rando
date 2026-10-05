@@ -22,11 +22,26 @@ try {
     }
 
     $file = $_FILES['gpx_file'];
-    $route_index = $_POST['route_index'] ?? 'default';
+    // route_index ne doit contenir que des caractères sûrs (index numérique côté JS)
+    $route_index = preg_replace('/[^a-zA-Z0-9_-]/', '', (string)($_POST['route_index'] ?? 'default'));
+    if ($route_index === '') {
+        $route_index = 'default';
+    }
 
     // Vérifier les erreurs d'upload
     if ($file['error'] !== UPLOAD_ERR_OK) {
         throw new Exception('Erreur lors de l\'upload: ' . $file['error']);
+    }
+
+    // Taille maximale : 5 Mo (parité avec config/storage.php)
+    if ($file['size'] > 5 * 1024 * 1024) {
+        throw new Exception('Fichier trop volumineux');
+    }
+
+    // Extension : whitelist stricte (jamais reprise du nom client sans contrôle)
+    $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+    if (!in_array($extension, ['gpx', 'xml'], true)) {
+        throw new Exception('Extension de fichier non autorisée');
     }
 
     // Vérifier le type de fichier
@@ -40,7 +55,6 @@ try {
     }
 
     // Générer un nom de fichier unique
-    $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
     $filename = 'temp/' . uniqid('gpx_') . '_' . $route_index . '.' . $extension;
     $filepath = Storage::getStoragePath('gpx', $filename);
 

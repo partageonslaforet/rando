@@ -6,7 +6,7 @@
  * Dépendances: Aucune
  */
 function render_header() {
-    global $pageTitle, $additionalStyles, $bodyClass;
+    global $pageTitle, $pageDescription, $pageImage, $pageCanonical, $pageType, $pageJsonLd, $additionalStyles, $bodyClass;
 
     if (session_status() === PHP_SESSION_NONE) {
         session_start();
@@ -32,6 +32,42 @@ function render_header() {
         <title><?= isset($pageTitle) ? htmlspecialchars($pageTitle) . ' - ' : '' ?>Partageons La Forêt</title>
         <link rel="icon" type="image/png" href="/assets/images/logoplfrond.png">
         
+        <?php
+            $metaDescription = isset($pageDescription) ? $pageDescription : 'Trouvez et proposez des randonnées, marches et activités en pleine nature.';
+            $metaDescription = preg_replace('/\s+/', ' ', $metaDescription);
+            $metaDescription = trim($metaDescription);
+
+            $metaImage = isset($pageImage) ? $pageImage : '/assets/images/logoplfrond.png';
+            $baseUrl = defined('APP_URL') ? rtrim(APP_URL, '/') : '';
+            if (strpos($metaImage, 'http') !== 0) {
+                $metaImage = ltrim($metaImage, '/');
+                $metaImage = str_replace('public/', '', $metaImage);
+                $metaImage = preg_replace('#^config/\.\./#', '', $metaImage);
+                $metaImage = ltrim($metaImage, '/');
+                $ogImage = $baseUrl . '/' . $metaImage;
+            } else {
+                $ogImage = $metaImage;
+            }
+
+            $metaCanonical = isset($pageCanonical) ? $pageCanonical : ($baseUrl . ($_SERVER['REQUEST_URI'] ?? '/'));
+            $metaType = isset($pageType) ? $pageType : 'website';
+        ?>
+        <meta name="description" content="<?= htmlspecialchars($metaDescription) ?>">
+        <link rel="canonical" href="<?= htmlspecialchars($metaCanonical) ?>">
+        <meta property="og:title" content="<?= htmlspecialchars(isset($pageTitle) ? $pageTitle : 'Partageons La Forêt') ?>">
+        <meta property="og:description" content="<?= htmlspecialchars($metaDescription) ?>">
+        <meta property="og:image" content="<?= htmlspecialchars($ogImage) ?>">
+        <meta property="og:url" content="<?= htmlspecialchars($metaCanonical) ?>">
+        <meta property="og:type" content="<?= htmlspecialchars($metaType) ?>">
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="<?= htmlspecialchars(isset($pageTitle) ? $pageTitle : 'Partageons La Forêt') ?>">
+        <meta name="twitter:description" content="<?= htmlspecialchars($metaDescription) ?>">
+        <meta name="twitter:image" content="<?= htmlspecialchars($ogImage) ?>">
+        
+        <?php if (!empty($pageJsonLd) && is_array($pageJsonLd)): ?>
+            <script type="application/ld+json"><?= json_encode($pageJsonLd, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG) ?></script>
+        <?php endif; ?>
+        
         <!-- Bootstrap CSS -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.css" rel="stylesheet">
@@ -51,17 +87,20 @@ function render_header() {
         <link rel="stylesheet" href="/assets/css/style.css">
         <link rel="stylesheet" href="/assets/css/components/connexion.css?v=3">
         <link rel="stylesheet" href="/assets/css/components/contact-modal.css">
-        <!-- <link rel="stylesheet" href="/assets/css/lq.css">
-        <link rel="stylesheet" href="/assets/css/lq-dark.css"> -->
         <link rel="stylesheet" href="/assets/css/components/filtres.css">
         <link rel="stylesheet" href="/assets/css/components/calendar.css">
-        <link rel="stylesheet" href="/assets/css/components/events-list.css">
-        <link rel="stylesheet" href="/assets/css/components/footer.css">
-        <link rel="stylesheet" href="/assets/css/header.css">
-        <link rel="stylesheet" href="/assets/css/calendar.css">
+        <link rel="stylesheet" href="/assets/css/components/events-list.css?v=7">
+        <link rel="stylesheet" href="/assets/css/layout/footer.css">
+        <link rel="stylesheet" href="/assets/css/layout/header.css">
+        <link rel="stylesheet" href="/assets/css/components/calendar-custom.css">
         
         <!-- Additional Styles -->
         <?= isset($additionalStyles) ? $additionalStyles : '' ?>
+        
+        <!-- Debug flag exposed to frontend (subscribers domain) -->
+        <script>
+            window.DEBUG_SUBSCRIBERS = <?= (defined('DEBUG_SUBSCRIBERS') && DEBUG_SUBSCRIBERS) ? 'true' : 'false' ?>;
+        </script>
         
     </head>
     <body class="<?= isset($bodyClass) ? htmlspecialchars($bodyClass) . ' ' : '' ?>lq-light">
@@ -112,6 +151,11 @@ function render_header() {
                                 <a href="#" class="nav-link btn-connexion" id="loginButton" data-bs-toggle="modal" data-bs-target="#loginModal">Connexion</a>
                             </li>
                         <?php endif; ?>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#subscribersModal" title="S'abonner aux événements">
+                                <i class="bi bi-bell"></i>
+                            </a>
+                        </li>
                         <li class="nav-item">
                             <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#contactModal">
                                 <i class="bi bi-envelope"></i>

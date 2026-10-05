@@ -75,7 +75,6 @@ CREATE TABLE IF NOT EXISTS `events` (
     `id` INT NOT NULL AUTO_INCREMENT,
     `title` VARCHAR(255) NOT NULL,
     `description` TEXT,
-    `category` VARCHAR(50) DEFAULT NULL,
     `category_id` INT DEFAULT NULL,
     `date` DATE NOT NULL,
     `start_time` TIME NOT NULL,
@@ -344,10 +343,10 @@ INSERT INTO `organizer_profiles` (`user_id`, `name`, `description`, `address`, `
 (1, 'Club Nature Ardenne', 'Association locale fictive de randonnées pédestres et de VTT.', 'Rue de la Forêt 1, 5500 Dinant', '+32 471 23 45 67', 'contact@example.local', 'https://example.local', '/uploads/organizers/logo.png');
 
 -- Événements de démonstration
-INSERT INTO `events` (`title`, `description`, `category`, `category_id`, `date`, `start_time`, `end_time`, `location`, `venue`, `coordinates`, `difficulty`, `max_participants`, `status`, `submitted_at`, `validated_at`, `validated_by`, `rejection_reason`, `main_image_path`, `main_image`, `user_id`, `organizer_id`, `created_by`, `organisation`, `has_gpx`, `gpx_path`, `gpx_downloadable`) VALUES
-('Randonnée familiale en forêt de Soignes', 'Une belle balade en famille à travers les sentiers de la forêt de Soignes. Niveau facile, accessible à tous.', 'hiking', 1, '2026-09-15', '09:00:00', '12:00:00', 'Forêt de Soignes', 'Parking de la Hulpe', '50.7320,4.4690', 'easy', 20, 'published', '2026-08-29 12:00:00', '2026-08-29 12:00:00', 1, NULL, '/uploads/events/randonnee.jpg', '/uploads/events/randonnee.jpg', 1, 1, 1, '1', 0, NULL, 0),
-('VTT sportif dans les crêtes de la Famenne', 'Boucle VTT exigeante sur les crêtes de la Famenne avec de beaux panoramas. GPX fourni.', 'cycling', 3, '2026-09-20', '09:30:00', '13:00:00', 'Gesves', 'Place de la Hestre', '50.4050,5.0680', 'hard', 15, 'published', '2026-08-29 12:00:00', '2026-08-29 12:00:00', 1, NULL, '/uploads/events/vtt.jpg', '/uploads/events/vtt.jpg', 1, 1, 1, '1', 1, 'uploads/gpx/vtt.gpx', 1),
-('Trail du bois de la Cambre', 'Sortie trail de 12 km en forêt, allure modérée. Prévoir bonnes chaussures.', 'running', 2, '2026-10-05', '08:00:00', '11:00:00', 'Bruxelles', 'Allée des Amazones', '50.8130,4.3670', 'medium', 50, 'published', '2026-08-29 12:00:00', '2026-08-29 12:00:00', 1, NULL, '/uploads/events/trail.jpg', '/uploads/events/trail.jpg', 1, 1, 1, '1', 0, NULL, 0);
+INSERT INTO `events` (`title`, `description`, `category_id`, `date`, `start_time`, `end_time`, `location`, `venue`, `coordinates`, `difficulty`, `max_participants`, `status`, `submitted_at`, `validated_at`, `validated_by`, `rejection_reason`, `main_image_path`, `main_image`, `user_id`, `organizer_id`, `created_by`, `organisation`, `has_gpx`, `gpx_path`, `gpx_downloadable`) VALUES
+('Randonnée familiale en forêt de Soignes', 'Une belle balade en famille à travers les sentiers de la forêt de Soignes. Niveau facile, accessible à tous.', 1, '2026-09-15', '09:00:00', '12:00:00', 'Forêt de Soignes', 'Parking de la Hulpe', '50.7320,4.4690', 'easy', 20, 'published', '2026-08-29 12:00:00', '2026-08-29 12:00:00', 1, NULL, '/uploads/events/randonnee.jpg', '/uploads/events/randonnee.jpg', 1, 1, 1, '1', 0, NULL, 0),
+('VTT sportif dans les crêtes de la Famenne', 'Boucle VTT exigeante sur les crêtes de la Famenne avec de beaux panoramas. GPX fourni.', 3, '2026-09-20', '09:30:00', '13:00:00', 'Gesves', 'Place de la Hestre', '50.4050,5.0680', 'hard', 15, 'published', '2026-08-29 12:00:00', '2026-08-29 12:00:00', 1, NULL, '/uploads/events/vtt.jpg', '/uploads/events/vtt.jpg', 1, 1, 1, '1', 1, 'uploads/gpx/vtt.gpx', 1),
+('Trail du bois de la Cambre', 'Sortie trail de 12 km en forêt, allure modérée. Prévoir bonnes chaussures.', 2, '2026-10-05', '08:00:00', '11:00:00', 'Bruxelles', 'Allée des Amazones', '50.8130,4.3670', 'medium', 50, 'published', '2026-08-29 12:00:00', '2026-08-29 12:00:00', 1, NULL, '/uploads/events/trail.jpg', '/uploads/events/trail.jpg', 1, 1, 1, '1', 0, NULL, 0);
 
 -- Images principales
 INSERT INTO `event_images` (`event_id`, `image_path`, `is_main`) VALUES

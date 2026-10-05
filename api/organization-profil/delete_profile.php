@@ -8,7 +8,7 @@ require_once __DIR__ . '/../../config/database.php';
 require_once __DIR__ . '/../../src/Models/organizer_profile.php';
 
 // Activer l'affichage des erreurs pour le débogage
-ini_set('display_errors', 1);
+ini_set('display_errors', 0);
 error_reporting(E_ALL);
 
 // S'assurer qu'aucune sortie n'a été envoyée avant

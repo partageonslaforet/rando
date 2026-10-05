@@ -1,34 +1,57 @@
 /* Variables globales et styles de base du site. */
 
+/* ---- Utilitaires globaux ---- */
+/* État initial masqué (le JS affiche via style.display, qui prime) */
+.is-hidden { display: none; }
+
+/* Cartes Leaflet */
+.map-container { height: 600px; width: 100%; }
+.map-h-400 { height: 400px; }
+
+/* Pages simples : espace sous le header */
+.page-offset { padding-top: 6rem; padding-bottom: 4rem; }
+
 :root {
-    --primary-color: #990047;
-    --primary-hover: #7d003a;
-    --secondary-color: #3A8A3D;
-    --secondary-hover: #2d6c2f;
-    --success-color: #3A8A3D;
+    /* ── Charte : vert forêt = marque ── */
+    --primary-color: #3A8A3D;
+    --primary-hover: #2d6c2f;
+    /* ── Danger : magenta ── */
     --danger-color: #990047;
+    --danger-hover: #7d003a;
+
+    /* ── Vert foncé : titres / textes de marque ── */
+    --green-dark: #2c3e2d;
+
+    /* ── Accents ── */
+    --warning: #f0b323;
+    --warning-dark: #92400e;
+    --warning-bg: color-mix(in srgb, var(--warning) 15%, var(--light-text));
+    --info: #0d6efd;
+    --info-dark: #31708f;
+    --info-bg: color-mix(in srgb, var(--info) 10%, var(--light-text));
+    --danger-bg: color-mix(in srgb, var(--danger-color) 10%, var(--light-text));
+
+    /* ── Neutres ── */
     --text-color: #333;
+    --text-muted: #6c757d;
+    --gray-dark: #444;
+    --gray-light: #adb5bd;
     --light-text: #fff;
-    --filter-bg: #fff;
-    --filter-active: #990047;
-    --filter-hover: #f3f4f6;
+    --surface: #f8f9fa;
+    --surface-green: #f6f9f7;
     --background-color: #dfe2e6;
-    --light-gray: #f8f9fa;
     --border-color: #dee2e6;
-    --profile-muted: #5a6a5d;
-    --profile-text: #2f3e2f;
-    --profile-bg: #f6f9f7;
-    --profile-card: #ffffff;
-    --profile-border: #E5EBE5;
-    --profile-background: #F7FAF7;
-    --profile-hero-bg: rgba(58, 138, 61, 0.06);
-    --profile-green: var(--secondary-color, #3A8A3D);
-    --profile-green-hover: var(--secondary-hover, #2d6c2f);
+    --border-green: #e5ebe5;
+
+    /* ── Ombres ── */
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.15);
+    --shadow-lg: 0 4px 20px rgba(0, 0, 0, 0.3);
+
+    /* ── Profil ── */
+    --profile-hero-bg: color-mix(in srgb, var(--primary-color) 6%, transparent);
     --profile-radius: 16px;
     --profile-gutter: 18px;
-    /* Alias verts utilisés par les formulaires d'authentification */
-    --auth-green: #2E8338;
-    --auth-green-hover: #246b2c;
 }
 
 [data-theme="dark"] {
@@ -43,21 +66,22 @@
 .map-container {
     border-radius: 16px !important;
     overflow: hidden;
+    box-shadow: 0 4px 20px color-mix(in srgb, #000 30%, transparent);
 }
 
 
 /* Navigation */
 .navbar {
     transition: all 0.3s ease;
-    background-color: #fff;
+    background-color: var(--light-text);
     height: 100px;
     display: flex;
     align-items: center;
 }
 
 .navbar-scrolled {
-    background-color: white;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: var(--light-text);
+    box-shadow: 0 2px 4px color-mix(in srgb, #000 10%, transparent);
 }
 
 /* Styles de base pour tous les liens de navigation */
@@ -69,7 +93,7 @@
 
 /* État par défaut (non scrollé) pour le header normal */
 .navbar-dark .nav-link:not(#loginButton) {
-    color: white !important;
+    color: var(--light-text) !important;
 }
 
 /* État scrollé pour le header normal et état par défaut pour le header-solid */
@@ -138,7 +162,7 @@ body {
     line-height: 1.6;
     color: var(--text-color);
     padding-top: 80px;
-    background-color: #F7FAF7;
+    background-color: var(--surface-green);
     min-height: 100vh;
 }
 
@@ -165,7 +189,7 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
+    background: color-mix(in srgb, #000 50%, transparent);
 }
 
 .hero-content {
@@ -182,6 +206,7 @@ body {
     position: relative;
     height: 75vh;
     min-height: 500px;
+    background-image: url('/assets/images/main-hero.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -189,7 +214,7 @@ body {
     align-items: center;
     justify-content: center;
     text-align: center;
-    color: white;
+    color: var(--light-text);
     padding: 2rem;
     margin-top: -5rem;
 }
@@ -201,7 +226,7 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
+    background: color-mix(in srgb, #000 50%, transparent);
 }
 
 .hero-content {
@@ -215,7 +240,7 @@ body {
 }
 
 .hero-content h1 {
-    color: white !important;
+    color: var(--light-text) !important;
     font-size: 4rem;
     font-weight: bold;
     margin-bottom: 0.5rem;
@@ -240,33 +265,33 @@ body {
 }
 
 .hero-search-container .form-control {
-    background: rgba(255, 255, 255, 0.15);
+    background: color-mix(in srgb, var(--light-text) 15%, transparent);
     border: none;
     border-radius: 10px;
     padding: 0.75rem 1.5rem;
     font-size: 1rem;
-    color: white;
+    color: var(--light-text);
     -webkit-backdrop-filter: blur(8px);
     backdrop-filter: blur(8px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px color-mix(in srgb, #000 10%, transparent);
 }
 
 .hero-search-container .form-control::placeholder {
-    color: rgba(255, 255, 255, 0.8);
+    color: color-mix(in srgb, var(--light-text) 80%, transparent);
 }
 
 .hero-search-container .form-control:focus {
-    background: rgba(255, 255, 255, 0.25);
-    color: white;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    background: color-mix(in srgb, var(--light-text) 25%, transparent);
+    color: var(--light-text);
+    box-shadow: 0 4px 12px color-mix(in srgb, #000 20%, transparent);
     border: none;
     outline: none;
 }
 
 .hero-search-container .btn {
     border-radius: 10px;
-    background-color: var(--success-color);
-    color: white;
+    background-color: var(--primary-color);
+    color: var(--light-text);
     border: none;
     transition: all 0.3s ease;
     white-space: nowrap;
@@ -274,9 +299,9 @@ body {
 }
 
 .hero-search-container .btn:hover {
-    background-color: var(--secondary-color);
+    background-color: var(--primary-color);
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 12px color-mix(in srgb, #000 15%, transparent);
 }
 
 .slogan {
@@ -315,7 +340,7 @@ body {
     }
 
     .navbar .nav-link {
-        color: #333!important;
+        color: var(--text-color)!important;
         transition: color 0.3s ease;
     }
 
@@ -413,22 +438,22 @@ body {
 .search-bar input {
     width: 100%;
     padding: 1rem 3rem 1rem 1.5rem;
-    border: 1px solid #333;
+    border: 1px solid var(--text-color);
     border-radius: 10px;
     background: transparent;
     font-size: 1.1rem;
     transition: all 0.3s ease;
-    color: white;
+    color: var(--light-text);
     backdrop-filter: blur(10px);
 }
 
 .search-bar input::placeholder {
-    color: rgba(255, 255, 255, 0.8);
+    color: color-mix(in srgb, var(--light-text) 80%, transparent);
 }
 
 .search-bar input:focus {
     outline: none;
-    background: rgba(0, 0, 0, 0.4);
+    background: color-mix(in srgb, #000 40%, transparent);
 }
 
 .search-button {
@@ -438,20 +463,20 @@ body {
     transform: translateY(-50%);
     background: none;
     border: none;
-    color: white;
+    color: var(--light-text);
     font-size: 1.2rem;
     cursor: pointer;
     transition: color 0.3s ease;
 }
 
 .search-button:hover {
-    color: rgba(255, 255, 255, 0.8);
+    color: color-mix(in srgb, var(--light-text) 80%, transparent);
 }
 
 .create-event {
     align-items: center;
     padding: 1rem 1rem;
-    color: white;
+    color: var(--light-text);
     border: none;
     border-radius: 10px;
     text-decoration: none;
@@ -462,18 +487,18 @@ body {
 
 .create-event:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    color: white;
+    box-shadow: 0 4px 12px color-mix(in srgb, #000 15%, transparent);
+    color: var(--light-text);
     text-decoration: none;
 }
 
 /* Filtres */
 .filters-container {
-    background: var(--filter-bg);
+    background: var(--light-text);
     padding: 1.5rem;
     margin-bottom: 2rem;
     border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 3px color-mix(in srgb, #000 10%, transparent);
 }
 
 .filter-tabs {
@@ -487,7 +512,7 @@ body {
     border-radius: 4px;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    background: var(--filter-hover);
+    background: var(--surface);
     border: none;
     font-weight: 500;
 }
@@ -498,13 +523,13 @@ body {
 }
 
 .filter-tab:not(.active):hover {
-    background: var(--filter-hover);
+    background: var(--surface);
 }
 
 .filter-category {
     padding: 0.5rem 1rem;
     border-radius: 20px;
-    background: var(--filter-hover);
+    background: var(--surface);
     cursor: pointer;
     transition: background-color 0.3s ease;
     display: flex;
@@ -515,7 +540,7 @@ body {
 
 .filter-category span {
     background: var(--primary-color);
-    color: white;
+    color: var(--light-text);
     padding: 0.2rem 0.6rem;
     border-radius: 12px;
     font-size: 0.85rem;
@@ -527,16 +552,16 @@ body {
 }
 
 .filter-category:not(.active):hover {
-    background: var(--filter-hover);
+    background: var(--surface);
 }
 
 /* Styles du filtre de distance */
 .filter-distance {
     margin-top: 0rem;
     padding: 1.5rem;
-    background: var(--filter-bg);
+    background: var(--light-text);
     border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 3px color-mix(in srgb, #000 10%, transparent);
 }
 
 .filter-distance-header {
@@ -583,7 +608,7 @@ body {
     -webkit-appearance: none;
     appearance: none;
     height: 4px;
-    background: linear-gradient(to right, var(--primary-color) var(--range-progress, 0%), #e9ecef var(--range-progress, 0%));
+    background: linear-gradient(to right, var(--primary-color) var(--range-progress, 0%), var(--surface) var(--range-progress, 0%));
     border-radius: 0.25rem;
     cursor: pointer;
     transition: background-color 0.3s ease;
@@ -614,20 +639,20 @@ body {
     display: block;
     width: 1px;
     height: 6px;
-    background-color: #999;
+    background-color: var(--gray-light);
     margin-bottom: 2px;
 }
 
 .tick-label {
     font-size: 0.75rem;
-    color: #666;
+    color: var(--text-muted);
     line-height: 1;
 }
 
 
 /* Style du bouton réinitialiser */
 .btn-reset {
-    color: var(--secondary-color);
+    color: var(--primary-color);
     background: transparent;
     border: none;
     padding: 0.5rem;
@@ -640,7 +665,7 @@ body {
 }
 
 .btn-reset:hover {
-    color: var(--success-color);
+    color: var(--primary-color);
 }
 
 .btn-reset i {
@@ -668,12 +693,12 @@ body {
     font-size: 0.85rem;
     font-weight: 500;
     background: var(--primary-color);
-    color: white;
+    color: var(--light-text);
 }
 
 .badge-category {
     background-color: var(--primary-color) !important;
-    color: #ffffff !important;
+    color: var(--light-text) !important;
     font-size: 0.8rem;
     padding: 0.5rem 1rem;
     border-radius: 50rem;
@@ -689,6 +714,13 @@ body {
 .event-popup-image {
     position: relative;
     width: 100%;
+}
+
+.event-popup-image img {
+    display: block;
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
 }
 
 .event-popup-container {
@@ -708,18 +740,75 @@ body {
 
 .event-popup-container .leaflet-popup-close-button {
     padding: 8px;
-    color: #fff;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    color: var(--light-text);
+    text-shadow: 0 1px 2px color-mix(in srgb, #000 20%, transparent);
 }
 
 .event-popup-content {
-    background: #F7FAF7;
+    background: var(--surface-green);
 }
 
-.event-popup-content h5 {
-    font-size: 1.1rem;
+.event-popup-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+}
+
+.event-popup-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-bottom: 0.4rem;
+}
+
+.event-popup-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--green-dark);
     margin: 0;
-    color: #333;
+    min-width: 0;
+}
+
+.event-popup-views {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    color: var(--text-muted);
+    font-size: 0.78rem;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.event-popup-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    margin-top: 0.5rem;
+}
+
+.event-popup-meta-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+.event-popup-meta-row i {
+    color: var(--primary-color);
+}
+
+.event-popup-cta {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin-top: 0.6rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid var(--surface-green);
+    color: var(--primary-color);
+    font-size: 0.82rem;
+    font-weight: 600;
 }
 
 /* Chips catégories dans le popup Leaflet */
@@ -735,17 +824,17 @@ body {
     align-items: center;
     padding: 0.2rem 0.6rem;
     border-radius: 999px;
-    background: var(--filter-hover, #f3f4f6);
-    color: var(--text-color, #333);
+    background: var(--surface, var(--surface));
+    color: var(--text-color, var(--text-color));
     font-size: 0.75rem;
     font-weight: 600;
-    border: 1px solid rgba(0,0,0,0.06);
+    border: 1px solid black;
 }
 
 .event-popup .badge-category {
     font-size: 0.8rem;
     padding: 4px 8px;
-    background: rgba(255,255,255,0.9);
+    background: color-mix(in srgb, var(--light-text) 90%, transparent);
     border-radius: 4px;
 }
 
@@ -756,27 +845,27 @@ body {
     justify-content: center;
     width: 40px !important;
     height: 40px !important;
-    background: white;
+    background: var(--light-text);
     border-radius: 50%;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    box-shadow: 0 2px 5px color-mix(in srgb, #000 20%, transparent);
     cursor: pointer;
 }
 
 .marker-icon i {
     font-size: 24px;
-    color: #dc3545;
+    color: var(--danger-color);
 }
 
 .marker-icon.running i {
-    color: #198754;
+    color: var(--primary-color);
 }
 
 .marker-icon.hiking i {
-    color: #0d6efd;
+    color: var(--info);
 }
 
 .marker-icon.cycling i {
-    color: #fd7e14;
+    color: var(--warning);
 }
 
 /* Styles pour les popups */
@@ -796,7 +885,7 @@ body {
 }
 
 .event-popup {
-    background: white;
+    background: var(--light-text);
 }
 
 .event-popup-image {
@@ -820,21 +909,21 @@ body {
     position: absolute;
     top: 8px;
     left: 8px;
-    background-color: #dc3545;
-    color: #fff;
+    background-color: var(--danger-color);
+    color: var(--light-text);
     font-size: 0.75rem;
     font-weight: 700;
     padding: 0.25rem 0.5rem;
     border-radius: 4px;
     text-transform: uppercase;
     z-index: 10;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    box-shadow: 0 1px 3px color-mix(in srgb, #000 20%, transparent);
 }
 
 /* Thème sombre */
 body.dark-theme {
-    background-color: #4a4a4a;
-    color: #e0e0e0;
+    background-color: var(--gray-dark);
+    color: var(--border-color);
 }
 
 body.dark-theme .navbar {
@@ -842,174 +931,174 @@ body.dark-theme .navbar {
 }
 
 body.dark-theme .navbar-scrolled {
-    background-color: rgba(84, 84, 84, 0.95);
+    background-color: color-mix(in srgb, var(--text-muted) 95%, transparent);
     backdrop-filter: blur(10px);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px color-mix(in srgb, #000 10%, transparent);
 }
 
 body.dark-theme .event-filters,
 body.dark-theme .calendar-container,
 body.dark-theme .event-card {
-    background-color: #545454 !important;
-    border: 1px solid rgba(224, 224, 224, 0.05);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    background-color: var(--text-muted) !important;
+    border: 1px solid color-mix(in srgb, var(--border-color) 5%, transparent);
+    box-shadow: 0 4px 6px color-mix(in srgb, #000 5%, transparent);
 }
 
 body.dark-theme .btn-light {
-    background-color: #5e5e5e;
-    border-color: rgba(224, 224, 224, 0.05);
-    color: #e0e0e0;
+    background-color: var(--text-muted);
+    border-color: color-mix(in srgb, var(--border-color) 5%, transparent);
+    color: var(--border-color);
 }
 
 body.dark-theme .btn-light:hover {
-    background-color: #656565;
-    border-color: rgba(224, 224, 224, 0.08);
+    background-color: var(--text-muted);
+    border-color: color-mix(in srgb, var(--border-color) 8%, transparent);
 }
 
 body.dark-theme .nav-link {
-    color: #e0e0e0 !important;
+    color: var(--border-color) !important;
 }
 
 body.dark-theme .event-card h5,
 body.dark-theme .event-card p {
-    color: #e0e0e0;
+    color: var(--border-color);
 }
 
 body.dark-theme .calendar-header,
 body.dark-theme .calendar-body {
-    background-color: #545454;
-    color: #e0e0e0;
+    background-color: var(--text-muted);
+    color: var(--border-color);
 }
 
 body.dark-theme .calendar td {
-    background-color: #656565;
-    border-color: rgba(224, 224, 224, 0.05);
+    background-color: var(--text-muted);
+    border-color: color-mix(in srgb, var(--border-color) 5%, transparent);
 }
 
 body.dark-theme .calendar td > div {
-    color: #ffffff;
+    color: var(--light-text);
 }
 
 body.dark-theme .calendar td.other-month {
-    background-color: #5e5e5e;
+    background-color: var(--text-muted);
 }
 
 body.dark-theme .calendar td.other-month > div {
-    color: rgba(255, 255, 255, 0.5);
+    color: color-mix(in srgb, var(--light-text) 50%, transparent);
 }
 
 body.dark-theme .calendar td.today {
-    background-color: #757575;
+    background-color: var(--text-muted);
     border: 2px solid var(--primary-color);
 }
 
 body.dark-theme .calendar td.has-events {
-    background-color: var(--secondary-color);
+    background-color: var(--primary-color);
 }
 
 body.dark-theme .calendar td.has-events:hover {
-    background-color: var(--secondary-hover);
+    background-color: var(--primary-hover);
 }
 
 body.dark-theme .filter-distance {
-    background-color: #656565;
-    border-color: rgba(224, 224, 224, 0.05);
+    background-color: var(--text-muted);
+    border-color: color-mix(in srgb, var(--border-color) 5%, transparent);
     padding: 15px;
     border-radius: 8px;
 }
 
 body.dark-theme .filter-distance label {
-    color: #ffffff;
+    color: var(--light-text);
 }
 
 body.dark-theme .distance-value,
 body.dark-theme .tick-label {
-    color: #ffffff !important;
+    color: var(--light-text) !important;
 }
 
 body.dark-theme .card {
-    background-color: #545454;
+    background-color: var(--text-muted);
 }
 
 body.dark-theme .card-title {
-    color: #ffffff;
+    color: var(--light-text);
 }
 
 body.dark-theme .card-text {
-    color: #ffffff;
+    color: var(--light-text);
 }
 
 body.dark-theme .text-muted,
 body.dark-theme .card-text.text-muted {
-    color: #e0e0e0 !important;
+    color: var(--border-color) !important;
 }
 
 body.dark-theme input,
 body.dark-theme select,
 body.dark-theme textarea {
-    background-color: #5e5e5e !important;
-    border-color: rgba(224, 224, 224, 0.05) !important;
-    color: #e0e0e0 !important;
+    background-color: var(--text-muted) !important;
+    border-color: color-mix(in srgb, var(--border-color) 5%, transparent) !important;
+    color: var(--border-color) !important;
 }
 
 body.dark-theme input::placeholder,
 body.dark-theme select::placeholder,
 body.dark-theme textarea::placeholder {
-    color: #c0c0c0 !important;
+    color: var(--border-color) !important;
 }
 
 body.dark-theme input:focus,
 body.dark-theme select:focus,
 body.dark-theme textarea:focus {
-    background-color: #656565 !important;
-    border-color: rgba(224, 224, 224, 0.1) !important;
-    box-shadow: 0 0 0 0.25rem rgba(224, 224, 224, 0.15) !important;
+    background-color: var(--text-muted) !important;
+    border-color: color-mix(in srgb, var(--border-color) 10%, transparent) !important;
+    box-shadow: 0 0 0 0.25rem color-mix(in srgb, var(--border-color) 15%, transparent) !important;
 }
 
 body.dark-theme .modal-content {
-    background-color: #2d2d2d;
-    border-color: rgba(224, 224, 224, 0.05);
+    background-color: var(--gray-dark);
+    border-color: color-mix(in srgb, var(--border-color) 5%, transparent);
 }
 
 body.dark-theme .modal-header,
 body.dark-theme .modal-footer {
-    border-color: rgba(224, 224, 224, 0.05);
+    border-color: color-mix(in srgb, var(--border-color) 5%, transparent);
 }
 
 /* Filtre de proximité en mode sombre */
 body.dark-theme .filter-distance {
-    background-color: #656565;
-    border-color: rgba(224, 224, 224, 0.05);
+    background-color: var(--text-muted);
+    border-color: color-mix(in srgb, var(--border-color) 5%, transparent);
     padding: 15px;
     border-radius: 8px;
 }
 
 body.dark-theme .filter-distance label {
-    color: #ffffff;
+    color: var(--light-text);
 }
 
 body.dark-theme .distance-value,
 body.dark-theme .tick-label {
-    color: #ffffff !important;
+    color: var(--light-text) !important;
 }
 
 /* Liste des événements en blanc */
 body.dark-theme .event-list .event-card {
-    background-color: #545454;
+    background-color: var(--text-muted);
 }
 
 body.dark-theme .event-list .event-card h5 {
-    color: #ffffff;
+    color: var(--light-text);
 }
 
 body.dark-theme .event-list .event-card .event-date,
 body.dark-theme .event-list .event-card .event-location,
 body.dark-theme .event-list .event-organizer {
-    color: #e0e0e0;
+    color: var(--border-color);
 }
 
 body.dark-theme .event-list .event-card .event-details {
-    color: #ffffff;
+    color: var(--light-text);
 }
 
 /* Header en mode sombre */
@@ -1018,102 +1107,102 @@ body.dark-theme .navbar {
 }
 
 body.dark-theme .navbar-scrolled {
-    background-color: rgba(84, 84, 84, 0.95);
+    background-color: color-mix(in srgb, var(--text-muted) 95%, transparent);
     backdrop-filter: blur(10px);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px color-mix(in srgb, #000 10%, transparent);
 }
 
 /* Événements en mode sombre */
 body.dark-theme .card {
-    background-color: #545454;
+    background-color: var(--text-muted);
 }
 
 body.dark-theme .card-title {
-    color: #ffffff;
+    color: var(--light-text);
 }
 
 body.dark-theme .card-text {
-    color: #ffffff;
+    color: var(--light-text);
 }
 
 body.dark-theme .text-muted,
 body.dark-theme .card-text.text-muted {
-    color: #e0e0e0 !important;
+    color: var(--border-color) !important;
 }
 
 /* Calendrier en mode sombre */
 body.dark-theme .calendar td.has-events {
-    background-color: var(--secondary-color);
+    background-color: var(--primary-color);
 }
 
 body.dark-theme .calendar td.has-events:hover {
-    background-color: var(--secondary-hover);
+    background-color: var(--primary-hover);
 }
 
 /* Filtre de proximité en mode sombre */
 body.dark-theme .filter-distance {
-    background-color: #656565;
-    border-color: rgba(224, 224, 224, 0.05);
+    background-color: var(--text-muted);
+    border-color: color-mix(in srgb, var(--border-color) 5%, transparent);
     padding: 15px;
     border-radius: 8px;
 }
 
 body.dark-theme .filter-distance label {
-    color: #ffffff;
+    color: var(--light-text);
 }
 
 body.dark-theme .distance-value,
 body.dark-theme .tick-label {
-    color: #ffffff !important;
+    color: var(--light-text) !important;
 }
 
 /* Événements en mode sombre */
 body.dark-theme .card {
-    background-color: #545454;
+    background-color: var(--text-muted);
 }
 
 body.dark-theme .card .card-title {
-    color: #ffffff;
+    color: var(--light-text);
 }
 
 body.dark-theme .card .card-text {
-    color: #ffffff;
+    color: var(--light-text);
 }
 
 body.dark-theme .card .card-text.text-muted,
 body.dark-theme .card .text-muted {
-    color: #ffffff !important;
+    color: var(--light-text) !important;
 }
 
 body.dark-theme .card i.bi {
-    color: #ffffff;
+    color: var(--light-text);
 }
 
 /* Footer en mode clair et sombre */
 footer {
-    background-color: #f8f9fa;
+    background-color: var(--surface);
     padding: 2rem 0;
     margin-top: 3rem;
 }
 
 footer h5 {
-    color: #333;
+    color: var(--text-color);
     margin-bottom: 1rem;
 }
 
 footer p, 
 footer a {
-    color: #666;
+    color: var(--text-muted);
 }
 
 footer a:hover {
-    color: #333;
+    color: var(--text-color);
     text-decoration: none;
 }
 
 /* Footer en mode sombre */
 body.dark-theme footer.bg-light {
-    background-color: rgba(84, 84, 84, 0.95) !important;
+    background-color: color-mix(in srgb, var(--text-muted) 95%, transparent) !important;
 }
 
 body.dark-theme footer h5,
@@ -1121,36 +1210,36 @@ body.dark-theme footer p,
 body.dark-theme footer a,
 body.dark-theme footer small,
 body.dark-theme footer i.bi {
-    color: #ffffff !important;
+    color: var(--light-text) !important;
 }
 
 body.dark-theme footer a:hover {
-    color: #e0e0e0 !important;
+    color: var(--border-color) !important;
 }
 
 body.dark-theme footer hr {
-    border-color: rgba(255, 255, 255, 0.1);
+    border-color: color-mix(in srgb, var(--light-text) 10%, transparent);
 }
 
 /* Barre de recherche en mode sombre */
 body.dark-theme .hero-search-container .form-control {
-    background: rgba(255, 255, 255, 0.15) !important;
-    color: #ffffff !important;
+    background: color-mix(in srgb, var(--light-text) 15%, transparent) !important;
+    color: var(--light-text) !important;
     -webkit-backdrop-filter: blur(8px) !important;
     backdrop-filter: blur(8px) !important;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+    box-shadow: 0 4px 12px color-mix(in srgb, #000 20%, transparent) !important;
     border: none !important;
 }
 
 body.dark-theme .hero-search-container .form-control:focus {
-    background: rgba(255, 255, 255, 0.25) !important;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+    background: color-mix(in srgb, var(--light-text) 25%, transparent) !important;
+    box-shadow: 0 4px 12px color-mix(in srgb, #000 30%, transparent) !important;
     border: none !important;
     outline: none !important;
 }
 
 body.dark-theme .hero-search-container .form-control::placeholder {
-    color: rgba(255, 255, 255, 0.7) !important;
+    color: color-mix(in srgb, var(--light-text) 70%, transparent) !important;
 }
 
 /* Styles du modal de login */
@@ -1161,9 +1250,9 @@ body.dark-theme .hero-search-container .form-control::placeholder {
 #loginModal .modal-content {
     border: none !important;
     border-radius: 16px !important;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
+    box-shadow: 0 10px 30px color-mix(in srgb, #000 10%, transparent) !important;
     padding: 1rem !important;
-    background-color: #F7FAF7 !important;
+    background-color: var(--surface-green) !important;
 }
 
 #loginModal .modal-header {
@@ -1177,7 +1266,7 @@ body.dark-theme .hero-search-container .form-control::placeholder {
     width: 100% !important;
     text-align: center !important;
     font-size: 1.75rem !important;
-    color: var(--secondary-color) !important;
+    color: var(--primary-color) !important;
 }
 
 #loginModal .btn-close {
@@ -1188,7 +1277,7 @@ body.dark-theme .hero-search-container .form-control::placeholder {
 
 #loginModal .form-control {
     padding: 0.75rem 1rem !important;
-    border: 2px solid #666 !important;
+    border: 2px solid var(--text-muted) !important;
     border-radius: 10px !important;
 }
 
@@ -1203,7 +1292,7 @@ body.dark-theme .hero-search-container .form-control::placeholder {
     display: block !important;
     margin: 1rem auto !important;
     min-width: 200px !important;
-    background-color: var(--secondary-color) !important;
+    background-color: var(--primary-color) !important;
     border: none !important;
     color: var(--light-text) !important;
 }
@@ -1211,7 +1300,7 @@ body.dark-theme .hero-search-container .form-control::placeholder {
 #loginModal .btn-secondary:hover,
 #forgotPasswordModal .btn-secondary:hover,
 #registerModal .btn-secondary:hover{
-    background-color: var(--secondary-hover) !important;
+    background-color: var(--primary-hover) !important;
     color: var(--light-text) !important;
 }
 
@@ -1226,7 +1315,7 @@ body.dark-theme .hero-search-container .form-control::placeholder {
 }
 
 #loginModal a {
-    color: var(--profile-text);
+    color: var(--green-dark);
     text-decoration: none !important;
 }
 
@@ -1241,21 +1330,21 @@ body.dark-theme .hero-search-container .form-control::placeholder {
 
 /* Mode sombre */
 body.dark-theme #loginModal .modal-content {
-    background-color: #2d2d2d !important;
-    color: white !important;
+    background-color: var(--gray-dark) !important;
+    color: var(--light-text) !important;
 }
 
 body.dark-theme #loginModal .form-control {
-    background-color: #3d3d3d !important;
-    border-color: #4d4d4d !important;
-    color: white !important;
+    background-color: var(--gray-dark) !important;
+    border-color: var(--gray-dark) !important;
+    color: var(--light-text) !important;
 }
 
 /* Styles du modal de login */
 .modal-content {
     border: none;
     border-radius: 16px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 30px color-mix(in srgb, #000 10%, transparent);
 }
 
 .modal-header {
@@ -1272,7 +1361,7 @@ body.dark-theme #loginModal .form-control {
 }
 
 .modal-header .btn-close {
-    background-color: #f8f9fa;
+    background-color: var(--surface);
     padding: 0.75rem;
     border-radius: 50%;
     opacity: 1;
@@ -1282,7 +1371,7 @@ body.dark-theme #loginModal .form-control {
 }
 
 .modal-header .btn-close:hover {
-    background-color: #e9ecef;
+    background-color: var(--surface);
 }
 
 .modal-body {
@@ -1297,14 +1386,14 @@ body.dark-theme #loginModal .form-control {
 /* Styles des champs du formulaire */
 .modal .form-control {
     padding: 0.5rem 1rem;
-    border: 2px solid #666;
+    border: 2px solid var(--text-muted);
     border-radius: 10px;
     transition: all 0.3s ease;
 }
 
 .modal .form-control:focus {
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 0.25rem rgba(153, 0, 71, 0.1);
+    box-shadow: 0 0 0 0.25rem color-mix(in srgb, var(--danger-color) 10%, transparent);
 }
 
 .modal .form-label {
@@ -1325,50 +1414,50 @@ body.dark-theme #loginModal .form-control {
 
 .modal .btn-primary:hover {
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(153, 0, 71, 0.2);
+    box-shadow: 0 4px 12px color-mix(in srgb, var(--danger-color) 20%, transparent);
 }
 
 /* Style des liens */
 .modal a {
-    color: var(--secondary-color);
+    color: var(--primary-color);
     transition: all 0.3s ease;
     text-decoration: none;
 }
 
 .modal a:hover {
-    color: var(--secondary-color);
+    color: var(--primary-color);
 }
 
 /* Style de la checkbox (déplacé dans create-event.css) */
 
 /* Styles pour le mode sombre */
 body.dark-theme .modal-content {
-    background-color: #2d2d2d;
-    color: #ffffff;
+    background-color: var(--gray-dark);
+    color: var(--light-text);
 }
 
 body.dark-theme .modal-header .btn-close {
-    background-color: #3d3d3d;
+    background-color: var(--gray-dark);
     filter: invert(1) grayscale(100%) brightness(200%);
 }
 
 body.dark-theme .modal .form-control {
-    background-color: #3d3d3d;
-    border-color: #4d4d4d;
-    color: white;
+    background-color: var(--gray-dark);
+    border-color: var(--gray-dark);
+    color: var(--light-text);
 }
 
 body.dark-theme .modal .form-check-input {
-    background-color: #3d3d3d;
-    border-color: #4d4d4d;
+    background-color: var(--gray-dark);
+    border-color: var(--gray-dark);
 }
 
 body.dark-theme .modal a {
-    color: #e0e0e0;
+    color: var(--border-color);
 }
 
 body.dark-theme .modal a:hover {
-    color: #ffffff;
+    color: var(--light-text);
 }
 
 /* Create event link */
@@ -1379,14 +1468,14 @@ body.dark-theme .modal a:hover {
 
 /* Login button in navbar */
 .navbar .nav-item a[href="#"][data-bs-target="#loginModal"] {
-    /*background-color: var(--secondary-color);*/
+    /*background-color: var(--primary-color);*/
     border-radius: 10px;
     padding: 0.5rem 1rem;
-    color: white !important;
+    color: var(--light-text) !important;
 }
 
 .navbar .nav-item a[href="#"][data-bs-target="#loginModal"]:hover {
-   /* background-color: var(--secondary-hover*/
+   
 }
 
 /* Icons in navbar */
@@ -1401,21 +1490,21 @@ body.dark-theme .modal a:hover {
 
 
 .btn-link {
-    color: #2e7d32;
+    color: var(--primary-color);
 }
 
 .btn-link:hover {
-    color: #1b5e20;
+    color: var(--green-dark);
 }
 
 /* Styles généraux */
 h1 {
-    color: var(--secondary-color);
+    color: var(--primary-color);
     margin-bottom: 1rem;
 }
 
 h3 {
-    color: var(--secondary-color);
+    color: var(--primary-color);
     margin-bottom: 1rem;
     display: flex;
     align-items: center;
@@ -1424,12 +1513,12 @@ h3 {
 
 .description {
     line-height: 1.6;
-    color: #4a4a4a;
+    color: var(--gray-dark);
 }
 
 /* Styles pour la légende GPX */
 .gpx-legend {
-    background: white;
+    background: var(--light-text);
     width: 100%;
     display: none;
 }
@@ -1445,7 +1534,7 @@ h3 {
     min-width: 200px;
     max-width: 300px;
     padding: 10px;
-    background-color: #f8f9fa;
+    background-color: var(--surface);
     border-radius: 5px;
 }
 
@@ -1474,7 +1563,7 @@ h3 {
 
 .gpx-route-details {
     font-size: 12px;
-    color: #666;
+    color: var(--text-muted);
     display: flex;
     gap: 10px;
 }
@@ -1488,7 +1577,7 @@ h3 {
 /* Form validation styles */
 .form-control.is-invalid,
 .was-validated .form-control:invalid {
-    border-color: var(--primary-color) !important;
+    border-color: var(--danger-color) !important;
     padding-right: calc(1.5em + 0.75rem);
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%230d6efd'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%230d6efd' stroke='none'/%3e%3c/svg%3e");
     background-repeat: no-repeat;
@@ -1497,7 +1586,7 @@ h3 {
 }
 
 .form-control.is-valid {
-    border-color: var(--secondary-color);
+    border-color: var(--primary-color);
     border-width: 2px;
 }
 
@@ -1506,7 +1595,7 @@ h3 {
     width: 100%;
     margin-top: 0.25rem;
     font-size: 0.875em;
-    color: var(--primary-color);
+    color: var(--danger-color);
 
 }
 
@@ -1530,7 +1619,7 @@ h3 {
 }
 
 .toast {
-    color: white !important;
+    color: var(--light-text) !important;
     text-align: center;
     border-radius: 10px;
     padding: 1rem;
@@ -1544,15 +1633,15 @@ h3 {
 .toast.text-bg-success,
 .toast.bg-success,
 .text-bg-success {
-    background-color: var(--secondary-color) !important;
-    color: #fff !important;
-    border: 1px solid var(--profile-border) !important;
+    background-color: var(--primary-color) !important;
+    color: var(--light-text) !important;
+    border: 1px solid var(--border-green) !important;
 }
 
 .toast.text-bg-danger,
 .toast.bg-danger,
 .text-bg-danger {
-    color: #fff !important;
+    color: var(--light-text) !important;
 }
 
 .toast .btn-close-white {
@@ -1611,10 +1700,10 @@ h3 {
 
 /* Styles des filtres */
 .filters-container {
-    background-color: white;
+    background-color: var(--light-text);
     border-radius: 10px;
     padding: 1.5rem;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px color-mix(in srgb, #000 10%, transparent);
 }
 
 
@@ -1623,7 +1712,46 @@ h3 {
 .leaflet-control-zoom-out,
 .leaflet-control-zoom-in span,
 .leaflet-control-zoom-out span {
-    color: var(--secondary-color) !important;
+    color: var(--primary-color) !important;
+}
+
+/* Pin de marqueur d'événement (divIcon + Bootstrap Icons) */
+.event-pin {
+    background: transparent;
+    border: none;
+}
+.event-pin i {
+    font-size: 38px;
+    line-height: 1;
+    color: var(--primary-color);
+    display: block;
+    text-align: center;
+    filter: drop-shadow(0 2px 3px color-mix(in srgb, #000 35%, transparent));
+    transition: transform 0.15s ease;
+}
+.event-pin:hover i {
+    transform: scale(1.12);
+    color: var(--primary-hover);
+}
+
+/* Pastille de regroupement des marqueurs (markercluster) */
+.event-cluster {
+    background: transparent;
+    border: none;
+}
+.event-cluster div {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    border: 3px solid var(--light-text);
+    box-shadow: 0 2px 6px color-mix(in srgb, #000 30%, transparent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--light-text);
+    font-weight: 700;
+    font-size: 0.95rem;
 }
 
 
@@ -1635,7 +1763,7 @@ h3 {
 /* Dark mode */
 body.dark-theme .filters-container,
 body.dark-theme .calendar-container {
-    background-color: var(--dark-bg-secondary);
+    background-color: var(--card-background, #2d2d2d));
 }
 
 
@@ -1670,8 +1798,8 @@ body.dark-theme .calendar-container {
     gap: .35rem;
     padding: .24rem .65rem;
     border-radius: 999px;
-    border: 1px solid rgba(58,138,61,.25);
-    color: var(--secondary-color);
+    border: 1px solid color-mix(in srgb, var(--primary-color) 25%, transparent);
+    color: var(--primary-color);
     background: var(--profile-hero-bg);
     font-weight: 600;
     font-size: .95rem;
@@ -1691,7 +1819,7 @@ body.dark-theme .calendar-container {
     bottom: .08em;
     width: 100%;
     height: 0.45em;
-    background: linear-gradient(90deg, rgba(58,138,61,.18) 0%, rgba(58,138,61,.08) 100%);
+    background: linear-gradient(90deg, color-mix(in srgb, var(--primary-color) 18%, transparent) 0%, color-mix(in srgb, var(--primary-color) 8%, transparent) 100%);
     border-radius: 6px;
     z-index: -1;
 }
@@ -1703,8 +1831,8 @@ body.dark-theme .calendar-container {
 
 .summary-chip--period {
     background: var(--profile-hero-bg) !important;
-    border-color: rgba(58,138,61,.25) !important;
-    color: var(--secondary-color) !important;
+    border-color: color-mix(in srgb, var(--primary-color) 25%, transparent) !important;
+    color: var(--primary-color) !important;
 }
 
 .summary-chip--search span {
@@ -1720,9 +1848,9 @@ body.dark-theme .calendar-container {
 
 :root {
     --bs-badge-color: var(--primary-color) !important;
-    --bs-badge-bg: white !important;
+    --bs-badge-bg: var(--light-text) !important;
 }
 
 .form-check-label, .form-label {
-    color: var(--profile-text);
+    color: var(--green-dark);
 }

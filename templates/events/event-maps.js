@@ -154,8 +154,7 @@ async function updateMapMarkers(events) {
                         <div class="event-popup">
                             <div class="event-popup-image">
                                 <img src="${event.main_image_path || '/assets/images/events/default-event.jpg'}" 
-                                     alt="${event.title}"
-                                     style="width: 100%; height: 120px; object-fit: cover;">
+                                     alt="${event.title}">
                                 <span class="badge-category position-absolute top-0 end-0 m-2">
                                     ${getCategoryLabel(event.category)}
                                 </span>

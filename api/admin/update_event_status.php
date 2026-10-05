@@ -11,7 +11,7 @@ require_once __DIR__ . '/../../includes/config.php';
 
 // Initialiser le tableau des logs
 $logs = [];
-function logMessage($message) {
+function logMessage(string $message) {
     global $logs;
     $logs[] = $message;
 }
@@ -77,39 +77,50 @@ try {
         $eventInfo = $stmt->fetch(PDO::FETCH_ASSOC);
         logMessage("Événement et infos utilisateur: " . json_encode($eventInfo));
         
-        if ($eventInfo && !empty($eventInfo['email'])) {
-            // Préparer l'email
-            $subject = $status === 'approved' ? 
-                'Votre événement a été approuvé' : 
-                'Votre événement a été rejeté';
-
-            $message = "Bonjour " . htmlspecialchars($eventInfo['name']) . ",\n\n";
-            $message .= "Votre événement \"" . htmlspecialchars($eventInfo['title']) . "\" prévu le " . 
-                       date('d/m/Y', strtotime($eventInfo['date'])) . " a été " .
-                       ($status === 'approved' ? "approuvé" : "rejeté") . ".\n\n";
-
-            if ($status === 'approved') {
-                $message .= "Il est maintenant visible sur le site.\n";
-            } else {
-                $message .= "Pour plus d'informations, veuillez nous contacter.\n";
+        if ($eventInfo && !empty($eventInfo['email']) && in_array($status, ['approved', 'rejected'])) {
+            // Email harmonisé via le Mailer (templates event_status_approved / _rejected)
+            try {
+                require_once __DIR__ . '/../../includes/mailer.php';
+                $mailer = new Mailer();
+                logMessage("Tentative d'envoi d'email à: " . $eventInfo['email']);
+                $mailSent = $status === 'approved'
+                    ? $mailer->sendEventApprovedEmail($eventInfo['email'], $eventInfo)
+                    : $mailer->sendEventRejectedEmail($eventInfo['email'], $eventInfo);
+                logMessage("Résultat envoi email: " . ($mailSent ? 'succès' : 'échec'));
+            } catch (\Throwable $e) {
+                logMessage("Erreur envoi email: " . $e->getMessage());
             }
-
-            $message .= "\nCordialement,\nL'équipe Partageons la Forêt";
-
-            // En-têtes additionnels
-            $headers = 'From: Partageons la Forêt <noreply@partageonslaforet.be>' . "\r\n" .
-                      'Reply-To: contact@partageonslaforet.be' . "\r\n" .
-                      'X-Mailer: PHP/' . phpversion();
-
-            logMessage("Tentative d'envoi d'email à: " . $eventInfo['email']);
-            logMessage("Sujet: " . $subject);
-            logMessage("Message: " . str_replace("\n", "\\n", $message));
-
-            // Envoyer l'email
-            $mailSent = mail($eventInfo['email'], $subject, $message, $headers);
-            logMessage("Résultat envoi email: " . ($mailSent ? 'succès' : 'échec'));
+        } elseif ($status === 'pending') {
+            logMessage("Pas d'email envoyé - statut 'pending' (retour en attente)");
         } else {
             logMessage("Pas d'email envoyé - créateur non trouvé ou sans email");
+        }
+
+        // Notifier les abonnés lorsque l'événement devient public (nouvel événement
+        // ou modification re-approuvée). Ne doit jamais bloquer la réponse.
+        if ($status === 'approved') {
+            try {
+                // Re-publication après modification (draft avec original_event_id)
+                // → notification 'update' ; sinon 'auto' (détection par l'historique)
+                $repub = $pdo->prepare('SELECT COUNT(*) FROM draft_events WHERE original_event_id = ?');
+                $repub->execute([$eventId]);
+                $notifContext = ((int) $repub->fetchColumn() > 0) ? 'update' : 'auto';
+
+                require_once __DIR__ . '/../../src/Services/Subscribers.php';
+                $subscribers = new Subscribers();
+                $notifResult = $subscribers->notifyEvent($eventId, $notifContext);
+                logMessage("Notifications abonnés: type=" . ($notifResult['type'] ?? '?') .
+                           ", sent=" . ($notifResult['sent'] ?? 0) .
+                           ", skipped=" . ($notifResult['skipped'] ?? 0));
+            } catch (\Throwable $e) {
+                logMessage("Erreur notifications abonnés: " . $e->getMessage());
+                if (function_exists('logError')) {
+                    logError('api/admin/update_event_status.php', 'Erreur notifications abonnés', [
+                        'event_id' => $eventId,
+                        'exception' => $e->getMessage()
+                    ]);
+                }
+            }
         }
 
         echo json_encode(['success' => true, 'logs' => $logs]);

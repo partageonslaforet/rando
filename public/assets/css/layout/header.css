@@ -7,8 +7,8 @@
 }
 
 .navbar.scrolled {
-    background-color: #F7FAF7 !important;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    background-color: var(--surface-green) !important;
+    box-shadow: 0 2px 4px color-mix(in srgb, #000 10%, transparent);
 }
 
 .navbar-brand-container {
@@ -21,7 +21,7 @@
 .navbar-brand {
     font-size: 2rem !important;
     font-weight: 700;
-    color: var(--secondary-color) !important;
+    color: var(--primary-color) !important;
     padding: 0;
     margin: 0;
     line-height: 1;
@@ -29,12 +29,12 @@
 
 /* Navigation items */
 #navbarNav .navbar-nav .nav-item .nav-link:not(.btn-connexion) {
-    color: white !important;
+    color: var(--light-text) !important;
     transition: color 0.3s ease;
 }
 
 .navbar-transparent #navbarNav .navbar-nav .nav-item .nav-link:not(.btn-connexion) {
-    color: white !important;
+    color: var(--light-text) !important;
 }
 
 .navbar.scrolled #navbarNav .navbar-nav .nav-item .nav-link:not(.btn-connexion) {
@@ -44,14 +44,14 @@
 /* Publish text */
 .publish-text {
     font-size: 1.2rem;
-    color: white !important;
+    color: var(--light-text) !important;
     transition: color 0.3s ease;
     margin-top: -5px;
     line-height: 1;
 }
 
 .navbar-transparent .publish-text {
-    color: white !important;
+    color: var(--light-text) !important;
 }
 
 .navbar.scrolled .publish-text {
@@ -61,8 +61,8 @@
 /* Connexion et Mon Compte buttons */
 .btn-connexion,
 #navbarNav .navbar-nav .nav-item .nav-link.btn-connexion {
-    background-color: var(--secondary-color) !important;
-    color: white !important;
+    background-color: var(--primary-color) !important;
+    color: var(--light-text) !important;
     padding: 0.5rem 1rem !important;
     border-radius: 10px;
     border: none !important;
@@ -70,20 +70,20 @@
 
 .btn-connexion:hover,
 #navbarNav .navbar-nav .nav-item .nav-link.btn-connexion:hover {
-    background-color: var(--secondary-hover) !important;
-    color: white !important;
+    background-color: var(--primary-hover) !important;
+    color: var(--light-text) !important;
 }
 
 /* S'assurer que le style reste en mode transparent */
 .navbar-transparent #navbarNav .navbar-nav .nav-item .nav-link.btn-connexion {
-    background-color: var(--secondary-color) !important;
-    color: white !important;
+    background-color: var(--primary-color) !important;
+    color: var(--light-text) !important;
 }
 
 /* Dropdown styles */
 .dropdown-menu {
     border: none;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px color-mix(in srgb, #000 10%, transparent);
     border-radius: 10px;
     margin-top: 0.5rem;
 }
@@ -95,13 +95,13 @@
 }
 
 .dropdown-item:hover {
-    background-color: rgba(58, 138, 61, 0.1);
-    color: var(--secondary-color);
+    background-color: color-mix(in srgb, var(--primary-color) 10%, transparent);
+    color: var(--primary-color);
 }
 
 .dropdown-divider {
     margin: 0.5rem 0;
-    border-color: rgba(0,0,0,0.1);
+    border-color: color-mix(in srgb, #000 10%, transparent);
 }
 
 /* Ajuster la position de la flèche du dropdown */
@@ -111,7 +111,7 @@
 }
 
 .navbar-toggler-icon {
-    color: white !important;
+    color: var(--light-text) !important;
 }
 
 /* Responsive styles */
@@ -127,7 +127,7 @@
     }
 
     .navbar-collapse {
-        background-color: white;
+        background-color: var(--light-text);
         padding: 1rem;
         border-radius: 0.5rem;
         margin-top: 1rem;
@@ -135,28 +135,28 @@
 
     /* Force les liens à rester en noir dans le menu mobile même quand transparent */
     .navbar-transparent .navbar-collapse .nav-link:not(.btn-connexion) {
-        color: #333 !important;
+        color: var(--text-color) !important;
     }
 
     .navbar-transparent #navbarNav .navbar-nav .nav-item .nav-link:not(.btn-connexion) {
-    color: #333 !important;
+    color: var(--text-color) !important;
     }
 }
 
 #loginButton {
-    background-color: var(--secondary-color) !important;
-    color: white !important;
+    background-color: var(--primary-color) !important;
+    color: var(--light-text) !important;
     border-radius: 10px;
 }
 
 #loginButton:hover {
-    background-color: var(--secondary-hover) !important;
+    background-color: var(--primary-hover) !important;
 }
 
 .navbar-brand {
     font-size: 2rem !important;
     font-weight: 700;
-    color: var(--secondary-color) !important;
+    color: var(--primary-color) !important;
     transition: color 0.3s ease;
     padding: 0;
     display: flex;
@@ -177,14 +177,14 @@
 
 /* Login/Account buttons in navbar */
 #loginButton {
-    background-color: var(--secondary-color) !important;
+    background-color: var(--primary-color) !important;
     border-radius: 10px;
     padding: 0.5rem 1rem;
-    color: white !important;
+    color: var(--light-text) !important;
 }
 
 #loginButton:hover {
-    background-color: var(--secondary-hover) !important;
+    background-color: var(--primary-hover) !important;
 }
 
 /* Réinitialiser le style pour les autres boutons de la navbar */
@@ -194,20 +194,20 @@
 
 /* Style pour les filtres temporels */
 .filter-temporal .btn.active {
-    background-color: var(--secondary-color) !important;
-    color: white !important;
+    background-color: var(--primary-color) !important;
+    color: var(--light-text) !important;
 }
 
 /* Login button */
 .navbar .nav-item a[href="#"][data-bs-target="#loginModal"] {
-    /*background-color: var(--secondary-color);*/
+    /*background-color: var(--primary-color);*/
     border-radius: 10px;
     padding: 0.5rem 1rem;
-    color: white !important;
+    color: var(--light-text) !important;
 }
 
 .navbar .nav-item a[href="#"][data-bs-target="#loginModal"]:hover {
-    /*background-color: var(--secondary-hover);*/
+    /*background-color: var(--primary-hover);*/
 }
 
 /* Icons in navbar */

@@ -145,6 +145,39 @@ try {
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
     }
 
+    // --- organizer_profiles : colonnes manquantes ---
+    $organizerProfilesColumns = [
+        'logo_path' => "ALTER TABLE `organizer_profiles` ADD COLUMN `logo_path` VARCHAR(255)",
+        'storage_path' => "ALTER TABLE `organizer_profiles` ADD COLUMN `storage_path` VARCHAR(255)",
+    ];
+    if (tableExists($pdo, 'organizer_profiles')) {
+        foreach ($organizerProfilesColumns as $col => $sql) {
+            if (!columnExists($pdo, 'organizer_profiles', $col)) {
+                execOrLog($pdo, $sql);
+            } else {
+                out("Colonne organizer_profiles.$col deja presente");
+            }
+        }
+    } else {
+        out('Table organizer_profiles absente, creation en cours');
+        execOrLog($pdo, "CREATE TABLE IF NOT EXISTS `organizer_profiles` (
+            `id` INT NOT NULL AUTO_INCREMENT,
+            `user_id` INT DEFAULT NULL,
+            `name` VARCHAR(255) NOT NULL,
+            `description` TEXT,
+            `address` TEXT,
+            `phone` VARCHAR(50),
+            `email` VARCHAR(255),
+            `website` VARCHAR(255),
+            `logo_path` VARCHAR(255),
+            `storage_path` VARCHAR(255),
+            `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            `updated_at` TIMESTAMP NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+            PRIMARY KEY (`id`),
+            KEY `user_id` (`user_id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
+    }
+
     // --- event_categories : colonnes manquantes ---
     if (!tableExists($pdo, 'event_categories')) {
         out('Table event_categories absente, creation en cours');

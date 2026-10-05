@@ -55,7 +55,7 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
 class Mailer {
-    private $mailer;
+    private PHPMailer $mailer;
 
     public function __construct() {
         try {
@@ -208,11 +208,7 @@ class Mailer {
         $link = rtrim(APP_URL, '/') . '/templates/auth/verify.php?token=' . urlencode($token) . '&email=' . urlencode($to);
         $subject = 'Vérification de votre compte - ' . APP_NAME;
 
-        $cssPath = __DIR__ . '/../public/assets/css/email-styles.css';
-        $css = is_readable($cssPath) ? (file_get_contents($cssPath) ?: '') : '';
-
         $vars = [
-            'css' => $css,
             'brand' => defined('APP_NAME') ? APP_NAME : 'Partageons la Forêt',
             'name' => $name,
             'link' => $link,
@@ -229,11 +225,7 @@ class Mailer {
         $link = rtrim(APP_URL, '/') . '/?reset=1&token=' . urlencode($token) . '&email=' . urlencode($to);
         $subject = 'Réinitialisation de votre mot de passe - ' . APP_NAME;
 
-        $cssPath = __DIR__ . '/../public/assets/css/email-styles.css';
-        $css = is_readable($cssPath) ? (file_get_contents($cssPath) ?: '') : '';
-
         $vars = [
-            'css' => $css,
             'brand' => defined('APP_NAME') ? APP_NAME : 'Partageons la Forêt',
             'name' => $name,
             'link' => $link,
@@ -252,14 +244,10 @@ class Mailer {
         $eventDateStr = !empty($eventData['date']) ? date('d/m/Y', strtotime($eventData['date'])) : 'date non précisée';
 
         $base = defined('APP_URL') ? rtrim(APP_URL, '/') : '';
-        $link = $eventId ? ($base . '/events/event-detail.php?id=' . $eventId) : $base;
+        $link = $eventId ? ($base . '/event/' . $eventId) : $base;
         $subject = 'Votre événement est en attente de validation - ' . APP_NAME;
 
-        $cssPath = __DIR__ . '/../public/assets/css/email-styles.css';
-        $css = is_readable($cssPath) ? (file_get_contents($cssPath) ?: '') : '';
-
         $vars = [
-            'css' => $css,
             'brand' => defined('APP_NAME') ? APP_NAME : 'Partageons la Forêt',
             'title' => $eventTitle,
             'eventDate' => $eventDateStr,
@@ -303,11 +291,7 @@ class Mailer {
         $base = defined('APP_URL') ? rtrim(APP_URL, '/') : '';
         $adminLink = $eventId ? ($base . '/pages/admin/view_event.php?id=' . $eventId) : ($base . '/pages/admin/events.php');
 
-        $cssPath = __DIR__ . '/../public/assets/css/email-styles.css';
-        $css = is_readable($cssPath) ? (file_get_contents($cssPath) ?: '') : '';
-
         $vars = [
-            'css' => $css,
             'brand' => defined('APP_NAME') ? APP_NAME : 'Partageons la Forêt',
             'title' => $title,
             'eventDate' => $eventDateStr,
@@ -330,13 +314,9 @@ class Mailer {
         $eventDateStr = !empty($event['date']) ? date('d/m/Y', strtotime($event['date'])) : 'date non précisée';
 
         $base = defined('APP_URL') ? rtrim(APP_URL, '/') : '';
-        $publicLink = $eventId ? ($base . '/events/event-detail.php?id=' . $eventId) : $base;
-
-        $cssPath = __DIR__ . '/../public/assets/css/email-styles.css';
-        $css = is_readable($cssPath) ? (file_get_contents($cssPath) ?: '') : '';
+        $publicLink = $eventId ? ($base . '/event/' . $eventId) : $base;
 
         $vars = [
-            'css' => $css,
             'brand' => defined('APP_NAME') ? APP_NAME : 'Partageons la Forêt',
             'title' => $title,
             'eventDate' => $eventDateStr,
@@ -359,11 +339,7 @@ class Mailer {
         $base = defined('APP_URL') ? rtrim(APP_URL, '/') : '';
         $myEvents = $base . '/pages/user/my-events.php?filter=rejected';
 
-        $cssPath = __DIR__ . '/../public/assets/css/email-styles.css';
-        $css = is_readable($cssPath) ? (file_get_contents($cssPath) ?: '') : '';
-
         $vars = [
-            'css' => $css,
             'brand' => defined('APP_NAME') ? APP_NAME : 'Partageons la Forêt',
             'title' => $title,
             'eventDate' => $eventDateStr,
@@ -376,6 +352,58 @@ class Mailer {
         $body = ob_get_clean();
 
         $subject = 'Votre événement a été refusé - ' . APP_NAME;
+        return $this->sendHtml($to, $subject, $body);
+    }
+
+    /**
+     * Notifie un abonné de la publication, mise à jour ou annulation d'un événement.
+     * @param string $to    Email de l'abonné
+     * @param array  $event Données de l'événement (id, title, date, start_time, location, description, cancellation_reason)
+     * @param string   $type          'new' | 'update' | 'cancelled'
+     * @param string[] $changedFields Libellés des éléments modifiés (affichés si 'update')
+     */
+    public function sendEventNotificationEmail(string $to, array $event, string $type = 'new', array $changedFields = []): bool {
+        $base = defined('APP_URL') ? rtrim(APP_URL, '/') : '';
+        $eventId = (int)($event['id'] ?? 0);
+
+        $vars = [
+            'event' => $event,
+            'eventUrl' => $eventId ? ($base . '/event/' . $eventId) : $base,
+            'unsubscribeUrl' => $base !== '' ? $base : '/',
+            'type' => $type,
+            'changedFields' => $changedFields,
+        ];
+
+        ob_start();
+        extract($vars, EXTR_SKIP);
+        include __DIR__ . '/../templates/emails/event-notification.php';
+        $body = ob_get_clean();
+
+        $title = $event['title'] ?? 'Événement';
+        $subjects = [
+            'new' => 'Nouvel événement : ',
+            'update' => 'Événement mis à jour : ',
+            'cancelled' => 'Événement annulé : ',
+        ];
+        $subject = ($subjects[$type] ?? $subjects['new']) . $title . ' - ' . APP_NAME;
+        return $this->sendHtml($to, $subject, $body);
+    }
+
+    /**
+     * Envoie l'email de confirmation d'un changement de mot de passe
+     * demandé depuis la page profil.
+     * @param string $to   Email du compte
+     * @param string $link Lien de confirmation (tokenisé, expire 1h)
+     */
+    public function sendPasswordChangeConfirmEmail(string $to, string $link): bool {
+        $subject = 'Confirmation de changement de mot de passe - ' . (defined('APP_NAME') ? APP_NAME : 'Partageons la Forêt');
+
+        $vars = ['link' => $link];
+        ob_start();
+        extract($vars, EXTR_SKIP);
+        include __DIR__ . '/../templates/emails/password-change-confirm.php';
+        $body = ob_get_clean();
+
         return $this->sendHtml($to, $subject, $body);
     }
 }

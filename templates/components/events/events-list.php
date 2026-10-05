@@ -6,13 +6,16 @@
  * Dépendances: Aucune
  */
 if (!function_exists('render_events_list')) {
-    function render_events_list() {
+        function render_events_list() {
         static $scriptIncluded = false;
         ?>
 
-        <!-- Conteneur principal des événements -->
+        
+
+
+<!-- Conteneur principal des événements -->
         <div class="events-list" id="events-container">
-            <header class="events-list-header" style="display: none;">
+            <header class="events-list-header is-hidden">
                 <h2 class="events-list-title">
                     <span class="events-list-title-text">Liste des événements</span>
                     <span class="events-list-summary" id="events-summary" aria-live="polite"></span>
@@ -27,15 +30,21 @@ if (!function_exists('render_events_list')) {
         <!-- Carte de résumé d'événement -->
         <template id="event-template">
             <div class="col">
-                <div class="summary-card">
-                    <a href="" class="summary-card-image" target="_blank" rel="noopener" aria-label="Afficher l'image">
+                <a href="" class="summary-card" aria-label="Voir l'événement">
+                    <div class="summary-card-image">
                         <img src="" alt="" loading="lazy">
-                    </a>
+                    </div>
                     <div class="cancelled-sticker">
                         <span>ANNULÉ</span>
                     </div>
-                    <a href="" class="summary-card-body" aria-label="Voir l'événement">
-                        <h3 class="summary-card-title"></h3>
+                    <div class="summary-card-body">
+                        <div class="summary-card-title-row">
+                            <h3 class="summary-card-title"></h3>
+                            <span class="meta-item meta-views is-hidden">
+                                <i class="bi bi-eye"></i>
+                                <span></span>
+                            </span>
+                        </div>
                             <!-- Ligne 1: Lieu | Adresse (à droite) -->
                             <div class="summary-card-meta line-1">
                                 <span class="meta-item meta-location">
@@ -58,10 +67,16 @@ if (!function_exists('render_events_list')) {
                                     <i class="bi bi-clock"></i>
                                     <span></span>
                                 </span>
-                                <span class="meta-item meta-end-time" style="display: none;">
+                                <span class="meta-item meta-end-time is-hidden">
                                     <i class="bi bi-clock-history"></i>
                                     <span></span>
                                 </span>
+                            </div>
+
+                            <!-- Motif d'annulation (affiché uniquement si annulé) -->
+                            <div class="card-cancelled-reason is-hidden">
+                                <i class="bi bi-exclamation-triangle-fill"></i>
+                                <span><strong>Motif&nbsp;:</strong> <span class="reason-text"></span></span>
                             </div>
 
                             <!-- Footer: Tag catégorie | Voir l'événement -->
@@ -71,8 +86,8 @@ if (!function_exists('render_events_list')) {
                                     Voir l'événement <span aria-hidden="true">→</span>
                                 </span>
                             </div>
-                    </a>
-                </div>
+                    </div>
+                </a>
             </div>
         </template>
 
@@ -281,16 +296,41 @@ if (!function_exists('render_events_list')) {
                         const eventElement = template.content.cloneNode(true);
 
                         const summaryCard = eventElement.querySelector('.summary-card');
-                        console.warn('[events-list]', event.id, event.title, 'is_cancelled=', event.is_cancelled);
-                        if (summaryCard && /^(1|t|true|yes|on)$/i.test(String(event.is_cancelled))) {
-                            console.warn('[events-list] ajout is-cancelled pour', event.id);
-                            summaryCard.classList.add('is-cancelled');
+                        if (summaryCard) {
+                            summaryCard.setAttribute('href', `/event?id=${event.id}`);
+                            if (/^(1|t|true|yes|on)$/i.test(String(event.is_cancelled))) {
+                                summaryCard.classList.add('is-cancelled');
+
+                                const reasonWrap = eventElement.querySelector('.card-cancelled-reason');
+                                const reasonText = reasonWrap ? reasonWrap.querySelector('.reason-text') : null;
+                                if (reasonWrap && event.cancellation_reason) {
+                                    reasonText.textContent = event.cancellation_reason;
+                                    reasonWrap.classList.remove('is-hidden');
+                                }
+                            }
                         }
 
                         const img = eventElement.querySelector('.summary-card-image img');
                         const placeholderSvg = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%23a8d5a2'/%3E%3Cstop offset='100%25' stop-color='%235d8c5f'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='400' height='300' fill='url(%23g)'/%3E%3C/svg%3E";
-                        img.src = event.main_image_path || event.main_image || (event.event_image ? `/uploads/events/${event.event_image}` : placeholderSvg);
-                        img.onerror = function() { this.onerror = null; this.src = placeholderSvg; };
+
+                        const runningFallback = '<?= getCourseAPiedFallbackImage() ?>';
+                        let imageSrc = event.main_image_path || event.main_image || (event.event_image ? `/uploads/events/${event.event_image}` : placeholderSvg);
+
+                        // Si le serveur renvoie l'image générique ou absente, utiliser le fallback course à pied
+                        const isRunning = ((event.category || '').toLowerCase() === 'running') || ((event.category_name || '').toLowerCase().includes('course à pied'));
+                        if (isRunning && (!imageSrc || !imageSrc.includes('/uploads/') || ['default-event.jpg','main-hero.jpg','map-hero.jpg','coursea'].some(g => imageSrc.includes(g)))) {
+                            imageSrc = runningFallback;
+                        }
+
+                        img.src = imageSrc;
+                        img.onerror = function() {
+                            this.onerror = null;
+                            if (this.src !== runningFallback) {
+                                this.src = runningFallback;
+                            } else {
+                                this.src = placeholderSvg;
+                            }
+                        };
                         img.alt = event.title ? `Image de ${event.title}` : 'Image de l\'événement';
 
                         const locEl = eventElement.querySelector('.meta-location span');
@@ -310,6 +350,16 @@ if (!function_exists('render_events_list')) {
                         if (dateEl) dateEl.textContent = formatDate(event.date);
 
                         eventElement.querySelector('.summary-card-title').textContent = event.title;
+
+                        const viewsWrap = eventElement.querySelector('.meta-views');
+                        const rawTotal = (event.views_total !== undefined && event.views_total !== null)
+                            ? event.views_total
+                            : event.view_count;
+                        if (viewsWrap && rawTotal !== undefined && rawTotal !== null) {
+                            const vc = parseInt(rawTotal, 10) || 0;
+                            viewsWrap.style.display = 'inline-flex';
+                            viewsWrap.querySelector('span').textContent = vc + ' vue' + (vc > 1 ? 's' : '');
+                        }
 
                         const timeWrap = eventElement.querySelector('.meta-time');
                         const timeEl = timeWrap ? timeWrap.querySelector('span') : null;
@@ -331,71 +381,47 @@ if (!function_exists('render_events_list')) {
                         const catsWrap = eventElement.querySelector('.summary-card-footer .meta-categories');
                         if (catsWrap) {
                             catsWrap.innerHTML = '';
-                            const iconFallback = { hiking: 'bi-person-walking', running: 'bi-person-walking', cycling: 'bi-bicycle' };
-                            if (Array.isArray(event.categories) && event.categories.length > 0) {
-                                event.categories.forEach(cat => {
-                                    const tag = document.createElement('span');
-                                    tag.className = 'meta-item meta-category';
-                                    const i = document.createElement('i');
-                                    const inferKey = (cat.name || '').toLowerCase();
-                                    let iconClass = '';
-                                    if (cat.icon) {
-                                        if (cat.icon.startsWith('fa')) {
-                                            iconClass = (cat.icon.includes('fa-') && !cat.icon.includes('fa-solid') && !cat.icon.startsWith('fas '))
-                                                ? `fa-solid ${cat.icon}`
-                                                : cat.icon;
-                                        } else if (cat.icon.startsWith('bi-')) {
-                                            iconClass = `bi ${cat.icon}`;
-                                        }
-                                    }
-                                    if (!iconClass) {
-                                        const fb = iconFallback[inferKey] || 'bi-tree';
-                                        iconClass = fb.startsWith('bi-') ? `bi ${fb}` : fb;
-                                    }
-                                    i.className = iconClass;
-                                    const text = document.createElement('span');
-                                    text.className = 'badge-text';
-                                    text.textContent = cat.name || '';
-                                    tag.appendChild(i);
-                                    tag.appendChild(text);
-                                    catsWrap.appendChild(tag);
-                                });
-                            } else if (event.category_name) {
+                            const iconFallback = {
+                                hiking: 'bi-person-walking',
+                                marche: 'bi-person-walking',
+                                running: 'bi-person-running',
+                                'course-a-pied': 'bi-person-running',
+                                cycling: 'bi-bicycle',
+                                vtt: 'bi-bicycle'
+                            };
+
+                            function buildCategoryTag(cat) {
                                 const tag = document.createElement('span');
                                 tag.className = 'meta-item meta-category';
                                 const i = document.createElement('i');
                                 let iconClass = '';
-                                if (event.category_icon) {
-                                    if (event.category_icon.startsWith('fa')) {
-                                        iconClass = (event.category_icon.includes('fa-') && !event.category_icon.includes('fa-solid') && !event.category_icon.startsWith('fas '))
-                                            ? `fa-solid ${event.category_icon}`
-                                            : event.category_icon;
-                                    } else if (event.category_icon.startsWith('bi-')) {
-                                        iconClass = `bi ${event.category_icon}`;
+                                if (cat.icon) {
+                                    if (cat.icon.startsWith('fa')) {
+                                        iconClass = (cat.icon.includes('fa-') && !cat.icon.includes('fa-solid') && !cat.icon.startsWith('fas '))
+                                            ? `fa-solid ${cat.icon}`
+                                            : cat.icon;
+                                    } else if (cat.icon.startsWith('bi-')) {
+                                        iconClass = `bi ${cat.icon}`;
                                     }
                                 }
                                 if (!iconClass) {
-                                    const fallback = (event.category && iconFallback[event.category]) ? iconFallback[event.category] : 'bi-tree';
+                                    const code = (cat.code || '').toLowerCase();
+                                    const fallback = iconFallback[code] || 'bi-tree';
                                     iconClass = fallback.startsWith('bi-') ? `bi ${fallback}` : fallback;
                                 }
                                 i.className = iconClass;
                                 const text = document.createElement('span');
                                 text.className = 'badge-text';
-                                text.textContent = event.category_name;
+                                text.textContent = cat.name;
                                 tag.appendChild(i);
                                 tag.appendChild(text);
                                 catsWrap.appendChild(tag);
                             }
-                        }
 
-                        const imageLink = eventElement.querySelector('.summary-card-image');
-                        if (imageLink) {
-                            imageLink.href = img.src;
-                        }
-
-                        const bodyLink = eventElement.querySelector('.summary-card-body');
-                        if (bodyLink) {
-                            bodyLink.href = `/event?id=${event.id}`;
+                            const cats = event.categories && event.categories.length
+                                ? event.categories
+                                : (event.category_name ? [{ name: event.category_name, icon: event.category_icon, code: event.category }] : []);
+                            cats.forEach(buildCategoryTag);
                         }
 
                         container.appendChild(eventElement);
@@ -491,7 +517,8 @@ if (!function_exists('render_events_list')) {
                 }
             };
         }
-        </script>
+
+                </script>
         <?php endif; ?>
         <?php
     }

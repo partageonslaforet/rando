@@ -3855,3 +3855,99 @@
 [07-Sep-2026 15:47:14 Europe/Brussels] Événement supprimé: oui
 [07-Sep-2026 15:47:14 Europe/Brussels] Validation de la transaction
 [07-Sep-2026 15:47:14 Europe/Brussels] === Fin de la suppression d'événement ===
+[15-Sep-2026 08:46:35 Europe/Paris] === Début de la suppression d'événement ===
+[15-Sep-2026 08:46:35 Europe/Paris] Initialisation de la session
+[15-Sep-2026 08:46:35 Europe/Paris] Session initialisée avec ID: 8pajnmr7r00s5a2uhaviav11cc
+[15-Sep-2026 08:46:35 Europe/Paris] Session data: Array
+(
+    [csrf_token] => 2b2ae0bd1df333f6b83fbd38130e7039be5e5fdd8c55a524e3b48d2380eebc60
+    [rate_limit_login] => Array
+        (
+            [count] => 1
+            [first] => 1789399039
+        )
+
+    [user_id] => 2
+    [user_email] => jarodhc4@gmail.com
+    [user_role] => admin
+    [user] => Array
+        (
+            [id] => 2
+            [email] => jarodhc4@gmail.com
+            [role] => admin
+        )
+
+)
+
+[15-Sep-2026 08:46:35 Europe/Paris] Vérification de connexion
+[15-Sep-2026 08:46:35 Europe/Paris] SESSION_ID: 8pajnmr7r00s5a2uhaviav11cc
+[15-Sep-2026 08:46:35 Europe/Paris] SESSION: Array
+(
+    [csrf_token] => 2b2ae0bd1df333f6b83fbd38130e7039be5e5fdd8c55a524e3b48d2380eebc60
+    [rate_limit_login] => Array
+        (
+            [count] => 1
+            [first] => 1789399039
+        )
+
+    [user_id] => 2
+    [user_email] => jarodhc4@gmail.com
+    [user_role] => admin
+    [user] => Array
+        (
+            [id] => 2
+            [email] => jarodhc4@gmail.com
+            [role] => admin
+        )
+
+)
+
+[15-Sep-2026 08:46:35 Europe/Paris] Vérification de connexion
+[15-Sep-2026 08:46:35 Europe/Paris] SESSION_ID: 8pajnmr7r00s5a2uhaviav11cc
+[15-Sep-2026 08:46:35 Europe/Paris] SESSION: Array
+(
+    [csrf_token] => 2b2ae0bd1df333f6b83fbd38130e7039be5e5fdd8c55a524e3b48d2380eebc60
+    [rate_limit_login] => Array
+        (
+            [count] => 1
+            [first] => 1789399039
+        )
+
+    [user_id] => 2
+    [user_email] => jarodhc4@gmail.com
+    [user_role] => admin
+    [user] => Array
+        (
+            [id] => 2
+            [email] => jarodhc4@gmail.com
+            [role] => admin
+        )
+
+)
+
+[15-Sep-2026 08:46:35 Europe/Paris]  Récupération ID utilisateur: 2
+[15-Sep-2026 08:46:35 Europe/Paris]  Accès autorisé - Utilisateur: 2
+[15-Sep-2026 08:46:35 Europe/Paris]  Vérification admin: Admin
+[15-Sep-2026 08:46:35 Europe/Paris] Données reçues: Array
+(
+    [event_id] => 1
+)
+
+[15-Sep-2026 08:46:35 Europe/Paris] ID de l'événement après filtrage: 1
+[15-Sep-2026 08:46:35 Europe/Brussels] Connexion à la base de données réussie (cool5792_sports_events)
+[15-Sep-2026 08:46:35 Europe/Brussels] Connexion à la base de données établie
+[15-Sep-2026 08:46:35 Europe/Brussels] Début de la transaction
+[15-Sep-2026 08:46:35 Europe/Brussels] Suppression des contacts
+[15-Sep-2026 08:46:35 Europe/Brussels] Contacts supprimés: 0
+[15-Sep-2026 08:46:35 Europe/Brussels] Récupération des chemins d'images
+[15-Sep-2026 08:46:35 Europe/Brussels] Images trouvées: 1
+[15-Sep-2026 08:46:35 Europe/Brussels] Suppression des entrées d'images en base
+[15-Sep-2026 08:46:35 Europe/Brussels] Images supprimées: 1
+[15-Sep-2026 08:46:35 Europe/Brussels] Récupération des fichiers GPX
+[15-Sep-2026 08:46:35 Europe/Brussels] Fichiers GPX trouvés: 1
+[15-Sep-2026 08:46:35 Europe/Brussels] Suppression des entrées de parcours en base
+[15-Sep-2026 08:46:35 Europe/Brussels] Parcours supprimés: 1
+[15-Sep-2026 08:46:35 Europe/Brussels] Suppression de l'événement
+[15-Sep-2026 08:46:35 Europe/Brussels] Événement supprimé: oui
+[15-Sep-2026 08:46:35 Europe/Brussels] Validation de la transaction
+[15-Sep-2026 08:46:35 Europe/Brussels] === Fin de la suppression d'événement ===

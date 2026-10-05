@@ -19,7 +19,7 @@ require_once __DIR__ . '/../../includes/csrf.php'; ?>
             <div class="modal-body">
                 <h5 class="modal-title" id="loginModalLabel">Connexion</h5>
                 <p class="auth-intro">Connectez-vous pour gérer vos événements et suivre leur validation.</p>
-                <div class="auth-alert auth-alert-danger" id="loginError" style="display: none;"></div>
+                <div class="auth-alert auth-alert-danger is-hidden" id="loginError"></div>
                 <form id="loginForm" method="post">
                     <div class="mb-3">
                         <label for="loginEmail" class="form-label">Adresse e-mail</label>
@@ -51,7 +51,6 @@ require_once __DIR__ . '/../../includes/csrf.php'; ?>
                 <div class="auth-separator"><span>ou</span></div>
                 <p class="auth-footer">
                     Vous n'avez pas encore de compte ?
-                    <!-- <i class="bi bi-arrow-down-circle-fill" aria-hidden="true" style="color: #1a1a1a; font-size: 1rem; vertical-align: middle; margin: 0 0.25rem;"></i> -->
                     <a href="#" class="auth-link" onclick="showRegisterModal(); return false;">Créer un compte</a>
                 </p>
             </div>

@@ -111,7 +111,7 @@ try {
             exit;
         }
 
-        header('Location: /events/event-detail.php?id=' . $eventId);
+        header('Location: /event/' . $eventId);
         exit;
     }
 
@@ -132,7 +132,7 @@ try {
         exit;
     }
 
-    $redirect = $eventId ? '/events/event-detail.php?id=' . $eventId : '/';
-    header('Location: ' . $redirect . '&error=' . urlencode($e->getMessage()));
+    $redirect = $eventId ? '/event/' . $eventId : '/';
+    header('Location: ' . $redirect . '?error=' . urlencode($e->getMessage()));
     exit;
 }

@@ -6,10 +6,15 @@
  * Dépendances: includes/config.php, src/Models/Event.php
  */
 require_once __DIR__ . '/../../includes/config.php';
+require_once __DIR__ . '/../../logs/error.log.php';
 require_once __DIR__ . '/../../src/Models/Event.php';
 
 // Récupérer l'ID de l'événement
 $eventId = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+logError('templates/events/event.php', 'template enter', [
+    'request_uri' => $_SERVER['REQUEST_URI'] ?? null,
+    'event_id' => $eventId
+]);
 if (!$eventId) {
     header('Location: /templates/events/events.php');
     exit;
@@ -77,7 +82,7 @@ require_once '../templates/layouts/header.php';
                 <span class="badge bg-<?php echo $event['category'] === 'running' ? 'danger' : 
                     ($event['category'] === 'hiking' ? 'success' : 
                     ($event['category'] === 'cycling' ? 'info' : 'secondary')); ?> me-2">
-                    <?php echo ucfirst($event['category']); ?>
+                    <?php echo !empty($event['category_name']) ? htmlspecialchars($event['category_name']) : 'Non classé'; ?>
                 </span>
                 <span class="text-muted">
                     <i class="bi bi-calendar me-1"></i>
@@ -158,7 +163,7 @@ require_once '../templates/layouts/header.php';
                 <div class="card mb-4">
                     <div class="card-body">
                         <h5 class="card-title">Parcours</h5>
-                        <div id="map" style="height: 400px;"></div>
+                        <div id="map" class="map-h-400"></div>
                         <div class="mt-3">
                             <a href="<?php echo htmlspecialchars($event['gpx_file']); ?>" 
                                class="btn btn-outline-primary btn-sm" download>

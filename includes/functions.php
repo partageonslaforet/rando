@@ -8,6 +8,37 @@ if (defined('PLF_FUNCTIONS_LOADED')) {
 define('PLF_FUNCTIONS_LOADED', true);
 
 require_once __DIR__ . '/../src/Services/Storage.php';
+require_once __DIR__ . '/../logs/error.log.php';
+
+// Fonction utilitaire : sponsors actifs pour l'affichage (card événement, footer accueil)
+// Retourne [] si la table est absente (migration non jouée) ou en cas d'erreur.
+function getActiveSponsors(?PDO $pdo): array {
+    if (!$pdo instanceof PDO) {
+        return [];
+    }
+    try {
+        return $pdo->query(
+            'SELECT id, name, image_path, link_url, alt_text FROM sponsors WHERE active = 1 ORDER BY position ASC, id ASC'
+        )->fetchAll(PDO::FETCH_ASSOC) ?: [];
+    } catch (Throwable $e) {
+        if (function_exists('logError')) {
+            logError('includes/functions.php', 'getActiveSponsors failed', ['error' => $e->getMessage()]);
+        }
+        return [];
+    }
+}
+
+// Fonction utilitaire pour compter les vues exactes d'un événement
+function getEventTotalViews(PDO $pdo, int $eventId): int {
+    $stmt = $pdo->prepare(
+        "SELECT COUNT(*) FROM site_visits WHERE url = :url1 OR url = :url2"
+    );
+    $stmt->execute([
+        'url1' => '/event?id=' . $eventId,
+        'url2' => '/event/' . $eventId
+    ]);
+    return (int)$stmt->fetchColumn();
+}
 
 /**
  * Vérifie si la requête est une requête AJAX
@@ -74,6 +105,125 @@ function isLoggedIn() {
 function isAdmin() {
     error_log(' Vérification admin: ' . (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin' ? 'Admin' : 'Non admin'));
     return isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
+}
+
+/**
+ * Enregistre une visite de page pour les statistiques de fréquentation.
+ * Ignore silencieusement les erreurs (ne doit jamais casser l'affichage d'une page).
+ * @param string $url Chemin de la page visitée (ex: '/', '/events', '/event?id=12')
+ */
+function trackVisit(string $url): void {
+    try {
+        $userAgent = $_SERVER['HTTP_USER_AGENT'] ?? '';
+
+        // Ignore les ressources statiques (favicon, images, polices, etc.) qui faussent les stats
+        $path = parse_url($url, PHP_URL_PATH) ?? '';
+        $ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+        $staticExts = ['png','jpg','jpeg','gif','svg','ico','css','js','txt','xml','json','woff','woff2','ttf','eot','map','pdf','webp','bmp','mp4','mp3','webm','ogg','avif','zip','gz','tar'];
+        if (in_array($ext, $staticExts, true)) {
+            return;
+        }
+
+        // Ne jamais stocker de paramètres sensibles dans les stats
+        $parts = parse_url($url);
+        if ($parts !== false && !empty($parts['query'])) {
+            parse_str($parts['query'], $params);
+            foreach (['password', 'password_confirm', 'passwd', 'pwd', 'csrf_token', 'token', 'email'] as $k) {
+                unset($params[$k]);
+            }
+            $url = ($parts['path'] ?? '/') . ($params ? '?' . http_build_query($params) : '');
+        }
+
+        // Filtre basique anti-bot / crawler
+        if ($userAgent !== '' && preg_match('/bot|crawl|spider|slurp|facebookexternalhit/i', $userAgent)) {
+            return;
+        }
+
+        // Détection outils / requêtes non humaines
+        $isHuman = 1;
+        if ($userAgent === '') {
+            $isHuman = 0;
+        } elseif (preg_match('/Postman|curl|wget|python-requests|python-urllib|axios|node-fetch|got\(|httpie|insomnia|java\/|Apache-HttpClient|Go-http-client|okhttp|libwww-perl|Guzzle|GuzzleHttp/i', $userAgent)) {
+            $isHuman = 0;
+        }
+
+        $pdo = getConnection();
+        $visitValues = [
+            substr($url, 0, 255),
+            $_SERVER['REMOTE_ADDR'] ?? null,
+            substr($userAgent, 0, 255),
+            isset($_SERVER['HTTP_REFERER']) ? substr($_SERVER['HTTP_REFERER'], 0, 255) : null,
+            $_SESSION['user_id'] ?? null,
+            session_id() ?: null,
+            $isHuman,
+        ];
+        $stmt = $pdo->prepare(
+            'INSERT INTO site_visits (url, ip_address, user_agent, referrer, user_id, session_id, is_human, visited_at)
+             VALUES (?, ?, ?, ?, ?, ?, ?, NOW())'
+        );
+        try {
+            $stmt->execute($visitValues);
+        } catch (Throwable $insertErr) {
+            // Fallback si la colonne is_human n'est pas encore déployée
+            if (strpos($insertErr->getMessage(), "Unknown column 'is_human'") !== false) {
+                $stmt = $pdo->prepare(
+                    'INSERT INTO site_visits (url, ip_address, user_agent, referrer, user_id, session_id, visited_at)
+                     VALUES (?, ?, ?, ?, ?, ?, NOW())'
+                );
+                array_pop($visitValues); // retire is_human
+                $stmt->execute($visitValues);
+            } else {
+                throw $insertErr;
+            }
+        }
+    } catch (Throwable $e) {
+        logError('includes/functions.php', 'trackVisit failed: ' . $e->getMessage(), ['url' => $url]);
+    }
+}
+
+/**
+ * Résout pays/ville d'une IP, avec cache en base (table ip_geo_cache).
+ * N'appelle l'API externe que si l'IP n'est pas déjà en cache.
+ * @param string $ip
+ * @return array{country: ?string, city: ?string}
+ */
+function resolveIpLocation(string $ip): array {
+    $default = ['country' => null, 'city' => null];
+    if ($ip === '' || in_array($ip, ['127.0.0.1', '::1'], true)) {
+        return ['country' => 'Local', 'city' => null];
+    }
+
+    try {
+        $pdo = getConnection();
+        $stmt = $pdo->prepare('SELECT country, city FROM ip_geo_cache WHERE ip_address = ?');
+        $stmt->execute([$ip]);
+        $cached = $stmt->fetch();
+        if ($cached) {
+            return ['country' => $cached['country'], 'city' => $cached['city']];
+        }
+
+        $context = stream_context_create(['http' => ['timeout' => 2]]);
+        $response = @file_get_contents(
+            'http://ip-api.com/json/' . urlencode($ip) . '?fields=status,country,city',
+            false,
+            $context
+        );
+        $data = $response ? json_decode($response, true) : null;
+
+        $country = ($data && ($data['status'] ?? '') === 'success') ? ($data['country'] ?? null) : null;
+        $city = ($data && ($data['status'] ?? '') === 'success') ? ($data['city'] ?? null) : null;
+
+        $stmt = $pdo->prepare(
+            'INSERT INTO ip_geo_cache (ip_address, country, city, resolved_at) VALUES (?, ?, ?, NOW())
+             ON DUPLICATE KEY UPDATE country = VALUES(country), city = VALUES(city), resolved_at = NOW()'
+        );
+        $stmt->execute([$ip, $country, $city]);
+
+        return ['country' => $country, 'city' => $city];
+    } catch (Throwable $e) {
+        error_log('resolveIpLocation: ' . $e->getMessage());
+        return $default;
+    }
 }
 
 /**
@@ -261,17 +411,45 @@ if (!function_exists('getFullUrl')) {
 
 if (!function_exists('resolveImagePublicUrl')) {
     function resolveImagePublicUrl($imagePath, $storagePath) {
-        if (!empty($imagePath)) {
+        $docRoot = realpath($_SERVER['DOCUMENT_ROOT'] ?? '');
+
+        // 1) Si storage_path existe physiquement, on l'utilise
+        if (!empty($storagePath) && file_exists($storagePath)) {
+            if ($docRoot && strpos($storagePath, $docRoot) === 0) {
+                return getFullUrl(substr($storagePath, strlen($docRoot)));
+            }
+            return $storagePath;
+        }
+
+        // 2) Si image_path est une URL externe, on l'accepte telle quelle
+        if (!empty($imagePath) && preg_match('#^https?://#i', $imagePath)) {
             return $imagePath;
         }
-        if (empty($storagePath)) {
-            return null;
+
+        // 3) Si image_path est un chemin local, vérifier que le fichier existe
+        if (!empty($imagePath) && $docRoot) {
+            $relative = ltrim($imagePath, '/');
+            if (file_exists($docRoot . '/' . $relative)) {
+                return $imagePath;
+            }
         }
-        $docRoot = realpath($_SERVER['DOCUMENT_ROOT'] ?? '');
-        if ($docRoot && strpos($storagePath, $docRoot) === 0) {
-            return getFullUrl(substr($storagePath, strlen($docRoot)));
-        }
-        return $storagePath;
+
+        return null;
+    }
+}
+
+if (!function_exists('getCourseAPiedFallbackImage')) {
+    function getCourseAPiedFallbackImage(): string {
+        return '/assets/images/course-a-pied.jpg';
+    }
+}
+
+if (!function_exists('isRealEventImage')) {
+    function isRealEventImage(?string $url): bool {
+        return !empty($url) && (
+            stripos($url, '/uploads/') !== false
+            || preg_match('#^https?://#i', $url)
+        );
     }
 }
 
