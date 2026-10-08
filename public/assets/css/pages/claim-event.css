@@ -1,0 +1,51 @@
+/**
+ * localisation: public/assets/css/pages/claim-event.css
+ * Role: Styles de la modal de revendication d'événement (charte Partageons La Forêt)
+ * Usage: Chargé par pages/claim-event.php via $additionalStyles
+ * Dépendances: style.css (variables CSS :root)
+ */
+
+/* Action principale — vert forêt */
+#claimResultModal .btn-claim-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: var(--light-text);
+    border-radius: 10px;
+    font-weight: 500;
+    padding: 0.6rem 1.6rem;
+    transition: background-color 0.3s ease;
+}
+#claimResultModal .btn-claim-primary:hover,
+#claimResultModal .btn-claim-primary:focus {
+    background-color: var(--primary-hover);
+    border-color: var(--primary-hover);
+    color: var(--light-text);
+}
+
+/* Action secondaire — contour vert forêt */
+#claimResultModal .btn-claim-secondary {
+    background-color: transparent;
+    border: 1px solid var(--primary-color);
+    color: var(--primary-color);
+    border-radius: 10px;
+    font-weight: 500;
+    padding: 0.6rem 1.6rem;
+    transition: all 0.3s ease;
+}
+#claimResultModal .btn-claim-secondary:hover,
+#claimResultModal .btn-claim-secondary:focus {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: var(--light-text);
+}
+
+/* Action tertiaire — simple lien discret */
+#claimResultModal .btn-claim-link {
+    color: var(--text-muted);
+    font-weight: 500;
+    text-decoration: none;
+    padding: 0.6rem 1rem;
+}
+#claimResultModal .btn-claim-link:hover {
+    color: var(--danger-color);
+}

@@ -22,6 +22,12 @@ return [
                 'public_path' => '/organizer_logos'
             ]
         ],
+        'sponsors' => [
+            'images' => [
+                'storage_path' => '/sponsors',
+                'public_path' => '/sponsors'
+            ]
+        ],
         'gpx' => [
             'files' => [
                 'storage_path' => '/gpx',

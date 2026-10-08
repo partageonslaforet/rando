@@ -111,7 +111,12 @@ document.addEventListener('DOMContentLoaded', function() {
             form.querySelector('#category_name').value = this.dataset.name;
             form.querySelector('#category_icon').value = this.dataset.icon;
             form.querySelector('#category_color').value = this.dataset.color;
-            
+
+            const title = document.getElementById('categoryModalTitle');
+            if (title) title.textContent = 'Modifier la catégorie';
+            const preview = document.getElementById('categoryColorPreview');
+            if (preview) preview.style.setProperty('--cat-color', this.dataset.color || '#000000');
+
             // Ouvrir le modal
             const bsModal = new bootstrap.Modal(modal);
             bsModal.show();
@@ -164,6 +169,19 @@ document.addEventListener('DOMContentLoaded', function() {
             const form = this.querySelector('form');
             form.reset();
             form.querySelector('#category_id').value = '';
+            const title = document.getElementById('categoryModalTitle');
+            if (title) title.textContent = 'Nouvelle catégorie';
+            const preview = document.getElementById('categoryColorPreview');
+            if (preview) preview.style.setProperty('--cat-color', '#000000');
+        });
+    }
+
+    // Aperçu couleur live dans la modale
+    const colorInput = document.getElementById('category_color');
+    if (colorInput) {
+        colorInput.addEventListener('input', function() {
+            const preview = document.getElementById('categoryColorPreview');
+            if (preview) preview.style.setProperty('--cat-color', this.value);
         });
     }
 

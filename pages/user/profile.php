@@ -85,6 +85,17 @@ require_once __DIR__ . '/../../templates/layouts/header-solid.php';
             </div>
         </header>
 
+        <?php if (empty($profiles)): ?>
+        <div class="organizer-cta-banner d-flex align-items-start gap-2" role="note">
+            <i class="bi bi-building-add flex-shrink-0" aria-hidden="true"></i>
+            <div>
+                <strong>Gagnez en visibilité :</strong> créez votre profil organisateur pour afficher
+                le nom et le logo de votre club ou association sur vos événements.
+                <a href="/pages/user/profile.php?tab=organizer&new=1">Créer mon profil organisateur</a>
+            </div>
+        </div>
+        <?php endif; ?>
+
         <div class="profile-layout">
             <!-- Menu du compte -->
             <aside class="profile-sidebar" aria-label="Menu du compte">
@@ -158,7 +169,7 @@ require_once __DIR__ . '/../../templates/layouts/header-solid.php';
                             <div>
                                 <h2 id="organizer-heading">Organisateur</h2>
                                 <p>Gérez les profils que vous présentez aux participants.</p>
-                            </div>
+                        </div>
                             <!-- Toujours proposer la création d'un nouveau profil -->
                             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#organizerModal">
                                 <i class="bi bi-plus-circle" aria-hidden="true"></i> Nouveau profil
@@ -169,7 +180,7 @@ require_once __DIR__ . '/../../templates/layouts/header-solid.php';
 
                     <div class="organizer-profiles">
                         <?php if (empty($profiles)): ?>
-                            <div class="alert alert-info">
+                            <div class="organizer-cta-banner">
                                 Vous n'avez pas encore de profil organisateur. Créez-en un pour pouvoir organiser des événements.
                             </div>
                         <?php else: ?>

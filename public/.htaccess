@@ -19,6 +19,11 @@ RewriteCond %{REQUEST_FILENAME} -f [OR]
 RewriteCond %{REQUEST_FILENAME} -d
 RewriteRule ^ - [L]
 
+# Fichiers d'uploads manquants -> vrai 404 (evite de servir index.php en 200,
+# ce qui renvoyait du HTML aux fetchs GPX et aux <img> cassées)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^uploads/ - [R=404,L]
+
 # Permettre l'accès direct aux fichiers PHP dans templates/events
 RewriteCond %{REQUEST_URI} !^/templates/events/.*\.php
 RewriteCond %{REQUEST_FILENAME} !-f

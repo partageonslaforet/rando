@@ -63,6 +63,9 @@ try {
         $mailer = new Mailer();
         $mailSent = $mailer->sendPasswordResetEmail($email, $user['name'], $token);
         logError('api/auth/forgot-password.php', 'Resultat envoi mail reset', ['sent' => $mailSent, 'email' => $email]);
+    } else {
+        // Diagnostic : l'email ne correspond à aucun compte actif (is_active = 1)
+        logError('api/auth/forgot-password.php', 'Reset demande sans compte actif', ['email' => $email]);
     }
 
     // Réponse neutre

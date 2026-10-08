@@ -13,11 +13,17 @@ function render_header() {
     }
 
     require_once __DIR__ . '/../../../logs/error.log.php';
-    logError('header.php', 'Menu auth check', [
-        'session_id' => session_id(),
-        'user_id' => $_SESSION['user_id'] ?? null,
-        'user_role' => $_SESSION['user_role'] ?? null,
-    ]);
+    if (defined('DEBUG') && DEBUG) {
+        logError('header.php', 'Menu auth check', [
+            'session_id' => session_id(),
+            'user_id' => $_SESSION['user_id'] ?? null,
+            'user_role' => $_SESSION['user_role'] ?? null,
+        ]);
+    }
+
+    // Pastille rappel : l'utilisateur connecté n'a pas de profil organisateur
+    require_once __DIR__ . '/../../../includes/functions.php';
+    $showOrganizerBadge = !empty($_SESSION['user_id']) && !userHasOrganizerProfile();
 
     // Inclure les messages flash après le démarrage de la session
     require_once __DIR__ . '/../messages/flash_messages.php';
@@ -137,9 +143,12 @@ function render_header() {
                                 <li class="nav-item dropdown">
                                     <a class="nav-link btn-connexion dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                         Mon Compte
+                                        <?php if ($showOrganizerBadge): ?>
+                                            <span class="org-badge" title="Créez votre profil organisateur pour gagner en visibilité" aria-label="Profil organisateur à créer">!</span>
+                                        <?php endif; ?>
                                     </a>
                                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                        <li><a class="dropdown-item" href="/pages/user/profile.php">Mon Profil</a></li>
+                                        <li><a class="dropdown-item" href="<?= $showOrganizerBadge ? '/pages/user/profile.php?tab=organizer&new=1' : '/pages/user/profile.php' ?>">Mon Profil<?php if ($showOrganizerBadge): ?><span class="org-badge" aria-hidden="true">!</span><?php endif; ?></a></li>
                                         <li><a class="dropdown-item" href="/pages/user/my-events.php">Mes Événements</a></li>
                                         <li><hr class="dropdown-divider"></li>
                                         <li><a class="dropdown-item" href="javascript:void(0);" onclick="logout()">Déconnexion</a></li>

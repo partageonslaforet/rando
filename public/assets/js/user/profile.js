@@ -343,5 +343,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Ajouter le gestionnaire de soumission
         organizerForm.addEventListener('submit', handleSubmit);
+
+        // Auto-ouverture de la modale depuis les CTA d'incitation (?tab=organizer&new=1)
+        try {
+            const url = new URL(window.location.href);
+            if (url.searchParams.get('new') === '1' && url.searchParams.get('tab') === 'organizer') {
+                new bootstrap.Modal(organizerModal).show();
+            }
+        } catch (_) { /* URL non parsable ou bootstrap absent : ignorer */ }
     }
 });

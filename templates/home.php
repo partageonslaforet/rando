@@ -27,6 +27,7 @@ try {
 include __DIR__ . '/components/hero-section/hero-section.php';
 include __DIR__ . '/components/filters/temporal.php';
 include __DIR__ . '/components/filters/categories.php';
+include __DIR__ . '/components/filters/distance.php';
 include __DIR__ . '/components/calendar/calendar.php';
 include __DIR__ . '/components/map/leaflet-map.php';
 include __DIR__ . '/components/events/events-list.php';
@@ -38,12 +39,17 @@ include __DIR__ . '/components/events/events-list.php';
     <div class="container mx-auto px-4 mt-4">
         <!-- Section des filtres -->
         <div class="row mb-4">
-            <!-- Colonne 60% pour les filtres temporels et catégories -->
-            <div class="filters col-12 col-lg-7 mb-4 mb-lg-0">
-                <?php 
-                render_temporal_filters($pdo);
-                render_category_filters($pdo);
-                ?>
+            <!-- Colonne 60% : carte filtres + carte distance séparées -->
+            <div class="col-12 col-lg-7 mb-4 mb-lg-0 d-flex flex-column gap-3">
+                <div class="filters">
+                    <?php
+                    render_temporal_filters($pdo);
+                    render_category_filters($pdo);
+                    ?>
+                </div>
+                <div class="filters">
+                    <?php render_distance_filter(); ?>
+                </div>
             </div>
             <!-- Colonne 40% pour le calendrier -->
             <div class="col-12 col-lg-5">

@@ -11,10 +11,12 @@ require_once __DIR__ . '/../../src/Models/Event.php';
 
 // Récupérer l'ID de l'événement
 $eventId = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
-logError('templates/events/event.php', 'template enter', [
-    'request_uri' => $_SERVER['REQUEST_URI'] ?? null,
-    'event_id' => $eventId
-]);
+if (defined('DEBUG') && DEBUG) {
+    logError('templates/events/event.php', 'template enter', [
+        'request_uri' => $_SERVER['REQUEST_URI'] ?? null,
+        'event_id' => $eventId
+    ]);
+}
 if (!$eventId) {
     header('Location: /templates/events/events.php');
     exit;

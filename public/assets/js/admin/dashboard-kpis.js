@@ -22,7 +22,7 @@
     const start = (page - 1) * pageSize;
     const pageRows = sorted.slice(start, start + pageSize);
 
-    let html = '<div class="table-responsive"><table class="table align-middle"><colgroup><col><col><col><col class="kpi-col-phone"><col><col><col></colgroup><thead><tr>';
+    let html = '<table class="table stats-table align-middle kpi-table-orgs"><colgroup><col><col><col><col class="kpi-col-phone"><col><col><col></colgroup><thead><tr>';
     html += '<th data-sort="name" class="col-nowrap">Nom ' + sortIcon('name') + '</th>';
     html += '<th data-sort="email" class="col-nowrap">Email ' + sortIcon('email') + '</th>';
     html += '<th data-sort="owner_name" class="col-nowrap">Propriétaire ' + sortIcon('owner_name') + '</th>';
@@ -50,11 +50,11 @@
         '</tr>';
       });
     }
-    html += '</tbody></table></div>';
+    html += '</tbody></table>';
 
     if (pages > 1) {
-      html += '<div class="d-flex justify-content-between align-items-center mt-2">';
-      html += '<div class="text-muted small">Page ' + page + ' / ' + pages + ' · ' + total + ' éléments</div>';
+      html += '<div class="stats-pager d-flex justify-content-center align-items-center gap-3 mt-3">';
+      html += '<div class="stats-pager-info text-muted small">Page ' + page + ' / ' + pages + ' · ' + total + ' éléments</div>';
       html += '<div class="btn-group">';
       html += '<button type="button" class="btn btn-sm btn-outline-secondary" data-page="first" ' + (page === 1 ? 'disabled' : '') + '>&laquo;</button>';
       html += '<button type="button" class="btn btn-sm btn-outline-secondary" data-page="prev" ' + (page === 1 ? 'disabled' : '') + '>&lsaquo;</button>';
@@ -132,8 +132,8 @@
   }
 
   function renderUsers(rows) {
-    const sorted = sortRows(rows, sort.field || 'created_at', sort.asc);
-    let html = '<div class="table-responsive"><table class="table align-middle"><thead><tr>';
+    const sorted = sort.field ? sortRows(rows, sort.field, sort.asc) : sortRows(rows, 'created_at', false);
+    let html = '<table class="table stats-table align-middle"><thead><tr>';
     html += th('Nom', 'name');
     html += th('Email', 'email');
     html += th('Rôle', 'role');
@@ -146,13 +146,13 @@
         html += `<tr><td>${escapeHtml(r.name)}</td><td>${escapeHtml(r.email)}</td><td>${escapeHtml(r.role)}</td><td>${formatDate(r.created_at)}</td></tr>`;
       });
     }
-    html += '</tbody></table></div>';
+    html += '</tbody></table>';
     return html;
   }
 
   function renderSubscribers(rows) {
-    const sorted = sortRows(rows, sort.field || 'verified_at', sort.asc);
-    let html = '<div class="table-responsive"><table class="table align-middle"><thead><tr>';
+    const sorted = sort.field ? sortRows(rows, sort.field, sort.asc) : sortRows(rows, 'verified_at', false);
+    let html = '<table class="table stats-table align-middle"><thead><tr>';
     html += th('Email', 'email');
     html += th('Vérifié le', 'verified_at');
     html += th('Actif', 'is_active');
@@ -174,13 +174,13 @@
         html += `</tr>`;
       });
     }
-    html += '</tbody></table></div>';
+    html += '</tbody></table>';
     return html;
   }
 
   function renderEvents(rows, isPending) {
-    const sorted = sortRows(rows, sort.field || 'start_date', sort.asc);
-    let html = '<div class="table-responsive"><table class="table align-middle"><thead><tr>';
+    const sorted = sort.field ? sortRows(rows, sort.field, sort.asc) : sortRows(rows, 'start_date', false);
+    let html = '<table class="table stats-table align-middle"><thead><tr>';
     html += th('Titre', 'title');
     html += th('Organisateur', 'organizer_name');
     html += th('Date', 'start_date');
@@ -203,7 +203,7 @@
         html += '</tr>';
       });
     }
-    html += '</tbody></table></div>';
+    html += '</tbody></table>';
     return html;
   }
 
@@ -212,7 +212,7 @@
     let html = '<div class="d-flex justify-content-between align-items-center mb-3">';
     html += '<button type="button" class="btn btn-success" data-kpi-action="new-category"><i class="bi bi-plus-lg"></i> Nouvelle catégorie</button>';
     html += '</div>';
-    html += '<div class="table-responsive"><table class="table align-middle"><thead><tr>';
+    html += '<table class="table stats-table align-middle"><thead><tr>';
     html += th('Code', 'code');
     html += th('Nom', 'name');
     html += th('Icône', 'icon');
@@ -232,7 +232,7 @@
         html += `</tr>`;
       });
     }
-    html += '</tbody></table></div>';
+    html += '</tbody></table>';
     return html;
   }
 

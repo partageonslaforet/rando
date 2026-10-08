@@ -51,6 +51,21 @@ require_once __DIR__ . '/../../includes/csrf.php'; ?>
                     <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(csrfToken(), ENT_QUOTES, 'UTF-8'); ?>">
                     <button type="submit" class="btn btn-auth">Créer mon compte</button>
                 </form>
+                <!-- Étape 2 : succès + incitation profil organisateur (affiché par auth.js) -->
+                <div id="registerSuccess" class="is-hidden">
+                    <div class="auth-alert auth-alert-success" role="status">
+                        <i class="bi bi-check-circle-fill" aria-hidden="true"></i>
+                        <span id="registerSuccessMessage">Compte créé ! Un e-mail de confirmation vient de vous être envoyé.</span>
+                    </div>
+                    <p class="text-muted small mt-3 mb-3">
+                        Une fois votre e-mail confirmé et votre compte connecté, pensez à créer votre
+                        <strong>profil organisateur</strong> : il affiche le nom et le logo de votre
+                        club ou association sur vos événements.
+                    </p>
+                    <div class="d-grid">
+                        <button type="button" class="btn btn-auth" data-bs-dismiss="modal">Compris, je vais vérifier mes e-mails</button>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
                 <p class="auth-footer">Déjà inscrit ? <a href="#" class="auth-link" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#loginModal">Se connecter</a></p>

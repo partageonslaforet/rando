@@ -72,8 +72,8 @@
   }
 
   function renderVisits(rows) {
-    const sorted = sortRows(rows, sort.field || 'day', sort.asc);
-    let html = '<table class="table align-middle"><thead><tr>';
+    const sorted = sort.field ? sortRows(rows, sort.field, sort.asc) : sortRows(rows, 'day', false);
+    let html = '<table class="table stats-table align-middle"><thead><tr>';
     html += th('DATE', 'day');
     html += th('VISITES', 'visits', 'end');
     html += th('SESSIONS', 'sessions', 'end');
@@ -93,7 +93,7 @@
 
   function renderPages(rows) {
     const sorted = sortRows(rows, sort.field || 'visits', sort.asc);
-    let html = '<table class="table align-middle"><thead><tr>';
+    let html = '<table class="table stats-table align-middle"><thead><tr>';
     html += th('PAGE', 'label');
     html += th('VISITES', 'visits', 'end');
     html += '</tr></thead><tbody>';
@@ -113,8 +113,8 @@
       const loc = [r.city, r.country].filter(Boolean).join(', ') || 'Inconnue';
       return Object.assign({}, r, { loc: loc, label: r.label || r.url });
     });
-    const sorted = sortRows(enriched, sort.field || 'visited_at', sort.asc);
-    let html = '<table class="table align-middle"><thead><tr>';
+    const sorted = sort.field ? sortRows(enriched, sort.field, sort.asc) : sortRows(enriched, 'visited_at', false);
+    let html = '<table class="table stats-table align-middle"><thead><tr>';
     html += th('DATE', 'visited_at');
     html += th('PAGE', 'label');
     html += th('IP', 'ip_address');
@@ -182,7 +182,7 @@
 
   function renderSources(rows) {
     const sorted = sort.field ? sortRows(rows, sort.field, sort.asc) : sortRows(rows, 'day', false);
-    let html = '<table class="table align-middle"><thead><tr>';
+    let html = '<table class="table stats-table align-middle"><thead><tr>';
     html += th('DATE', 'day');
     html += th('RÉFÉRANT', 'referrer');
     html += th('VISITES', 'visits', 'end');
@@ -191,7 +191,8 @@
       html += '<tr><td colspan="3" class="text-center text-muted py-4">Aucune donnée</td></tr>';
     } else {
       sorted.forEach(function (r) {
-        html += '<tr><td><a href="#" data-source-date="' + escapeHtml(r.day) + '">' + formatDate(r.day) + '</a></td><td>' + escapeHtml(r.referrer || '') + '</td><td class="text-end">' + parseInt(r.visits, 10) + '</td></tr>';
+        const refLabel = r.referrer_label || r.referrer || '';
+        html += '<tr><td><a href="#" data-source-date="' + escapeHtml(r.day) + '">' + formatDate(r.day) + '</a></td><td title="' + escapeHtml(r.referrer || '') + '">' + escapeHtml(refLabel) + '</td><td class="text-end">' + parseInt(r.visits, 10) + '</td></tr>';
       });
     }
     html += '</tbody></table>';
@@ -200,7 +201,7 @@
 
   function renderCountries(rows) {
     const sorted = sortRows(rows, sort.field || 'visits', sort.asc);
-    let html = '<table class="table align-middle"><thead><tr>';
+    let html = '<table class="table stats-table align-middle"><thead><tr>';
     html += th('PAYS', 'country');
     html += th('VISITES', 'visits', 'end');
     html += '</tr></thead><tbody>';
@@ -295,10 +296,10 @@
     const page = pagination.page || 1;
     const totalPages = pagination.total_pages || 1;
     if (total <= 0) return '';
-    return '<div class="d-flex justify-content-between align-items-center mt-3">'
-      + '<button type="button" id="page-prev" class="btn btn-sm btn-outline-secondary"' + (page <= 1 ? ' disabled' : '') + ' data-page="prev">Précédent</button>'
-      + '<span class="text-muted small">Page ' + page + ' / ' + totalPages + ' (' + total + ' résultat' + (total > 1 ? 's' : '') + ')</span>'
-      + '<button type="button" id="page-next" class="btn btn-sm btn-outline-secondary"' + (page >= totalPages ? ' disabled' : '') + ' data-page="next">Suivant</button>'
+    return '<div class="stats-pager d-flex justify-content-center align-items-center gap-3">'
+      + '<button type="button" id="page-prev" class="btn btn-sm btn-outline-secondary"' + (page <= 1 ? ' disabled' : '') + ' data-page="prev"><i class="bi bi-chevron-left"></i> Précédent</button>'
+      + '<span class="stats-pager-info text-muted small">Page ' + page + ' / ' + totalPages + ' · ' + total + ' résultat' + (total > 1 ? 's' : '') + '</span>'
+      + '<button type="button" id="page-next" class="btn btn-sm btn-outline-secondary"' + (page >= totalPages ? ' disabled' : '') + ' data-page="next">Suivant <i class="bi bi-chevron-right"></i></button>'
       + '</div>';
   }
 

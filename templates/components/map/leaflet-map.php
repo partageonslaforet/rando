@@ -16,6 +16,7 @@ function render_map(PDO $pdo) {
             e.title,
             e.coordinates,
             c.code AS category,
+            c.name AS category_name,
             e.date,
             e.location,
             e.main_image_path AS event_image_path,
@@ -51,7 +52,7 @@ function render_map(PDO $pdo) {
         $event['main_image_path'] = $raw ?: '/assets/images/events/default-event.jpg';
         unset($event['event_image_path'], $event['image_path'], $event['storage_path'], $event['main_image']);
 
-        if ($event['main_image_path'] === '/assets/images/events/default-event.jpg') {
+        if ($event['main_image_path'] === '/assets/images/events/default-event.jpg' && defined('DEBUG') && DEBUG) {
             logError('leaflet-map', 'Image principale non résolue', [
                 'event_id' => $event['id'],
                 'title' => $event['title']
@@ -67,12 +68,16 @@ function render_map(PDO $pdo) {
     window.allEvents = <?= json_encode($locations, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE) ?>;
     window.currentFilters = {};  // Filtres par défaut
     </script>
+    <?php if (!defined('PLF_LEAFLET_CDN_EMITTED')) { define('PLF_LEAFLET_CDN_EMITTED', true); ?>
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <!-- Regroupement des marqueurs -->
     <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+    <?php } ?>
+    <?php if (!defined('PLF_MAP_JS_EMITTED')) { define('PLF_MAP_JS_EMITTED', true); ?>
     <!-- Notre script de carte -->
     <script src="<?= APP_URL ?>/assets/js/home/map.js?v=<?= @filemtime(__DIR__ . '/../../../public/assets/js/home/map.js') ?: 1 ?>"></script>
+    <?php } ?>
     <?php
 }
 

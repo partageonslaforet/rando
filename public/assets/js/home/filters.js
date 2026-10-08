@@ -80,7 +80,12 @@ async function filterEvents() {
         // 4. Appliquer les autres filtres
         filteredEvents = filteredEvents.filter(event => applyFilters(event, currentFilters));
         
-        updateUI(filteredEvents);
+        // 5. Pour la carte : mêmes événements mais SANS le critère distance
+        //    (les marqueurs hors rayon restent visibles et cliquables)
+        const filtersNoDistance = Object.assign({}, currentFilters, { distance: null });
+        const eventsForMap = events.filter(event => applyFilters(event, filtersNoDistance));
+        
+        updateUI(filteredEvents, eventsForMap);
         return filteredEvents;
     } catch (error) {
         console.error('❌ Erreur dans filterEvents:', error);
@@ -139,6 +144,11 @@ function applyFilters(event, filters) {
         if (!anyMatch) return false;
     }
 
+    // Filtre distance : l'événement doit être dans le rayon (liste seulement,
+    // les marqueurs hors rayon restent actifs sur la carte — voir updateUI)
+    if (filters.distance && window.distanceFilter && typeof window.distanceFilter.eventWithinRadius === 'function') {
+        if (!window.distanceFilter.eventWithinRadius(event, filters.distance)) return false;
+    }
 
     return true;
 }
@@ -208,10 +218,11 @@ function updateCounters(allEvents) {
 }
 
 // Mise à jour de l'interface
-async function updateUI(filteredEvents) {
+// eventsForMap : événements pour la carte (sans critère distance — marqueurs actifs)
+async function updateUI(filteredEvents, eventsForMap) {
     
     if (window.mapFunctions && window.mapFunctions.updateMapMarkers) {
-        window.mapFunctions.updateMapMarkers(filteredEvents);
+        window.mapFunctions.updateMapMarkers(eventsForMap || filteredEvents);
     }
 
     // Rendu de la liste: utiliser l'API paginée avec les filtres courants
@@ -231,6 +242,14 @@ async function updateUI(filteredEvents) {
     if (currentFilters.period) apiFilters.period = currentFilters.period;
     if (currentFilters.category && currentFilters.category !== 'all') apiFilters.category = currentFilters.category;
     if (currentFilters.search) apiFilters.search = currentFilters.search;
+
+    // Le filtre distance n'existe pas côté API : rendu client de la liste filtrée
+    if (currentFilters.distance) {
+        if (window.eventListFunctions && typeof window.eventListFunctions.updateEventsList === 'function') {
+            window.eventListFunctions.updateEventsList(filteredEvents || []);
+        }
+        return;
+    }
 
     const loadPaged = (page = 1, limit = perPage) => {
         if (!window.EventsAPI || typeof window.EventsAPI.getAllEventsPaged !== 'function') {

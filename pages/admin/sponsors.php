@@ -31,6 +31,19 @@ function validHttpUrl(string $url): string {
     return in_array($scheme, ['http', 'https'], true) ? $url : '';
 }
 
+/** Valide une date optionnelle au format Y-m-d. Retourne la date normalisée ou null. */
+function validSponsorDate(?string $value, string $field): ?string {
+    $value = trim((string) $value);
+    if ($value === '') {
+        return null;
+    }
+    $d = DateTime::createFromFormat('Y-m-d', $value);
+    if (!$d || $d->format('Y-m-d') !== $value) {
+        throw new RuntimeException("Date $field invalide (format attendu AAAA-MM-JJ).");
+    }
+    return $value;
+}
+
 /** Traite l'upload du champ 'image'. Retourne le chemin public ou ''. */
 function handleImageUpload(): string {
     if (empty($_FILES['image']) || $_FILES['image']['error'] === UPLOAD_ERR_NO_FILE) {
@@ -44,15 +57,9 @@ function handleImageUpload(): string {
     if (!isset(ALLOWED_MIME[$mime])) {
         throw new RuntimeException('Format non supporté (jpg, png, webp, gif).');
     }
-    $dir = dirname(__DIR__, 2) . '/public' . UPLOAD_DIR;
-    if (!is_dir($dir) && !mkdir($dir, 0755, true)) {
-        throw new RuntimeException('Impossible de créer le dossier des visuels.');
-    }
     $name = 'sponsor_' . bin2hex(random_bytes(8)) . '.' . ALLOWED_MIME[$mime];
-    if (!move_uploaded_file($f['tmp_name'], $dir . $name)) {
-        throw new RuntimeException("Échec de l'enregistrement de l'image.");
-    }
-    return UPLOAD_DIR . $name;
+    $result = Storage::saveUploadedFile($f, 'sponsors', $name);
+    return $result['public_url'] ?? '';
 }
 
 // ------------------------------ actions POST (PRG) ------------------------------
@@ -78,10 +85,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $linkUrl = validHttpUrl((string) ($_POST['link_url'] ?? ''));
                     $alt = trim((string) ($_POST['alt_text'] ?? ''));
                     $position = (int) ($_POST['position'] ?? 0);
+                    $start = validSponsorDate($_POST['start_date'] ?? null, 'de début');
+                    $end = validSponsorDate($_POST['end_date'] ?? null, 'de fin');
+                    if ($start !== null && $end !== null && $end < $start) {
+                        throw new RuntimeException('La date de fin doit être postérieure à la date de début.');
+                    }
                     $db->prepare(
-                        'INSERT INTO sponsors (name, image_path, link_url, alt_text, position, active)
-                         VALUES (?, ?, ?, ?, ?, 1)'
-                    )->execute([$name, $imagePath, $linkUrl !== '' ? $linkUrl : null, $alt !== '' ? $alt : null, $position]);
+                        'INSERT INTO sponsors (name, image_path, link_url, alt_text, position, active, start_date, end_date)
+                         VALUES (?, ?, ?, ?, ?, 1, ?, ?)'
+                    )->execute([$name, $imagePath, $linkUrl !== '' ? $linkUrl : null, $alt !== '' ? $alt : null, $position, $start, $end]);
                     $flash = ['type' => 'success', 'text' => 'Sponsor ajouté.'];
                     break;
 
@@ -100,8 +112,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $linkUrl = validHttpUrl((string) ($_POST['link_url'] ?? ''));
                     $alt = trim((string) ($_POST['alt_text'] ?? ''));
                     $position = (int) ($_POST['position'] ?? 0);
-                    $db->prepare('UPDATE sponsors SET name = ?, link_url = ?, alt_text = ?, position = ? WHERE id = ?')
-                       ->execute([$name, $linkUrl !== '' ? $linkUrl : null, $alt !== '' ? $alt : null, $position, $id]);
+                    $start = validSponsorDate($_POST['start_date'] ?? null, 'de début');
+                    $end = validSponsorDate($_POST['end_date'] ?? null, 'de fin');
+                    if ($start !== null && $end !== null && $end < $start) {
+                        throw new RuntimeException('La date de fin doit être postérieure à la date de début.');
+                    }
+                    $db->prepare('UPDATE sponsors SET name = ?, link_url = ?, alt_text = ?, position = ?, start_date = ?, end_date = ? WHERE id = ?')
+                       ->execute([$name, $linkUrl !== '' ? $linkUrl : null, $alt !== '' ? $alt : null, $position, $start, $end, $id]);
                     $flash = ['type' => 'success', 'text' => 'Sponsor mis à jour.'];
                     break;
 
@@ -112,7 +129,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $sponsor = $row->fetch();
                     $db->prepare('DELETE FROM sponsors WHERE id = ?')->execute([$id]);
                     // Nettoie le fichier local (pas les URL externes)
-                    if ($sponsor && strpos($sponsor['image_path'], UPLOAD_DIR) === 0) {
+                    if ($sponsor && strpos($sponsor['image_path'], '/uploads/sponsors/') === 0) {
+                        Storage::deleteFile('sponsors', basename($sponsor['image_path']));
+                    } elseif ($sponsor && strpos($sponsor['image_path'], UPLOAD_DIR) === 0) {
                         $file = dirname(__DIR__, 2) . '/public' . $sponsor['image_path'];
                         if (is_file($file)) {
                             @unlink($file);
@@ -188,6 +207,15 @@ include __DIR__ . '/../../templates/layouts/header-solid.php';
                     <label class="form-label">Ordre</label>
                     <input type="number" name="position" class="form-control" value="0">
                 </div>
+                <div class="col-md-3">
+                    <label class="form-label">Début d'affichage</label>
+                    <input type="date" name="start_date" class="form-control">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Fin d'affichage</label>
+                    <input type="date" name="end_date" class="form-control">
+                    <div class="form-text">Laisser vide = toujours visible.</div>
+                </div>
                 <div class="col-md-2 d-flex align-items-end">
                     <button type="submit" class="btn btn-success w-100">Ajouter</button>
                 </div>
@@ -203,6 +231,7 @@ include __DIR__ . '/../../templates/layouts/header-solid.php';
                     <th class="col-visual">Visuel</th>
                     <th>Nom / Lien / Alt</th>
                     <th class="col-order">Ordre</th>
+                    <th class="col-period">Période</th>
                     <th class="col-active">Actif</th>
                     <th class="text-end">Actions</th>
                 </tr>
@@ -211,8 +240,13 @@ include __DIR__ . '/../../templates/layouts/header-solid.php';
             <?php foreach ($sponsors as $s): ?>
                 <tr>
                     <td>
-                        <img src="<?= htmlspecialchars($s['image_path']) ?>" alt=""
-                             class="sponsor-thumb">
+                        <?php $logo = resolveImagePublicUrl($s['image_path'] ?? '', null); ?>
+                        <?php if ($logo): ?>
+                            <img src="<?= htmlspecialchars($logo) ?>" alt=""
+                                 class="sponsor-thumb">
+                        <?php else: ?>
+                            <span class="text-muted small">Visuel manquant</span>
+                        <?php endif; ?>
                     </td>
                     <td>
                         <form method="post" class="row g-2 align-items-center sponsor-edit" id="edit-<?= (int) $s['id'] ?>">
@@ -237,6 +271,21 @@ include __DIR__ . '/../../templates/layouts/header-solid.php';
                         <input type="number" name="position" form="edit-<?= (int) $s['id'] ?>"
                                class="form-control form-control-sm position-input"
                                value="<?= (int) $s['position'] ?>">
+                    </td>
+                    <td>
+                        <div class="d-flex gap-1">
+                            <input type="date" name="start_date" form="edit-<?= (int) $s['id'] ?>"
+                                   class="form-control form-control-sm" style="width:135px"
+                                   value="<?= htmlspecialchars($s['start_date'] ?? '') ?>" title="Début d'affichage">
+                            <input type="date" name="end_date" form="edit-<?= (int) $s['id'] ?>"
+                                   class="form-control form-control-sm" style="width:135px"
+                                   value="<?= htmlspecialchars($s['end_date'] ?? '') ?>" title="Fin d'affichage">
+                        </div>
+                        <?php if (!empty($s['start_date']) && $s['start_date'] > date('Y-m-d')): ?>
+                            <span class="badge text-bg-warning mt-1">Programmé</span>
+                        <?php elseif (!empty($s['end_date']) && $s['end_date'] < date('Y-m-d')): ?>
+                            <span class="badge text-bg-secondary mt-1">Expiré</span>
+                        <?php endif; ?>
                     </td>
                     <td>
                         <form method="post">
@@ -265,7 +314,7 @@ include __DIR__ . '/../../templates/layouts/header-solid.php';
                 </tr>
             <?php endforeach; ?>
             <?php if (empty($sponsors)): ?>
-                <tr><td colspan="5" class="text-center text-muted py-4">Aucun sponsor — la card ne s'affiche nulle part.</td></tr>
+                <tr><td colspan="6" class="text-center text-muted py-4">Aucun sponsor — la card ne s'affiche nulle part.</td></tr>
             <?php endif; ?>
             </tbody>
         </table>

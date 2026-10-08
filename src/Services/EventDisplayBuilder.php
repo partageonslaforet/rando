@@ -126,12 +126,12 @@ class EventDisplayBuilder
     private function fetchViewsTotal(int $eventId): int
     {
         // Entrée dans le calcul des vues
-        if (function_exists('logError')) {
+        if (function_exists('logError') && defined('DEBUG') && DEBUG) {
             logError('src/Services/EventDisplayBuilder.php', 'fetchViewsTotal enter', ['event_id' => $eventId]);
         }
         // Utilise la fonction factorisée pour le compteur
         $total = getEventTotalViews($this->pdo, $eventId);
-        if (function_exists('logError')) {
+        if (function_exists('logError') && defined('DEBUG') && DEBUG) {
             logError('src/Services/EventDisplayBuilder.php', 'fetchViewsTotal total', [
                 'event_id' => $eventId,
                 'total' => $total

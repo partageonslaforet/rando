@@ -27,6 +27,13 @@ DirectoryIndex index.php
     # Exposer les pages publiques subscribers
     RewriteRule ^subscribers/(.*)$ /public/subscribers/$1 [L]
 
+    # Fichiers d'uploads manquants -> vrai 404 (evite de servir la home en 200,
+    # ce qui faisait planter le parseur XML/GPX cote navigateur).
+    # NB : on cible le chemin post-alias public/uploads/ — /uploads/... est reecrit
+    # avant cette regle, REQUEST_FILENAME pointe alors sur le vrai fichier.
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^public/uploads/ - [R=404,L]
+
     # Redirige toutes les requetes vers index.php sauf si le fichier ou dossier existe
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d

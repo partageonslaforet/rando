@@ -14,6 +14,7 @@ ini_set('error_log', __DIR__ . '/publish.log');
 session_start();
 require_once __DIR__ . '/../../includes/config.php';
 require_once __DIR__ . '/../../includes/functions.php';
+require_once __DIR__ . '/../../src/Services/Storage.php';
 
 // Logs
 $logFile = __DIR__ . '/publish.log';
@@ -261,6 +262,45 @@ try {
             ");
             $stmt->execute([$eventId, $draftId]);
             log_message("✅ Parcours copiés");
+
+            // Les GPX sont uploadés dans gpx/temp/ (upload-gpx.php) : à la publication,
+            // on les déplace vers gpx/ et on met à jour gpx_file, sinon les URLs temporaires
+            // cassent dès que temp/ est purgé (fetch → HTML 200 → XML Parsing Error).
+            try {
+                $gpxStmt = $pdo->prepare(
+                    "SELECT id, gpx_file FROM event_parcours
+                     WHERE event_id = ? AND gpx_file LIKE '%/temp/%'"
+                );
+                $gpxStmt->execute([$eventId]);
+                foreach ($gpxStmt->fetchAll(PDO::FETCH_ASSOC) as $gpxRow) {
+                    $basename = basename((string)$gpxRow['gpx_file']);
+                    $srcPath = Storage::getStoragePath('gpx', 'temp/' . $basename);
+                    $dstPath = Storage::getStoragePath('gpx', $basename);
+                    if (!is_file($srcPath)) {
+                        // Fichier temporaire déjà perdu : la référence pointerait vers du HTML (rewrite)
+                        $pdo->prepare('UPDATE event_parcours SET gpx_file = NULL WHERE id = ?')
+                            ->execute([$gpxRow['id']]);
+                        $pdo->prepare('UPDATE draft_parcours SET gpx_file = NULL WHERE event_id = ? AND gpx_file = ?')
+                            ->execute([$draftId, $gpxRow['gpx_file']]);
+                        log_message("⚠️ GPX temporaire introuvable, référence vidée : {$gpxRow['gpx_file']}", true);
+                        continue;
+                    }
+                    Storage::ensureDirectoryExists(dirname($dstPath));
+                    if (rename($srcPath, $dstPath)) {
+                        $newUrl = Storage::getPublicUrl('gpx', $basename);
+                        $pdo->prepare('UPDATE event_parcours SET gpx_file = ? WHERE id = ?')
+                            ->execute([$newUrl, $gpxRow['id']]);
+                        $pdo->prepare('UPDATE draft_parcours SET gpx_file = ? WHERE event_id = ? AND gpx_file = ?')
+                            ->execute([$newUrl, $draftId, $gpxRow['gpx_file']]);
+                        log_message("✅ GPX déplacé : temp/{$basename} → {$basename}");
+                    } else {
+                        log_message("⚠️ Déplacement GPX impossible : {$basename}", true);
+                    }
+                }
+            } catch (Throwable $e) {
+                log_message("❌ Erreur déplacement GPX: " . $e->getMessage(), true);
+                throw new Exception("Erreur lors de la finalisation des fichiers GPX");
+            }
         } catch (PDOException $e) {
             log_message("❌ Erreur lors de la copie des parcours: " . $e->getMessage(), true);
             throw new Exception("Erreur lors de la copie des parcours");

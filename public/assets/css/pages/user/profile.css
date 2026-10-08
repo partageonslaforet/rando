@@ -754,3 +754,24 @@ header .navbar-brand .logo-text {
 #organizerModal form.was-validated .form-control:invalid {
     border-color: var(--danger-color) !important;
 }
+
+/* Bandeau incitation profil organisateur — charte #990047 à 50 % */
+.organizer-cta-banner {
+    background-color: rgba(153, 0, 71, 0.5);
+    border: 1px solid rgba(153, 0, 71, 0.7);
+    border-radius: 8px;
+    color: #fff;
+    padding: 0.9rem 1rem;
+    margin-bottom: 1.25rem;
+}
+
+.organizer-cta-banner i {
+    color: #fff;
+}
+
+.organizer-cta-banner a {
+    color: #fff;
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}

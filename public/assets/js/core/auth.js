@@ -151,17 +151,36 @@ document.addEventListener('DOMContentLoaded', function() {
                     throw new Error(data.message || 'Une erreur est survenue lors de l\'inscription');
                 }
 
-                const registerModal = bootstrap.Modal.getInstance(document.getElementById('registerModal'));
-                if (registerModal) {
-                    registerModal.hide();
-                }
+                // Étape 2 dans la même modale : succès + incitation profil organisateur
+                const registerModalEl = document.getElementById('registerModal');
+                const successPanel = document.getElementById('registerSuccess');
 
-                registerForm.reset();
+                if (registerModalEl && successPanel) {
+                    const introEl = registerModalEl.querySelector('.auth-intro');
+                    const titleEl = registerModalEl.querySelector('.modal-title');
+                    const footerEl = registerModalEl.querySelector('.modal-footer');
+                    const successMsg = document.getElementById('registerSuccessMessage');
 
-                if (typeof showToast === 'function') {
-                    showToast(data.message, 'success');
+                    registerForm.reset();
+                    registerForm.classList.add('is-hidden');
+                    if (introEl) introEl.classList.add('is-hidden');
+                    if (footerEl) footerEl.classList.add('is-hidden');
+                    if (titleEl) titleEl.textContent = 'Bienvenue !';
+                    if (successMsg && data.message) successMsg.textContent = data.message;
+                    successPanel.classList.remove('is-hidden');
                 } else {
-                    alert(data.message);
+                    const registerModal = bootstrap.Modal.getInstance(registerModalEl);
+                    if (registerModal) {
+                        registerModal.hide();
+                    }
+
+                    registerForm.reset();
+
+                    if (typeof showToast === 'function') {
+                        showToast(data.message, 'success');
+                    } else {
+                        alert(data.message);
+                    }
                 }
 
             } catch (error) {
@@ -175,6 +194,23 @@ document.addEventListener('DOMContentLoaded', function() {
                     submitBtn.innerHTML = originalBtnText;
                 }
             }
+        });
+    }
+
+    // Remet la modale d'inscription à l'étape 1 quand elle se ferme
+    const registerModalElReset = document.getElementById('registerModal');
+    if (registerModalElReset) {
+        registerModalElReset.addEventListener('hidden.bs.modal', function() {
+            const form = document.getElementById('registerForm');
+            const successPanel = document.getElementById('registerSuccess');
+            const introEl = this.querySelector('.auth-intro');
+            const titleEl = this.querySelector('.modal-title');
+            const footerEl = this.querySelector('.modal-footer');
+            if (form) form.classList.remove('is-hidden');
+            if (successPanel) successPanel.classList.add('is-hidden');
+            if (introEl) introEl.classList.remove('is-hidden');
+            if (footerEl) footerEl.classList.remove('is-hidden');
+            if (titleEl) titleEl.textContent = 'Créer un compte';
         });
     }
 

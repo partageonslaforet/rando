@@ -97,6 +97,7 @@ try {
             e.status,
             e.created_at,
             e.updated_at,
+            e.organizer_notified_at,
             u.id as user_id,
             u.name as creator_name,
             c.code as category
@@ -256,6 +257,16 @@ error_log("Header chargé avec succès dans events");
                                         <i class="fas fa-ban"></i>
                                     </button>
                                 <?php endif; ?>
+                                <?php if ($event['status'] === 'approved'): ?>
+                                    <?php $alreadyNotified = !empty($event['organizer_notified_at']); ?>
+                                    <button class="btn btn-<?= $alreadyNotified ? 'secondary' : 'info' ?> btn-sm me-1"
+                                            onclick="notifyOrganizer(<?php echo $event['id']; ?>)"
+                                            title="<?= $alreadyNotified
+                                                ? 'Organisateur déjà notifié le ' . date('d/m/Y H:i', strtotime($event['organizer_notified_at'])) . ' — cliquer pour renvoyer'
+                                                : 'Notifier l\'organisateur par email' ?>">
+                                        <i class="fas <?= $alreadyNotified ? 'fa-envelope-open-text' : 'fa-envelope' ?>"></i>
+                                    </button>
+                                <?php endif; ?>
                                 <button class="btn btn-danger btn-sm" 
                                         onclick="deleteEvent(<?php echo $event['id']; ?>)"
                                         title="Supprimer">
@@ -270,6 +281,7 @@ error_log("Header chargé avec succès dans events");
     </div>
 </div>
 
+<script src="/assets/js/admin/notify-organizer.js"></script>
 <script>
 function viewEvent(eventId) {
     window.location.href = `/pages/admin/view_event.php?id=${eventId}`;

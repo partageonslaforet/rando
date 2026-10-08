@@ -358,7 +358,7 @@
 
 .filters {
     background-color: var(--light-text);
-    border-radius: 12px;
+    border-radius: 16px !important;
     padding: 1rem;
     background-color: var(--light-text);
     border-radius: 8px;
@@ -368,6 +368,11 @@
     flex-direction: column;
     position: relative;
     z-index: 1;
+}
+
+/* Cartes .filters empilées dans la colonne flex (filtres + distance) */
+.col-lg-7 > .filters {
+    height: auto;
 }
 
 .temporal-filters {

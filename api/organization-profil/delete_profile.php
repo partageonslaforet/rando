@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-function sendJsonResponse($data, $statusCode = 200) {
+function sendJsonResponse(array $data, int $statusCode = 200) {
     http_response_code($statusCode);
     ob_clean();
     echo json_encode($data);
@@ -82,6 +82,9 @@ try {
     $result = $organizerProfile->delete($data['profile_id']);
 
     if ($result) {
+        // Invalider le cache de la pastille header : le prochain chargement recalcule
+        unset($_SESSION['has_organizer_profile']);
+
         $response = [
             'success' => true,
             'message' => 'Profil supprimé avec succès'

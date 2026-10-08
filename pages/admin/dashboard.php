@@ -216,26 +216,24 @@ try {
             $eventTitles = $titleStmt->fetchAll(PDO::FETCH_KEY_PAIR);
         }
 
-        // Visites par pays
+        // Visites par pays (toutes périodes)
         try {
             $stmt = $pdo->query("
                 SELECT COUNT(DISTINCT g.country) AS total_countries
                 FROM site_visits s
                 INNER JOIN ip_geo_cache g ON s.ip_address = g.ip_address
-                WHERE s.visited_at >= DATE_SUB(CURDATE(), INTERVAL 6 DAY)
-                  AND s.url NOT REGEXP '\\\\.(png|jpg|jpeg|gif|svg|ico|css|js|txt|xml|json|woff|woff2|ttf|eot|map|pdf|webp|bmp|mp4|mp3|webm|ogg|avif|zip|gz|tar)$'
+                WHERE s.url NOT REGEXP '\\\\.(png|jpg|jpeg|gif|svg|ico|css|js|txt|xml|json|woff|woff2|ttf|eot|map|pdf|webp|bmp|mp4|mp3|webm|ogg|avif|zip|gz|tar)$'
             ");
-            $totalCountries7 = (int) $stmt->fetchColumn();
+            $totalCountries = (int) $stmt->fetchColumn();
         } catch (PDOException $e) {
             error_log("Erreur visites par pays : " . $e->getMessage());
-            $totalCountries7 = 0;
+            $totalCountries = 0;
         }
 
-        // Visites avec referrer externe (hors rando.*)
-        $totalReferred7 = (int) $pdo->query("
+        // Visites avec referrer externe, toutes périodes (hors rando.*)
+        $totalReferred = (int) $pdo->query("
             SELECT COUNT(*) FROM site_visits
-            WHERE visited_at >= DATE_SUB(CURDATE(), INTERVAL 6 DAY)
-              AND referrer IS NOT NULL AND referrer <> ''
+            WHERE referrer IS NOT NULL AND referrer <> ''
               AND referrer NOT LIKE '%rando.partageonslaforet%'
         ")->fetchColumn();
     } catch (PDOException $e) {
@@ -248,8 +246,8 @@ try {
         $visitsPerDay = [];
         $topPages = [];
         $recentVisits = [];
-        $totalCountries7 = 0;
-        $totalReferred7 = 0;
+        $totalCountries = 0;
+        $totalReferred = 0;
     }
 
     // Libellé lisible d'une page : /event?id=XXX → titre de l'événement
@@ -264,24 +262,48 @@ try {
         return $url;
     };
 
-    // Totaux pour les 4 tuiles de fréquentation (7 derniers jours)
-    $totalVisits7 = (int) array_sum(array_column($visitsPerDay, 'visits'));
-    $totalPages7 = count($topPages);
+    // Totaux pour les tuiles de fréquentation (toutes périodes, sauf dernières visites)
+    $totalVisits = 0;
+    $totalPages = 0;
+    try {
+        $totalVisits = (int) $pdo->query("SELECT COUNT(*) FROM site_visits")->fetchColumn();
+        $totalPages = (int) $pdo->query("SELECT COUNT(DISTINCT url) FROM site_visits")->fetchColumn();
+    } catch (PDOException $e) {
+        error_log("Erreur totaux tuiles fréquentation : " . $e->getMessage());
+    }
     $totalRecent7 = count($recentVisits);
 
-    // Récupérer les événements récents avec leurs catégories
+    // Récupérer tous les événements avec leurs catégories (les pills filtrent l'ensemble, comme les tuiles KPI)
     try {
         $recentEvents = $pdo->query("
             SELECT e.*, u.name as organizer_name, c.name as category_name, c.icon as category_icon, c.color as category_color
             FROM events e 
             JOIN users u ON e.user_id = u.id 
             LEFT JOIN event_categories c ON e.category_id = c.id
-            ORDER BY e.created_at DESC 
-            LIMIT 10
+            ORDER BY e.created_at DESC
         ")->fetchAll();
     } catch (PDOException $e) {
         error_log("Erreur lors de la récupération des événements récents : " . $e->getMessage());
         $recentEvents = [];
+    }
+
+    // Statut dérivé identique à my-events.php : 'expired' = statut DB OU approuvé dont la date est passée
+    $pillCounts = ['all' => count($recentEvents), 'pending' => 0, 'approved' => 0, 'rejected' => 0, 'expired' => 0];
+    foreach ($recentEvents as $e) {
+        $st = strtolower($e['status'] ?? 'pending');
+        $exp = !empty($e['date']) && strtotime($e['date']) < strtotime('today');
+        if ($st === 'expired' || ($st === 'approved' && $exp)) $pillCounts['expired']++;
+        elseif ($st === 'approved') $pillCounts['approved']++;
+        elseif ($st === 'rejected') $pillCounts['rejected']++;
+        else $pillCounts['pending']++;
+    }
+
+    // Sponsors pour la section dédiée
+    try {
+        $sponsors = $pdo->query('SELECT * FROM sponsors ORDER BY position ASC, id ASC')->fetchAll();
+    } catch (PDOException $e) {
+        error_log("Erreur récupération sponsors : " . $e->getMessage());
+        $sponsors = [];
     }
 
     // Récupérer toutes les catégories
@@ -302,8 +324,7 @@ try {
 
 // Titre de la page
 $pageTitle = "Administration";
-$additionalStyles = '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.css">' . "\n"
-                  . '<link rel="stylesheet" href="/assets/css/pages/admin/dashboard.css">' . "\n"
+$additionalStyles = '<link rel="stylesheet" href="/assets/css/pages/admin/dashboard.css">' . "\n"
                   . '<link rel="stylesheet" href="/assets/css/pages/admin/admin-dashboard.css">';
 
 // Inclure l'en-tête
@@ -325,15 +346,15 @@ include __DIR__ . '/../../templates/layouts/header-solid.php';
     <div class="summary-card" data-stat-modal="visits" role="button" tabindex="0">
       <div class="summary-icon views"><i class="bi bi-graph-up"></i></div>
       <div>
-        <div class="summary-label">VISITES (7j)</div>
-        <div class="summary-value"><?= (int)$totalVisits7 ?></div>
+        <div class="summary-label">VISITES</div>
+        <div class="summary-value"><?= (int)$totalVisits ?></div>
       </div>
     </div>
     <div class="summary-card" data-stat-modal="pages" role="button" tabindex="0">
       <div class="summary-icon views"><i class="bi bi-file-earmark-text"></i></div>
       <div>
-        <div class="summary-label">PAGES LES PLUS VISITÉES (7j)</div>
-        <div class="summary-value"><?= (int)$totalPages7 ?></div>
+        <div class="summary-label">PAGES VISITÉES</div>
+        <div class="summary-value"><?= (int)$totalPages ?></div>
       </div>
     </div>
     <div class="summary-card" data-stat-modal="recent" role="button" tabindex="0">
@@ -347,14 +368,14 @@ include __DIR__ . '/../../templates/layouts/header-solid.php';
       <div class="summary-icon users"><i class="bi bi-globe"></i></div>
       <div>
         <div class="summary-label">VISITES PAR PAYS</div>
-        <div class="summary-value"><?= (int)$totalCountries7 ?></div>
+        <div class="summary-value"><?= (int)$totalCountries ?></div>
       </div>
     </div>
     <div class="summary-card" data-stat-modal="sources" role="button" tabindex="0">
       <div class="summary-icon users"><i class="bi bi-box-arrow-in-right"></i></div>
       <div>
-        <div class="summary-label">VISITES RÉFÉRÉES (7j)</div>
-        <div class="summary-value"><?= (int)$totalReferred7 ?></div>
+        <div class="summary-label">VISITES RÉFÉRÉES</div>
+        <div class="summary-value"><?= (int)$totalReferred ?></div>
       </div>
     </div>
   </div>
@@ -415,11 +436,11 @@ include __DIR__ . '/../../templates/layouts/header-solid.php';
   <!-- Toolbar -->
   <div class="dash-toolbar">
     <div class="pills">
-      <button type="button" class="pill active" data-filter="all">Tous</button>
-      <button type="button" class="pill" data-filter="pending">En attente</button>
-      <button type="button" class="pill" data-filter="approved">Actifs</button>
-      <button type="button" class="pill" data-filter="rejected">Rejetés</button>
-      <button type="button" class="pill" data-filter="expired">Échus</button>
+      <button type="button" class="pill active" data-filter="all">Tous <span class="pill-count"><?= (int)$pillCounts['all'] ?></span></button>
+      <button type="button" class="pill" data-filter="pending">En attente <span class="pill-count"><?= (int)$pillCounts['pending'] ?></span></button>
+      <button type="button" class="pill" data-filter="approved">Actifs <span class="pill-count"><?= (int)$pillCounts['approved'] ?></span></button>
+      <button type="button" class="pill" data-filter="rejected">Rejetés <span class="pill-count"><?= (int)$pillCounts['rejected'] ?></span></button>
+      <button type="button" class="pill" data-filter="expired">Échus <span class="pill-count"><?= (int)$pillCounts['expired'] ?></span></button>
     </div>
     <div class="search"><input type="search" id="dashSearch" class="form-control" placeholder="Rechercher par titre ou organisateur…"></div>
   </div>
@@ -430,7 +451,7 @@ include __DIR__ . '/../../templates/layouts/header-solid.php';
         <nav class="nav flex-column">
           <a href="#" class="nav-link active" data-target="section-events"><i class="bi bi-calendar-event me-1"></i> Événements</a>
           <a href="#" class="nav-link" data-target="section-categories"><i class="bi bi-tags-fill me-1"></i> Catégories</a>
-          <a href="/pages/admin/sponsors.php" class="nav-link"><i class="bi bi-megaphone me-1"></i> Sponsors</a>
+          <a href="#section-sponsors" class="nav-link" data-target="section-sponsors"><i class="bi bi-megaphone me-1"></i> Sponsors</a>
         </nav>
       </div>
     </aside>
@@ -455,12 +476,14 @@ include __DIR__ . '/../../templates/layouts/header-solid.php';
                 </thead>
                 <tbody>
                 <?php foreach ($recentEvents as $event): 
-                  $status = strtolower($event['status'] ?? 'pending');
-                  $badgeClass = $status === 'approved' ? 'status-approved' : ($status === 'rejected' ? 'status-rejected' : 'status-pending');
+                  $rawStatus = strtolower($event['status'] ?? 'pending');
+                  $isExpired = !empty($event['date']) && strtotime($event['date']) < strtotime('today');
+                  // Même logique que les compteurs : 'expired' = statut DB ou approuvé échu
+                  $status = ($rawStatus === 'expired' || ($rawStatus === 'approved' && $isExpired)) ? 'expired' : $rawStatus;
+                  $badgeClass = $status === 'approved' ? 'status-approved' : ($status === 'rejected' ? 'status-rejected' : ($status === 'expired' ? 'status-expired' : 'status-pending'));
                   $dateTxt = !empty($event['date']) ? date('d/m/Y', strtotime($event['date'])) : '-';
                   $titleTxt = h($event['title'] ?? 'Sans titre');
                   $orgTxt = h($event['organizer_name'] ?? '-');
-                  $isExpired = !empty($event['date']) && (strtotime($event['date']) < strtotime(date('Y-m-d')));
                 ?>
                   <tr data-status="<?= $status ?>" data-title="<?= $titleTxt ?>" data-org="<?= $orgTxt ?>" data-expired="<?= $isExpired ? '1' : '0' ?>">
                     <td><?= $dateTxt ?></td>
@@ -483,9 +506,19 @@ include __DIR__ . '/../../templates/layouts/header-solid.php';
                       </small>
                     </td>
                     <td><?= $orgTxt ?></td>
-                    <td><span class="status-badge <?= $badgeClass ?>"><?php if ($status === 'approved'): ?>Actif<?php elseif ($status === 'rejected'): ?>Rejeté<?php else: ?>En attente<?php endif; ?></span></td>
+                    <td><span class="status-badge <?= $badgeClass ?>"><?php if ($status === 'approved'): ?>Actif<?php elseif ($status === 'rejected'): ?>Rejeté<?php elseif ($status === 'expired'): ?>Échu<?php else: ?>En attente<?php endif; ?></span></td>
                     <td class="text-end actions-cell">
                       <a href="/pages/admin/view_event.php?id=<?= (int)$event['id'] ?>" class="btn btn-sm btn-view btn-pill"><i class="bi bi-eye"></i> Voir</a>
+                      <?php if ($status === 'approved'): ?>
+                        <?php $alreadyNotified = !empty($event['organizer_notified_at']); ?>
+                        <button type="button" class="btn btn-sm btn-<?= $alreadyNotified ? 'outline-secondary' : 'btn-notify' ?> btn-pill"
+                                onclick="notifyOrganizer(<?= (int)$event['id'] ?>)"
+                                title="<?= $alreadyNotified
+                                    ? 'Organisateur déjà notifié le ' . date('d/m/Y H:i', strtotime($event['organizer_notified_at'])) . ' — cliquer pour renvoyer'
+                                    : 'Notifier l\'organisateur par email' ?>">
+                          <i class="bi <?= $alreadyNotified ? 'bi-envelope-check' : 'bi-envelope' ?>"></i>
+                        </button>
+                      <?php endif; ?>
                       <button type="button" class="btn btn-sm btn-delete btn-pill" onclick="deleteEvent(<?= (int)$event['id'] ?>)"><i class="bi bi-trash"></i> Suppr.</button>
                     </td>
                   </tr>
@@ -493,6 +526,7 @@ include __DIR__ . '/../../templates/layouts/header-solid.php';
                 <?php if (empty($recentEvents)): ?>
                   <tr><td colspan="5" class="text-center text-muted py-4">Aucun événement récent</td></tr>
                 <?php endif; ?>
+                <tr id="filterEmptyRow" class="d-none"><td colspan="5" class="text-center text-muted py-4">Aucun événement pour ce filtre</td></tr>
                 </tbody>
               </table>
             </div>
@@ -518,7 +552,7 @@ include __DIR__ . '/../../templates/layouts/header-solid.php';
                     <th>Nom</th>
                     <th>Icône</th>
                     <th>Couleur</th>
-                    <th>Actions</th>
+                    <th class="actions-col">Actions</th>
                   </tr>
                 </thead>
                 <tbody id="categoriesTableBody">
@@ -547,7 +581,7 @@ include __DIR__ . '/../../templates/layouts/header-solid.php';
                           <span class="color-preview" style="--cat-color: <?= htmlspecialchars($category['color']) ?>"></span>
                         <?php endif; ?>
                       </td>
-                      <td>
+                      <td class="actions-cell">
                         <button type="button" class="btn btn-sm btn-outline-primary edit-category"
                                 data-id="<?= $category['id'] ?>"
                                 data-code="<?= htmlspecialchars($category['code']) ?>"
@@ -562,6 +596,88 @@ include __DIR__ . '/../../templates/layouts/header-solid.php';
                       </td>
                     </tr>
                   <?php endforeach; ?>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section Sponsors -->
+      <section id="section-sponsors" class="d-none" data-section>
+        <div class="card">
+          <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
+            <h5 class="mb-0">Gestion des sponsors</h5>
+            <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#sponsorModal">
+              <i class="bi bi-plus"></i> Nouveau sponsor
+            </button>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table align-middle sponsors-table">
+                <thead>
+                  <tr>
+                    <th class="col-visual">Visuel</th>
+                    <th>Nom</th>
+                    <th>Lien</th>
+                    <th class="col-order">Ordre</th>
+                    <th class="col-period">Période</th>
+                    <th class="col-active">Actif</th>
+                    <th class="actions-col">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="sponsorsTableBody">
+                  <?php foreach ($sponsors as $s): ?>
+                    <tr data-id="<?= (int)$s['id'] ?>">
+                      <td><img src="<?= htmlspecialchars($s['image_path']) ?>" alt="" class="sponsor-thumb"></td>
+                      <td><?= htmlspecialchars($s['name']) ?></td>
+                      <td>
+                        <?php if (!empty($s['link_url'])): ?>
+                          <a href="<?= htmlspecialchars($s['link_url']) ?>" target="_blank" rel="noopener" class="d-inline-block text-truncate" style="max-width:180px"><?= htmlspecialchars($s['link_url']) ?></a>
+                        <?php else: ?>—<?php endif; ?>
+                      </td>
+                      <td><?= (int)$s['position'] ?></td>
+                      <td>
+                        <?php if (!empty($s['start_date']) || !empty($s['end_date'])): ?>
+                          <div class="small text-nowrap">
+                            <?= !empty($s['start_date']) ? htmlspecialchars(date('d/m/Y', strtotime($s['start_date']))) : '…' ?> →
+                            <?= !empty($s['end_date']) ? htmlspecialchars(date('d/m/Y', strtotime($s['end_date']))) : '…' ?>
+                          </div>
+                        <?php else: ?>
+                          <span class="text-muted">—</span>
+                        <?php endif; ?>
+                        <?php if (!empty($s['start_date']) && $s['start_date'] > date('Y-m-d')): ?>
+                          <span class="badge text-bg-warning">Programmé</span>
+                        <?php elseif (!empty($s['end_date']) && $s['end_date'] < date('Y-m-d')): ?>
+                          <span class="badge text-bg-secondary">Expiré</span>
+                        <?php endif; ?>
+                      </td>
+                      <td>
+                        <div class="form-check form-switch">
+                          <input type="checkbox" class="form-check-input toggle-sponsor" data-id="<?= (int)$s['id'] ?>" <?= $s['active'] ? 'checked' : '' ?>>
+                        </div>
+                      </td>
+                      <td class="actions-cell">
+                        <button type="button" class="btn btn-sm btn-outline-primary edit-sponsor"
+                                data-id="<?= (int)$s['id'] ?>"
+                                data-name="<?= htmlspecialchars($s['name']) ?>"
+                                data-image="<?= htmlspecialchars($s['image_path']) ?>"
+                                data-link="<?= htmlspecialchars($s['link_url'] ?? '') ?>"
+                                data-alt="<?= htmlspecialchars($s['alt_text'] ?? '') ?>"
+                                data-position="<?= (int)$s['position'] ?>"
+                                data-start="<?= htmlspecialchars($s['start_date'] ?? '') ?>"
+                                data-end="<?= htmlspecialchars($s['end_date'] ?? '') ?>">
+                          <i class="bi bi-pencil"></i>
+                        </button>
+                        <button type="button" class="btn btn-sm btn-outline-danger delete-sponsor" data-id="<?= (int)$s['id'] ?>">
+                          <i class="bi bi-trash"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  <?php endforeach; ?>
+                  <?php if (empty($sponsors)): ?>
+                    <tr><td colspan="7" class="text-center text-muted py-4">Aucun sponsor — la card ne s'affiche nulle part.</td></tr>
+                  <?php endif; ?>
                 </tbody>
               </table>
             </div>
@@ -720,7 +836,7 @@ include __DIR__ . '/../../templates/layouts/header-solid.php';
 
     <!-- Modal statistiques de fréquentation -->
     <div class="modal fade" id="statsModal" tabindex="-1" aria-labelledby="statsModalTitle" aria-hidden="true">
-      <div class="modal-dialog modal-xl modal-dialog-scrollable">
+      <div class="modal-dialog modal-fit modal-dialog-scrollable">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="statsModalTitle">Fréquentation</h5>
@@ -752,7 +868,7 @@ include __DIR__ . '/../../templates/layouts/header-solid.php';
 
     <!-- Modal détail KPI -->
     <div class="modal fade" id="kpiModal" tabindex="-1" aria-labelledby="kpiModalTitle" aria-hidden="true">
-      <div class="modal-dialog modal-xl modal-dialog-scrollable">
+      <div class="modal-dialog modal-fit modal-dialog-scrollable">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="kpiModalTitle">Détail</h5>
@@ -770,43 +886,151 @@ include __DIR__ . '/../../templates/layouts/header-solid.php';
 
     <!-- Modal pour les catégories -->
     <div class="modal fade" id="categoryModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <form id="categoryForm">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Catégorie</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <div class="modal-header border-0 pb-0">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
                     </div>
                     <div class="modal-body">
+                        <div class="form-modal-header">
+                            <div class="auth-icon" aria-hidden="true"><i class="bi bi-tags"></i></div>
+                            <h5 class="page-title" id="categoryModalTitle">Nouvelle catégorie</h5>
+                            <p class="page-subtitle">La catégorie sert à filtrer et illustrer les événements.</p>
+                        </div>
                         <input type="hidden" id="category_id" name="id">
-                        
-                        <div class="mb-3">
-                            <label for="category_code" class="form-label">Code</label>
-                            <input type="text" class="form-control" id="category_code" name="code" required>
-                            <div class="form-text">Code unique pour identifier la catégorie (ex: hiking)</div>
+
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h3 class="card-title">Informations</h3>
+                                <div class="row g-3">
+                                    <div class="col-md-5">
+                                        <label for="category_code" class="form-label required-field">Code</label>
+                                        <input type="text" class="form-control" id="category_code" name="code" required>
+                                        <div class="form-text">Identifiant unique (ex : hiking)</div>
+                                    </div>
+                                    <div class="col-md-7">
+                                        <label for="category_name" class="form-label required-field">Nom</label>
+                                        <input type="text" class="form-control" id="category_name" name="name" required>
+                                        <div class="form-text">Nom affiché (ex : Randonnée)</div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
-                        <div class="mb-3">
-                            <label for="category_name" class="form-label">Nom</label>
-                            <input type="text" class="form-control" id="category_name" name="name" required>
-                            <div class="form-text">Nom affiché aux utilisateurs (ex: Randonnée)</div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="category_icon" class="form-label">Icône</label>
-                            <input type="text" class="form-control" id="category_icon" name="icon">
-                            <div class="form-text">Classe d'icône Bootstrap (ex: bi-bicycle)</div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="category_color" class="form-label">Couleur</label>
-                            <input type="color" class="form-control" id="category_color" name="color">
-                            <div class="form-text">Couleur pour le badge de la catégorie</div>
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h3 class="card-title">Apparence</h3>
+                                <div class="row g-3 align-items-end">
+                                    <div class="col-md-7">
+                                        <label for="category_icon" class="form-label">Icône</label>
+                                        <input type="text" class="form-control" id="category_icon" name="icon">
+                                        <div class="form-text">Bootstrap Icons (ex : bi-bicycle)</div>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <label for="category_color" class="form-label">Couleur</label>
+                                        <div class="d-flex align-items-center gap-2">
+                                            <input type="color" class="form-control form-control-color" id="category_color" name="color">
+                                            <span class="color-preview flex-shrink-0" id="categoryColorPreview"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="modal-footer">
+                    <div class="modal-footer border-0">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                        <button type="submit" class="btn btn-secondary">Enregistrer</button>
+                        <button type="submit" class="btn btn-success"><i class="bi bi-check-lg"></i> Enregistrer</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal sponsor -->
+    <div class="modal fade" id="sponsorModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <form id="sponsorForm" enctype="multipart/form-data">
+                    <div class="modal-header border-0 pb-0">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-modal-header">
+                            <div class="auth-icon" aria-hidden="true"><i class="bi bi-megaphone"></i></div>
+                            <h5 class="page-title" id="sponsorModalTitle">Nouveau sponsor</h5>
+                            <p class="page-subtitle">Le visuel s'affiche dans la card sponsor des événements et le pied de page de l'accueil.</p>
+                        </div>
+                        <input type="hidden" id="sponsor_id" name="id">
+
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h3 class="card-title">Partenaire</h3>
+                                <div class="mb-3">
+                                    <label for="sponsor_name" class="form-label required-field">Nom</label>
+                                    <input type="text" class="form-control" id="sponsor_name" name="name" required maxlength="255">
+                                </div>
+                                <div class="row g-3">
+                                    <div class="col-md-7">
+                                        <label for="sponsor_link_url" class="form-label">Lien du site partenaire</label>
+                                        <input type="url" class="form-control" id="sponsor_link_url" name="link_url" placeholder="https://…">
+                                    </div>
+                                    <div class="col-md-5">
+                                        <label for="sponsor_alt_text" class="form-label">Texte alternatif</label>
+                                        <input type="text" class="form-control" id="sponsor_alt_text" name="alt_text" maxlength="255">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h3 class="card-title">Visuel</h3>
+                                <p class="form-intro">Fichier image (max 2 Mo) ou URL externe.</p>
+                                <div class="row g-3 align-items-start">
+                                    <div class="col-auto">
+                                        <div class="sponsor-image-box" id="sponsorImageBox">
+                                            <img id="sponsor_current_image" class="sponsor-image-preview" alt="Aperçu du visuel">
+                                            <label class="image-upload-button">
+                                                <i class="bi bi-upload"></i>
+                                                <span>Choisir l'image</span>
+                                                <input type="file" id="sponsor_image" name="image" accept="image/jpeg,image/png,image/webp,image/gif" class="d-none">
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <label for="sponsor_image_url" class="form-label">ou URL de l'image</label>
+                                        <input type="url" class="form-control" id="sponsor_image_url" name="image_url" placeholder="https://…">
+                                        <div class="form-text">En édition : laisser vide pour conserver l'image actuelle.</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h3 class="card-title">Diffusion</h3>
+                                <div class="row g-3">
+                                    <div class="col-md-4">
+                                        <label for="sponsor_position" class="form-label">Ordre</label>
+                                        <input type="number" class="form-control" id="sponsor_position" name="position" value="0">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="sponsor_start_date" class="form-label">Début d'affichage</label>
+                                        <input type="date" class="form-control" id="sponsor_start_date" name="start_date">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="sponsor_end_date" class="form-label">Fin d'affichage</label>
+                                        <input type="date" class="form-control" id="sponsor_end_date" name="end_date">
+                                    </div>
+                                    <div class="col-12"><small class="text-muted">Dates vides = toujours visible.</small></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-0">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <button type="submit" class="btn btn-success"><i class="bi bi-check-lg"></i> Enregistrer</button>
                     </div>
                 </form>
             </div>
@@ -816,9 +1040,11 @@ include __DIR__ . '/../../templates/layouts/header-solid.php';
     <!-- Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js"></script>
     <script src="/assets/js/admin/categories.js"></script>
+    <script src="/assets/js/admin/sponsors.js"></script>
     <script src="/assets/js/admin/admin-dashboard.js"></script>
     <script src="/assets/js/admin/dashboard-stats.js"></script>
     <script src="/assets/js/admin/dashboard-kpis.js"></script>
+    <script src="/assets/js/admin/notify-organizer.js"></script>
     <script>
     function updateEventStatus(eventId, status) {
         if (!confirm('Êtes-vous sûr de vouloir ' + (status === 'approved' ? 'approuver' : 'rejeter') + ' cet événement ?')) {

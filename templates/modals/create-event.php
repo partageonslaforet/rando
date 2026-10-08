@@ -573,6 +573,16 @@ document.addEventListener('DOMContentLoaded', function() {
                         <div class="card mb-4">
                             <div class="card-body">
                                 <h3 class="card-title">Organisateur</h3>
+                                <?php if (empty($organizerProfiles)): ?>
+                                    <div class="organizer-cta-banner d-flex align-items-start gap-2 mb-3" role="note">
+                                        <i class="bi bi-building-add flex-shrink-0" aria-hidden="true"></i>
+                                        <div>
+                                            Vous n'avez pas encore de profil organisateur.
+                                            Créez-en un pour afficher le <strong>nom et le logo de votre club ou association</strong> sur vos événements.
+                                            <a href="/pages/user/profile.php?tab=organizer&new=1" target="_blank">Créer mon profil organisateur</a>
+                                        </div>
+                                    </div>
+                                <?php endif; ?>
                                 <div class="mb-3">
                                     <label for="organizerId" class="form-label">Profil organisateur</label>
                                     <select class="form-select" id="organizerId" name="organizerId">
@@ -607,7 +617,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                     <div class="form-text">
                                         <a href="/pages/user/profile.php?tab=organizer" target="_blank">Gérer mes profils organisateur</a>
                                     </div>
-                                    <?php if (function_exists('logError')) { logError('create-event.php', 'Organizer select rendered', [ 'draft_id' => $draft_id ?? null, 'selected_organizer_id' => $draft['organizer_id'] ?? null, 'organisation' => $draft['organisation'] ?? null ]); } ?>
+                                    <?php if (function_exists('logError') && defined('DEBUG') && DEBUG) { logError('create-event.php', 'Organizer select rendered', [ 'draft_id' => $draft_id ?? null, 'selected_organizer_id' => $draft['organizer_id'] ?? null, 'organisation' => $draft['organisation'] ?? null ]); } ?>
                                 </div>
                             </div>
                         </div>

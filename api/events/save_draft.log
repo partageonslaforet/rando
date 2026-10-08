@@ -1,74 +1,75 @@
-[2026-10-05 15:47:23] INFO:  Début de l'enregistrement du brouillon
-[2026-10-05 15:47:23] INFO: POST data: Array
+[2026-10-08 18:35:33] INFO:  Début de l'enregistrement du brouillon
+[2026-10-08 18:35:33] INFO: POST data: Array
 (
-    [draftId] => 67
-    [title] => Course Marcel KIEFER 
-    [description] => Pas de garderie. Douches et vestiaires.
-10h20 Départ 1 km pour 7/12 ans
+    [draftId] => 77
+    [title] => Les foulées longuyonnaises
+    [description] => Course jeunes à 10h10 ( 3km)
+Vestiaires, buvette, restauration. Pas de douches, pas de garderie.
     [categories] => Array
         (
             [0] => 2
+            [1] => 7
         )
 
-    [date] => 01/11/2026
-    [registrationOpens] => 08:45
-    [registrationCloses] => 10:00
-    [meeting_name] => Salle des sports
-    [meeting_address] => Avenue du Maréchal Foch, Cité Michel, Hussigny-Godbrange
+    [date] => 13/12/2026
+    [registrationOpens] => 09:45
+    [registrationCloses] => 10:20
+    [meeting_name] =>  Salle ASL Auguste Rodry
+    [meeting_address] => Rue Louis Barthou, 24 Longuyon
     [meeting_city] => 
-    [meeting_coordinates] => 49.4947673,5.8686177
-    [routes] => [{"name":"","category_id":"2","distance":"13.13","elevation":"","price":"","description":"Départ 10:00 - 80% chemins forestiers, 20% routes","gpx_file":"","gpx_downloadable":false},{"name":"","category_id":"2","distance":"21.30","elevation":"","price":"","description":"Départ : 10:00 - 80% chemins forestiers, 20% routes","gpx_file":"","gpx_downloadable":false},{"name":"","category_id":"2","distance":"5.50","elevation":"","price":"","description":"Départ 10:15 - 80% chemins forestiers, 20% routes","gpx_file":"","gpx_downloadable":false}]
+    [meeting_coordinates] => 49.4390204,5.608719
+    [routes] => [{"name":"","category_id":"2","distance":"7.00","elevation":"","price":"7.00","description":"Départ à 10h10\nParcours forestiers","gpx_file":"","gpx_downloadable":false},{"name":"","category_id":"2","distance":"11.00","elevation":"","price":"10.00","description":"Départ à 10h00\nParcours forestiers","gpx_file":"","gpx_downloadable":false},{"name":"","category_id":"2","distance":"15.00","elevation":"","price":"15.00","description":"Départ à 9h45\nParcours forestiers","gpx_file":"","gpx_downloadable":false},{"name":"","category_id":"2","distance":"3.00","elevation":"","price":"3.00","description":"Départ à 10h15\n","gpx_file":"","gpx_downloadable":false},{"name":"","category_id":"7","distance":"6.50","elevation":"","price":"3.00","description":"Départ à 10h20","gpx_file":"","gpx_downloadable":false}]
     [organizerId] => 1
     [organizerName] => 
-    [contacts] => [{"name":"Jean-Louis PERIN","email":"jean-louis.perin@wanadoo.fr","phone":"+33 6 89 69 05 31"}]
+    [contacts] => [{"name":"Laurence GAVROY","email":"asl.gymnastique54260@gmail.com","phone":"+33 7 69 76 69 27"}]
     [saveReason] => before-publish
 )
 
-[2026-10-05 15:47:23] INFO: FILES data: Array
+[2026-10-08 18:35:33] INFO: FILES data: Array
 (
 )
 
-[2026-10-05 15:47:23] INFO:  Utilisation du brouillon existant: 67
-[2026-10-05 15:47:23] INFO: 🧩 Organizer result - organizer_id=1 | organisation='NOT_SET'
-[2026-10-05 15:47:23] INFO: 📝 Champs de l'événement:
-[2026-10-05 15:47:23] INFO: title: Course Marcel KIEFER 
-[2026-10-05 15:47:23] INFO: description: Pas de garderie. Douches et vestiaires.
-10h20 Départ 1 km pour 7/12 ans
-[2026-10-05 15:47:23] INFO: date: 2026-11-01
-[2026-10-05 15:47:23] INFO: registration_opens: 08:45:00
-[2026-10-05 15:47:23] INFO: registration_closes: 10:00:00
-[2026-10-05 15:47:23] INFO: location: Salle des sports
-[2026-10-05 15:47:23] INFO: venue: Avenue du Maréchal Foch, Cité Michel, Hussigny-Godbrange
-[2026-10-05 15:47:23] INFO: coordinates: 49.4947673,5.8686177
-[2026-10-05 15:47:23] INFO: meeting_name: Salle des sports
-[2026-10-05 15:47:23] INFO: meeting_address: Avenue du Maréchal Foch, Cité Michel, Hussigny-Godbrange
-[2026-10-05 15:47:23] INFO: meeting_city: Hussigny-Godbrange
-[2026-10-05 15:47:23] INFO: meeting_coordinates: 49.4947673,5.8686177
-[2026-10-05 15:47:23] INFO: updated_at: 2026-10-05 15:47:23
-[2026-10-05 15:47:23] INFO: organizer_id: 1
-[2026-10-05 15:47:23] INFO: organisation: 
-[2026-10-05 15:47:23] INFO: ℹ️ Aucun organisateur reçu depuis le formulaire événement
-[2026-10-05 15:47:23] INFO: Requête SQL: UPDATE draft_events SET title = ?, description = ?, date = ?, registration_opens = ?, registration_closes = ?, location = ?, venue = ?, coordinates = ?, meeting_name = ?, meeting_address = ?, meeting_city = ?, meeting_coordinates = ?, updated_at = ?, organizer_id = ? WHERE id = ?
-[2026-10-05 15:47:23] INFO: Paramètres: Array
+[2026-10-08 18:35:33] INFO:  Utilisation du brouillon existant: 77
+[2026-10-08 18:35:33] INFO: 🧩 Organizer result - organizer_id=1 | organisation='NOT_SET'
+[2026-10-08 18:35:33] INFO: 📝 Champs de l'événement:
+[2026-10-08 18:35:33] INFO: title: Les foulées longuyonnaises
+[2026-10-08 18:35:33] INFO: description: Course jeunes à 10h10 ( 3km)
+Vestiaires, buvette, restauration. Pas de douches, pas de garderie.
+[2026-10-08 18:35:33] INFO: date: 2026-12-13
+[2026-10-08 18:35:33] INFO: registration_opens: 09:45:00
+[2026-10-08 18:35:33] INFO: registration_closes: 10:20:00
+[2026-10-08 18:35:33] INFO: location:  Salle ASL Auguste Rodry
+[2026-10-08 18:35:33] INFO: venue: Rue Louis Barthou, 24 Longuyon
+[2026-10-08 18:35:33] INFO: coordinates: 49.4390204,5.608719
+[2026-10-08 18:35:33] INFO: meeting_name:  Salle ASL Auguste Rodry
+[2026-10-08 18:35:33] INFO: meeting_address: Rue Louis Barthou, 24 Longuyon
+[2026-10-08 18:35:33] INFO: meeting_city: Longuyon
+[2026-10-08 18:35:33] INFO: meeting_coordinates: 49.4390204,5.608719
+[2026-10-08 18:35:33] INFO: updated_at: 2026-10-08 18:35:33
+[2026-10-08 18:35:33] INFO: organizer_id: 1
+[2026-10-08 18:35:33] INFO: organisation: 
+[2026-10-08 18:35:33] INFO: ℹ️ Aucun organisateur reçu depuis le formulaire événement
+[2026-10-08 18:35:33] INFO: Requête SQL: UPDATE draft_events SET title = ?, description = ?, date = ?, registration_opens = ?, registration_closes = ?, location = ?, venue = ?, coordinates = ?, meeting_name = ?, meeting_address = ?, meeting_city = ?, meeting_coordinates = ?, updated_at = ?, organizer_id = ? WHERE id = ?
+[2026-10-08 18:35:33] INFO: Paramètres: Array
 (
-    [0] => Course Marcel KIEFER 
-    [1] => Pas de garderie. Douches et vestiaires.
-10h20 Départ 1 km pour 7/12 ans
-    [2] => 2026-11-01
-    [3] => 08:45:00
-    [4] => 10:00:00
-    [5] => Salle des sports
-    [6] => Avenue du Maréchal Foch, Cité Michel, Hussigny-Godbrange
-    [7] => 49.4947673,5.8686177
-    [8] => Salle des sports
-    [9] => Avenue du Maréchal Foch, Cité Michel, Hussigny-Godbrange
-    [10] => Hussigny-Godbrange
-    [11] => 49.4947673,5.8686177
-    [12] => 2026-10-05 15:47:23
+    [0] => Les foulées longuyonnaises
+    [1] => Course jeunes à 10h10 ( 3km)
+Vestiaires, buvette, restauration. Pas de douches, pas de garderie.
+    [2] => 2026-12-13
+    [3] => 09:45:00
+    [4] => 10:20:00
+    [5] =>  Salle ASL Auguste Rodry
+    [6] => Rue Louis Barthou, 24 Longuyon
+    [7] => 49.4390204,5.608719
+    [8] =>  Salle ASL Auguste Rodry
+    [9] => Rue Louis Barthou, 24 Longuyon
+    [10] => Longuyon
+    [11] => 49.4390204,5.608719
+    [12] => 2026-10-08 18:35:33
     [13] => 1
-    [14] => 67
+    [14] => 77
 )
 
-[2026-10-05 15:47:23] INFO: Informations principales de l'événement mises à jour avec succès
-[2026-10-05 15:47:23] INFO: ✅ Tags d'activité enregistrés : 2
-[2026-10-05 15:47:23] INFO:  Transaction validée avec succès
+[2026-10-08 18:35:33] INFO: Informations principales de l'événement mises à jour avec succès
+[2026-10-08 18:35:33] INFO: ✅ Tags d'activité enregistrés : 2, 7
+[2026-10-08 18:35:33] INFO:  Transaction validée avec succès

@@ -85,6 +85,11 @@
             const res = await fetch(gpxUrl);
             if (!res.ok) throw new Error('HTTP ' + res.status);
             const text = await res.text();
+            // Garde : un fichier manquant peut retourner la home en HTML 200 (rewrite .htaccess)
+            if (!/^\s*<\?xml|^\s*<gpx[\s>]/i.test(text)) {
+                console.warn('Réponse non-GPX ignorée', gpxUrl);
+                return [];
+            }
             const parser = new DOMParser();
             const xml = parser.parseFromString(text, 'text/xml');
             const points = Array.from(xml.getElementsByTagName('trkpt')).map(pt => [parseFloat(pt.getAttribute('lat')), parseFloat(pt.getAttribute('lon'))]).filter(c => !isNaN(c[0]) && !isNaN(c[1]));

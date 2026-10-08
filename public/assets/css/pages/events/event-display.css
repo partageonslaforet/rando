@@ -762,14 +762,20 @@
 .desc-card .info-times .info-item { min-width:0; }
 .desc-card .desc-content { margin-top:.4rem; color:var(--text-color); font-size:1rem; line-height:1.7; }
 
-/* Actions dans l’aside */
-.aside-actions .btn-share { display:flex; align-items:center; justify-content:center; gap:.5rem; border:1px solid color-mix(in srgb, #000 15%, transparent); background:var(--light-text); color:var(--green-dark); border-radius:999px; padding:.5rem .9rem; font-weight:700; transition:.2s; }
-.aside-actions .btn-share:hover { background:var(--surface); border-color:color-mix(in srgb, #000 25%, transparent); }
-.aside-actions .btn-share i { color: var(--primary-color); }
+/* Actions dans l’aside : barre horizontale Partager / Calendrier / S'abonner */
+.aside-actions .action-bar { display:flex; gap:.5rem; }
+.aside-actions .action-bar > * { flex:1; min-width:0; }
 
-.aside-actions .btn-subscribe { display:flex; align-items:center; justify-content:center; gap:.5rem; border:none; background:var(--primary-color); color:var(--light-text); border-radius:999px; padding:.5rem .9rem; font-weight:700; transition:.2s; }
+.aside-actions .btn-share,
+.aside-actions .btn-ics { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.25rem; border:1px solid color-mix(in srgb, #000 15%, transparent); background:var(--light-text); color:var(--green-dark); border-radius:14px; padding:.6rem .4rem; font-weight:700; font-size:.78rem; text-decoration:none; transition:.2s; }
+.aside-actions .btn-share:hover,
+.aside-actions .btn-ics:hover { background:var(--surface); border-color:color-mix(in srgb, #000 25%, transparent); color:var(--green-dark); }
+.aside-actions .btn-share i,
+.aside-actions .btn-ics i { color: var(--primary-color); font-size:1.15rem; }
+
+.aside-actions .btn-subscribe { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.25rem; border:none; background:var(--primary-color); color:var(--light-text); border-radius:14px; padding:.6rem .4rem; font-weight:700; font-size:.78rem; transition:.2s; }
 .aside-actions .btn-subscribe:hover { background:var(--green-dark); }
-.aside-actions .btn-subscribe i { color: var(--light-text); }
+.aside-actions .btn-subscribe i { color: var(--light-text); font-size:1.15rem; }
 
 /* Mini-galerie dans l’aside */
 
@@ -1031,6 +1037,15 @@ body.event-detail-page {
 }
 .itinerary-geoloc.loading i {
     animation: itinerary-spin 1s linear infinite;
+}
+
+/* Bouton reset du point de départ — variante danger */
+.itinerary-reset {
+    color: var(--danger-color);
+}
+.itinerary-reset:hover {
+    background: var(--danger-color);
+    color: var(--light-text);
 }
 @keyframes itinerary-spin {
     to { transform: rotate(360deg); }

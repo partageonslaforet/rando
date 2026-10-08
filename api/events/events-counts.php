@@ -298,8 +298,8 @@ try {
 
                     $event['main_image_path'] = $publicUrl ?: $categoryFallback;
 
-                    // Log si aucune image réelle trouvée
-                    if (!$publicUrl) {
+                    // Log si aucune image réelle trouvée (debug uniquement)
+                    if (!$publicUrl && defined('DEBUG') && DEBUG) {
                         logError('api/events-counts', 'Image principale non résolue', [
                             'event_id' => $eid,
                             'title' => $event['title'] ?? null,
@@ -353,7 +353,7 @@ try {
 
             // Log de diagnostic des événements annulés
             $cancelledEvents = array_filter($events, fn($e) => (int)($e['is_cancelled'] ?? 0) === 1);
-            if (!empty($cancelledEvents)) {
+            if (!empty($cancelledEvents) && defined('DEBUG') && DEBUG) {
                 logError('api/events-counts', 'Evénements annulés retournés', [
                     'ids' => array_column($cancelledEvents, 'id'),
                     'titles' => array_column($cancelledEvents, 'title'),

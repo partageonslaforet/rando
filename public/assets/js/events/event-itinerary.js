@@ -138,6 +138,7 @@
         const ui = {
             input: document.getElementById('itineraryStart'),
             geoloc: document.getElementById('itineraryGeoloc'),
+            reset: document.getElementById('itineraryReset'),
             profiles: document.querySelectorAll('.itinerary-profile'),
             summary: document.getElementById('itinerarySummary'),
             error: document.getElementById('itineraryError')
@@ -168,6 +169,20 @@
         let currentProfile = 'driving';
         let startLatLng = null;
         let routing = false;
+
+        function updateReset() {
+            if (!ui.reset) return;
+            ui.reset.hidden = !(startLatLng || (ui.input && ui.input.value.trim()));
+        }
+
+        function resetItinerary() {
+            startLatLng = null;
+            if (ui.input) ui.input.value = '';
+            if (routeLayers) routeLayers.clearLayers();
+            if (ui.summary) ui.summary.textContent = '';
+            setError(ui.error, '');
+            updateReset();
+        }
 
         async function computeRoute() {
             if (!startLatLng || routing) return;
@@ -223,11 +238,16 @@
             try {
                 const coords = await geocode(ui.input.value);
                 startLatLng = L.latLng(coords.lat, coords.lng);
+                updateReset();
                 computeRoute();
             } catch (err) {
                 setError(ui.error, err.message);
             }
         });
+        ui.input && ui.input.addEventListener('input', updateReset);
+
+        // --- « Effacer » : vide le départ, le tracé et le résumé
+        ui.reset && ui.reset.addEventListener('click', resetItinerary);
 
         // --- « Votre position » : géolocalisation au clic
         ui.geoloc && ui.geoloc.addEventListener('click', function () {
@@ -242,6 +262,7 @@
                     ui.geoloc.classList.remove('loading');
                     startLatLng = L.latLng(pos.coords.latitude, pos.coords.longitude);
                     if (ui.input) ui.input.value = 'Votre position';
+                    updateReset();
                     computeRoute();
                 },
                 function (err) {

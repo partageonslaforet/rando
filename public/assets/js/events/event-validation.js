@@ -1518,7 +1518,12 @@ function handleGpxUpload(input, routeIndex) {
     reader.onload = function(e) {
         try {
             const gpxData = e.target.result;
-            
+
+            // Garde : éviter de parser du non-XML (fichier HTML/PDF renommé, etc.)
+            if (!/^\s*<\?xml|^\s*<gpx[\s>]/i.test(gpxData)) {
+                throw new Error('Le fichier n\'est pas un GPX valide');
+            }
+
             // Créer un élément temporaire pour parser le GPX
             const parser = new DOMParser();
             const gpx = parser.parseFromString(gpxData, 'text/xml');
@@ -1704,8 +1709,13 @@ function removeGpx(routeIndex) {
 
 // Fonction pour calculer la distance d'un parcours GPX
 function calculateDistance(gpxData) {
-    
+
     try {
+        // Garde : ne pas envoyer du contenu non-XML au parseur
+        if (!/^\s*<\?xml|^\s*<gpx[\s>]/i.test(gpxData)) {
+            console.error('Contenu non-GPX, distance non calculée');
+            return 0;
+        }
         const parser = new DOMParser();
         const gpx = parser.parseFromString(gpxData, 'text/xml');
         const points = Array.from(gpx.getElementsByTagName('trkpt'));

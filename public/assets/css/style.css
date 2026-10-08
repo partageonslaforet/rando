@@ -753,6 +753,21 @@ body {
     text-decoration: none;
     color: inherit;
 }
+/* Override du bleu par défaut de Leaflet (.leaflet-container a) — charte graphique */
+.leaflet-container a.event-popup-link,
+.leaflet-popup-content a.event-popup-link {
+    color: var(--text-color);
+    text-decoration: none;
+}
+.leaflet-container a.event-popup-link:hover {
+    color: var(--text-color);
+}
+.event-popup h5 {
+    color: var(--green-dark);
+}
+.event-popup-content .bi {
+    color: var(--primary-color);
+}
 
 .event-popup-head {
     display: flex;
@@ -902,6 +917,130 @@ body {
 
 .event-popup-content {
     padding: 15px;
+}
+
+/* Filtre distance : lieu de référence + rayon en km */
+.distance-filter {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.distance-filter-title {
+    margin: 0;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--green-dark);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+.distance-filter-title i {
+    color: var(--primary-color);
+}
+
+.distance-filter-row {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.distance-dot {
+    flex-shrink: 0;
+    width: 14px;
+    height: 14px;
+    border: 3px solid var(--primary-color);
+    border-radius: 50%;
+    background: var(--light-text);
+    margin-left: 3px;
+}
+
+.distance-origin {
+    flex: 1;
+    min-width: 0;
+}
+
+.distance-geoloc,
+.distance-clear {
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    border: 1px solid var(--border-color);
+    border-radius: 50%;
+    background: var(--light-text);
+    color: var(--primary-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.05rem;
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+
+.distance-geoloc:hover {
+    background: var(--primary-color);
+    color: var(--light-text);
+}
+
+.distance-clear {
+    color: var(--danger-color);
+}
+.distance-clear:hover {
+    background: var(--danger-color);
+    color: var(--light-text);
+}
+
+.distance-filter.picking .distance-origin {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--primary-color) 25%, transparent);
+}
+
+.distance-radius-row i {
+    flex-shrink: 0;
+    width: 20px;
+    text-align: center;
+    color: var(--primary-color);
+    font-size: 1.05rem;
+}
+
+.distance-radius {
+    flex: 1;
+    min-width: 0;
+    accent-color: var(--primary-color);
+    cursor: pointer;
+}
+.distance-radius:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.distance-radius-label {
+    flex-shrink: 0;
+    min-width: 3.2rem;
+    text-align: right;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.distance-error {
+    font-size: 0.82rem;
+    color: var(--danger-color);
+}
+
+/* Conteneur badges en haut à gauche de l'image du popup */
+.event-popup-badges {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    z-index: 10;
+}
+.event-popup-badges .event-popup-cancelled {
+    position: static;
 }
 
 /* Badge Annulé dans le popup Leaflet */
@@ -1623,6 +1762,7 @@ h3 {
     text-align: center;
     border-radius: 10px;
     padding: 1rem;
+    font-size:15px;
 }
 
 /* Conserver la couleur par défaut uniquement si aucune classe text-bg/* ou bg-* n'est fournie */
@@ -1633,7 +1773,7 @@ h3 {
 .toast.text-bg-success,
 .toast.bg-success,
 .text-bg-success {
-    background-color: var(--primary-color) !important;
+    background: color-mix(in srgb, var(--primary-color) 50%, transparent) !important;
     color: var(--light-text) !important;
     border: 1px solid var(--border-green) !important;
 }

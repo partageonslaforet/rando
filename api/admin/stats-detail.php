@@ -255,6 +255,32 @@ try {
         if ($date) $stmt->bindValue(':date', $date);
         $stmt->execute();
         $data = $stmt->fetchAll();
+
+        // Référants pointant vers un événement interne : afficher son titre
+        $eventIds = [];
+        foreach ($data as $row) {
+            if (preg_match('#/event(?:\?id=|/)(\d+)#', (string) ($row['referrer'] ?? ''), $m)) {
+                $eventIds[] = (int) $m[1];
+            }
+        }
+        $eventTitles = [];
+        if (!empty($eventIds)) {
+            $placeholders = implode(',', array_fill(0, count($eventIds), '?'));
+            $titleStmt = $pdo->prepare("SELECT id, title FROM events WHERE id IN ($placeholders)");
+            $titleStmt->execute($eventIds);
+            $eventTitles = $titleStmt->fetchAll(PDO::FETCH_KEY_PAIR);
+        }
+        foreach ($data as &$row) {
+            $ref = (string) ($row['referrer'] ?? '');
+            $row['referrer_label'] = $ref;
+            if (preg_match('#/event(?:\?id=|/)(\d+)#', $ref, $m)) {
+                $t = $eventTitles[(int) $m[1]] ?? '';
+                if ($t !== '') {
+                    $row['referrer_label'] = 'Événement : ' . $t;
+                }
+            }
+        }
+        unset($row);
     } else {
         $countryJoin = '';
         $countryFilter = '';

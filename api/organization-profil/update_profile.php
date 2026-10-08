@@ -52,6 +52,9 @@ try {
         $logoPath = $organizerProfile->uploadLogo($_FILES['logo'], $result);
     }
 
+    // Invalider le cache de la pastille header : l'utilisateur a désormais un profil
+    $_SESSION['has_organizer_profile'] = true;
+
     // Préparer la réponse
     $response = [
         'success' => true,

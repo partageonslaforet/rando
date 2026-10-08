@@ -39,7 +39,8 @@ function initMap() {
 
     try {
         // Création de la carte centrée sur la Belgique
-        window.mainMap = L.map(mapContainer).setView([50.5039, 4.4699], 8);
+        // tap:false — évite le click synthétique Leaflet sur iOS Safari
+        window.mainMap = L.map(mapContainer, { tap: false }).setView([50.5039, 4.4699], 8);
 
         // Ajout de la couche OpenStreetMap
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -229,28 +230,36 @@ async function updateMapMarkers(events) {
 
                 if (coordinates && coordinates.lat && coordinates.lng) {
                     const isCancelled = /^(1|t|true|yes|on)$/i.test(String(event.is_cancelled));
+                    // Nom réel de la catégorie (DB) en priorité, fallback sur le mapping code→label
+                    const catLabel = event.category_name || getCategoryLabel(event.category);
+                    const dateTxt = (typeof formatDateLongFR === 'function')
+                        ? formatDateLongFR(event.date)
+                        : new Date(event.date).toLocaleDateString('fr-FR');
                     const popupContent = `
-                        <div class="event-popup">
-                            <div class="event-popup-image">
-                                ${isCancelled ? '<span class="event-popup-cancelled">Annulé</span>' : ''}
-                                <img src="${event.main_image_path || '/assets/images/events/default-event.jpg'}" 
-                                     alt="${event.title}">
-                                <span class="badge-category position-absolute top-0 end-0 m-2">
-                                    ${getCategoryLabel(event.category)}
-                                </span>
-                            </div>
-                            <div class="event-popup-content p-3">
-                                <h5 class="mb-2">${event.title}</h5>
-                                <div class="d-flex align-items-center mb-2">
-                                    <i class="bi bi-calendar-event me-2"></i>
-                                    <span>${new Date(event.date).toLocaleDateString()}</span>
+                        <a href="/event?id=${encodeURIComponent(event.id)}" class="event-popup-link" aria-label="Voir l'événement">
+                            <div class="event-popup">
+                                <div class="event-popup-image">
+                                    <div class="event-popup-badges">
+                                        ${isCancelled ? '<span class="event-popup-cancelled">Annulé</span>' : ''}
+                                        <span class="badge-category">${catLabel}</span>
+                                    </div>
+                                    <img src="${event.main_image_path || '/assets/images/events/default-event.jpg'}" 
+                                         alt="${event.title}">
                                 </div>
-                                <div class="d-flex align-items-center">
-                                    <i class="bi bi-geo-alt me-2"></i>
-                                    <span>${event.location}</span>
+                                <div class="event-popup-content p-3">
+                                    <h5 class="mb-2">${event.title}</h5>
+                                    <div class="d-flex align-items-center mb-2">
+                                        <i class="bi bi-calendar-event me-2"></i>
+                                        <span>${dateTxt}</span>
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <i class="bi bi-geo-alt me-2"></i>
+                                        <span>${event.location}</span>
+                                    </div>
+                                    <div class="event-popup-cta">Voir l'événement <i class="bi bi-arrow-right"></i></div>
                                 </div>
                             </div>
-                        </div>`;
+                        </a>`;
 
                     const marker = L.marker([coordinates.lat, coordinates.lng], {
                         icon: window.eventPinIcon,
@@ -302,7 +311,6 @@ function getCategoryLabel(category) {
 }
 
 // Exporter les fonctions
-console.log('[event-maps.js] Exposition de window.mapFunctions');
 window.mapFunctions = {
     updateMapMarkers,
     getCategoryBadgeClass,

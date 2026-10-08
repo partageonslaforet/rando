@@ -71,7 +71,8 @@ function initMap() {
     }
     try {
         // Création de la carte centrée sur la Belgique
-        window.mainMap = L.map('map').setView([50.5039, 4.4699], 8);
+        // tap:false — évite le click synthétique Leaflet sur iOS Safari
+        window.mainMap = L.map('map', { tap: false }).setView([50.5039, 4.4699], 8);
         // console.log('Carte créée:', map); // Log de la carte créée
 
         // Ajout de la couche OpenStreetMap
@@ -133,7 +134,10 @@ function createMarkersLayer() {
         return L.markerClusterGroup({
             showCoverageOnHover: false,
             spiderfyOnMaxZoom: true,
-            iconCreateFunction: eventClusterIcon
+            iconCreateFunction: eventClusterIcon,
+            // L'autopan à l'ouverture du popup déclenche un moveend qui retirait
+            // le marqueur hors des bounds → popup détruit aussitôt (bug mobile)
+            removeOutsideVisibleBounds: false
         });
     }
     return L.layerGroup();
@@ -262,7 +266,7 @@ async function updateMapMarkers(events) {
                                    e.categories.map(c => `<span class="chip" title="${c.name}">${c.name}</span>`).join('') +
                                    `</div>`;
                         }
-                        const label = (typeof getCategoryLabel === 'function' ? getCategoryLabel(e.category) : (e.category || 'Autre'));
+                        const label = e.category_name || (typeof getCategoryLabel === 'function' ? getCategoryLabel(e.category) : (e.category || 'Autre'));
                         return `<div class="category-chips mb-2"><span class="chip">${label}</span></div>`;
                     };
 

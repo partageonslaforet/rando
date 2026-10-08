@@ -22,7 +22,7 @@ require_once __DIR__ . '/../config/mail.php';
 $__logFile = __DIR__ . '/../logs/error.log.php';
 if (file_exists($__logFile)) {
     require_once $__logFile;
-    if (function_exists('logError')) {
+    if (function_exists('logError') && defined('DEBUG') && DEBUG) {
         logError('includes/mailer.php', 'Config mail chargée', [
             'local_loaded' => (bool) $__localCfgLoaded,
             'local_path' => $__localCfgLoaded,
@@ -68,9 +68,10 @@ class Mailer {
             // Limite le timeout de connexion fsockopen pour eviter un blocage de 60s
             ini_set('default_socket_timeout', '10');
 
-            // Choisir dynamiquement le transport
+            // Choisir dynamiquement le transport : SMTP dès qu'un host est défini
+            // (permet Mailhog/Mailpit en local sans credentials)
             $useSMTP = false;
-            if (!empty(MAIL_HOST) && strtolower(MAIL_HOST) !== 'mail()' && (!empty(MAIL_USERNAME) && !empty(MAIL_PASSWORD))) {
+            if (!empty(MAIL_HOST) && strtolower(MAIL_HOST) !== 'mail()') {
                 $useSMTP = true;
             }
 
@@ -80,9 +81,11 @@ class Mailer {
                 $this->mailer->isSMTP();
                 $this->mailer->Host = MAIL_HOST;
                 $this->mailer->Port = MAIL_PORT;
-                $this->mailer->SMTPAuth = true;
-                $this->mailer->Username = MAIL_USERNAME;
-                $this->mailer->Password = MAIL_PASSWORD;
+                $this->mailer->SMTPAuth = (!empty(MAIL_USERNAME) && !empty(MAIL_PASSWORD));
+                if ($this->mailer->SMTPAuth) {
+                    $this->mailer->Username = MAIL_USERNAME;
+                    $this->mailer->Password = MAIL_PASSWORD;
+                }
 
                 if (strtolower(MAIL_ENCRYPTION) === 'tls') {
                     $this->mailer->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
@@ -106,7 +109,7 @@ class Mailer {
                 }
             }
 
-            if (function_exists('logError')) {
+            if (function_exists('logError') && defined('DEBUG') && DEBUG) {
                 logError('includes/mailer.php', 'Init transport', [
                     'useSMTP' => $useSMTP,
                     'transport' => $useSMTP ? 'smtp' : 'mail',
@@ -157,8 +160,8 @@ class Mailer {
             $this->mailer->Body = $body;
             $this->mailer->AltBody = $altBody ?: strip_tags($body);
 
-            // Log de tentative (sanitisé)
-            if (defined('DEBUG') && DEBUG) {
+            // Log de tentative (sanitisé) — permanent, utile en prod
+            if (function_exists('logError')) {
                 require_once __DIR__ . '/../logs/error.log.php';
                 $transport = $this->mailer->Mailer; // 'smtp' ou 'mail'
                 $ctx = [
@@ -172,9 +175,7 @@ class Mailer {
                     $ctx['secure'] = $this->mailer->SMTPSecure ?: 'none';
                     $ctx['auth'] = $this->mailer->SMTPAuth ? 'yes' : 'no';
                 }
-                if (function_exists('logError')) {
-                    logError('includes/mailer.php', 'Tentative envoi e-mail', $ctx);
-                }
+                logError('includes/mailer.php', 'Tentative envoi e-mail', $ctx);
             }
 
             $result = $this->mailer->send();
@@ -189,7 +190,7 @@ class Mailer {
                         'port' => $this->mailer->Port ?? null,
                     ]);
                 }
-            } elseif (defined('DEBUG') && DEBUG && function_exists('logError')) {
+            } elseif (function_exists('logError')) {
                 logError('includes/mailer.php', 'Envoi e-mail reussi', [
                     'to' => $to,
                     'subject' => $subject,
@@ -386,6 +387,42 @@ class Mailer {
             'cancelled' => 'Événement annulé : ',
         ];
         $subject = ($subjects[$type] ?? $subjects['new']) . $title . ' - ' . APP_NAME;
+        return $this->sendHtml($to, $subject, $body);
+    }
+
+    /**
+     * Notifie un organisateur que son événement est en ligne sur le site,
+     * avec un lien tokenisé pour le revendiquer.
+     * Déclenché manuellement depuis le dashboard admin (notify_organizer.php).
+     * @param string $to       Email du contact de l'événement (event_contacts.email)
+     * @param array  $event    Données de l'événement (id, title, date, location, venue, meeting_*)
+     * @param string $claimUrl URL complète /pages/claim-event.php?token=...
+     */
+    public function sendOrganizerEventOnlineEmail(string $to, array $event, string $claimUrl): bool {
+        $base = defined('APP_URL') ? rtrim(APP_URL, '/') : '';
+        $eventId = (int)($event['id'] ?? 0);
+
+        $place = trim(implode(', ', array_filter([
+            $event['meeting_name'] ?? '', $event['meeting_address'] ?? '', $event['meeting_city'] ?? '',
+        ])));
+        if ($place === '') {
+            $place = trim(implode(', ', array_filter([$event['venue'] ?? '', $event['location'] ?? ''])));
+        }
+
+        $vars = [
+            'brand'      => defined('APP_NAME') ? APP_NAME : 'Partageons la Forêt',
+            'eventTitle' => $event['title'] ?? 'Votre événement',
+            'eventDate'  => !empty($event['date']) ? date('d/m/Y', strtotime($event['date'])) : 'date non précisée',
+            'eventPlace' => $place,
+            'eventUrl'   => $eventId ? ($base . '/event/' . $eventId) : $base,
+            'claimUrl'   => $claimUrl,
+        ];
+        ob_start();
+        extract($vars, EXTR_SKIP);
+        include __DIR__ . '/../templates/emails/organizer-event-online.php';
+        $body = ob_get_clean();
+
+        $subject = 'Votre événement « ' . ($event['title'] ?? '') . ' » est en ligne sur rando.partageonslaforet.be';
         return $this->sendHtml($to, $subject, $body);
     }
 

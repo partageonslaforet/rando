@@ -24,6 +24,7 @@ $rejectedEvents = [];
 $expiredEvents = [];
 $currentTab = 'all';
 $filteredEvents = [];
+$hasOrganizerProfile = false;
 
 try {
     // Connexion à la base de données
@@ -116,12 +117,17 @@ try {
     $stmt = $db->prepare('SELECT * FROM users WHERE id = ?');
     $stmt->execute([getCurrentUserId()]);
     $user = $stmt->fetch();
-    
+
     if (!$user) {
         session_destroy();
         header('Location: /?login=required');
         exit;
     }
+
+    // L'utilisateur possède-t-il un profil organisateur ? (rappel persistant sinon)
+    $opStmt = $db->prepare('SELECT 1 FROM organizer_profiles WHERE user_id = ? LIMIT 1');
+    $opStmt->execute([$user['id']]);
+    $hasOrganizerProfile = (bool)$opStmt->fetchColumn();
 
     // Vérifier le rôle et rediriger si nécessaire
     if ($user['role'] === 'admin' && strpos($_SERVER['REQUEST_URI'], '/pages/user/') !== false) {
@@ -308,6 +314,17 @@ require_once __DIR__ . '/../../templates/layouts/header-solid.php';
             Créer un événement
         </a>
     </section>
+
+    <?php if (!$hasOrganizerProfile): ?>
+    <div class="organizer-cta-banner d-flex align-items-start gap-2" role="note">
+        <i class="bi bi-building-add flex-shrink-0" aria-hidden="true"></i>
+        <div>
+            <strong>Gagnez en visibilité :</strong> créez votre profil organisateur pour afficher
+            le nom et le logo de votre club ou association sur vos événements.
+            <a href="/pages/user/profile.php?tab=organizer&new=1">Créer mon profil organisateur</a>
+        </div>
+    </div>
+    <?php endif; ?>
 
     <section class="my-events-card" aria-labelledby="events-section-title">
         <div class="my-events-card-header">

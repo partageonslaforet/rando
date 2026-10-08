@@ -31,20 +31,26 @@ if (!$isPreview && strpos($_SERVER['REQUEST_URI'] ?? '', 'templates/events/event
 }
 
 // Trace d'entrée du template
-logError('templates/events/event-detail.php', 'template enter', [
-    'request_uri' => $_SERVER['REQUEST_URI'] ?? null,
-    'event_id' => $eventId,
-    'preview' => $isPreview ? true : false
-]);
+if (defined('DEBUG') && DEBUG) {
+    logError('templates/events/event-detail.php', 'template enter', [
+        'request_uri' => $_SERVER['REQUEST_URI'] ?? null,
+        'event_id' => $eventId,
+        'preview' => $isPreview ? true : false
+    ]);
+}
 
 try {
     $builder = new EventDisplayBuilder($db);
     $mode = $isPreview ? 'draft' : 'published';
     $userId = $isPreview ? ($_SESSION['user_id'] ?? null) : null;
     $event = $builder->build($mode, $eventId, $userId);
-    logError('templates/events/event-detail.php', 'render enter', ['event_id' => $eventId, 'mode' => $mode]);
+    if (defined('DEBUG') && DEBUG) {
+        logError('templates/events/event-detail.php', 'render enter', ['event_id' => $eventId, 'mode' => $mode]);
+    }
     $event['views_total'] = getEventTotalViews($db, $eventId);
-    logError('templates/events/event-detail.php', 'render views', ['event_id' => $eventId, 'views_total' => (int)($event['views_total'] ?? -1)]);
+    if (defined('DEBUG') && DEBUG) {
+        logError('templates/events/event-detail.php', 'render views', ['event_id' => $eventId, 'views_total' => (int)($event['views_total'] ?? -1)]);
+    }
 
     if (!$event) {
         throw new Exception('Événement non trouvé');

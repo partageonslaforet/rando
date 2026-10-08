@@ -349,15 +349,18 @@ function attrValue(mixed $value): string
 
             <aside class="col-lg-4">
                 <section class="event-section aside-actions">
-                    <button class="btn-share w-100" type="button" data-share="event">
-                        <i class="bi bi-share"></i><span>Partager cet événement</span>
-                    </button>
-                </section>
-
-                <section class="event-section aside-actions">
-                    <button class="btn-subscribe w-100" type="button" data-bs-toggle="modal" data-bs-target="#subscribersModal" aria-controls="subscribersModal" aria-haspopup="dialog">
-                        <i class="bi bi-bell"></i><span>S'abonner aux événements</span>
-                    </button>
+                    <div class="action-bar">
+                        <button class="btn-share" type="button" data-share="event" title="Partager cet événement">
+                            <i class="bi bi-share"></i><span>Partager</span>
+                        </button>
+                        <a class="btn-ics" href="/api/events/ics.php?id=<?= (int)$event['id'] ?>"
+                           title="Ajouter à mon calendrier" aria-label="Ajouter cet événement à mon calendrier">
+                            <i class="bi bi-calendar-plus"></i><span>Calendrier</span>
+                        </a>
+                        <button class="btn-subscribe" type="button" data-bs-toggle="modal" data-bs-target="#subscribersModal" aria-controls="subscribersModal" aria-haspopup="dialog" title="S'abonner aux événements">
+                            <i class="bi bi-bell"></i><span>S'abonner</span>
+                        </button>
+                    </div>
                 </section>
 
                 <?php if ($organizer): ?>
@@ -421,11 +424,15 @@ function attrValue(mixed $value): string
                             <div class="itinerary-row">
                                 <span class="itinerary-dot itinerary-dot-start" aria-hidden="true"></span>
                                 <input type="text" id="itineraryStart" class="form-control"
-                                       placeholder="Choisissez un point de départ ou cliquez"
+                                       placeholder="Point de départ"
                                        autocomplete="off" aria-label="Point de départ">
                                 <button type="button" id="itineraryGeoloc" class="itinerary-geoloc"
                                         title="Votre position" aria-label="Utiliser ma position">
                                     <i class="bi bi-crosshair"></i>
+                                </button>
+                                <button type="button" id="itineraryReset" class="itinerary-geoloc itinerary-reset"
+                                        title="Effacer le point de départ" aria-label="Effacer le point de départ" hidden>
+                                    <i class="bi bi-x-lg"></i>
                                 </button>
                             </div>
                             <div class="itinerary-row">

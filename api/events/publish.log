@@ -1,24 +1,26 @@
-[05-Oct-2026 13:04:01 Europe/Brussels] Connexion à la base de données réussie (cool5792_sports_events)
-[05-Oct-2026 13:04:01 Europe/Brussels] [2026-10-05 13:04:01] === Début de la requête ===
+[08-Oct-2026 18:35:33 Europe/Brussels] Connexion à la base de données réussie (cool5792_sports_events)
+[08-Oct-2026 18:35:33 Europe/Brussels] [2026-10-08 18:35:33] === Début de la requête ===
 
-[2026-10-05 13:04:01] === Début de la requête ===
-[05-Oct-2026 13:04:01 Europe/Brussels] [2026-10-05 13:04:01] 📝 POST data: Array
+[2026-10-08 18:35:33] === Début de la requête ===
+[08-Oct-2026 18:35:33 Europe/Brussels] [2026-10-08 18:35:33] 📝 POST data: Array
 (
-    [draftId] => 64
-    [title] => Corrida Léodégarienne
-    [description] => Circuit sur route. Pas de garderie. Vestiaires et douches.
+    [draftId] => 77
+    [title] => Les foulées longuyonnaises
+    [description] => Course jeunes à 10h10 ( 3km)
+Vestiaires, buvette, restauration. Pas de douches, pas de garderie.
     [categories] => Array
         (
             [0] => 2
+            [1] => 7
         )
 
-    [date] => 18/12/2026
-    [registrationOpens] => 18:30
-    [registrationCloses] => 19:45
-    [meeting_name] => Complexe  Sportif
-    [meeting_address] => Rue de Virton, Saint-Léger
+    [date] => 13/12/2026
+    [registrationOpens] => 09:45
+    [registrationCloses] => 10:20
+    [meeting_name] =>  Salle ASL Auguste Rodry
+    [meeting_address] => Rue Louis Barthou, 24 Longuyon
     [meeting_city] => 
-    [meeting_coordinates] => 49.605370475253196,5.651435917556063
+    [meeting_coordinates] => 49.4390204,5.608719
     [routes] => Array
         (
             [0] => Array
@@ -26,10 +28,11 @@
                     [name] => 
                     [category_id] => 2
                     [gpx_file] => 
-                    [distance] => 4.30
+                    [distance] => 7.00
                     [elevation] => 
-                    [price] => 
-                    [description] => 
+                    [price] => 7.00
+                    [description] => Départ à 10h10
+Parcours forestiers
                 )
 
             [1] => Array
@@ -37,10 +40,46 @@
                     [name] => 
                     [category_id] => 2
                     [gpx_file] => 
-                    [distance] => 8.60
+                    [distance] => 11.00
                     [elevation] => 
-                    [price] => 
-                    [description] => 
+                    [price] => 10.00
+                    [description] => Départ à 10h00
+Parcours forestiers
+                )
+
+            [2] => Array
+                (
+                    [name] => 
+                    [category_id] => 2
+                    [gpx_file] => 
+                    [distance] => 15.00
+                    [elevation] => 
+                    [price] => 15.00
+                    [description] => Départ à 9h45
+Parcours forestiers
+                )
+
+            [3] => Array
+                (
+                    [name] => 
+                    [category_id] => 2
+                    [gpx_file] => 
+                    [distance] => 3.00
+                    [elevation] => 
+                    [price] => 3.00
+                    [description] => Départ à 10h15
+
+                )
+
+            [4] => Array
+                (
+                    [name] => 
+                    [category_id] => 7
+                    [gpx_file] => 
+                    [distance] => 6.50
+                    [elevation] => 
+                    [price] => 3.00
+                    [description] => Départ à 10h20
                 )
 
         )
@@ -51,9 +90,9 @@
         (
             [0] => Array
                 (
-                    [name] => Michel DONEUX
-                    [email] => lesvibiellesgaumaises@gmail.com
-                    [phone] => +32 498 69 24 69
+                    [name] => Laurence GAVROY
+                    [email] => asl.gymnastique54260@gmail.com
+                    [phone] => +33 7 69 76 69 27
                 )
 
         )
@@ -61,23 +100,25 @@
 )
 
 
-[2026-10-05 13:04:01] 📝 POST data: Array
+[2026-10-08 18:35:33] 📝 POST data: Array
 (
-    [draftId] => 64
-    [title] => Corrida Léodégarienne
-    [description] => Circuit sur route. Pas de garderie. Vestiaires et douches.
+    [draftId] => 77
+    [title] => Les foulées longuyonnaises
+    [description] => Course jeunes à 10h10 ( 3km)
+Vestiaires, buvette, restauration. Pas de douches, pas de garderie.
     [categories] => Array
         (
             [0] => 2
+            [1] => 7
         )
 
-    [date] => 18/12/2026
-    [registrationOpens] => 18:30
-    [registrationCloses] => 19:45
-    [meeting_name] => Complexe  Sportif
-    [meeting_address] => Rue de Virton, Saint-Léger
+    [date] => 13/12/2026
+    [registrationOpens] => 09:45
+    [registrationCloses] => 10:20
+    [meeting_name] =>  Salle ASL Auguste Rodry
+    [meeting_address] => Rue Louis Barthou, 24 Longuyon
     [meeting_city] => 
-    [meeting_coordinates] => 49.605370475253196,5.651435917556063
+    [meeting_coordinates] => 49.4390204,5.608719
     [routes] => Array
         (
             [0] => Array
@@ -85,10 +126,11 @@
                     [name] => 
                     [category_id] => 2
                     [gpx_file] => 
-                    [distance] => 4.30
+                    [distance] => 7.00
                     [elevation] => 
-                    [price] => 
-                    [description] => 
+                    [price] => 7.00
+                    [description] => Départ à 10h10
+Parcours forestiers
                 )
 
             [1] => Array
@@ -96,10 +138,46 @@
                     [name] => 
                     [category_id] => 2
                     [gpx_file] => 
-                    [distance] => 8.60
+                    [distance] => 11.00
                     [elevation] => 
-                    [price] => 
-                    [description] => 
+                    [price] => 10.00
+                    [description] => Départ à 10h00
+Parcours forestiers
+                )
+
+            [2] => Array
+                (
+                    [name] => 
+                    [category_id] => 2
+                    [gpx_file] => 
+                    [distance] => 15.00
+                    [elevation] => 
+                    [price] => 15.00
+                    [description] => Départ à 9h45
+Parcours forestiers
+                )
+
+            [3] => Array
+                (
+                    [name] => 
+                    [category_id] => 2
+                    [gpx_file] => 
+                    [distance] => 3.00
+                    [elevation] => 
+                    [price] => 3.00
+                    [description] => Départ à 10h15
+
+                )
+
+            [4] => Array
+                (
+                    [name] => 
+                    [category_id] => 7
+                    [gpx_file] => 
+                    [distance] => 6.50
+                    [elevation] => 
+                    [price] => 3.00
+                    [description] => Départ à 10h20
                 )
 
         )
@@ -110,22 +188,22 @@
         (
             [0] => Array
                 (
-                    [name] => Michel DONEUX
-                    [email] => lesvibiellesgaumaises@gmail.com
-                    [phone] => +32 498 69 24 69
+                    [name] => Laurence GAVROY
+                    [email] => asl.gymnastique54260@gmail.com
+                    [phone] => +33 7 69 76 69 27
                 )
 
         )
 
 )
 
-[05-Oct-2026 13:04:01 Europe/Brussels] [2026-10-05 13:04:01] 📝 SESSION data: Array
+[08-Oct-2026 18:35:33 Europe/Brussels] [2026-10-08 18:35:33] 📝 SESSION data: Array
 (
-    [csrf_token] => bd5c31fe9f5169b22245e6072403edcba0c7747634b687212b25d9a13ddfa90e
+    [csrf_token] => 71f909bd4d232896aed035c7b86170ae2ca36862c4abb0bdf565b89a385e33c6
     [rate_limit_login] => Array
         (
             [count] => 1
-            [first] => 1791195404
+            [first] => 1791477266
         )
 
     [user_id] => 2
@@ -141,13 +219,13 @@
 )
 
 
-[2026-10-05 13:04:01] 📝 SESSION data: Array
+[2026-10-08 18:35:33] 📝 SESSION data: Array
 (
-    [csrf_token] => bd5c31fe9f5169b22245e6072403edcba0c7747634b687212b25d9a13ddfa90e
+    [csrf_token] => 71f909bd4d232896aed035c7b86170ae2ca36862c4abb0bdf565b89a385e33c6
     [rate_limit_login] => Array
         (
             [count] => 1
-            [first] => 1791195404
+            [first] => 1791477266
         )
 
     [user_id] => 2
@@ -162,7 +240,7 @@
 
 )
 
-[05-Oct-2026 13:04:01 Europe/Brussels] [2026-10-05 13:04:01] 📝 SERVER data: Array
+[08-Oct-2026 18:35:33 Europe/Brussels] [2026-10-08 18:35:33] 📝 SERVER data: Array
 (
     [PHP_FCGI_CHILDREN] => 4
     [PWD] => /Applications/MAMP/fcgi-bin
@@ -180,7 +258,7 @@
     [SERVER_PROTOCOL] => HTTP/1.1
     [GATEWAY_INTERFACE] => CGI/1.1
     [REDIRECT_URL] => /api/events/publish.php
-    [REMOTE_PORT] => 52225
+    [REMOTE_PORT] => 57966
     [SCRIPT_FILENAME] => /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/api/events/publish.php
     [SERVER_ADMIN] => you@example.com
     [CONTEXT_DOCUMENT_ROOT] => /Applications/MAMP/fcgi-bin/
@@ -198,12 +276,12 @@
     [HTTP_SEC_FETCH_SITE] => same-origin
     [HTTP_SEC_FETCH_MODE] => cors
     [HTTP_SEC_FETCH_DEST] => empty
-    [HTTP_COOKIE] => plf_lang=fr; _pk_id.1.1fff=b7ece2f8575a3f81.1759054166.; PHPSESSID=pa7jr0adjc7drbsv60372nbs31
+    [HTTP_COOKIE] => plf_lang=fr; _pk_id.1.1fff=b7ece2f8575a3f81.1759054166.; PHPSESSID=1qsoh3ge2pvobmv58b7ln5ca1h
     [HTTP_CONNECTION] => keep-alive
     [HTTP_ORIGIN] => http://localhost:8888
-    [CONTENT_LENGTH] => 4634
-    [CONTENT_TYPE] => multipart/form-data; boundary=----geckoformboundaryafda0fa2895c714224d0467816e26c7e
-    [HTTP_REFERER] => http://localhost:8888/?create=1&draft_id=64
+    [CONTENT_LENGTH] => 8019
+    [CONTENT_TYPE] => multipart/form-data; boundary=----geckoformboundary74adb106fd5ca6218d7272fcc4b47584
+    [HTTP_REFERER] => http://localhost:8888/?create=1&draft_id=77
     [HTTP_ACCEPT_ENCODING] => gzip, deflate, br, zstd
     [HTTP_ACCEPT_LANGUAGE] => fr-BE
     [HTTP_ACCEPT] => */*
@@ -213,8 +291,8 @@
     [REDIRECT_HANDLER] => php-fastcgi
     [FCGI_ROLE] => RESPONDER
     [PHP_SELF] => /api/events/publish.php
-    [REQUEST_TIME_FLOAT] => 1791198241.1422
-    [REQUEST_TIME] => 1791198241
+    [REQUEST_TIME_FLOAT] => 1791477333.8045
+    [REQUEST_TIME] => 1791477333
     [DB_HOST] => 127.0.0.1
     [DB_PORT] => 3306
     [DB_NAME] => cool5792_sports_events
@@ -233,7 +311,7 @@
 )
 
 
-[2026-10-05 13:04:01] 📝 SERVER data: Array
+[2026-10-08 18:35:33] 📝 SERVER data: Array
 (
     [PHP_FCGI_CHILDREN] => 4
     [PWD] => /Applications/MAMP/fcgi-bin
@@ -251,7 +329,7 @@
     [SERVER_PROTOCOL] => HTTP/1.1
     [GATEWAY_INTERFACE] => CGI/1.1
     [REDIRECT_URL] => /api/events/publish.php
-    [REMOTE_PORT] => 52225
+    [REMOTE_PORT] => 57966
     [SCRIPT_FILENAME] => /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/api/events/publish.php
     [SERVER_ADMIN] => you@example.com
     [CONTEXT_DOCUMENT_ROOT] => /Applications/MAMP/fcgi-bin/
@@ -269,12 +347,12 @@
     [HTTP_SEC_FETCH_SITE] => same-origin
     [HTTP_SEC_FETCH_MODE] => cors
     [HTTP_SEC_FETCH_DEST] => empty
-    [HTTP_COOKIE] => plf_lang=fr; _pk_id.1.1fff=b7ece2f8575a3f81.1759054166.; PHPSESSID=pa7jr0adjc7drbsv60372nbs31
+    [HTTP_COOKIE] => plf_lang=fr; _pk_id.1.1fff=b7ece2f8575a3f81.1759054166.; PHPSESSID=1qsoh3ge2pvobmv58b7ln5ca1h
     [HTTP_CONNECTION] => keep-alive
     [HTTP_ORIGIN] => http://localhost:8888
-    [CONTENT_LENGTH] => 4634
-    [CONTENT_TYPE] => multipart/form-data; boundary=----geckoformboundaryafda0fa2895c714224d0467816e26c7e
-    [HTTP_REFERER] => http://localhost:8888/?create=1&draft_id=64
+    [CONTENT_LENGTH] => 8019
+    [CONTENT_TYPE] => multipart/form-data; boundary=----geckoformboundary74adb106fd5ca6218d7272fcc4b47584
+    [HTTP_REFERER] => http://localhost:8888/?create=1&draft_id=77
     [HTTP_ACCEPT_ENCODING] => gzip, deflate, br, zstd
     [HTTP_ACCEPT_LANGUAGE] => fr-BE
     [HTTP_ACCEPT] => */*
@@ -284,8 +362,8 @@
     [REDIRECT_HANDLER] => php-fastcgi
     [FCGI_ROLE] => RESPONDER
     [PHP_SELF] => /api/events/publish.php
-    [REQUEST_TIME_FLOAT] => 1791198241.1422
-    [REQUEST_TIME] => 1791198241
+    [REQUEST_TIME_FLOAT] => 1791477333.8045
+    [REQUEST_TIME] => 1791477333
     [DB_HOST] => 127.0.0.1
     [DB_PORT] => 3306
     [DB_NAME] => cool5792_sports_events
@@ -303,603 +381,98 @@
     [MAIL_FROM_NAME] => Partageons La Forêt
 )
 
-[05-Oct-2026 13:04:01 Europe/Brussels] [2026-10-05 13:04:01] ✅ Utilisateur connecté (ID: 2)
+[08-Oct-2026 18:35:33 Europe/Brussels] [2026-10-08 18:35:33] ✅ Utilisateur connecté (ID: 2)
 
-[2026-10-05 13:04:01] ✅ Utilisateur connecté (ID: 2)
-[05-Oct-2026 13:04:01 Europe/Brussels] [2026-10-05 13:04:01] Draft ID: 64
+[2026-10-08 18:35:33] ✅ Utilisateur connecté (ID: 2)
+[08-Oct-2026 18:35:33 Europe/Brussels] [2026-10-08 18:35:33] Draft ID: 77
 
-[2026-10-05 13:04:01] Draft ID: 64
-[05-Oct-2026 13:04:01 Europe/Brussels] [2026-10-05 13:04:01] ✅ Données du brouillon trouvées
+[2026-10-08 18:35:33] Draft ID: 77
+[08-Oct-2026 18:35:33 Europe/Brussels] [2026-10-08 18:35:33] ✅ Données du brouillon trouvées
 
-[2026-10-05 13:04:01] ✅ Données du brouillon trouvées
-[05-Oct-2026 13:04:01 Europe/Brussels] [2026-10-05 13:04:01] 📝 Informations de l'événement:
+[2026-10-08 18:35:33] ✅ Données du brouillon trouvées
+[08-Oct-2026 18:35:33 Europe/Brussels] [2026-10-08 18:35:33] 📝 Informations de l'événement:
 
-[2026-10-05 13:04:01] 📝 Informations de l'événement:
-[05-Oct-2026 13:04:01 Europe/Brussels] [2026-10-05 13:04:01] - Titre: Corrida Léodégarienne
+[2026-10-08 18:35:33] 📝 Informations de l'événement:
+[08-Oct-2026 18:35:33 Europe/Brussels] [2026-10-08 18:35:33] - Titre: Les foulées longuyonnaises
 
-[2026-10-05 13:04:01] - Titre: Corrida Léodégarienne
-[05-Oct-2026 13:04:01 Europe/Brussels] [2026-10-05 13:04:01] - Date: 2026-12-18
+[2026-10-08 18:35:33] - Titre: Les foulées longuyonnaises
+[08-Oct-2026 18:35:33 Europe/Brussels] [2026-10-08 18:35:33] - Date: 2026-12-13
 
-[2026-10-05 13:04:01] - Date: 2026-12-18
-[05-Oct-2026 13:04:01 Europe/Brussels] [2026-10-05 13:04:01] - Heures d'inscription: 18:30:00 à 19:45:00
+[2026-10-08 18:35:33] - Date: 2026-12-13
+[08-Oct-2026 18:35:33 Europe/Brussels] [2026-10-08 18:35:33] - Heures d'inscription: 09:45:00 à 10:20:00
 
-[2026-10-05 13:04:01] - Heures d'inscription: 18:30:00 à 19:45:00
-[05-Oct-2026 13:04:01 Europe/Brussels] [2026-10-05 13:04:01] - Lieu: Complexe  Sportif
+[2026-10-08 18:35:33] - Heures d'inscription: 09:45:00 à 10:20:00
+[08-Oct-2026 18:35:33 Europe/Brussels] [2026-10-08 18:35:33] - Lieu:  Salle ASL Auguste Rodry
 
-[2026-10-05 13:04:01] - Lieu: Complexe  Sportif
-[05-Oct-2026 13:04:01 Europe/Brussels] [2026-10-05 13:04:01] - Adresse: Rue de Virton, Saint-Léger
+[2026-10-08 18:35:33] - Lieu:  Salle ASL Auguste Rodry
+[08-Oct-2026 18:35:33 Europe/Brussels] [2026-10-08 18:35:33] - Adresse: Rue Louis Barthou, 24 Longuyon
 
-[2026-10-05 13:04:01] - Adresse: Rue de Virton, Saint-Léger
-[05-Oct-2026 13:04:01 Europe/Brussels] [2026-10-05 13:04:01] - Coordonnées: 49.605370475253196,5.651435917556063
+[2026-10-08 18:35:33] - Adresse: Rue Louis Barthou, 24 Longuyon
+[08-Oct-2026 18:35:33 Europe/Brussels] [2026-10-08 18:35:33] - Coordonnées: 49.4390204,5.608719
 
-[2026-10-05 13:04:01] - Coordonnées: 49.605370475253196,5.651435917556063
-[05-Oct-2026 13:04:01 Europe/Brussels] [2026-10-05 13:04:01] 🔁 Mise à jour de l'événement existant ID=21 -> statut 'pending'
+[2026-10-08 18:35:33] - Coordonnées: 49.4390204,5.608719
+[08-Oct-2026 18:35:33 Europe/Brussels] [2026-10-08 18:35:33] 🔁 Mise à jour de l'événement existant ID=20 -> statut 'pending'
 
-[2026-10-05 13:04:01] 🔁 Mise à jour de l'événement existant ID=21 -> statut 'pending'
-[05-Oct-2026 13:04:01 Europe/Brussels] [2026-10-05 13:04:01] 🔄 Association des tags d'activité
+[2026-10-08 18:35:33] 🔁 Mise à jour de l'événement existant ID=20 -> statut 'pending'
+[08-Oct-2026 18:35:33 Europe/Brussels] [2026-10-08 18:35:33] 🔄 Association des tags d'activité
 
-[2026-10-05 13:04:01] 🔄 Association des tags d'activité
-[05-Oct-2026 13:04:01 Europe/Brussels] [2026-10-05 13:04:01] ✅ Tags associés
+[2026-10-08 18:35:33] 🔄 Association des tags d'activité
+[08-Oct-2026 18:35:33 Europe/Brussels] [2026-10-08 18:35:33] ✅ Tags associés
 
-[2026-10-05 13:04:01] ✅ Tags associés
-[05-Oct-2026 13:04:01 Europe/Brussels] [2026-10-05 13:04:01] ✅ Category_id synchronisé
+[2026-10-08 18:35:33] ✅ Tags associés
+[08-Oct-2026 18:35:33 Europe/Brussels] [2026-10-08 18:35:33] ✅ Category_id synchronisé
 
-[2026-10-05 13:04:01] ✅ Category_id synchronisé
-[05-Oct-2026 13:04:01 Europe/Brussels] [2026-10-05 13:04:01] 🔄 Copie des images
+[2026-10-08 18:35:33] ✅ Category_id synchronisé
+[08-Oct-2026 18:35:33 Europe/Brussels] [2026-10-08 18:35:33] 🔄 Copie des images
 
-[2026-10-05 13:04:01] 🔄 Copie des images
-[05-Oct-2026 13:04:01 Europe/Brussels] [2026-10-05 13:04:01] ✅ Images copiées
+[2026-10-08 18:35:33] 🔄 Copie des images
+[08-Oct-2026 18:35:33 Europe/Brussels] [2026-10-08 18:35:33] ✅ Images copiées
 
-[2026-10-05 13:04:01] ✅ Images copiées
-[05-Oct-2026 13:04:01 Europe/Brussels] [2026-10-05 13:04:01] 🔄 Copie des contacts
+[2026-10-08 18:35:33] ✅ Images copiées
+[08-Oct-2026 18:35:33 Europe/Brussels] [2026-10-08 18:35:33] 🔄 Copie des contacts
 
-[2026-10-05 13:04:01] 🔄 Copie des contacts
-[05-Oct-2026 13:04:01 Europe/Brussels] [2026-10-05 13:04:01] ✅ Contacts copiés
+[2026-10-08 18:35:33] 🔄 Copie des contacts
+[08-Oct-2026 18:35:33 Europe/Brussels] [2026-10-08 18:35:33] ✅ Contacts copiés
 
-[2026-10-05 13:04:01] ✅ Contacts copiés
-[05-Oct-2026 13:04:01 Europe/Brussels] [2026-10-05 13:04:01] 🔄 Copie des parcours
+[2026-10-08 18:35:33] ✅ Contacts copiés
+[08-Oct-2026 18:35:33 Europe/Brussels] [2026-10-08 18:35:33] 🔄 Copie des parcours
 
-[2026-10-05 13:04:01] 🔄 Copie des parcours
-[05-Oct-2026 13:04:01 Europe/Brussels] [2026-10-05 13:04:01] ✅ Parcours copiés
+[2026-10-08 18:35:33] 🔄 Copie des parcours
+[08-Oct-2026 18:35:33 Europe/Brussels] [2026-10-08 18:35:33] ✅ Parcours copiés
 
-[2026-10-05 13:04:01] ✅ Parcours copiés
-[05-Oct-2026 13:04:01 Europe/Brussels] [2026-10-05 13:04:01] 🔄 Mise à jour du statut du brouillon
+[2026-10-08 18:35:33] ✅ Parcours copiés
+[08-Oct-2026 18:35:33 Europe/Brussels] [2026-10-08 18:35:33] 🔄 Mise à jour du statut du brouillon
 
-[2026-10-05 13:04:01] 🔄 Mise à jour du statut du brouillon
-[05-Oct-2026 13:04:01 Europe/Brussels] [2026-10-05 13:04:01] ✅ Statut du brouillon mis à jour
+[2026-10-08 18:35:33] 🔄 Mise à jour du statut du brouillon
+[08-Oct-2026 18:35:33 Europe/Brussels] [2026-10-08 18:35:33] ✅ Statut du brouillon mis à jour
 
-[2026-10-05 13:04:01] ✅ Statut du brouillon mis à jour
-[05-Oct-2026 13:04:01 Europe/Brussels] [2026-10-05 13:04:01] ✅ Transaction validée avec succès
+[2026-10-08 18:35:33] ✅ Statut du brouillon mis à jour
+[08-Oct-2026 18:35:33 Europe/Brussels] [2026-10-08 18:35:33] ✅ Transaction validée avec succès
 
-[2026-10-05 13:04:01] ✅ Transaction validée avec succès
-[05-Oct-2026 13:04:01 Europe/Brussels] [2026-10-05 13:04:01] 🔄 Récupération des données pour l'email
+[2026-10-08 18:35:33] ✅ Transaction validée avec succès
+[08-Oct-2026 18:35:33 Europe/Brussels] [2026-10-08 18:35:33] 🔄 Récupération des données pour l'email
 
-[2026-10-05 13:04:01] 🔄 Récupération des données pour l'email
-[05-Oct-2026 13:04:01 Europe/Brussels] [2026-10-05 13:04:01] ✅ Données trouvées pour l'email
+[2026-10-08 18:35:33] 🔄 Récupération des données pour l'email
+[08-Oct-2026 18:35:33 Europe/Brussels] [2026-10-08 18:35:33] ✅ Données trouvées pour l'email
 
-[2026-10-05 13:04:01] ✅ Données trouvées pour l'email
-[05-Oct-2026 13:04:01 Europe/Brussels] [2026-10-05 13:04:01] 📝 Données de l'événement: {
-    "id": 21,
-    "title": "Corrida L\u00e9od\u00e9garienne",
-    "description": "Circuit sur route. Pas de garderie. Vestiaires et douches.",
+[2026-10-08 18:35:33] ✅ Données trouvées pour l'email
+[08-Oct-2026 18:35:33 Europe/Brussels] [2026-10-08 18:35:33] 📝 Données de l'événement: {
+    "id": 20,
+    "title": "Les foul\u00e9es longuyonnaises",
+    "description": "Course jeunes \u00e0 10h10 ( 3km)\r\nVestiaires, buvette, restauration. Pas de douches, pas de garderie.",
     "category_id": 2,
-    "date": "2026-12-18",
-    "start_time": "18:30:00",
-    "end_time": "19:30:00",
-    "registration_opens": "18:30:00",
-    "registration_closes": "19:45:00",
-    "location": "Complexe  Sportif",
-    "venue": "Rue de Virton, Saint-L\u00e9ger",
-    "coordinates": "49.605370475253196,5.651435917556063",
-    "meeting_name": "Complexe  Sportif",
-    "meeting_address": "Rue de Virton, Saint-L\u00e9ger",
-    "meeting_city": "Saint-L\u00e9ger",
-    "meeting_coordinates": "49.605370475253196,5.651435917556063",
-    "difficulty": null,
-    "max_participants": null,
-    "status": "pending",
-    "submitted_at": null,
-    "validated_at": null,
-    "validated_by": null,
-    "rejection_reason": null,
-    "main_image_path": null,
-    "main_image": null,
-    "user_id": 2,
-    "organizer_id": 1,
-    "created_by": null,
-    "organisation": null,
-    "has_gpx": 0,
-    "gpx_path": null,
-    "gpx_downloadable": 0,
-    "view_count": 6,
-    "created_at": "2026-09-15 20:23:01",
-    "updated_at": "2026-10-05 13:04:01",
-    "is_cancelled": 0,
-    "cancelled_at": null,
-    "cancellation_reason": null,
-    "user_email": "jarodhc4@gmail.com"
-}
-
-[2026-10-05 13:04:01] 📝 Données de l'événement: {
-    "id": 21,
-    "title": "Corrida L\u00e9od\u00e9garienne",
-    "description": "Circuit sur route. Pas de garderie. Vestiaires et douches.",
-    "category_id": 2,
-    "date": "2026-12-18",
-    "start_time": "18:30:00",
-    "end_time": "19:30:00",
-    "registration_opens": "18:30:00",
-    "registration_closes": "19:45:00",
-    "location": "Complexe  Sportif",
-    "venue": "Rue de Virton, Saint-L\u00e9ger",
-    "coordinates": "49.605370475253196,5.651435917556063",
-    "meeting_name": "Complexe  Sportif",
-    "meeting_address": "Rue de Virton, Saint-L\u00e9ger",
-    "meeting_city": "Saint-L\u00e9ger",
-    "meeting_coordinates": "49.605370475253196,5.651435917556063",
-    "difficulty": null,
-    "max_participants": null,
-    "status": "pending",
-    "submitted_at": null,
-    "validated_at": null,
-    "validated_by": null,
-    "rejection_reason": null,
-    "main_image_path": null,
-    "main_image": null,
-    "user_id": 2,
-    "organizer_id": 1,
-    "created_by": null,
-    "organisation": null,
-    "has_gpx": 0,
-    "gpx_path": null,
-    "gpx_downloadable": 0,
-    "view_count": 6,
-    "created_at": "2026-09-15 20:23:01",
-    "updated_at": "2026-10-05 13:04:01",
-    "is_cancelled": 0,
-    "cancelled_at": null,
-    "cancellation_reason": null,
-    "user_email": "jarodhc4@gmail.com"
-}
-[05-Oct-2026 13:04:01 Europe/Brussels] [2026-10-05 13:04:01] ✅ Classe Mailer chargée
-
-[2026-10-05 13:04:01] ✅ Classe Mailer chargée
-[05-Oct-2026 13:04:01 Europe/Brussels] [2026-10-05 13:04:01] 🔄 Création de l'instance Mailer
-
-[2026-10-05 13:04:01] 🔄 Création de l'instance Mailer
-[05-Oct-2026 13:04:01 Europe/Brussels] [2026-10-05 13:04:01] ✅ Instance Mailer créée
-
-[2026-10-05 13:04:01] ✅ Instance Mailer créée
-[05-Oct-2026 13:04:01 Europe/Brussels] [2026-10-05 13:04:01] 🔄 Envoi de l'email à jarodhc4@gmail.com
-
-[2026-10-05 13:04:01] 🔄 Envoi de l'email à jarodhc4@gmail.com
-[05-Oct-2026 13:04:02 Europe/Brussels] [2026-10-05 13:04:02] ✅ Email de confirmation envoyé à jarodhc4@gmail.com
-
-[2026-10-05 13:04:02] ✅ Email de confirmation envoyé à jarodhc4@gmail.com
-[05-Oct-2026 13:04:03 Europe/Brussels] [2026-10-05 13:04:03] ✅ Email admin de validation envoyé à rando@partageonslaforet.be
-
-[2026-10-05 13:04:03] ✅ Email admin de validation envoyé à rando@partageonslaforet.be
-[05-Oct-2026 13:22:51 Europe/Brussels] Connexion à la base de données réussie (cool5792_sports_events)
-[05-Oct-2026 13:22:51 Europe/Brussels] [2026-10-05 13:22:51] === Début de la requête ===
-
-[2026-10-05 13:22:51] === Début de la requête ===
-[05-Oct-2026 13:22:51 Europe/Brussels] [2026-10-05 13:22:51] 📝 POST data: Array
-(
-    [draftId] => 65
-    [title] => Course Marcel KIEFER 
-    [description] => Pas de garderie. Douches et vestiaires.
-10h20 Départ 1 km pour 7/12 ans
-    [categories] => Array
-        (
-            [0] => 2
-        )
-
-    [date] => 01/11/2026
-    [registrationOpens] => 08:30
-    [registrationCloses] => 10:00
-    [meeting_name] => Salle des sports
-    [meeting_address] => Avenue du Maréchal Foch, Cité Michel, Hussigny-Godbrange
-    [meeting_city] => 
-    [meeting_coordinates] => 49.4947673,5.8686177
-    [routes] => Array
-        (
-            [0] => Array
-                (
-                    [name] => 
-                    [category_id] => 2
-                    [gpx_file] => 
-                    [distance] => 13.13
-                    [elevation] => 
-                    [price] => 
-                    [description] => Départ 10:00 - 80% chemins forestiers, 20% routes
-                )
-
-            [1] => Array
-                (
-                    [name] => 
-                    [category_id] => 2
-                    [gpx_file] => 
-                    [distance] => 21.30
-                    [elevation] => 
-                    [price] => 
-                    [description] => Départ : 10:00 - 80% chemins forestiers, 20% routes
-                )
-
-            [2] => Array
-                (
-                    [name] => 
-                    [category_id] => 2
-                    [gpx_file] => 
-                    [distance] => 5.50
-                    [elevation] => 
-                    [price] => 
-                    [description] => Départ 10:15 - 80% chemins forestiers, 20% routes
-                )
-
-        )
-
-    [organizerId] => 1
-    [organizerName] => 
-    [contacts] => Array
-        (
-            [0] => Array
-                (
-                    [name] => Jean-Louis PERIN
-                    [email] => jean-louis.perin@wanadoo.fr
-                    [phone] => +33 6 89 69 05 31
-                )
-
-        )
-
-)
-
-
-[2026-10-05 13:22:51] 📝 POST data: Array
-(
-    [draftId] => 65
-    [title] => Course Marcel KIEFER 
-    [description] => Pas de garderie. Douches et vestiaires.
-10h20 Départ 1 km pour 7/12 ans
-    [categories] => Array
-        (
-            [0] => 2
-        )
-
-    [date] => 01/11/2026
-    [registrationOpens] => 08:30
-    [registrationCloses] => 10:00
-    [meeting_name] => Salle des sports
-    [meeting_address] => Avenue du Maréchal Foch, Cité Michel, Hussigny-Godbrange
-    [meeting_city] => 
-    [meeting_coordinates] => 49.4947673,5.8686177
-    [routes] => Array
-        (
-            [0] => Array
-                (
-                    [name] => 
-                    [category_id] => 2
-                    [gpx_file] => 
-                    [distance] => 13.13
-                    [elevation] => 
-                    [price] => 
-                    [description] => Départ 10:00 - 80% chemins forestiers, 20% routes
-                )
-
-            [1] => Array
-                (
-                    [name] => 
-                    [category_id] => 2
-                    [gpx_file] => 
-                    [distance] => 21.30
-                    [elevation] => 
-                    [price] => 
-                    [description] => Départ : 10:00 - 80% chemins forestiers, 20% routes
-                )
-
-            [2] => Array
-                (
-                    [name] => 
-                    [category_id] => 2
-                    [gpx_file] => 
-                    [distance] => 5.50
-                    [elevation] => 
-                    [price] => 
-                    [description] => Départ 10:15 - 80% chemins forestiers, 20% routes
-                )
-
-        )
-
-    [organizerId] => 1
-    [organizerName] => 
-    [contacts] => Array
-        (
-            [0] => Array
-                (
-                    [name] => Jean-Louis PERIN
-                    [email] => jean-louis.perin@wanadoo.fr
-                    [phone] => +33 6 89 69 05 31
-                )
-
-        )
-
-)
-
-[05-Oct-2026 13:22:51 Europe/Brussels] [2026-10-05 13:22:51] 📝 SESSION data: Array
-(
-    [csrf_token] => bd5c31fe9f5169b22245e6072403edcba0c7747634b687212b25d9a13ddfa90e
-    [rate_limit_login] => Array
-        (
-            [count] => 1
-            [first] => 1791195404
-        )
-
-    [user_id] => 2
-    [user_email] => jarodhc4@gmail.com
-    [user_role] => user
-    [user] => Array
-        (
-            [id] => 2
-            [email] => jarodhc4@gmail.com
-            [role] => user
-        )
-
-)
-
-
-[2026-10-05 13:22:51] 📝 SESSION data: Array
-(
-    [csrf_token] => bd5c31fe9f5169b22245e6072403edcba0c7747634b687212b25d9a13ddfa90e
-    [rate_limit_login] => Array
-        (
-            [count] => 1
-            [first] => 1791195404
-        )
-
-    [user_id] => 2
-    [user_email] => jarodhc4@gmail.com
-    [user_role] => user
-    [user] => Array
-        (
-            [id] => 2
-            [email] => jarodhc4@gmail.com
-            [role] => user
-        )
-
-)
-
-[05-Oct-2026 13:22:51 Europe/Brussels] [2026-10-05 13:22:51] 📝 SERVER data: Array
-(
-    [PHP_FCGI_CHILDREN] => 4
-    [PWD] => /Applications/MAMP/fcgi-bin
-    [SHLVL] => 0
-    [PHP_FCGI_MAX_REQUESTS] => 200
-    [__CF_USER_TEXT_ENCODING] => 0x1F5:0:0
-    [ORIG_SCRIPT_NAME] => /fcgi-bin/php.fcgi
-    [ORIG_PATH_TRANSLATED] => /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/api/events/publish.php
-    [ORIG_PATH_INFO] => /api/events/publish.php
-    [ORIG_SCRIPT_FILENAME] => /Applications/MAMP/fcgi-bin/php.fcgi
-    [SCRIPT_NAME] => /api/events/publish.php
-    [REQUEST_URI] => /api/events/publish.php
-    [QUERY_STRING] => 
-    [REQUEST_METHOD] => POST
-    [SERVER_PROTOCOL] => HTTP/1.1
-    [GATEWAY_INTERFACE] => CGI/1.1
-    [REDIRECT_URL] => /api/events/publish.php
-    [REMOTE_PORT] => 49378
-    [SCRIPT_FILENAME] => /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/api/events/publish.php
-    [SERVER_ADMIN] => you@example.com
-    [CONTEXT_DOCUMENT_ROOT] => /Applications/MAMP/fcgi-bin/
-    [CONTEXT_PREFIX] => /fcgi-bin/
-    [REQUEST_SCHEME] => http
-    [DOCUMENT_ROOT] => /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be
-    [REMOTE_ADDR] => 127.0.0.1
-    [SERVER_PORT] => 8888
-    [SERVER_ADDR] => 127.0.0.1
-    [SERVER_NAME] => localhost
-    [SERVER_SOFTWARE] => Apache/2.4.62 (Unix) OpenSSL/1.1.1w mod_fastcgi/mod_fastcgi-SNAP-0910052141
-    [SERVER_SIGNATURE] => 
-    [PATH] => /usr/bin:/bin:/usr/sbin:/sbin
-    [HTTP_PRIORITY] => u=4
-    [HTTP_SEC_FETCH_SITE] => same-origin
-    [HTTP_SEC_FETCH_MODE] => cors
-    [HTTP_SEC_FETCH_DEST] => empty
-    [HTTP_COOKIE] => plf_lang=fr; _pk_id.1.1fff=b7ece2f8575a3f81.1759054166.; PHPSESSID=pa7jr0adjc7drbsv60372nbs31
-    [HTTP_CONNECTION] => keep-alive
-    [HTTP_ORIGIN] => http://localhost:8888
-    [CONTENT_LENGTH] => 5836
-    [CONTENT_TYPE] => multipart/form-data; boundary=----geckoformboundary3f89eb1bbe1db9a6aad96b99d16dd7cc
-    [HTTP_REFERER] => http://localhost:8888/?create=1&draft_id=65
-    [HTTP_ACCEPT_ENCODING] => gzip, deflate, br, zstd
-    [HTTP_ACCEPT_LANGUAGE] => fr-BE
-    [HTTP_ACCEPT] => */*
-    [HTTP_USER_AGENT] => Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:158.0) Gecko/20100101 Firefox/158.0
-    [HTTP_HOST] => localhost:8888
-    [REDIRECT_STATUS] => 200
-    [REDIRECT_HANDLER] => php-fastcgi
-    [FCGI_ROLE] => RESPONDER
-    [PHP_SELF] => /api/events/publish.php
-    [REQUEST_TIME_FLOAT] => 1791199371.6704
-    [REQUEST_TIME] => 1791199371
-    [DB_HOST] => 127.0.0.1
-    [DB_PORT] => 3306
-    [DB_NAME] => cool5792_sports_events
-    [DB_USER] => root
-    [DB_PASS] => root
-    [APP_URL] => http://localhost:8888
-    [APP_NAME] => Partageons La Forêt
-    [DEBUG] => true
-    [MAIL_HOST] => localhost
-    [MAIL_PORT] => 1025
-    [MAIL_USERNAME] => 
-    [MAIL_PASSWORD] => 
-    [MAIL_ENCRYPTION] => 
-    [MAIL_FROM_EMAIL] => noreply@partageonslaforet.be
-    [MAIL_FROM_NAME] => Partageons La Forêt
-)
-
-
-[2026-10-05 13:22:51] 📝 SERVER data: Array
-(
-    [PHP_FCGI_CHILDREN] => 4
-    [PWD] => /Applications/MAMP/fcgi-bin
-    [SHLVL] => 0
-    [PHP_FCGI_MAX_REQUESTS] => 200
-    [__CF_USER_TEXT_ENCODING] => 0x1F5:0:0
-    [ORIG_SCRIPT_NAME] => /fcgi-bin/php.fcgi
-    [ORIG_PATH_TRANSLATED] => /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/api/events/publish.php
-    [ORIG_PATH_INFO] => /api/events/publish.php
-    [ORIG_SCRIPT_FILENAME] => /Applications/MAMP/fcgi-bin/php.fcgi
-    [SCRIPT_NAME] => /api/events/publish.php
-    [REQUEST_URI] => /api/events/publish.php
-    [QUERY_STRING] => 
-    [REQUEST_METHOD] => POST
-    [SERVER_PROTOCOL] => HTTP/1.1
-    [GATEWAY_INTERFACE] => CGI/1.1
-    [REDIRECT_URL] => /api/events/publish.php
-    [REMOTE_PORT] => 49378
-    [SCRIPT_FILENAME] => /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/api/events/publish.php
-    [SERVER_ADMIN] => you@example.com
-    [CONTEXT_DOCUMENT_ROOT] => /Applications/MAMP/fcgi-bin/
-    [CONTEXT_PREFIX] => /fcgi-bin/
-    [REQUEST_SCHEME] => http
-    [DOCUMENT_ROOT] => /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be
-    [REMOTE_ADDR] => 127.0.0.1
-    [SERVER_PORT] => 8888
-    [SERVER_ADDR] => 127.0.0.1
-    [SERVER_NAME] => localhost
-    [SERVER_SOFTWARE] => Apache/2.4.62 (Unix) OpenSSL/1.1.1w mod_fastcgi/mod_fastcgi-SNAP-0910052141
-    [SERVER_SIGNATURE] => 
-    [PATH] => /usr/bin:/bin:/usr/sbin:/sbin
-    [HTTP_PRIORITY] => u=4
-    [HTTP_SEC_FETCH_SITE] => same-origin
-    [HTTP_SEC_FETCH_MODE] => cors
-    [HTTP_SEC_FETCH_DEST] => empty
-    [HTTP_COOKIE] => plf_lang=fr; _pk_id.1.1fff=b7ece2f8575a3f81.1759054166.; PHPSESSID=pa7jr0adjc7drbsv60372nbs31
-    [HTTP_CONNECTION] => keep-alive
-    [HTTP_ORIGIN] => http://localhost:8888
-    [CONTENT_LENGTH] => 5836
-    [CONTENT_TYPE] => multipart/form-data; boundary=----geckoformboundary3f89eb1bbe1db9a6aad96b99d16dd7cc
-    [HTTP_REFERER] => http://localhost:8888/?create=1&draft_id=65
-    [HTTP_ACCEPT_ENCODING] => gzip, deflate, br, zstd
-    [HTTP_ACCEPT_LANGUAGE] => fr-BE
-    [HTTP_ACCEPT] => */*
-    [HTTP_USER_AGENT] => Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:158.0) Gecko/20100101 Firefox/158.0
-    [HTTP_HOST] => localhost:8888
-    [REDIRECT_STATUS] => 200
-    [REDIRECT_HANDLER] => php-fastcgi
-    [FCGI_ROLE] => RESPONDER
-    [PHP_SELF] => /api/events/publish.php
-    [REQUEST_TIME_FLOAT] => 1791199371.6704
-    [REQUEST_TIME] => 1791199371
-    [DB_HOST] => 127.0.0.1
-    [DB_PORT] => 3306
-    [DB_NAME] => cool5792_sports_events
-    [DB_USER] => root
-    [DB_PASS] => root
-    [APP_URL] => http://localhost:8888
-    [APP_NAME] => Partageons La Forêt
-    [DEBUG] => true
-    [MAIL_HOST] => localhost
-    [MAIL_PORT] => 1025
-    [MAIL_USERNAME] => 
-    [MAIL_PASSWORD] => 
-    [MAIL_ENCRYPTION] => 
-    [MAIL_FROM_EMAIL] => noreply@partageonslaforet.be
-    [MAIL_FROM_NAME] => Partageons La Forêt
-)
-
-[05-Oct-2026 13:22:51 Europe/Brussels] [2026-10-05 13:22:51] ✅ Utilisateur connecté (ID: 2)
-
-[2026-10-05 13:22:51] ✅ Utilisateur connecté (ID: 2)
-[05-Oct-2026 13:22:51 Europe/Brussels] [2026-10-05 13:22:51] Draft ID: 65
-
-[2026-10-05 13:22:51] Draft ID: 65
-[05-Oct-2026 13:22:51 Europe/Brussels] [2026-10-05 13:22:51] ✅ Données du brouillon trouvées
-
-[2026-10-05 13:22:51] ✅ Données du brouillon trouvées
-[05-Oct-2026 13:22:51 Europe/Brussels] [2026-10-05 13:22:51] 📝 Informations de l'événement:
-
-[2026-10-05 13:22:51] 📝 Informations de l'événement:
-[05-Oct-2026 13:22:51 Europe/Brussels] [2026-10-05 13:22:51] - Titre: Course Marcel KIEFER 
-
-[2026-10-05 13:22:51] - Titre: Course Marcel KIEFER 
-[05-Oct-2026 13:22:51 Europe/Brussels] [2026-10-05 13:22:51] - Date: 2026-11-01
-
-[2026-10-05 13:22:51] - Date: 2026-11-01
-[05-Oct-2026 13:22:51 Europe/Brussels] [2026-10-05 13:22:51] - Heures d'inscription: 08:30:00 à 10:00:00
-
-[2026-10-05 13:22:51] - Heures d'inscription: 08:30:00 à 10:00:00
-[05-Oct-2026 13:22:51 Europe/Brussels] [2026-10-05 13:22:51] - Lieu: Salle des sports
-
-[2026-10-05 13:22:51] - Lieu: Salle des sports
-[05-Oct-2026 13:22:51 Europe/Brussels] [2026-10-05 13:22:51] - Adresse: Avenue du Maréchal Foch, Cité Michel, Hussigny-Godbrange
-
-[2026-10-05 13:22:51] - Adresse: Avenue du Maréchal Foch, Cité Michel, Hussigny-Godbrange
-[05-Oct-2026 13:22:51 Europe/Brussels] [2026-10-05 13:22:51] - Coordonnées: 49.4947673,5.8686177
-
-[2026-10-05 13:22:51] - Coordonnées: 49.4947673,5.8686177
-[05-Oct-2026 13:22:51 Europe/Brussels] [2026-10-05 13:22:51] 🔁 Mise à jour de l'événement existant ID=16 -> statut 'pending'
-
-[2026-10-05 13:22:51] 🔁 Mise à jour de l'événement existant ID=16 -> statut 'pending'
-[05-Oct-2026 13:22:51 Europe/Brussels] [2026-10-05 13:22:51] 🔄 Association des tags d'activité
-
-[2026-10-05 13:22:51] 🔄 Association des tags d'activité
-[05-Oct-2026 13:22:51 Europe/Brussels] [2026-10-05 13:22:51] ✅ Tags associés
-
-[2026-10-05 13:22:51] ✅ Tags associés
-[05-Oct-2026 13:22:51 Europe/Brussels] [2026-10-05 13:22:51] ✅ Category_id synchronisé
-
-[2026-10-05 13:22:51] ✅ Category_id synchronisé
-[05-Oct-2026 13:22:51 Europe/Brussels] [2026-10-05 13:22:51] 🔄 Copie des images
-
-[2026-10-05 13:22:51] 🔄 Copie des images
-[05-Oct-2026 13:22:51 Europe/Brussels] [2026-10-05 13:22:51] ✅ Images copiées
-
-[2026-10-05 13:22:51] ✅ Images copiées
-[05-Oct-2026 13:22:51 Europe/Brussels] [2026-10-05 13:22:51] 🔄 Copie des contacts
-
-[2026-10-05 13:22:51] 🔄 Copie des contacts
-[05-Oct-2026 13:22:51 Europe/Brussels] [2026-10-05 13:22:51] ✅ Contacts copiés
-
-[2026-10-05 13:22:51] ✅ Contacts copiés
-[05-Oct-2026 13:22:51 Europe/Brussels] [2026-10-05 13:22:51] 🔄 Copie des parcours
-
-[2026-10-05 13:22:51] 🔄 Copie des parcours
-[05-Oct-2026 13:22:51 Europe/Brussels] [2026-10-05 13:22:51] ✅ Parcours copiés
-
-[2026-10-05 13:22:51] ✅ Parcours copiés
-[05-Oct-2026 13:22:51 Europe/Brussels] [2026-10-05 13:22:51] 🔄 Mise à jour du statut du brouillon
-
-[2026-10-05 13:22:51] 🔄 Mise à jour du statut du brouillon
-[05-Oct-2026 13:22:51 Europe/Brussels] [2026-10-05 13:22:51] ✅ Statut du brouillon mis à jour
-
-[2026-10-05 13:22:51] ✅ Statut du brouillon mis à jour
-[05-Oct-2026 13:22:51 Europe/Brussels] [2026-10-05 13:22:51] ✅ Transaction validée avec succès
-
-[2026-10-05 13:22:51] ✅ Transaction validée avec succès
-[05-Oct-2026 13:22:51 Europe/Brussels] [2026-10-05 13:22:51] 🔄 Récupération des données pour l'email
-
-[2026-10-05 13:22:51] 🔄 Récupération des données pour l'email
-[05-Oct-2026 13:22:51 Europe/Brussels] [2026-10-05 13:22:51] ✅ Données trouvées pour l'email
-
-[2026-10-05 13:22:51] ✅ Données trouvées pour l'email
-[05-Oct-2026 13:22:51 Europe/Brussels] [2026-10-05 13:22:51] 📝 Données de l'événement: {
-    "id": 16,
-    "title": "Course Marcel KIEFER ",
-    "description": "Pas de garderie. Douches et vestiaires.\r\n10h20 D\u00e9part 1 km pour 7\/12 ans",
-    "category_id": 2,
-    "date": "2026-11-01",
+    "date": "2026-12-13",
     "start_time": "09:00:00",
     "end_time": "10:00:00",
-    "registration_opens": "08:30:00",
-    "registration_closes": "10:00:00",
-    "location": "Salle des sports",
-    "venue": "Avenue du Mar\u00e9chal Foch, Cit\u00e9 Michel, Hussigny-Godbrange",
-    "coordinates": "49.4947673,5.8686177",
-    "meeting_name": "Salle des sports",
-    "meeting_address": "Avenue du Mar\u00e9chal Foch, Cit\u00e9 Michel, Hussigny-Godbrange",
-    "meeting_city": "Hussigny-Godbrange",
-    "meeting_coordinates": "49.4947673,5.8686177",
+    "registration_opens": "09:45:00",
+    "registration_closes": "10:20:00",
+    "location": " Salle ASL Auguste Rodry",
+    "venue": "Rue Louis Barthou, 24 Longuyon",
+    "coordinates": "49.4390204,5.608719",
+    "meeting_name": " Salle ASL Auguste Rodry",
+    "meeting_address": "Rue Louis Barthou, 24 Longuyon",
+    "meeting_city": "Longuyon",
+    "meeting_coordinates": "49.4390204,5.608719",
     "difficulty": null,
     "max_participants": null,
     "status": "pending",
@@ -916,32 +489,34 @@
     "has_gpx": 0,
     "gpx_path": null,
     "gpx_downloadable": 0,
-    "view_count": 17,
-    "created_at": "2026-09-14 21:37:34",
-    "updated_at": "2026-10-05 13:22:51",
+    "view_count": 10,
+    "created_at": "2026-09-15 20:13:45",
+    "updated_at": "2026-10-08 18:35:33",
     "is_cancelled": 0,
     "cancelled_at": null,
     "cancellation_reason": null,
+    "organizer_notified_at": "2026-10-07 09:08:08",
+    "claim_token": "b0d499041671a0620de6665cc98bc3d282be80a23cbbe169922038872d3564f6",
     "user_email": "jarodhc4@gmail.com"
 }
 
-[2026-10-05 13:22:51] 📝 Données de l'événement: {
-    "id": 16,
-    "title": "Course Marcel KIEFER ",
-    "description": "Pas de garderie. Douches et vestiaires.\r\n10h20 D\u00e9part 1 km pour 7\/12 ans",
+[2026-10-08 18:35:33] 📝 Données de l'événement: {
+    "id": 20,
+    "title": "Les foul\u00e9es longuyonnaises",
+    "description": "Course jeunes \u00e0 10h10 ( 3km)\r\nVestiaires, buvette, restauration. Pas de douches, pas de garderie.",
     "category_id": 2,
-    "date": "2026-11-01",
+    "date": "2026-12-13",
     "start_time": "09:00:00",
     "end_time": "10:00:00",
-    "registration_opens": "08:30:00",
-    "registration_closes": "10:00:00",
-    "location": "Salle des sports",
-    "venue": "Avenue du Mar\u00e9chal Foch, Cit\u00e9 Michel, Hussigny-Godbrange",
-    "coordinates": "49.4947673,5.8686177",
-    "meeting_name": "Salle des sports",
-    "meeting_address": "Avenue du Mar\u00e9chal Foch, Cit\u00e9 Michel, Hussigny-Godbrange",
-    "meeting_city": "Hussigny-Godbrange",
-    "meeting_coordinates": "49.4947673,5.8686177",
+    "registration_opens": "09:45:00",
+    "registration_closes": "10:20:00",
+    "location": " Salle ASL Auguste Rodry",
+    "venue": "Rue Louis Barthou, 24 Longuyon",
+    "coordinates": "49.4390204,5.608719",
+    "meeting_name": " Salle ASL Auguste Rodry",
+    "meeting_address": "Rue Louis Barthou, 24 Longuyon",
+    "meeting_city": "Longuyon",
+    "meeting_coordinates": "49.4390204,5.608719",
     "difficulty": null,
     "max_participants": null,
     "status": "pending",
@@ -958,1051 +533,31 @@
     "has_gpx": 0,
     "gpx_path": null,
     "gpx_downloadable": 0,
-    "view_count": 17,
-    "created_at": "2026-09-14 21:37:34",
-    "updated_at": "2026-10-05 13:22:51",
+    "view_count": 10,
+    "created_at": "2026-09-15 20:13:45",
+    "updated_at": "2026-10-08 18:35:33",
     "is_cancelled": 0,
     "cancelled_at": null,
     "cancellation_reason": null,
+    "organizer_notified_at": "2026-10-07 09:08:08",
+    "claim_token": "b0d499041671a0620de6665cc98bc3d282be80a23cbbe169922038872d3564f6",
     "user_email": "jarodhc4@gmail.com"
 }
-[05-Oct-2026 13:22:51 Europe/Brussels] [2026-10-05 13:22:51] ✅ Classe Mailer chargée
+[08-Oct-2026 18:35:33 Europe/Brussels] [2026-10-08 18:35:33] ✅ Classe Mailer chargée
 
-[2026-10-05 13:22:51] ✅ Classe Mailer chargée
-[05-Oct-2026 13:22:51 Europe/Brussels] [2026-10-05 13:22:51] 🔄 Création de l'instance Mailer
+[2026-10-08 18:35:33] ✅ Classe Mailer chargée
+[08-Oct-2026 18:35:33 Europe/Brussels] [2026-10-08 18:35:33] 🔄 Création de l'instance Mailer
 
-[2026-10-05 13:22:51] 🔄 Création de l'instance Mailer
-[05-Oct-2026 13:22:51 Europe/Brussels] [2026-10-05 13:22:51] ✅ Instance Mailer créée
+[2026-10-08 18:35:33] 🔄 Création de l'instance Mailer
+[08-Oct-2026 18:35:33 Europe/Brussels] [2026-10-08 18:35:33] ✅ Instance Mailer créée
 
-[2026-10-05 13:22:51] ✅ Instance Mailer créée
-[05-Oct-2026 13:22:51 Europe/Brussels] [2026-10-05 13:22:51] 🔄 Envoi de l'email à jarodhc4@gmail.com
+[2026-10-08 18:35:33] ✅ Instance Mailer créée
+[08-Oct-2026 18:35:33 Europe/Brussels] [2026-10-08 18:35:33] 🔄 Envoi de l'email à jarodhc4@gmail.com
 
-[2026-10-05 13:22:51] 🔄 Envoi de l'email à jarodhc4@gmail.com
-[05-Oct-2026 13:22:52 Europe/Brussels] [2026-10-05 13:22:52] ✅ Email de confirmation envoyé à jarodhc4@gmail.com
+[2026-10-08 18:35:33] 🔄 Envoi de l'email à jarodhc4@gmail.com
+[08-Oct-2026 18:35:35 Europe/Brussels] [2026-10-08 18:35:35] ✅ Email de confirmation envoyé à jarodhc4@gmail.com
 
-[2026-10-05 13:22:52] ✅ Email de confirmation envoyé à jarodhc4@gmail.com
-[05-Oct-2026 13:22:54 Europe/Brussels] [2026-10-05 13:22:54] ✅ Email admin de validation envoyé à rando@partageonslaforet.be
+[2026-10-08 18:35:35] ✅ Email de confirmation envoyé à jarodhc4@gmail.com
+[08-Oct-2026 18:35:36 Europe/Brussels] [2026-10-08 18:35:36] ✅ Email admin de validation envoyé à rando@partageonslaforet.be
 
-[2026-10-05 13:22:54] ✅ Email admin de validation envoyé à rando@partageonslaforet.be
-[05-Oct-2026 13:34:29 Europe/Brussels] Connexion à la base de données réussie (cool5792_sports_events)
-[05-Oct-2026 13:34:29 Europe/Brussels] [2026-10-05 13:34:29] === Début de la requête ===
-
-[2026-10-05 13:34:29] === Début de la requête ===
-[05-Oct-2026 13:34:29 Europe/Brussels] [2026-10-05 13:34:29] 📝 POST data: Array
-(
-    [draftId] => 66
-    [title] => Course Marcel KIEFER 
-    [description] => Pas de garderie. Douches et vestiaires.
-10h20 Départ 1 km pour 7/12 ans
-    [categories] => Array
-        (
-            [0] => 2
-        )
-
-    [date] => 01/11/2026
-    [registrationOpens] => 09:00
-    [registrationCloses] => 10:00
-    [meeting_name] => Salle des sports
-    [meeting_address] => Avenue du Maréchal Foch, Cité Michel, Hussigny-Godbrange
-    [meeting_city] => 
-    [meeting_coordinates] => 49.4947673,5.8686177
-    [routes] => Array
-        (
-            [0] => Array
-                (
-                    [name] => 
-                    [category_id] => 2
-                    [gpx_file] => 
-                    [distance] => 13.13
-                    [elevation] => 
-                    [price] => 
-                    [description] => Départ 10:00 - 80% chemins forestiers, 20% routes
-                )
-
-            [1] => Array
-                (
-                    [name] => 
-                    [category_id] => 2
-                    [gpx_file] => 
-                    [distance] => 21.30
-                    [elevation] => 
-                    [price] => 
-                    [description] => Départ : 10:00 - 80% chemins forestiers, 20% routes
-                )
-
-            [2] => Array
-                (
-                    [name] => 
-                    [category_id] => 2
-                    [gpx_file] => 
-                    [distance] => 5.50
-                    [elevation] => 
-                    [price] => 
-                    [description] => Départ 10:15 - 80% chemins forestiers, 20% routes
-                )
-
-        )
-
-    [organizerId] => 1
-    [organizerName] => 
-    [contacts] => Array
-        (
-            [0] => Array
-                (
-                    [name] => Jean-Louis PERIN
-                    [email] => jean-louis.perin@wanadoo.fr
-                    [phone] => +33 6 89 69 05 31
-                )
-
-        )
-
-)
-
-
-[2026-10-05 13:34:29] 📝 POST data: Array
-(
-    [draftId] => 66
-    [title] => Course Marcel KIEFER 
-    [description] => Pas de garderie. Douches et vestiaires.
-10h20 Départ 1 km pour 7/12 ans
-    [categories] => Array
-        (
-            [0] => 2
-        )
-
-    [date] => 01/11/2026
-    [registrationOpens] => 09:00
-    [registrationCloses] => 10:00
-    [meeting_name] => Salle des sports
-    [meeting_address] => Avenue du Maréchal Foch, Cité Michel, Hussigny-Godbrange
-    [meeting_city] => 
-    [meeting_coordinates] => 49.4947673,5.8686177
-    [routes] => Array
-        (
-            [0] => Array
-                (
-                    [name] => 
-                    [category_id] => 2
-                    [gpx_file] => 
-                    [distance] => 13.13
-                    [elevation] => 
-                    [price] => 
-                    [description] => Départ 10:00 - 80% chemins forestiers, 20% routes
-                )
-
-            [1] => Array
-                (
-                    [name] => 
-                    [category_id] => 2
-                    [gpx_file] => 
-                    [distance] => 21.30
-                    [elevation] => 
-                    [price] => 
-                    [description] => Départ : 10:00 - 80% chemins forestiers, 20% routes
-                )
-
-            [2] => Array
-                (
-                    [name] => 
-                    [category_id] => 2
-                    [gpx_file] => 
-                    [distance] => 5.50
-                    [elevation] => 
-                    [price] => 
-                    [description] => Départ 10:15 - 80% chemins forestiers, 20% routes
-                )
-
-        )
-
-    [organizerId] => 1
-    [organizerName] => 
-    [contacts] => Array
-        (
-            [0] => Array
-                (
-                    [name] => Jean-Louis PERIN
-                    [email] => jean-louis.perin@wanadoo.fr
-                    [phone] => +33 6 89 69 05 31
-                )
-
-        )
-
-)
-
-[05-Oct-2026 13:34:29 Europe/Brussels] [2026-10-05 13:34:29] 📝 SESSION data: Array
-(
-    [csrf_token] => bd5c31fe9f5169b22245e6072403edcba0c7747634b687212b25d9a13ddfa90e
-    [rate_limit_login] => Array
-        (
-            [count] => 1
-            [first] => 1791195404
-        )
-
-    [user_id] => 2
-    [user_email] => jarodhc4@gmail.com
-    [user_role] => user
-    [user] => Array
-        (
-            [id] => 2
-            [email] => jarodhc4@gmail.com
-            [role] => user
-        )
-
-)
-
-
-[2026-10-05 13:34:29] 📝 SESSION data: Array
-(
-    [csrf_token] => bd5c31fe9f5169b22245e6072403edcba0c7747634b687212b25d9a13ddfa90e
-    [rate_limit_login] => Array
-        (
-            [count] => 1
-            [first] => 1791195404
-        )
-
-    [user_id] => 2
-    [user_email] => jarodhc4@gmail.com
-    [user_role] => user
-    [user] => Array
-        (
-            [id] => 2
-            [email] => jarodhc4@gmail.com
-            [role] => user
-        )
-
-)
-
-[05-Oct-2026 13:34:29 Europe/Brussels] [2026-10-05 13:34:29] 📝 SERVER data: Array
-(
-    [PHP_FCGI_CHILDREN] => 4
-    [PWD] => /Applications/MAMP/fcgi-bin
-    [SHLVL] => 0
-    [PHP_FCGI_MAX_REQUESTS] => 200
-    [__CF_USER_TEXT_ENCODING] => 0x1F5:0:0
-    [ORIG_SCRIPT_NAME] => /fcgi-bin/php.fcgi
-    [ORIG_PATH_TRANSLATED] => /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/api/events/publish.php
-    [ORIG_PATH_INFO] => /api/events/publish.php
-    [ORIG_SCRIPT_FILENAME] => /Applications/MAMP/fcgi-bin/php.fcgi
-    [SCRIPT_NAME] => /api/events/publish.php
-    [REQUEST_URI] => /api/events/publish.php
-    [QUERY_STRING] => 
-    [REQUEST_METHOD] => POST
-    [SERVER_PROTOCOL] => HTTP/1.1
-    [GATEWAY_INTERFACE] => CGI/1.1
-    [REDIRECT_URL] => /api/events/publish.php
-    [REMOTE_PORT] => 57780
-    [SCRIPT_FILENAME] => /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/api/events/publish.php
-    [SERVER_ADMIN] => you@example.com
-    [CONTEXT_DOCUMENT_ROOT] => /Applications/MAMP/fcgi-bin/
-    [CONTEXT_PREFIX] => /fcgi-bin/
-    [REQUEST_SCHEME] => http
-    [DOCUMENT_ROOT] => /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be
-    [REMOTE_ADDR] => 127.0.0.1
-    [SERVER_PORT] => 8888
-    [SERVER_ADDR] => 127.0.0.1
-    [SERVER_NAME] => localhost
-    [SERVER_SOFTWARE] => Apache/2.4.62 (Unix) OpenSSL/1.1.1w mod_fastcgi/mod_fastcgi-SNAP-0910052141
-    [SERVER_SIGNATURE] => 
-    [PATH] => /usr/bin:/bin:/usr/sbin:/sbin
-    [HTTP_PRIORITY] => u=4
-    [HTTP_SEC_FETCH_SITE] => same-origin
-    [HTTP_SEC_FETCH_MODE] => cors
-    [HTTP_SEC_FETCH_DEST] => empty
-    [HTTP_COOKIE] => plf_lang=fr; _pk_id.1.1fff=b7ece2f8575a3f81.1759054166.; PHPSESSID=pa7jr0adjc7drbsv60372nbs31
-    [HTTP_CONNECTION] => keep-alive
-    [HTTP_ORIGIN] => http://localhost:8888
-    [CONTENT_LENGTH] => 5836
-    [CONTENT_TYPE] => multipart/form-data; boundary=----geckoformboundaryafae988e6b8003228b1f923ebc017a1f
-    [HTTP_REFERER] => http://localhost:8888/?create=1&draft_id=66
-    [HTTP_ACCEPT_ENCODING] => gzip, deflate, br, zstd
-    [HTTP_ACCEPT_LANGUAGE] => fr-BE
-    [HTTP_ACCEPT] => */*
-    [HTTP_USER_AGENT] => Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:158.0) Gecko/20100101 Firefox/158.0
-    [HTTP_HOST] => localhost:8888
-    [REDIRECT_STATUS] => 200
-    [REDIRECT_HANDLER] => php-fastcgi
-    [FCGI_ROLE] => RESPONDER
-    [PHP_SELF] => /api/events/publish.php
-    [REQUEST_TIME_FLOAT] => 1791200069.0399
-    [REQUEST_TIME] => 1791200069
-    [DB_HOST] => 127.0.0.1
-    [DB_PORT] => 3306
-    [DB_NAME] => cool5792_sports_events
-    [DB_USER] => root
-    [DB_PASS] => root
-    [APP_URL] => http://localhost:8888
-    [APP_NAME] => Partageons La Forêt
-    [DEBUG] => true
-    [MAIL_HOST] => localhost
-    [MAIL_PORT] => 1025
-    [MAIL_USERNAME] => 
-    [MAIL_PASSWORD] => 
-    [MAIL_ENCRYPTION] => 
-    [MAIL_FROM_EMAIL] => noreply@partageonslaforet.be
-    [MAIL_FROM_NAME] => Partageons La Forêt
-)
-
-
-[2026-10-05 13:34:29] 📝 SERVER data: Array
-(
-    [PHP_FCGI_CHILDREN] => 4
-    [PWD] => /Applications/MAMP/fcgi-bin
-    [SHLVL] => 0
-    [PHP_FCGI_MAX_REQUESTS] => 200
-    [__CF_USER_TEXT_ENCODING] => 0x1F5:0:0
-    [ORIG_SCRIPT_NAME] => /fcgi-bin/php.fcgi
-    [ORIG_PATH_TRANSLATED] => /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/api/events/publish.php
-    [ORIG_PATH_INFO] => /api/events/publish.php
-    [ORIG_SCRIPT_FILENAME] => /Applications/MAMP/fcgi-bin/php.fcgi
-    [SCRIPT_NAME] => /api/events/publish.php
-    [REQUEST_URI] => /api/events/publish.php
-    [QUERY_STRING] => 
-    [REQUEST_METHOD] => POST
-    [SERVER_PROTOCOL] => HTTP/1.1
-    [GATEWAY_INTERFACE] => CGI/1.1
-    [REDIRECT_URL] => /api/events/publish.php
-    [REMOTE_PORT] => 57780
-    [SCRIPT_FILENAME] => /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/api/events/publish.php
-    [SERVER_ADMIN] => you@example.com
-    [CONTEXT_DOCUMENT_ROOT] => /Applications/MAMP/fcgi-bin/
-    [CONTEXT_PREFIX] => /fcgi-bin/
-    [REQUEST_SCHEME] => http
-    [DOCUMENT_ROOT] => /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be
-    [REMOTE_ADDR] => 127.0.0.1
-    [SERVER_PORT] => 8888
-    [SERVER_ADDR] => 127.0.0.1
-    [SERVER_NAME] => localhost
-    [SERVER_SOFTWARE] => Apache/2.4.62 (Unix) OpenSSL/1.1.1w mod_fastcgi/mod_fastcgi-SNAP-0910052141
-    [SERVER_SIGNATURE] => 
-    [PATH] => /usr/bin:/bin:/usr/sbin:/sbin
-    [HTTP_PRIORITY] => u=4
-    [HTTP_SEC_FETCH_SITE] => same-origin
-    [HTTP_SEC_FETCH_MODE] => cors
-    [HTTP_SEC_FETCH_DEST] => empty
-    [HTTP_COOKIE] => plf_lang=fr; _pk_id.1.1fff=b7ece2f8575a3f81.1759054166.; PHPSESSID=pa7jr0adjc7drbsv60372nbs31
-    [HTTP_CONNECTION] => keep-alive
-    [HTTP_ORIGIN] => http://localhost:8888
-    [CONTENT_LENGTH] => 5836
-    [CONTENT_TYPE] => multipart/form-data; boundary=----geckoformboundaryafae988e6b8003228b1f923ebc017a1f
-    [HTTP_REFERER] => http://localhost:8888/?create=1&draft_id=66
-    [HTTP_ACCEPT_ENCODING] => gzip, deflate, br, zstd
-    [HTTP_ACCEPT_LANGUAGE] => fr-BE
-    [HTTP_ACCEPT] => */*
-    [HTTP_USER_AGENT] => Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:158.0) Gecko/20100101 Firefox/158.0
-    [HTTP_HOST] => localhost:8888
-    [REDIRECT_STATUS] => 200
-    [REDIRECT_HANDLER] => php-fastcgi
-    [FCGI_ROLE] => RESPONDER
-    [PHP_SELF] => /api/events/publish.php
-    [REQUEST_TIME_FLOAT] => 1791200069.0399
-    [REQUEST_TIME] => 1791200069
-    [DB_HOST] => 127.0.0.1
-    [DB_PORT] => 3306
-    [DB_NAME] => cool5792_sports_events
-    [DB_USER] => root
-    [DB_PASS] => root
-    [APP_URL] => http://localhost:8888
-    [APP_NAME] => Partageons La Forêt
-    [DEBUG] => true
-    [MAIL_HOST] => localhost
-    [MAIL_PORT] => 1025
-    [MAIL_USERNAME] => 
-    [MAIL_PASSWORD] => 
-    [MAIL_ENCRYPTION] => 
-    [MAIL_FROM_EMAIL] => noreply@partageonslaforet.be
-    [MAIL_FROM_NAME] => Partageons La Forêt
-)
-
-[05-Oct-2026 13:34:29 Europe/Brussels] [2026-10-05 13:34:29] ✅ Utilisateur connecté (ID: 2)
-
-[2026-10-05 13:34:29] ✅ Utilisateur connecté (ID: 2)
-[05-Oct-2026 13:34:29 Europe/Brussels] [2026-10-05 13:34:29] Draft ID: 66
-
-[2026-10-05 13:34:29] Draft ID: 66
-[05-Oct-2026 13:34:29 Europe/Brussels] [2026-10-05 13:34:29] ✅ Données du brouillon trouvées
-
-[2026-10-05 13:34:29] ✅ Données du brouillon trouvées
-[05-Oct-2026 13:34:29 Europe/Brussels] [2026-10-05 13:34:29] 📝 Informations de l'événement:
-
-[2026-10-05 13:34:29] 📝 Informations de l'événement:
-[05-Oct-2026 13:34:29 Europe/Brussels] [2026-10-05 13:34:29] - Titre: Course Marcel KIEFER 
-
-[2026-10-05 13:34:29] - Titre: Course Marcel KIEFER 
-[05-Oct-2026 13:34:29 Europe/Brussels] [2026-10-05 13:34:29] - Date: 2026-11-01
-
-[2026-10-05 13:34:29] - Date: 2026-11-01
-[05-Oct-2026 13:34:29 Europe/Brussels] [2026-10-05 13:34:29] - Heures d'inscription: 09:00:00 à 10:00:00
-
-[2026-10-05 13:34:29] - Heures d'inscription: 09:00:00 à 10:00:00
-[05-Oct-2026 13:34:29 Europe/Brussels] [2026-10-05 13:34:29] - Lieu: Salle des sports
-
-[2026-10-05 13:34:29] - Lieu: Salle des sports
-[05-Oct-2026 13:34:29 Europe/Brussels] [2026-10-05 13:34:29] - Adresse: Avenue du Maréchal Foch, Cité Michel, Hussigny-Godbrange
-
-[2026-10-05 13:34:29] - Adresse: Avenue du Maréchal Foch, Cité Michel, Hussigny-Godbrange
-[05-Oct-2026 13:34:29 Europe/Brussels] [2026-10-05 13:34:29] - Coordonnées: 49.4947673,5.8686177
-
-[2026-10-05 13:34:29] - Coordonnées: 49.4947673,5.8686177
-[05-Oct-2026 13:34:29 Europe/Brussels] [2026-10-05 13:34:29] 🔁 Mise à jour de l'événement existant ID=16 -> statut 'pending'
-
-[2026-10-05 13:34:29] 🔁 Mise à jour de l'événement existant ID=16 -> statut 'pending'
-[05-Oct-2026 13:34:29 Europe/Brussels] [2026-10-05 13:34:29] 🔄 Association des tags d'activité
-
-[2026-10-05 13:34:29] 🔄 Association des tags d'activité
-[05-Oct-2026 13:34:29 Europe/Brussels] [2026-10-05 13:34:29] ✅ Tags associés
-
-[2026-10-05 13:34:29] ✅ Tags associés
-[05-Oct-2026 13:34:29 Europe/Brussels] [2026-10-05 13:34:29] ✅ Category_id synchronisé
-
-[2026-10-05 13:34:29] ✅ Category_id synchronisé
-[05-Oct-2026 13:34:29 Europe/Brussels] [2026-10-05 13:34:29] 🔄 Copie des images
-
-[2026-10-05 13:34:29] 🔄 Copie des images
-[05-Oct-2026 13:34:29 Europe/Brussels] [2026-10-05 13:34:29] ✅ Images copiées
-
-[2026-10-05 13:34:29] ✅ Images copiées
-[05-Oct-2026 13:34:29 Europe/Brussels] [2026-10-05 13:34:29] 🔄 Copie des contacts
-
-[2026-10-05 13:34:29] 🔄 Copie des contacts
-[05-Oct-2026 13:34:29 Europe/Brussels] [2026-10-05 13:34:29] ✅ Contacts copiés
-
-[2026-10-05 13:34:29] ✅ Contacts copiés
-[05-Oct-2026 13:34:29 Europe/Brussels] [2026-10-05 13:34:29] 🔄 Copie des parcours
-
-[2026-10-05 13:34:29] 🔄 Copie des parcours
-[05-Oct-2026 13:34:29 Europe/Brussels] [2026-10-05 13:34:29] ✅ Parcours copiés
-
-[2026-10-05 13:34:29] ✅ Parcours copiés
-[05-Oct-2026 13:34:29 Europe/Brussels] [2026-10-05 13:34:29] 🔄 Mise à jour du statut du brouillon
-
-[2026-10-05 13:34:29] 🔄 Mise à jour du statut du brouillon
-[05-Oct-2026 13:34:29 Europe/Brussels] [2026-10-05 13:34:29] ✅ Statut du brouillon mis à jour
-
-[2026-10-05 13:34:29] ✅ Statut du brouillon mis à jour
-[05-Oct-2026 13:34:29 Europe/Brussels] [2026-10-05 13:34:29] ✅ Transaction validée avec succès
-
-[2026-10-05 13:34:29] ✅ Transaction validée avec succès
-[05-Oct-2026 13:34:29 Europe/Brussels] [2026-10-05 13:34:29] 🔄 Récupération des données pour l'email
-
-[2026-10-05 13:34:29] 🔄 Récupération des données pour l'email
-[05-Oct-2026 13:34:29 Europe/Brussels] [2026-10-05 13:34:29] ✅ Données trouvées pour l'email
-
-[2026-10-05 13:34:29] ✅ Données trouvées pour l'email
-[05-Oct-2026 13:34:29 Europe/Brussels] [2026-10-05 13:34:29] 📝 Données de l'événement: {
-    "id": 16,
-    "title": "Course Marcel KIEFER ",
-    "description": "Pas de garderie. Douches et vestiaires.\r\n10h20 D\u00e9part 1 km pour 7\/12 ans",
-    "category_id": 2,
-    "date": "2026-11-01",
-    "start_time": "09:00:00",
-    "end_time": "10:00:00",
-    "registration_opens": "09:00:00",
-    "registration_closes": "10:00:00",
-    "location": "Salle des sports",
-    "venue": "Avenue du Mar\u00e9chal Foch, Cit\u00e9 Michel, Hussigny-Godbrange",
-    "coordinates": "49.4947673,5.8686177",
-    "meeting_name": "Salle des sports",
-    "meeting_address": "Avenue du Mar\u00e9chal Foch, Cit\u00e9 Michel, Hussigny-Godbrange",
-    "meeting_city": "Hussigny-Godbrange",
-    "meeting_coordinates": "49.4947673,5.8686177",
-    "difficulty": null,
-    "max_participants": null,
-    "status": "pending",
-    "submitted_at": null,
-    "validated_at": null,
-    "validated_by": null,
-    "rejection_reason": null,
-    "main_image_path": null,
-    "main_image": null,
-    "user_id": 2,
-    "organizer_id": 1,
-    "created_by": null,
-    "organisation": null,
-    "has_gpx": 0,
-    "gpx_path": null,
-    "gpx_downloadable": 0,
-    "view_count": 18,
-    "created_at": "2026-09-14 21:37:34",
-    "updated_at": "2026-10-05 13:34:29",
-    "is_cancelled": 0,
-    "cancelled_at": null,
-    "cancellation_reason": null,
-    "user_email": "jarodhc4@gmail.com"
-}
-
-[2026-10-05 13:34:29] 📝 Données de l'événement: {
-    "id": 16,
-    "title": "Course Marcel KIEFER ",
-    "description": "Pas de garderie. Douches et vestiaires.\r\n10h20 D\u00e9part 1 km pour 7\/12 ans",
-    "category_id": 2,
-    "date": "2026-11-01",
-    "start_time": "09:00:00",
-    "end_time": "10:00:00",
-    "registration_opens": "09:00:00",
-    "registration_closes": "10:00:00",
-    "location": "Salle des sports",
-    "venue": "Avenue du Mar\u00e9chal Foch, Cit\u00e9 Michel, Hussigny-Godbrange",
-    "coordinates": "49.4947673,5.8686177",
-    "meeting_name": "Salle des sports",
-    "meeting_address": "Avenue du Mar\u00e9chal Foch, Cit\u00e9 Michel, Hussigny-Godbrange",
-    "meeting_city": "Hussigny-Godbrange",
-    "meeting_coordinates": "49.4947673,5.8686177",
-    "difficulty": null,
-    "max_participants": null,
-    "status": "pending",
-    "submitted_at": null,
-    "validated_at": null,
-    "validated_by": null,
-    "rejection_reason": null,
-    "main_image_path": null,
-    "main_image": null,
-    "user_id": 2,
-    "organizer_id": 1,
-    "created_by": null,
-    "organisation": null,
-    "has_gpx": 0,
-    "gpx_path": null,
-    "gpx_downloadable": 0,
-    "view_count": 18,
-    "created_at": "2026-09-14 21:37:34",
-    "updated_at": "2026-10-05 13:34:29",
-    "is_cancelled": 0,
-    "cancelled_at": null,
-    "cancellation_reason": null,
-    "user_email": "jarodhc4@gmail.com"
-}
-[05-Oct-2026 13:34:29 Europe/Brussels] [2026-10-05 13:34:29] ✅ Classe Mailer chargée
-
-[2026-10-05 13:34:29] ✅ Classe Mailer chargée
-[05-Oct-2026 13:34:29 Europe/Brussels] [2026-10-05 13:34:29] 🔄 Création de l'instance Mailer
-
-[2026-10-05 13:34:29] 🔄 Création de l'instance Mailer
-[05-Oct-2026 13:34:29 Europe/Brussels] [2026-10-05 13:34:29] ✅ Instance Mailer créée
-
-[2026-10-05 13:34:29] ✅ Instance Mailer créée
-[05-Oct-2026 13:34:29 Europe/Brussels] [2026-10-05 13:34:29] 🔄 Envoi de l'email à jarodhc4@gmail.com
-
-[2026-10-05 13:34:29] 🔄 Envoi de l'email à jarodhc4@gmail.com
-[05-Oct-2026 13:34:30 Europe/Brussels] [2026-10-05 13:34:30] ✅ Email de confirmation envoyé à jarodhc4@gmail.com
-
-[2026-10-05 13:34:30] ✅ Email de confirmation envoyé à jarodhc4@gmail.com
-[05-Oct-2026 13:34:31 Europe/Brussels] [2026-10-05 13:34:31] ✅ Email admin de validation envoyé à rando@partageonslaforet.be
-
-[2026-10-05 13:34:31] ✅ Email admin de validation envoyé à rando@partageonslaforet.be
-[05-Oct-2026 15:47:23 Europe/Brussels] Connexion à la base de données réussie (cool5792_sports_events)
-[05-Oct-2026 15:47:23 Europe/Brussels] [2026-10-05 15:47:23] === Début de la requête ===
-
-[2026-10-05 15:47:23] === Début de la requête ===
-[05-Oct-2026 15:47:23 Europe/Brussels] [2026-10-05 15:47:23] 📝 POST data: Array
-(
-    [draftId] => 67
-    [title] => Course Marcel KIEFER 
-    [description] => Pas de garderie. Douches et vestiaires.
-10h20 Départ 1 km pour 7/12 ans
-    [categories] => Array
-        (
-            [0] => 2
-        )
-
-    [date] => 01/11/2026
-    [registrationOpens] => 08:45
-    [registrationCloses] => 10:00
-    [meeting_name] => Salle des sports
-    [meeting_address] => Avenue du Maréchal Foch, Cité Michel, Hussigny-Godbrange
-    [meeting_city] => 
-    [meeting_coordinates] => 49.4947673,5.8686177
-    [routes] => Array
-        (
-            [0] => Array
-                (
-                    [name] => 
-                    [category_id] => 2
-                    [gpx_file] => 
-                    [distance] => 13.13
-                    [elevation] => 
-                    [price] => 
-                    [description] => Départ 10:00 - 80% chemins forestiers, 20% routes
-                )
-
-            [1] => Array
-                (
-                    [name] => 
-                    [category_id] => 2
-                    [gpx_file] => 
-                    [distance] => 21.30
-                    [elevation] => 
-                    [price] => 
-                    [description] => Départ : 10:00 - 80% chemins forestiers, 20% routes
-                )
-
-            [2] => Array
-                (
-                    [name] => 
-                    [category_id] => 2
-                    [gpx_file] => 
-                    [distance] => 5.50
-                    [elevation] => 
-                    [price] => 
-                    [description] => Départ 10:15 - 80% chemins forestiers, 20% routes
-                )
-
-        )
-
-    [organizerId] => 1
-    [organizerName] => 
-    [contacts] => Array
-        (
-            [0] => Array
-                (
-                    [name] => Jean-Louis PERIN
-                    [email] => jean-louis.perin@wanadoo.fr
-                    [phone] => +33 6 89 69 05 31
-                )
-
-        )
-
-)
-
-
-[2026-10-05 15:47:23] 📝 POST data: Array
-(
-    [draftId] => 67
-    [title] => Course Marcel KIEFER 
-    [description] => Pas de garderie. Douches et vestiaires.
-10h20 Départ 1 km pour 7/12 ans
-    [categories] => Array
-        (
-            [0] => 2
-        )
-
-    [date] => 01/11/2026
-    [registrationOpens] => 08:45
-    [registrationCloses] => 10:00
-    [meeting_name] => Salle des sports
-    [meeting_address] => Avenue du Maréchal Foch, Cité Michel, Hussigny-Godbrange
-    [meeting_city] => 
-    [meeting_coordinates] => 49.4947673,5.8686177
-    [routes] => Array
-        (
-            [0] => Array
-                (
-                    [name] => 
-                    [category_id] => 2
-                    [gpx_file] => 
-                    [distance] => 13.13
-                    [elevation] => 
-                    [price] => 
-                    [description] => Départ 10:00 - 80% chemins forestiers, 20% routes
-                )
-
-            [1] => Array
-                (
-                    [name] => 
-                    [category_id] => 2
-                    [gpx_file] => 
-                    [distance] => 21.30
-                    [elevation] => 
-                    [price] => 
-                    [description] => Départ : 10:00 - 80% chemins forestiers, 20% routes
-                )
-
-            [2] => Array
-                (
-                    [name] => 
-                    [category_id] => 2
-                    [gpx_file] => 
-                    [distance] => 5.50
-                    [elevation] => 
-                    [price] => 
-                    [description] => Départ 10:15 - 80% chemins forestiers, 20% routes
-                )
-
-        )
-
-    [organizerId] => 1
-    [organizerName] => 
-    [contacts] => Array
-        (
-            [0] => Array
-                (
-                    [name] => Jean-Louis PERIN
-                    [email] => jean-louis.perin@wanadoo.fr
-                    [phone] => +33 6 89 69 05 31
-                )
-
-        )
-
-)
-
-[05-Oct-2026 15:47:23 Europe/Brussels] [2026-10-05 15:47:23] 📝 SESSION data: Array
-(
-    [csrf_token] => 42f561cbe4a3e9d9e4011e404d849a51d45b0d554d7756503055ce514ffcc09c
-    [rate_limit_reset_password] => Array
-        (
-            [count] => 1
-            [first] => 1791207944
-        )
-
-    [rate_limit_login] => Array
-        (
-            [count] => 1
-            [first] => 1791207993
-        )
-
-    [user_id] => 2
-    [user_email] => jarodhc4@gmail.com
-    [user_role] => user
-    [user] => Array
-        (
-            [id] => 2
-            [email] => jarodhc4@gmail.com
-            [role] => user
-        )
-
-)
-
-
-[2026-10-05 15:47:23] 📝 SESSION data: Array
-(
-    [csrf_token] => 42f561cbe4a3e9d9e4011e404d849a51d45b0d554d7756503055ce514ffcc09c
-    [rate_limit_reset_password] => Array
-        (
-            [count] => 1
-            [first] => 1791207944
-        )
-
-    [rate_limit_login] => Array
-        (
-            [count] => 1
-            [first] => 1791207993
-        )
-
-    [user_id] => 2
-    [user_email] => jarodhc4@gmail.com
-    [user_role] => user
-    [user] => Array
-        (
-            [id] => 2
-            [email] => jarodhc4@gmail.com
-            [role] => user
-        )
-
-)
-
-[05-Oct-2026 15:47:23 Europe/Brussels] [2026-10-05 15:47:23] 📝 SERVER data: Array
-(
-    [PHP_FCGI_CHILDREN] => 4
-    [PWD] => /Applications/MAMP/fcgi-bin
-    [SHLVL] => 0
-    [PHP_FCGI_MAX_REQUESTS] => 200
-    [__CF_USER_TEXT_ENCODING] => 0x1F5:0:0
-    [ORIG_SCRIPT_NAME] => /fcgi-bin/php.fcgi
-    [ORIG_PATH_TRANSLATED] => /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/api/events/publish.php
-    [ORIG_PATH_INFO] => /api/events/publish.php
-    [ORIG_SCRIPT_FILENAME] => /Applications/MAMP/fcgi-bin/php.fcgi
-    [SCRIPT_NAME] => /api/events/publish.php
-    [REQUEST_URI] => /api/events/publish.php
-    [QUERY_STRING] => 
-    [REQUEST_METHOD] => POST
-    [SERVER_PROTOCOL] => HTTP/1.1
-    [GATEWAY_INTERFACE] => CGI/1.1
-    [REDIRECT_URL] => /api/events/publish.php
-    [REMOTE_PORT] => 62011
-    [SCRIPT_FILENAME] => /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/api/events/publish.php
-    [SERVER_ADMIN] => you@example.com
-    [CONTEXT_DOCUMENT_ROOT] => /Applications/MAMP/fcgi-bin/
-    [CONTEXT_PREFIX] => /fcgi-bin/
-    [REQUEST_SCHEME] => http
-    [DOCUMENT_ROOT] => /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be
-    [REMOTE_ADDR] => ::1
-    [SERVER_PORT] => 8888
-    [SERVER_ADDR] => ::1
-    [SERVER_NAME] => localhost
-    [SERVER_SOFTWARE] => Apache/2.4.62 (Unix) OpenSSL/1.1.1w mod_fastcgi/mod_fastcgi-SNAP-0910052141
-    [SERVER_SIGNATURE] => 
-    [PATH] => /usr/bin:/bin:/usr/sbin:/sbin
-    [HTTP_CONNECTION] => keep-alive
-    [HTTP_COOKIE] => PHPSESSID=pl80ls9f8ncbnc4eq79sfvsd9h; remember_token=2a9060a4969c0d8fc8892ab440f0bc4b20082c3a840616d995cd0249d25961ac; _pk_id.1.1fff=a405503ad9f212d8.1790874924.; plf_lang=fr
-    [HTTP_ACCEPT_ENCODING] => gzip, deflate
-    [HTTP_PRIORITY] => u=3, i
-    [HTTP_ACCEPT_LANGUAGE] => fr-FR,fr;q=0.9
-    [CONTENT_LENGTH] => 5176
-    [HTTP_SEC_FETCH_DEST] => empty
-    [HTTP_REFERER] => http://localhost:8888/?create=1&draft_id=67
-    [HTTP_USER_AGENT] => Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/27.0.1 Safari/605.1.15
-    [HTTP_SEC_FETCH_MODE] => cors
-    [HTTP_SEC_FETCH_SITE] => same-origin
-    [HTTP_ORIGIN] => http://localhost:8888
-    [CONTENT_TYPE] => multipart/form-data; boundary=----WebKitFormBoundary9UNaHKx7QMZ1FvcD
-    [HTTP_ACCEPT] => */*
-    [HTTP_HOST] => localhost:8888
-    [REDIRECT_STATUS] => 200
-    [REDIRECT_HANDLER] => php-fastcgi
-    [FCGI_ROLE] => RESPONDER
-    [PHP_SELF] => /api/events/publish.php
-    [REQUEST_TIME_FLOAT] => 1791208043.2482
-    [REQUEST_TIME] => 1791208043
-    [DB_HOST] => 127.0.0.1
-    [DB_PORT] => 3306
-    [DB_NAME] => cool5792_sports_events
-    [DB_USER] => root
-    [DB_PASS] => root
-    [APP_URL] => http://localhost:8888
-    [APP_NAME] => Partageons La Forêt
-    [DEBUG] => true
-    [MAIL_HOST] => localhost
-    [MAIL_PORT] => 1025
-    [MAIL_USERNAME] => 
-    [MAIL_PASSWORD] => 
-    [MAIL_ENCRYPTION] => 
-    [MAIL_FROM_EMAIL] => noreply@partageonslaforet.be
-    [MAIL_FROM_NAME] => Partageons La Forêt
-)
-
-
-[2026-10-05 15:47:23] 📝 SERVER data: Array
-(
-    [PHP_FCGI_CHILDREN] => 4
-    [PWD] => /Applications/MAMP/fcgi-bin
-    [SHLVL] => 0
-    [PHP_FCGI_MAX_REQUESTS] => 200
-    [__CF_USER_TEXT_ENCODING] => 0x1F5:0:0
-    [ORIG_SCRIPT_NAME] => /fcgi-bin/php.fcgi
-    [ORIG_PATH_TRANSLATED] => /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/api/events/publish.php
-    [ORIG_PATH_INFO] => /api/events/publish.php
-    [ORIG_SCRIPT_FILENAME] => /Applications/MAMP/fcgi-bin/php.fcgi
-    [SCRIPT_NAME] => /api/events/publish.php
-    [REQUEST_URI] => /api/events/publish.php
-    [QUERY_STRING] => 
-    [REQUEST_METHOD] => POST
-    [SERVER_PROTOCOL] => HTTP/1.1
-    [GATEWAY_INTERFACE] => CGI/1.1
-    [REDIRECT_URL] => /api/events/publish.php
-    [REMOTE_PORT] => 62011
-    [SCRIPT_FILENAME] => /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be/api/events/publish.php
-    [SERVER_ADMIN] => you@example.com
-    [CONTEXT_DOCUMENT_ROOT] => /Applications/MAMP/fcgi-bin/
-    [CONTEXT_PREFIX] => /fcgi-bin/
-    [REQUEST_SCHEME] => http
-    [DOCUMENT_ROOT] => /Users/oconrard/Sites/Partageonslaforet/rando.partageonslaforet.be
-    [REMOTE_ADDR] => ::1
-    [SERVER_PORT] => 8888
-    [SERVER_ADDR] => ::1
-    [SERVER_NAME] => localhost
-    [SERVER_SOFTWARE] => Apache/2.4.62 (Unix) OpenSSL/1.1.1w mod_fastcgi/mod_fastcgi-SNAP-0910052141
-    [SERVER_SIGNATURE] => 
-    [PATH] => /usr/bin:/bin:/usr/sbin:/sbin
-    [HTTP_CONNECTION] => keep-alive
-    [HTTP_COOKIE] => PHPSESSID=pl80ls9f8ncbnc4eq79sfvsd9h; remember_token=2a9060a4969c0d8fc8892ab440f0bc4b20082c3a840616d995cd0249d25961ac; _pk_id.1.1fff=a405503ad9f212d8.1790874924.; plf_lang=fr
-    [HTTP_ACCEPT_ENCODING] => gzip, deflate
-    [HTTP_PRIORITY] => u=3, i
-    [HTTP_ACCEPT_LANGUAGE] => fr-FR,fr;q=0.9
-    [CONTENT_LENGTH] => 5176
-    [HTTP_SEC_FETCH_DEST] => empty
-    [HTTP_REFERER] => http://localhost:8888/?create=1&draft_id=67
-    [HTTP_USER_AGENT] => Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/27.0.1 Safari/605.1.15
-    [HTTP_SEC_FETCH_MODE] => cors
-    [HTTP_SEC_FETCH_SITE] => same-origin
-    [HTTP_ORIGIN] => http://localhost:8888
-    [CONTENT_TYPE] => multipart/form-data; boundary=----WebKitFormBoundary9UNaHKx7QMZ1FvcD
-    [HTTP_ACCEPT] => */*
-    [HTTP_HOST] => localhost:8888
-    [REDIRECT_STATUS] => 200
-    [REDIRECT_HANDLER] => php-fastcgi
-    [FCGI_ROLE] => RESPONDER
-    [PHP_SELF] => /api/events/publish.php
-    [REQUEST_TIME_FLOAT] => 1791208043.2482
-    [REQUEST_TIME] => 1791208043
-    [DB_HOST] => 127.0.0.1
-    [DB_PORT] => 3306
-    [DB_NAME] => cool5792_sports_events
-    [DB_USER] => root
-    [DB_PASS] => root
-    [APP_URL] => http://localhost:8888
-    [APP_NAME] => Partageons La Forêt
-    [DEBUG] => true
-    [MAIL_HOST] => localhost
-    [MAIL_PORT] => 1025
-    [MAIL_USERNAME] => 
-    [MAIL_PASSWORD] => 
-    [MAIL_ENCRYPTION] => 
-    [MAIL_FROM_EMAIL] => noreply@partageonslaforet.be
-    [MAIL_FROM_NAME] => Partageons La Forêt
-)
-
-[05-Oct-2026 15:47:23 Europe/Brussels] [2026-10-05 15:47:23] ✅ Utilisateur connecté (ID: 2)
-
-[2026-10-05 15:47:23] ✅ Utilisateur connecté (ID: 2)
-[05-Oct-2026 15:47:23 Europe/Brussels] [2026-10-05 15:47:23] Draft ID: 67
-
-[2026-10-05 15:47:23] Draft ID: 67
-[05-Oct-2026 15:47:23 Europe/Brussels] [2026-10-05 15:47:23] ✅ Données du brouillon trouvées
-
-[2026-10-05 15:47:23] ✅ Données du brouillon trouvées
-[05-Oct-2026 15:47:23 Europe/Brussels] [2026-10-05 15:47:23] 📝 Informations de l'événement:
-
-[2026-10-05 15:47:23] 📝 Informations de l'événement:
-[05-Oct-2026 15:47:23 Europe/Brussels] [2026-10-05 15:47:23] - Titre: Course Marcel KIEFER 
-
-[2026-10-05 15:47:23] - Titre: Course Marcel KIEFER 
-[05-Oct-2026 15:47:23 Europe/Brussels] [2026-10-05 15:47:23] - Date: 2026-11-01
-
-[2026-10-05 15:47:23] - Date: 2026-11-01
-[05-Oct-2026 15:47:23 Europe/Brussels] [2026-10-05 15:47:23] - Heures d'inscription: 08:45:00 à 10:00:00
-
-[2026-10-05 15:47:23] - Heures d'inscription: 08:45:00 à 10:00:00
-[05-Oct-2026 15:47:23 Europe/Brussels] [2026-10-05 15:47:23] - Lieu: Salle des sports
-
-[2026-10-05 15:47:23] - Lieu: Salle des sports
-[05-Oct-2026 15:47:23 Europe/Brussels] [2026-10-05 15:47:23] - Adresse: Avenue du Maréchal Foch, Cité Michel, Hussigny-Godbrange
-
-[2026-10-05 15:47:23] - Adresse: Avenue du Maréchal Foch, Cité Michel, Hussigny-Godbrange
-[05-Oct-2026 15:47:23 Europe/Brussels] [2026-10-05 15:47:23] - Coordonnées: 49.4947673,5.8686177
-
-[2026-10-05 15:47:23] - Coordonnées: 49.4947673,5.8686177
-[05-Oct-2026 15:47:23 Europe/Brussels] [2026-10-05 15:47:23] 🔁 Mise à jour de l'événement existant ID=16 -> statut 'pending'
-
-[2026-10-05 15:47:23] 🔁 Mise à jour de l'événement existant ID=16 -> statut 'pending'
-[05-Oct-2026 15:47:23 Europe/Brussels] [2026-10-05 15:47:23] 🔄 Association des tags d'activité
-
-[2026-10-05 15:47:23] 🔄 Association des tags d'activité
-[05-Oct-2026 15:47:23 Europe/Brussels] [2026-10-05 15:47:23] ✅ Tags associés
-
-[2026-10-05 15:47:23] ✅ Tags associés
-[05-Oct-2026 15:47:23 Europe/Brussels] [2026-10-05 15:47:23] ✅ Category_id synchronisé
-
-[2026-10-05 15:47:23] ✅ Category_id synchronisé
-[05-Oct-2026 15:47:23 Europe/Brussels] [2026-10-05 15:47:23] 🔄 Copie des images
-
-[2026-10-05 15:47:23] 🔄 Copie des images
-[05-Oct-2026 15:47:23 Europe/Brussels] [2026-10-05 15:47:23] ✅ Images copiées
-
-[2026-10-05 15:47:23] ✅ Images copiées
-[05-Oct-2026 15:47:23 Europe/Brussels] [2026-10-05 15:47:23] 🔄 Copie des contacts
-
-[2026-10-05 15:47:23] 🔄 Copie des contacts
-[05-Oct-2026 15:47:23 Europe/Brussels] [2026-10-05 15:47:23] ✅ Contacts copiés
-
-[2026-10-05 15:47:23] ✅ Contacts copiés
-[05-Oct-2026 15:47:23 Europe/Brussels] [2026-10-05 15:47:23] 🔄 Copie des parcours
-
-[2026-10-05 15:47:23] 🔄 Copie des parcours
-[05-Oct-2026 15:47:23 Europe/Brussels] [2026-10-05 15:47:23] ✅ Parcours copiés
-
-[2026-10-05 15:47:23] ✅ Parcours copiés
-[05-Oct-2026 15:47:23 Europe/Brussels] [2026-10-05 15:47:23] 🔄 Mise à jour du statut du brouillon
-
-[2026-10-05 15:47:23] 🔄 Mise à jour du statut du brouillon
-[05-Oct-2026 15:47:23 Europe/Brussels] [2026-10-05 15:47:23] ✅ Statut du brouillon mis à jour
-
-[2026-10-05 15:47:23] ✅ Statut du brouillon mis à jour
-[05-Oct-2026 15:47:23 Europe/Brussels] [2026-10-05 15:47:23] ✅ Transaction validée avec succès
-
-[2026-10-05 15:47:23] ✅ Transaction validée avec succès
-[05-Oct-2026 15:47:23 Europe/Brussels] [2026-10-05 15:47:23] 🔄 Récupération des données pour l'email
-
-[2026-10-05 15:47:23] 🔄 Récupération des données pour l'email
-[05-Oct-2026 15:47:23 Europe/Brussels] [2026-10-05 15:47:23] ✅ Données trouvées pour l'email
-
-[2026-10-05 15:47:23] ✅ Données trouvées pour l'email
-[05-Oct-2026 15:47:23 Europe/Brussels] [2026-10-05 15:47:23] 📝 Données de l'événement: {
-    "id": 16,
-    "title": "Course Marcel KIEFER ",
-    "description": "Pas de garderie. Douches et vestiaires.\r\n10h20 D\u00e9part 1 km pour 7\/12 ans",
-    "category_id": 2,
-    "date": "2026-11-01",
-    "start_time": "09:00:00",
-    "end_time": "10:00:00",
-    "registration_opens": "08:45:00",
-    "registration_closes": "10:00:00",
-    "location": "Salle des sports",
-    "venue": "Avenue du Mar\u00e9chal Foch, Cit\u00e9 Michel, Hussigny-Godbrange",
-    "coordinates": "49.4947673,5.8686177",
-    "meeting_name": "Salle des sports",
-    "meeting_address": "Avenue du Mar\u00e9chal Foch, Cit\u00e9 Michel, Hussigny-Godbrange",
-    "meeting_city": "Hussigny-Godbrange",
-    "meeting_coordinates": "49.4947673,5.8686177",
-    "difficulty": null,
-    "max_participants": null,
-    "status": "pending",
-    "submitted_at": null,
-    "validated_at": null,
-    "validated_by": null,
-    "rejection_reason": null,
-    "main_image_path": null,
-    "main_image": null,
-    "user_id": 2,
-    "organizer_id": 1,
-    "created_by": null,
-    "organisation": null,
-    "has_gpx": 0,
-    "gpx_path": null,
-    "gpx_downloadable": 0,
-    "view_count": 20,
-    "created_at": "2026-09-14 21:37:34",
-    "updated_at": "2026-10-05 15:47:23",
-    "is_cancelled": 0,
-    "cancelled_at": null,
-    "cancellation_reason": null,
-    "user_email": "jarodhc4@gmail.com"
-}
-
-[2026-10-05 15:47:23] 📝 Données de l'événement: {
-    "id": 16,
-    "title": "Course Marcel KIEFER ",
-    "description": "Pas de garderie. Douches et vestiaires.\r\n10h20 D\u00e9part 1 km pour 7\/12 ans",
-    "category_id": 2,
-    "date": "2026-11-01",
-    "start_time": "09:00:00",
-    "end_time": "10:00:00",
-    "registration_opens": "08:45:00",
-    "registration_closes": "10:00:00",
-    "location": "Salle des sports",
-    "venue": "Avenue du Mar\u00e9chal Foch, Cit\u00e9 Michel, Hussigny-Godbrange",
-    "coordinates": "49.4947673,5.8686177",
-    "meeting_name": "Salle des sports",
-    "meeting_address": "Avenue du Mar\u00e9chal Foch, Cit\u00e9 Michel, Hussigny-Godbrange",
-    "meeting_city": "Hussigny-Godbrange",
-    "meeting_coordinates": "49.4947673,5.8686177",
-    "difficulty": null,
-    "max_participants": null,
-    "status": "pending",
-    "submitted_at": null,
-    "validated_at": null,
-    "validated_by": null,
-    "rejection_reason": null,
-    "main_image_path": null,
-    "main_image": null,
-    "user_id": 2,
-    "organizer_id": 1,
-    "created_by": null,
-    "organisation": null,
-    "has_gpx": 0,
-    "gpx_path": null,
-    "gpx_downloadable": 0,
-    "view_count": 20,
-    "created_at": "2026-09-14 21:37:34",
-    "updated_at": "2026-10-05 15:47:23",
-    "is_cancelled": 0,
-    "cancelled_at": null,
-    "cancellation_reason": null,
-    "user_email": "jarodhc4@gmail.com"
-}
-[05-Oct-2026 15:47:23 Europe/Brussels] [2026-10-05 15:47:23] ✅ Classe Mailer chargée
-
-[2026-10-05 15:47:23] ✅ Classe Mailer chargée
-[05-Oct-2026 15:47:23 Europe/Brussels] [2026-10-05 15:47:23] 🔄 Création de l'instance Mailer
-
-[2026-10-05 15:47:23] 🔄 Création de l'instance Mailer
-[05-Oct-2026 15:47:23 Europe/Brussels] [2026-10-05 15:47:23] ✅ Instance Mailer créée
-
-[2026-10-05 15:47:23] ✅ Instance Mailer créée
-[05-Oct-2026 15:47:23 Europe/Brussels] [2026-10-05 15:47:23] 🔄 Envoi de l'email à jarodhc4@gmail.com
-
-[2026-10-05 15:47:23] 🔄 Envoi de l'email à jarodhc4@gmail.com
-[05-Oct-2026 15:47:24 Europe/Brussels] [2026-10-05 15:47:24] ✅ Email de confirmation envoyé à jarodhc4@gmail.com
-
-[2026-10-05 15:47:24] ✅ Email de confirmation envoyé à jarodhc4@gmail.com
-[05-Oct-2026 15:47:25 Europe/Brussels] [2026-10-05 15:47:25] ✅ Email admin de validation envoyé à rando@partageonslaforet.be
-
-[2026-10-05 15:47:25] ✅ Email admin de validation envoyé à rando@partageonslaforet.be
+[2026-10-08 18:35:36] ✅ Email admin de validation envoyé à rando@partageonslaforet.be

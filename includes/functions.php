@@ -17,9 +17,25 @@ function getActiveSponsors(?PDO $pdo): array {
         return [];
     }
     try {
-        return $pdo->query(
-            'SELECT id, name, image_path, link_url, alt_text FROM sponsors WHERE active = 1 ORDER BY position ASC, id ASC'
+        $rows = $pdo->query(
+            'SELECT id, name, image_path, link_url, alt_text FROM sponsors
+             WHERE active = 1
+               AND (start_date IS NULL OR start_date <= CURDATE())
+               AND (end_date IS NULL OR end_date >= CURDATE())
+             ORDER BY position ASC, id ASC'
         )->fetchAll(PDO::FETCH_ASSOC) ?: [];
+
+        // Même logique que les images d'événements : on vérifie que le visuel
+        // existe réellement (ou URL externe) avant de l'afficher.
+        foreach ($rows as $i => $row) {
+            $resolved = resolveImagePublicUrl($row['image_path'] ?? '', null);
+            if ($resolved === null) {
+                unset($rows[$i]);
+                continue;
+            }
+            $rows[$i]['image_path'] = $resolved;
+        }
+        return array_values($rows);
     } catch (Throwable $e) {
         if (function_exists('logError')) {
             logError('includes/functions.php', 'getActiveSponsors failed', ['error' => $e->getMessage()]);
@@ -399,7 +415,7 @@ function processGpxFile($file) {
 }
 
 if (!function_exists('getFullUrl')) {
-    function getFullUrl($path) {
+    function getFullUrl(string $path) {
         if (defined('APP_URL') && !empty(APP_URL)) {
             return rtrim(APP_URL, '/') . '/' . ltrim($path, '/');
         }
@@ -410,7 +426,7 @@ if (!function_exists('getFullUrl')) {
 }
 
 if (!function_exists('resolveImagePublicUrl')) {
-    function resolveImagePublicUrl($imagePath, $storagePath) {
+    function resolveImagePublicUrl(?string $imagePath, ?string $storagePath) {
         $docRoot = realpath($_SERVER['DOCUMENT_ROOT'] ?? '');
 
         // 1) Si storage_path existe physiquement, on l'utilise
@@ -426,11 +442,21 @@ if (!function_exists('resolveImagePublicUrl')) {
             return $imagePath;
         }
 
-        // 3) Si image_path est un chemin local, vérifier que le fichier existe
-        if (!empty($imagePath) && $docRoot) {
+        // 3) Si image_path est un chemin local, vérifier que le fichier existe.
+        // Le docroot peut être la racine du projet (alias .htaccess /assets et
+        // /uploads → /public/...) ou directement public/ selon l'environnement.
+        if (!empty($imagePath)) {
             $relative = ltrim($imagePath, '/');
-            if (file_exists($docRoot . '/' . $relative)) {
-                return $imagePath;
+            $candidates = [];
+            if ($docRoot) {
+                $candidates[] = $docRoot . '/' . $relative;
+                $candidates[] = $docRoot . '/public/' . $relative;
+            }
+            $candidates[] = dirname(__DIR__) . '/public/' . $relative;
+            foreach ($candidates as $candidate) {
+                if (is_file($candidate)) {
+                    return $imagePath;
+                }
             }
         }
 
@@ -450,6 +476,36 @@ if (!function_exists('isRealEventImage')) {
             stripos($url, '/uploads/') !== false
             || preg_match('#^https?://#i', $url)
         );
+    }
+}
+
+if (!function_exists('userHasOrganizerProfile')) {
+    /**
+     * Indique si l'utilisateur connecté possède au moins un profil organisateur.
+     * Résultat mis en cache en session ; invalidé lors de la création/suppression
+     * d'un profil via les endpoints api/organization-profil/*.
+     * En cas d'erreur DB, retourne true (on préfère ne pas afficher de pastille erronée).
+     */
+    function userHasOrganizerProfile(): bool {
+        if (empty($_SESSION['user_id'])) {
+            return false;
+        }
+        if (isset($_SESSION['has_organizer_profile'])) {
+            return (bool) $_SESSION['has_organizer_profile'];
+        }
+        try {
+            require_once __DIR__ . '/../config/database.php';
+            $stmt = getConnection()->prepare('SELECT 1 FROM organizer_profiles WHERE user_id = ? LIMIT 1');
+            $stmt->execute([$_SESSION['user_id']]);
+            $has = (bool) $stmt->fetchColumn();
+            $_SESSION['has_organizer_profile'] = $has;
+            return $has;
+        } catch (Throwable $e) {
+            if (function_exists('logError')) {
+                logError('includes/functions.php', 'userHasOrganizerProfile failed', ['error' => $e->getMessage()]);
+            }
+            return true; // Ne pas afficher la pastille en cas d'erreur
+        }
     }
 }
 
