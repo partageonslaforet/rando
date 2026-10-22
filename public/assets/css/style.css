@@ -15,6 +15,7 @@
     /* ── Charte : vert forêt = marque ── */
     --primary-color: #3A8A3D;
     --primary-hover: #2d6c2f;
+    
     /* ── Danger : magenta ── */
     --danger-color: #990047;
     --danger-hover: #7d003a;
@@ -38,10 +39,11 @@
     --gray-light: #adb5bd;
     --light-text: #fff;
     --surface: #f8f9fa;
-    --surface-green: #f6f9f7;
+    --surface-green: #e5ebe5; /* TEST: vert primaire 50% (était #edf5f0) — debug blanchiment ~15s */
     --background-color: #dfe2e6;
-    --border-color: #dee2e6;
+    --border-color: #2c3e2d;
     --border-green: #e5ebe5;
+    --border-subtle: 1px solid color-mix(in srgb, #000 25%, transparent);
 
     /* ── Ombres ── */
     --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
@@ -473,134 +475,7 @@ body {
     color: color-mix(in srgb, var(--light-text) 80%, transparent);
 }
 
-.create-event {
-    align-items: center;
-    padding: 1rem 1rem;
-    color: var(--light-text);
-    border: none;
-    border-radius: 10px;
-    text-decoration: none;
-    font-size: 1.1rem;
-    transition: all 0.3s ease;
-    white-space: nowrap;
-}
-
-.create-event:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px color-mix(in srgb, #000 15%, transparent);
-    color: var(--light-text);
-    text-decoration: none;
-}
-
-/* Filtres */
-.filters-container {
-    background: var(--light-text);
-    padding: 1.5rem;
-    margin-bottom: 2rem;
-    border-radius: 8px;
-    box-shadow: 0 1px 3px color-mix(in srgb, #000 10%, transparent);
-}
-
-.filter-tabs {
-    display: flex;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
-}
-
-.filter-tab {
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    background: var(--surface);
-    border: none;
-    font-weight: 500;
-}
-
-.filter-tab.active {
-    background: var(--primary-color);
-    color: var(--light-text);
-}
-
-.filter-tab:not(.active):hover {
-    background: var(--surface);
-}
-
-.filter-category {
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
-    background: var(--surface);
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    border: none;
-}
-
-.filter-category span {
-    background: var(--primary-color);
-    color: var(--light-text);
-    padding: 0.2rem 0.6rem;
-    border-radius: 12px;
-    font-size: 0.85rem;
-}
-
-.filter-category.active {
-    background: var(--primary-color);
-    color: var(--light-text);
-}
-
-.filter-category:not(.active):hover {
-    background: var(--surface);
-}
-
-/* Styles du filtre de distance */
-.filter-distance {
-    margin-top: 0rem;
-    padding: 1.5rem;
-    background: var(--light-text);
-    border-radius: 8px;
-    box-shadow: 0 1px 3px color-mix(in srgb, #000 10%, transparent);
-}
-
-.filter-distance-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-}
-
-.filter-distance-title {
-    font-weight: 500;
-    color: var(--text-color);
-}
-
-.filter-distance-value {
-    color: var(--text-color);
-    font-size: 0.9rem;
-    font-weight: bold;
-    transition: opacity 0.3s ease;
-}
-
-.filter-distance-value.hidden {
-    opacity: 0;
-    pointer-events: none;
-}
-
-.filter-distance-content {
-    display: block;
-    margin-top: 0rem;
-}
-
-.filter-distance-content.disabled {
-    opacity: 0.5;
-    pointer-events: none;
-}
-
-.filter-distance-content.disabled .form-range {
-    cursor: not-allowed;
-}
+/* .create-event déplacé dans pages/events/create-event.css */
 
 /* Styles pour le range input */
 .form-range {
@@ -919,114 +794,7 @@ body {
     padding: 15px;
 }
 
-/* Filtre distance : lieu de référence + rayon en km */
-.distance-filter {
-    display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
-}
 
-.distance-filter-title {
-    margin: 0;
-    font-size: 0.95rem;
-    font-weight: 600;
-    color: var(--green-dark);
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-}
-.distance-filter-title i {
-    color: var(--primary-color);
-}
-
-.distance-filter-row {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-}
-
-.distance-dot {
-    flex-shrink: 0;
-    width: 14px;
-    height: 14px;
-    border: 3px solid var(--primary-color);
-    border-radius: 50%;
-    background: var(--light-text);
-    margin-left: 3px;
-}
-
-.distance-origin {
-    flex: 1;
-    min-width: 0;
-}
-
-.distance-geoloc,
-.distance-clear {
-    flex-shrink: 0;
-    width: 36px;
-    height: 36px;
-    border: 1px solid var(--border-color);
-    border-radius: 50%;
-    background: var(--light-text);
-    color: var(--primary-color);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.05rem;
-    cursor: pointer;
-    transition: background 0.15s ease, color 0.15s ease;
-}
-
-.distance-geoloc:hover {
-    background: var(--primary-color);
-    color: var(--light-text);
-}
-
-.distance-clear {
-    color: var(--danger-color);
-}
-.distance-clear:hover {
-    background: var(--danger-color);
-    color: var(--light-text);
-}
-
-.distance-filter.picking .distance-origin {
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--primary-color) 25%, transparent);
-}
-
-.distance-radius-row i {
-    flex-shrink: 0;
-    width: 20px;
-    text-align: center;
-    color: var(--primary-color);
-    font-size: 1.05rem;
-}
-
-.distance-radius {
-    flex: 1;
-    min-width: 0;
-    accent-color: var(--primary-color);
-    cursor: pointer;
-}
-.distance-radius:disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
-}
-
-.distance-radius-label {
-    flex-shrink: 0;
-    min-width: 3.2rem;
-    text-align: right;
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: var(--primary-color);
-}
-
-.distance-error {
-    font-size: 0.82rem;
-    color: var(--danger-color);
-}
 
 /* Conteneur badges en haut à gauche de l'image du popup */
 .event-popup-badges {
@@ -1522,23 +1290,6 @@ body.dark-theme #loginModal .form-control {
     padding: 0.5rem 1.5rem 1.5rem;
 }
 
-/* Styles des champs du formulaire */
-.modal .form-control {
-    padding: 0.5rem 1rem;
-    border: 2px solid var(--text-muted);
-    border-radius: 10px;
-    transition: all 0.3s ease;
-}
-
-.modal .form-control:focus {
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 0.25rem color-mix(in srgb, var(--danger-color) 10%, transparent);
-}
-
-.modal .form-label {
-    font-weight: 500;
-    margin-bottom: 0.5rem;
-}
 
 /* Style du bouton de connexion */
 .modal .btn-primary {
@@ -1713,37 +1464,7 @@ h3 {
     gap: 5px;
 }
 
-/* Form validation styles */
-.form-control.is-invalid,
-.was-validated .form-control:invalid {
-    border-color: var(--danger-color) !important;
-    padding-right: calc(1.5em + 0.75rem);
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%230d6efd'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%230d6efd' stroke='none'/%3e%3c/svg%3e");
-    background-repeat: no-repeat;
-    background-position: right calc(0.375em + 0.1875rem) center;
-    background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
-}
 
-.form-control.is-valid {
-    border-color: var(--primary-color);
-    border-width: 2px;
-}
-
-.invalid-feedback {
-    display: none;
-    width: 100%;
-    margin-top: 0.25rem;
-    font-size: 0.875em;
-    color: var(--danger-color);
-
-}
-
-.is-invalid ~ .invalid-feedback,
-.is-invalid ~ .invalid-tooltip,
-.was-validated :invalid ~ .invalid-feedback,
-.was-validated :invalid ~ .invalid-tooltip {
-    display: block;
-}
 
 /* Toast styles */
 .toast-container,
@@ -1874,6 +1595,16 @@ h3 {
     color: var(--primary-hover);
 }
 
+/* Pin hors périmètre du filtre distance (reste visible et cliquable) */
+.event-pin-outside i {
+    color: var(--text-muted);
+    opacity: 0.7;
+}
+.event-pin-outside:hover i {
+    color: var(--text-muted);
+    opacity: 1;
+}
+
 /* Pastille de regroupement des marqueurs (markercluster) */
 .event-cluster {
     background: transparent;
@@ -1972,7 +1703,7 @@ body.dark-theme .calendar-container {
 .summary-chip--period {
     background: var(--profile-hero-bg) !important;
     border-color: color-mix(in srgb, var(--primary-color) 25%, transparent) !important;
-    color: var(--primary-color) !important;
+    color: var(--green-dark) !important;
 }
 
 .summary-chip--search span {

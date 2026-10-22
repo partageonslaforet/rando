@@ -106,7 +106,7 @@ function buildEnrichedFormData(includeFiles = true) {
     const routesContainer = document.getElementById('routes-container');
     if (routesContainer) {
         const routes = [];
-        const routeDivs = routesContainer.querySelectorAll(':scope > .mb-4');
+        const routeDivs = routesContainer.querySelectorAll(':scope > .route-item');
         routeDivs.forEach((div) => {
             const name = div.querySelector('input[name$="[name]"]')?.value || '';
             const category_id = div.querySelector('select[name$="[category_id]"]')?.value || '';
@@ -473,11 +473,9 @@ async function nextStep() {
             const stepContent = document.querySelector(`#step${currentStep}`);
             const firstInvalidField = stepContent ? stepContent.querySelector('.is-invalid') : null;
             const label = firstInvalidField
-                ? (firstInvalidField.closest('.mb-2, .mb-3, .form-group, .row')?.querySelector('label')?.textContent?.trim()
-                   || firstInvalidField.getAttribute('placeholder')
-                   || firstInvalidField.name)
+                ? getFieldLabel(firstInvalidField)
                 : 'requis';
-            showToast(`Erreur sur le champ ${label}`, 'error');
+            showToast(`Erreur sur le champ « ${label} »`, 'error');
         }
     } else {
     }
@@ -746,73 +744,115 @@ function addRoute() {
     const catOptions = categories.map(c => `<option value="${c.id}">${String(c.name).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</option>`).join('');
 
     const newRoute = document.createElement('div');
-    newRoute.className = 'mb-4';
+    newRoute.className = 'route-item open';
     newRoute.innerHTML = `
-        <div class="d-flex justify-content-between align-items-center mb-2">
-            <h5 class="mb-0">Parcours ${newIndex + 1}</h5>
-            <button type="button" class="btn btn-outline-danger btn-sm" onclick="removeRoute(this)" data-route-index="${newIndex}">
+        <div class="route-header" onclick="toggleRoute(this)">
+            <i class="bi bi-geo-alt route-header-icon"></i>
+            <div class="route-header-text">
+                <span class="route-title">Parcours ${newIndex + 1}</span>
+                <span class="route-meta">Détails à compléter</span>
+            </div>
+            <button type="button" class="btn btn-outline-danger btn-sm route-delete-btn" onclick="event.stopPropagation(); removeRoute(this)" data-route-index="${newIndex}">
                 <i class="bi bi-trash"></i>
             </button>
+            <i class="bi bi-chevron-down route-chevron"></i>
         </div>
-        <div class="mb-2">
-            <label class="form-label">Nom du parcours</label>
-            <input type="text" class="form-control" name="routes[${newIndex}][name]">
-        </div>
-        <div class="mb-2">
-            <label class="form-label required-field">Catégorie du parcours</label>
-            <select class="form-select" name="routes[${newIndex}][category_id]" required>
-                <option value="">Choisir une catégorie</option>
-                ${catOptions}
-            </select>
-        </div>
-        <div class="row">
-            <div class="col-md-4">
-                <div class="mb-2">
-                    <label class="form-label required-field">Distance (km)</label>
-                    <input type="number" step="0.1" class="form-control" name="routes[${newIndex}][distance]" required>
+        <div class="route-body">
+            <div class="row g-3 mb-2">
+                <div class="col-md-6">
+                    <label class="form-label">Nom du parcours</label>
+                    <input type="text" class="form-control" name="routes[${newIndex}][name]">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label required-field">Catégorie du parcours</label>
+                    <select class="form-select" name="routes[${newIndex}][category_id]" required>
+                        <option value="">Choisir une catégorie</option>
+                        ${catOptions}
+                    </select>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="mb-2">
-                    <label class="form-label">Dénivelé (m)</label>
-                    <input type="number" class="form-control" name="routes[${newIndex}][elevation]">
+            <div class="row g-3 parcours">
+                <div class="col-12">
+                    <label class="form-label">GPX <small class="form-text text-muted">(Importer un GPX rempli automatiquement la distance et le dénivelé)</small></label>
+                </div>
+                <div class="col-md-6 gpx-col">
+                    <div class="gpx-dropzone">
+                        <span class="gpx-dropzone-title">Charger un fichier GPX</span>
+                        <i class="bi bi-cloud-arrow-up"></i>
+                        <span class="gpx-dropzone-hint">Glisser-déposer<br>ou</span>
+                        <span class="gpx-dropzone-browse">Parcourir</span>
+                        <input type="file" class="gpx-dropzone-input" name="routes[${newIndex}][gpx]" accept=".gpx" onchange="handleGpxUpload(this, ${newIndex})">
+                    </div>
+                    <input type="hidden" name="routes[${newIndex}][gpx_file]" value="">
+                    <div class="gpx-file-row">
+                        <div class="gpx-file-label" id="gpxFileLabel${newIndex}"></div>
+                        <button type="button" class="btn btn-sm btn-outline-danger gpx-remove-btn" onclick="removeGpx(${newIndex})" title="Supprimer le GPX">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
+                    <div class="form-check gpx-downloadable-check">
+                        <input type="checkbox" class="form-check-input" id="gpxDownloadable${newIndex}" name="routes[${newIndex}][gpx_downloadable]" value="1" checked>
+                        <label class="form-check-label" for="gpxDownloadable${newIndex}">Autoriser le téléchargement du GPX</label>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <label class="form-label required-field">Distance (km)</label>
+                            <input type="number" step="0.1" class="form-control" name="routes[${newIndex}][distance]" required>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Dénivelé (m)</label>
+                            <input type="number" class="form-control" name="routes[${newIndex}][elevation]">
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Prix (€)</label>
+                            <input type="number" step="0.01" class="form-control" name="routes[${newIndex}][price]">
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="mb-2">
-                    <label class="form-label">Prix (€)</label>
-                    <input type="number" step="0.01" class="form-control" name="routes[${newIndex}][price]">
-                </div>
+            <div class="mb-2">
+                <label class="form-label">Description du parcours</label>
+                <textarea class="form-control" name="routes[${newIndex}][description]" rows="3"></textarea>
             </div>
-        </div>
-        <div class="mb-2">
-            <label class="form-label">GPX <small class="form-text text-muted">(Importer un GPX rempli automatiquement la distance et le dénivelé)</small></label>
-            <div class="input-group">
-                <input type="file" class="form-control" name="routes[${newIndex}][gpx]" accept=".gpx" onchange="handleGpxUpload(this, ${newIndex})">
-                <button type="button" class="btn btn-outline-danger" onclick="removeGpx(${newIndex})" title="Supprimer le GPX">
-                    <i class="bi bi-trash"></i>
-                </button>
-            </div>
-            <input type="hidden" name="routes[${newIndex}][gpx_file]" value="">
-            <div class="gpx-file-label" id="gpxFileLabel${newIndex}"></div>
-        </div>
-        <div class="mb-2 form-check">
-            <input type="checkbox" class="form-check-input" id="gpxDownloadable${newIndex}" name="routes[${newIndex}][gpx_downloadable]" value="1" checked>
-            <label class="form-check-label" for="gpxDownloadable${newIndex}">Autoriser le téléchargement du GPX</label>
-        </div>
-        <div class="mb-2">
-            <label class="form-label">Description du parcours</label>
-            <textarea class="form-control" name="routes[${newIndex}][description]" rows="3"></textarea>
         </div>`;
 
     container.appendChild(newRoute);
     updateGpxDownloadable(newIndex, false);
 }
 
+// Accordéon : déplier/replier le corps d'un parcours
+function toggleRoute(header) {
+    const item = header.closest('.route-item');
+    if (item) {
+        item.classList.toggle('open');
+    }
+}
+
+// Met à jour le résumé du header (nom · distance) d'un item accordéon
+function updateRouteMeta(item) {
+    const name = item.querySelector('input[name$="[name]"]')?.value.trim() || '';
+    const distance = item.querySelector('input[name$="[distance]"]')?.value.trim() || '';
+    const meta = item.querySelector('.route-meta');
+    if (meta) {
+        const parts = [name, distance ? distance + ' km' : ''].filter(Boolean);
+        meta.textContent = parts.length ? parts.join(' · ') : 'Détails à compléter';
+    }
+}
+
+// Résumé du header rafraîchi en direct à la saisie (nom / distance)
+document.addEventListener('input', function(e) {
+    const item = e.target.closest ? e.target.closest('.route-item') : null;
+    if (item) {
+        updateRouteMeta(item);
+    }
+});
+
 // Fonction pour supprimer un parcours
 function removeRoute(button) {
     const routesContainer = document.getElementById('routes-container');
-    const routeContainer = button.closest('.mb-4');
+    const routeContainer = button.closest('.route-item');
     const routeIndex = button.getAttribute('data-route-index');
     
     // Supprimer le GPX de la carte s'il existe
@@ -827,10 +867,10 @@ function removeRoute(button) {
     }
 
     // Mettre à jour les numéros des parcours restants
-    const routes = routesContainer.querySelectorAll('.mb-4');
+    const routes = routesContainer.querySelectorAll('.route-item');
     routes.forEach((route, index) => {
         // Mettre à jour le titre
-        const title = route.querySelector('h5');
+        const title = route.querySelector('.route-title');
         if (title) {
             title.textContent = `Parcours ${index + 1}`;
         }
@@ -883,7 +923,6 @@ function validateForm() {
     // Liste des champs requis avec leurs messages d'erreur
     const requiredFields = {
         'title': 'Titre de l\'événement',
-        'description': 'Description',
         'date': 'Date',
         'registrationOpens': 'Ouverture des inscriptions',
         'registrationCloses': 'Fermeture des inscriptions'
@@ -940,15 +979,21 @@ function validateStep(stepNumber) {
         // Vérifier les parcours
         const routesContainer = document.getElementById('routes-container');
         if (routesContainer) {
-            const routeInputs = routesContainer.querySelectorAll('input[required]');
+            const routeInputs = routesContainer.querySelectorAll('input[required], select[required]');
             
             routeInputs.forEach((input) => {
                 input.classList.remove('is-invalid', 'is-valid');
                 
+                // Parcours entièrement vide : ignoré (non enregistré côté serveur)
+                if (isRouteEmpty(input.closest('.route-item'))) {
+                    hideFieldError(input);
+                    return;
+                }
+                
                 if (!input.value.trim()) {
                     input.classList.add('is-invalid');
-                    const label = input.closest('.mb-2')?.querySelector('label')?.textContent || input.name;
-                    showFieldError(input, `Le champ "${label}" est requis`);
+                    const label = getFieldLabel(input);
+                    showFieldError(input, `Le champ « ${label} » est requis`);
                     isValid = false;
                 } else {
                     input.classList.add('is-valid');
@@ -965,12 +1010,16 @@ function validateStep(stepNumber) {
         // Ne pas revalider les champs déjà vérifiés
         if (field.classList.contains('is-valid')) return;
 
+        // Champs d'un parcours entièrement vide : ignorés
+        if (isRouteEmpty(field.closest('.route-item'))) {
+            field.classList.remove('is-invalid');
+            return;
+        }
+
         field.classList.remove('is-invalid', 'is-valid');
         
         // Récupérer le label du champ
-        const label = field.closest('.form-group')?.querySelector('label')?.textContent 
-                     || field.getAttribute('placeholder') 
-                     || field.name;
+        const label = getFieldLabel(field);
         
         let fieldValid = false;
         
@@ -1003,7 +1052,7 @@ function validateStep(stepNumber) {
             field.classList.add('is-invalid');
             
             // Message d'erreur spécifique selon le type
-            let errorMessage = `Le champ "${label}" est requis`;
+            let errorMessage = `Le champ « ${label} » est requis`;
             if (field.type === 'email') {
                 errorMessage = `Veuillez entrer une adresse email valide`;
             } else if (field.type === 'tel') {
@@ -1021,6 +1070,8 @@ function validateStep(stepNumber) {
     });
 
     if (!isValid) {
+        console.error('[validateStep] Champs invalides étape ' + stepNumber + ' :',
+            [...stepContent.querySelectorAll('.is-invalid')].map(f => `${f.name || f.id}="${f.value}"`));
         return false;
     }
 
@@ -1578,7 +1629,10 @@ function handleGpxUpload(input, routeIndex) {
             const distanceField = document.querySelector(`input[name="routes[${routeIndex}][distance]"]`);
             const elevationField = document.querySelector(`input[name="routes[${routeIndex}][elevation]"]`);
             
-            if (distanceField) distanceField.value = distance.toFixed(1);
+            if (distanceField) {
+                distanceField.value = distance.toFixed(1);
+                distanceField.dispatchEvent(new Event('input', { bubbles: true }));
+            }
             if (elevationField) elevationField.value = Math.round(elevation);
 
             // Afficher le parcours sur la carte
@@ -1785,6 +1839,45 @@ function hideGlobalErrors() {
     container.classList.remove('show');
 }
 
+// Un parcours est « vide » si aucun de ses champs n'est renseigné
+// (cohérent avec buildEnrichedFormData qui n'envoie que les parcours avec données)
+function isRouteEmpty(routeItem) {
+    if (!routeItem) return false;
+    const dataSelectors = [
+        'input[name$="[name]"]',
+        'select[name$="[category_id]"]',
+        'input[name$="[distance]"]',
+        'input[name$="[elevation]"]',
+        'input[name$="[price]"]',
+        'input[name$="[gpx_file]"]',
+        'textarea[name$="[description]"]'
+    ];
+    return !dataSelectors.some(sel => {
+        const el = routeItem.querySelector(sel);
+        return el && String(el.value || '').trim() !== '';
+    });
+}
+
+// Libellé lisible d'un champ pour les messages d'erreur (évite les noms techniques type routes[0][category_id])
+function getFieldLabel(field) {
+    if (!field) return 'ce champ';
+
+    // 1. Label explicitement associé via for/id
+    if (field.id) {
+        const linked = document.querySelector(`label[for="${CSS.escape(field.id)}"]`);
+        if (linked) return linked.textContent.replace(/\*/g, '').trim();
+    }
+
+    // 2. Label dans le conteneur parent (col-*, form-group, mb-*)
+    const container = field.closest('.form-group, .mb-2, .mb-3, [class*="col-"]');
+    const label = container && container.querySelector('label');
+    if (label && label.textContent.trim()) return label.textContent.replace(/\*/g, '').trim();
+
+    // 3. Repli : placeholder, sinon nom technique nettoyé
+    if (field.getAttribute('placeholder')) return field.getAttribute('placeholder');
+    return (field.name || 'ce champ').replace(/\[|\]/g, ' ');
+}
+
 // Fonction pour afficher une erreur sur un champ spécifique
 function showFieldError(field, message) {
     if (!field) {
@@ -1803,7 +1896,7 @@ function showFieldError(field, message) {
     }
     errorDiv.textContent = message;
     errorDiv.style.display = 'block';
-    errorDiv.style.color = 'var(--bs-primary)';
+    errorDiv.style.color = 'var(--danger-color)';
 }
 
 // Fonction pour masquer l'erreur d'un champ
@@ -2164,3 +2257,36 @@ function initializeNewOrganizerToggle() {
     organizerSelect.addEventListener('change', updateOrganizerNameField);
     updateOrganizerNameField();
 }
+
+// Glisser-déposer sur les zones GPX (délégation : couvre aussi les parcours ajoutés dynamiquement)
+document.addEventListener('dragover', (e) => {
+    const zone = e.target.closest('.gpx-dropzone');
+    if (!zone) return;
+    e.preventDefault();
+    zone.classList.add('dragover');
+});
+
+document.addEventListener('dragleave', (e) => {
+    const zone = e.target.closest('.gpx-dropzone');
+    if (zone) zone.classList.remove('dragover');
+});
+
+document.addEventListener('drop', (e) => {
+    const zone = e.target.closest('.gpx-dropzone');
+    if (!zone) return;
+    e.preventDefault();
+    zone.classList.remove('dragover');
+
+    const input = zone.querySelector('input[type="file"]');
+    const file = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+    if (!input || !file) return;
+
+    try {
+        const dt = new DataTransfer();
+        dt.items.add(file);
+        input.files = dt.files;
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+    } catch (err) {
+        console.error('Drop GPX impossible :', err);
+    }
+});

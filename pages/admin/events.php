@@ -291,6 +291,26 @@ function editEvent(eventId) {
     window.location.href = `/pages/admin/edit_event.php?id=${eventId}`;
 }
 
+function postToFacebook(eventId) {
+    if (!confirm('Publier cet événement sur la Page Facebook ? Un post avec lien sera créé.')) {
+        return;
+    }
+    fetch('/api/admin/events/facebook_post.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ event_id: parseInt(eventId, 10) })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Post publié sur la Page Facebook');
+        } else {
+            alert('Erreur: ' + (data.message || 'publication impossible'));
+        }
+    })
+    .catch(() => alert('Une erreur est survenue lors de la communication avec le serveur'));
+}
+
 function updateEventStatus(eventId, status) {
     const action = status === 'approved' ? 'approuver' : 'rejeter';
     console.log(`Tentative de ${action} l'événement ${eventId}`);
@@ -363,6 +383,11 @@ function deleteEvent(eventId) {
 }
 
 console.log('Page de gestion des événements chargée');
+</script>
+
+<?php
+include __DIR__ . '/../../templates/layouts/footer.php';
+?>
 </script>
 
 <?php

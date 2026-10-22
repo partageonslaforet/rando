@@ -227,6 +227,31 @@ td.actions-cell .btn {
   color: var(--light-text);
 }
 
+/* Sous-menus sidebar (ex. Sponsors → Gestion / Statistiques) */
+.dash-sidenav .nav-parent {
+  border-radius: 12px;
+  font-weight: 700;
+  color: var(--text-color);
+  padding: 10px 12px 4px;
+}
+
+.dash-sidenav .nav-sub {
+  padding-left: 28px;
+  font-weight: 600;
+  font-size: .92rem;
+}
+
+/* Tables triables (stats sponsors) : colonnes cliquables */
+.sortable-table th[data-sort] {
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.sortable-table th[data-sort]:hover {
+  color: var(--primary-color);
+}
+
 /* === Modale stats : tableaux unifiés === */
 
 /* Largeur de la modale adaptée au contenu (remplace modal-xl fixe) */
@@ -305,3 +330,63 @@ td.actions-cell .btn {
   min-width: 9rem;
   text-align: center;
 }
+
+/* Pagination de la liste des contacts mailing */
+.mailing-pager {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.mailing-pager-info {
+  font-size: .85rem;
+  color: var(--text-muted);
+}
+.mailing-pager-pages {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.mailing-pager-pages .pg {
+  border-radius: 999px;
+  border: 1px solid var(--border-green);
+  background: var(--light-text);
+  color: var(--text-color);
+  font-weight: 600;
+  font-size: .85rem;
+  padding: 4px 12px;
+  min-width: 34px;
+  cursor: pointer;
+}
+.mailing-pager-pages .pg:hover:not(:disabled):not(.active) {
+  background: color-mix(in srgb, var(--primary-color) 12%, transparent);
+  color: var(--primary-color);
+}
+.mailing-pager-pages .pg.active {
+  background: var(--primary-color);
+  color: var(--light-text);
+  border-color: var(--primary-color);
+}
+.mailing-pager-pages .pg:disabled {
+  opacity: .45;
+  cursor: default;
+}
+.mailing-pager-pages .pg-dots {
+  color: var(--text-muted);
+  padding: 4px 2px;
+  font-weight: 600;
+}
+
+/* --- Tri des colonnes (Événements récents) --- */
+th.sortable {
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+}
+th.sortable .sort-icon { font-size: .75rem; opacity: .35; margin-left: 4px; }
+th.sortable:hover .sort-icon { opacity: .8; }
+th.sortable.sorted .sort-icon { opacity: 1; color: var(--primary-color); }
+
+/* --- Icône « publié sur Facebook » --- */
+.fb-posted { color: #1877F2; margin-left: 6px; font-size: .9rem; }

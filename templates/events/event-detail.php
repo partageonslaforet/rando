@@ -20,6 +20,9 @@ $isPreview = (isset($_GET['preview']) && $_GET['preview'] === 'true');
 $eventId = (int) ($_GET['id'] ?? 0);
 
 if (!$eventId) {
+    if (function_exists('recordNotFound') && isset($db)) {
+        recordNotFound($db, $_SERVER['REQUEST_URI'] ?? '/event');
+    }
     header('Location: /');
     exit;
 }
@@ -101,7 +104,10 @@ try {
     } else {
         $pageDescription = $rawDescription;
     }
-    $pageDescription = !empty($pageDescription) ? $pageDescription : 'Randonnée et activité en pleine nature proposée sur Partageons La Forêt.';
+    // Description vide OU sans aucun caractère utile (ex. « // ») → texte par défaut
+    if (!preg_match('/[\p{L}\p{N}]/u', (string) $pageDescription)) {
+        $pageDescription = 'Randonnée et activité en pleine nature proposée sur rando.partageonslaforet.be.';
+    }
 
     // Image normalisée pour les OG
     $rawImage = $event['main_image'] ?? '/assets/images/events/default-event.jpg';

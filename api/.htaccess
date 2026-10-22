@@ -1,9 +1,9 @@
 # Activer le moteur de réécriture
 RewriteEngine On
 
-# Forcer HTTPS (sauf en local)
+# Forcer HTTPS (prod uniquement — pas de TLS sur localhost:8888)
 RewriteCond %{HTTPS} off
-RewriteCond %{HTTP_HOST} !^(localhost|127\.0\.0\.1)(:[0-9]+)?$
+RewriteCond %{HTTP_HOST} !^localhost(:[0-9]+)?$
 RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
 # Headers CORS

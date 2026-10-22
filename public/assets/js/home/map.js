@@ -118,6 +118,15 @@ const eventPinIcon = L.divIcon({
     popupAnchor: [0, -38]
 });
 
+// Variante grisée : événement hors du périmètre du filtre distance
+const eventPinIconOutside = L.divIcon({
+    className: 'event-pin event-pin-outside',
+    html: '<i class="bi bi-geo-alt-fill" aria-hidden="true"></i>',
+    iconSize: [30, 42],
+    iconAnchor: [15, 42],
+    popupAnchor: [0, -38]
+});
+
 // Icône de cluster (pastille verte avec compteur) pour markercluster
 function eventClusterIcon(cluster) {
     return L.divIcon({
@@ -128,9 +137,11 @@ function eventClusterIcon(cluster) {
     });
 }
 
-// Couche de marqueurs : cluster si le plugin est chargé, sinon layerGroup simple
-function createMarkersLayer() {
-    if (typeof L.markerClusterGroup === 'function') {
+// Couche de marqueurs : cluster si le plugin est chargé, sinon layerGroup simple.
+// disableCluster=true force une couche simple — utilisé quand le filtre distance
+// est actif pour que le grisage des pins hors rayon soit visible individuellement.
+function createMarkersLayer(disableCluster) {
+    if (!disableCluster && typeof L.markerClusterGroup === 'function') {
         return L.markerClusterGroup({
             showCoverageOnHover: false,
             spiderfyOnMaxZoom: true,
@@ -231,12 +242,17 @@ async function updateMapMarkers(events) {
     // console.log('Mise à jour des marqueurs avec', events?.length, 'événements');
     
     try {
-        // Vérifier que markersLayer existe
-        if (!window.markersLayer) {
-            // console.error('markersLayer n\'existe pas!');
-            window.markersLayer = createMarkersLayer().addTo(window.mainMap);
+        // Filtre distance actif → couche simple (grisage visible) ; sinon cluster
+        const distanceActive = !!(window.currentFilters && window.currentFilters.distance);
+        const isCluster = typeof L.MarkerClusterGroup === 'function'
+            && window.markersLayer instanceof L.MarkerClusterGroup;
+        if (!window.markersLayer || (distanceActive === isCluster)) {
+            if (window.markersLayer && window.mainMap) {
+                window.mainMap.removeLayer(window.markersLayer);
+            }
+            window.markersLayer = createMarkersLayer(distanceActive).addTo(window.mainMap);
         }
-        
+
         // Supprimer tous les marqueurs existants
         window.markersLayer.clearLayers();
         
@@ -302,15 +318,24 @@ async function updateMapMarkers(events) {
                             </div>
                         </a>`;
 
+                    // Pin grisé si l'événement est hors du périmètre du filtre distance
+                    const outsideRadius = window.distanceFilter
+                        && typeof window.distanceFilter.eventOutsideRadius === 'function'
+                        && window.distanceFilter.eventOutsideRadius(event, (window.currentFilters || {}).distance);
+
                     // Créer le marqueur avec tooltip et icône pin verte
                     const marker = L.marker([coordinates.lat, coordinates.lng], {
-                        icon: eventPinIcon,
+                        icon: outsideRadius ? eventPinIconOutside : eventPinIcon,
                         title: "Cliquez pour plus d'informations"  // Ajoute le tooltip
                     }).bindPopup(popupContent);
                     
                     // Ajouter le marqueur à la couche
                     marker.addTo(window.markersLayer);
-                    bounds.extend([coordinates.lat, coordinates.lng]);
+                    // Filtre distance actif : seuls les événements dans le rayon
+                    // participent au cadrage (le cercle de renderRadius fixe la vue)
+                    if (!distanceActive || !outsideRadius) {
+                        bounds.extend([coordinates.lat, coordinates.lng]);
+                    }
                     // console.log('Marqueur ajouté à la carte pour:', event.title);
                 }
             } catch (error) {
@@ -318,8 +343,9 @@ async function updateMapMarkers(events) {
             }
         }
 
-        // Ajuster la vue de la carte
-        if (bounds.isValid()) {
+        // Ajuster la vue de la carte (quand le filtre distance est actif,
+        // renderRadius cadre déjà le cercle — un fitBounds ici dézoomerait)
+        if (bounds.isValid() && !distanceActive) {
             window.mainMap.fitBounds(bounds, { padding: [50, 50] });
             // console.log('Vue de la carte ajustée');
         }

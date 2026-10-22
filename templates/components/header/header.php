@@ -94,6 +94,7 @@ function render_header() {
         <link rel="stylesheet" href="/assets/css/components/connexion.css?v=3">
         <link rel="stylesheet" href="/assets/css/components/contact-modal.css">
         <link rel="stylesheet" href="/assets/css/components/filtres.css">
+        <link rel="stylesheet" href="/assets/css/components/sponsors.css?v=1">
         <link rel="stylesheet" href="/assets/css/components/calendar.css">
         <link rel="stylesheet" href="/assets/css/components/events-list.css?v=7">
         <link rel="stylesheet" href="/assets/css/layout/footer.css">
@@ -107,7 +108,24 @@ function render_header() {
         <script>
             window.DEBUG_SUBSCRIBERS = <?= (defined('DEBUG_SUBSCRIBERS') && DEBUG_SUBSCRIBERS) ? 'true' : 'false' ?>;
         </script>
-        
+
+        <?php if (defined('MATOMO_URL') && MATOMO_URL !== ''): ?>
+        <!-- Matomo -->
+        <script>
+            var _paq = window._paq = window._paq || [];
+            _paq.push(['trackPageView']);
+            _paq.push(['enableLinkTracking']);
+            (function() {
+                var u = '<?= rtrim(MATOMO_URL, '/') ?>/';
+                _paq.push(['setTrackerUrl', u + 'matomo.php']);
+                _paq.push(['setSiteId', '<?= (int) MATOMO_SITE_ID ?>']);
+                var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+                g.async = true; g.src = u + 'matomo.js'; s.parentNode.insertBefore(g, s);
+            })();
+        </script>
+        <!-- End Matomo Code -->
+        <?php endif; ?>
+
     </head>
     <body class="<?= isset($bodyClass) ? htmlspecialchars($bodyClass) . ' ' : '' ?>lq-light">
         <!-- Navigation -->
@@ -161,12 +179,17 @@ function render_header() {
                             </li>
                         <?php endif; ?>
                         <li class="nav-item">
+                            <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#guideModal" title="Guide de démarrage">
+                                <i class="bi bi-question-circle"></i>
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#subscribersModal" title="S'abonner aux événements">
                                 <i class="bi bi-bell"></i>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#contactModal">
+                            <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#contactModal" title="Nous contacter">
                                 <i class="bi bi-envelope"></i>
                             </a>
                         </li>

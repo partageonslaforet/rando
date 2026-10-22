@@ -205,6 +205,7 @@
     vertical-align: middle;
     border: none;
     border-bottom: 1px solid var(--border-color);
+    font-size: 0.9rem;
 }
 
 .tab-content .table th,
@@ -221,6 +222,16 @@
 .tab-content .table tbody tr:hover,
 .card .table tbody tr:hover {
     background: color-mix(in srgb, var(--primary-color) 3%, transparent);
+}
+
+/* Zébrage : une ligne sur 2 en vert pâle — liste des contacts mailing */
+/* Appliqué sur les td : Bootstrap pose un --bs-table-bg sur chaque cellule qui masque le fond du tr */
+#section-mailing-contacts .table tbody tr:nth-child(even) td {
+    background-color: var(--surface-green);
+}
+
+#section-mailing-contacts .table tbody tr:hover td {
+    background: color-mix(in srgb, var(--primary-color) 8%, var(--surface-green));
 }
 
 .tab-content .table tbody tr:last-child td,
@@ -630,3 +641,67 @@
     object-fit: contain;
 }
 .sponsors-table .position-input { width: 70px; }
+
+/* === Campagnes menées : runs dépliables (section Historique) === */
+.mailing-run {
+    border: 1px solid var(--border-green);
+    border-radius: 12px;
+    margin-bottom: .75rem;
+    overflow: hidden;
+}
+
+.mailing-run summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    padding: .85rem 1.25rem;
+    cursor: pointer;
+    list-style: none;
+    background: var(--surface-green);
+}
+
+.mailing-run summary::-webkit-details-marker { display: none; }
+
+.mailing-run summary::after {
+    content: "\F282"; /* bi-chevron-down */
+    font-family: "bootstrap-icons";
+    color: var(--text-muted);
+    transition: transform .2s ease;
+}
+
+.mailing-run[open] summary::after { transform: rotate(180deg); }
+
+.mailing-run-title {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    font-weight: 600;
+    color: var(--green-dark);
+}
+
+.mailing-run-meta {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    font-size: .85rem;
+    color: var(--text-muted);
+}
+
+.mailing-run-list {
+    padding: .25rem 1.25rem .75rem;
+    border-top: 1px solid var(--border-green);
+}
+
+.mailing-run-item {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    padding: .35rem 0;
+    border-bottom: 1px dashed var(--border-green);
+    font-size: .9rem;
+}
+
+.mailing-run-item:last-child { border-bottom: none; }
+.mailing-run-item.is-error strong { color: var(--danger-color); }

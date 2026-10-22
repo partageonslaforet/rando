@@ -163,6 +163,13 @@ try {
                     ]);
                 }
             }
+
+            // Post automatique sur la Page Facebook — uniquement pour une NOUVELLE
+            // mise en ligne (pas de re-post sur republication de brouillon 'update'
+            // ni si l'événement était déjà approuvé). Non bloquant.
+            if (($notifContext ?? 'auto') !== 'update' && ($event['status'] ?? '') !== 'approved') {
+                postEventToFacebook($eventData ?: [], $eventId, $db);
+            }
         }
 
         echo json_encode(['success' => true, 'message' => 'Statut mis à jour avec succès']);

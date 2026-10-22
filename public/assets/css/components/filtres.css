@@ -55,19 +55,23 @@
 .btn-primary.active {
     background-color: var(--primary-color) !important;
     border-color: var(--primary-color) !important;
-    color: var(--light-text);
+    color: var(--light-text) !important;
+    border-radius: 20px;
 }
+
 
 .btn-primary {
     background-color: transparent ;
     border-color: var(--primary-color) ;
-    color: var(--light-text) !important ;
+    color: var(--primary-color) !important ;
 }
 
 .btn-primary:hover {
     background-color: var(--primary-color) !important;
     border-color: var(--primary-color) !important;
+    color: #fff !important ;
 }
+
 .btn .badge {
     position: absolute;
     right: 0.5rem;
@@ -117,7 +121,115 @@
     gap: 10px;
 }
 
+/* Filtres */
+.filters-container {
+    background: var(--light-text);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px color-mix(in srgb, #000 10%, transparent);
+}
 
+.filter-tabs {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.filter-tab {
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    background: var(--surface);
+    border: none;
+    font-weight: 500;
+}
+
+.filter-tab.active {
+    background: var(--primary-color);
+    color: var(--light-text);
+}
+
+.filter-tab:not(.active):hover {
+    background: var(--surface);
+}
+
+.filter-category {
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    background: var(--surface);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border: none;
+}
+
+.filter-category span {
+    background: var(--primary-color);
+    color: var(--light-text);
+    padding: 0.2rem 0.6rem;
+    border-radius: 12px;
+    font-size: 0.85rem;
+}
+
+.filter-category.active {
+    background: var(--primary-color);
+    color: var(--light-text);
+}
+
+.filter-category:not(.active):hover {
+    background: var(--surface);
+}
+
+/* Styles du filtre de distance */
+.filter-distance {
+    margin-top: 0rem;
+    padding: 1.5rem;
+    background: var(--light-text);
+    border-radius: 8px;
+    box-shadow: 0 1px 3px color-mix(in srgb, #000 10%, transparent);
+}
+
+.filter-distance-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.filter-distance-title {
+    font-weight: 500;
+    color: var(--text-color);
+}
+
+.filter-distance-value {
+    color: var(--text-color);
+    font-size: 0.9rem;
+    font-weight: bold;
+    transition: opacity 0.3s ease;
+}
+
+.filter-distance-value.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.filter-distance-content {
+    display: block;
+    margin-top: 0rem;
+}
+
+.filter-distance-content.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.filter-distance-content.disabled .form-range {
+    cursor: not-allowed;
+}
 
 /* Pastille pour bouton actif */
 .btn-primary::after {
@@ -322,7 +434,6 @@
 
 .btn-light {
     background-color: var(--light-text);
-    border: 1px solid var(--border-color);
 }
 
 .btn-light:hover {
@@ -340,6 +451,7 @@
 
 .btn-light{ 
     border-color : var(--primary-color) !important;
+    border-radius: 20px;
 }
 
 .btn-outline-primary{
@@ -388,6 +500,118 @@
     border-radius: 25px;
     text-align: left;
     position: relative;
+}
+
+/* Filtre distance : lieu de référence + rayon en km */
+.distance-filter {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.distance-filter-title {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--green-dark);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+}
+
+.distance-filter-title i {
+    color: var(--primary-color);
+}
+
+.distance-filter-row {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.distance-dot {
+    flex-shrink: 0;
+    width: 14px;
+    height: 14px;
+    border: 3px solid var(--primary-color);
+    border-radius: 50%;
+    background: var(--light-text);
+    margin-left: 3px;
+}
+
+.distance-origin {
+    flex: 1;
+    min-width: 0;
+}
+
+.distance-geoloc,
+.distance-clear {
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    border: 1px solid var(--border-color);
+    border-radius: 50%;
+    background: var(--light-text);
+    color: var(--primary-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.05rem;
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+
+.distance-geoloc:hover {
+    background: var(--primary-color);
+    color: var(--light-text);
+}
+
+.distance-clear {
+    color: var(--danger-color);
+}
+.distance-clear:hover {
+    background: var(--danger-color);
+    color: var(--light-text);
+}
+
+.distance-filter.picking .distance-origin {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--primary-color) 25%, transparent);
+}
+
+.distance-radius-row i {
+    flex-shrink: 0;
+    width: 20px;
+    text-align: center;
+    color: var(--primary-color);
+    font-size: 1.05rem;
+}
+
+.distance-radius {
+    flex: 1;
+    min-width: 0;
+    accent-color: var(--primary-color);
+    cursor: pointer;
+}
+.distance-radius:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.distance-radius-label {
+    flex-shrink: 0;
+    min-width: 3.2rem;
+    text-align: right;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.distance-error {
+    font-size: 0.82rem;
+    color: var(--danger-color);
 }
 
 @media (max-width: 771px) {

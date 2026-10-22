@@ -64,12 +64,12 @@
 
 /* Bouton Modifier */
 .admin-actions .btn-edit {
-  background-color: color-mix(in srgb, var(--warning) 15%, var(--light-text)) !important;
+  background-color: color-mix(in srgb, var(--warning) 80%, var(--light-text)) !important;
   border-color: color-mix(in srgb, var(--warning) 15%, var(--light-text)) !important;
   color: var(--light-text) !important;
 }
 .admin-actions .btn-edit:hover {
-  background-color: color-mix(in srgb, var(--warning) 15%, var(--light-text)) !important;
+  background-color: color-mix(in srgb, var(--warning) 80%, var(--light-text)) !important;
   border-color: color-mix(in srgb, var(--warning) 15%, var(--light-text)) !important;
 }
 

@@ -11,18 +11,34 @@ session_start();
 
 require_once __DIR__ . '/../../includes/config.php';
 require_once __DIR__ . '/../../includes/functions.php';
+require_once __DIR__ . '/../../logs/error.log.php';
 
 if (empty($_SESSION['user_id']) || ($_SESSION['user_role'] ?? '') !== 'admin') {
+    logError('api/admin/stats-detail.php', 'Accès refusé stats-detail', [
+        'has_user_id' => !empty($_SESSION['user_id']),
+        'role' => $_SESSION['user_role'] ?? null,
+        'session_active' => session_status() === PHP_SESSION_ACTIVE,
+        'type' => $_GET['type'] ?? ''
+    ]);
     http_response_code(403);
     echo json_encode(['success' => false, 'message' => 'Non autorisé']);
     exit;
 }
 
 $type = $_GET['type'] ?? '';
-$allowedTypes = ['visits', 'pages', 'recent', 'countries', 'sources'];
+$allowedTypes = ['visits', 'pages', 'recent', 'countries', 'sources', 'utm'];
 if (!in_array($type, $allowedTypes, true)) {
+    logError('api/admin/stats-detail.php', 'Type stats-detail invalide', [
+        'type_recu' => $type,
+        'allowed' => $allowedTypes
+    ]);
     http_response_code(400);
-    echo json_encode(['success' => false, 'message' => 'Type invalide']);
+    echo json_encode([
+        'success' => false,
+        'message' => 'Type invalide',
+        'received' => $type,
+        'allowed' => $allowedTypes
+    ]);
     exit;
 }
 
@@ -281,6 +297,66 @@ try {
             }
         }
         unset($row);
+    } elseif ($type === 'utm') {
+        // Les UTM sont stockés dans la query string de site_visits.url — agrégation en PHP
+        $sql = "
+            SELECT url, ip_address, session_id, visited_at
+            FROM site_visits
+            WHERE visited_at >= DATE_SUB(CURDATE(), INTERVAL :days DAY)
+            $urlFilter
+            $dateFilter
+            AND url LIKE '%utm_source=%'
+            ORDER BY visited_at DESC
+            LIMIT 5000
+        ";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindValue(':days', $days, PDO::PARAM_INT);
+        if ($date) $stmt->bindValue(':date', $date);
+        $stmt->execute();
+        $rows = $stmt->fetchAll();
+
+        $grouped = [];
+        foreach ($rows as $row) {
+            parse_str((string) parse_url($row['url'], PHP_URL_QUERY), $params);
+            $src = $params['utm_source'] ?? '';
+            if ($src === '') continue;
+            $campaign = $params['utm_campaign'] ?? '';
+            $key = $src . '|' . $campaign;
+            if (!isset($grouped[$key])) {
+                $grouped[$key] = [
+                    'utm_source' => $src,
+                    'utm_campaign' => $campaign,
+                    'visits' => 0,
+                    'sessions' => [],
+                    'ips' => [],
+                    'last_visit' => $row['visited_at']
+                ];
+            }
+            $g = &$grouped[$key];
+            $g['visits']++;
+            if (!empty($row['session_id'])) $g['sessions'][$row['session_id']] = true;
+            if (!empty($row['ip_address'])) $g['ips'][$row['ip_address']] = true;
+            if ($row['visited_at'] > $g['last_visit']) $g['last_visit'] = $row['visited_at'];
+            unset($g);
+        }
+
+        $data = [];
+        foreach ($grouped as $g) {
+            $data[] = [
+                'utm_source' => $g['utm_source'],
+                'utm_campaign' => $g['utm_campaign'],
+                'visits' => $g['visits'],
+                'sessions' => count($g['sessions']),
+                'unique_ips' => count($g['ips']),
+                'last_visit' => $g['last_visit']
+            ];
+        }
+        usort($data, function ($a, $b) { return $b['visits'] <=> $a['visits']; });
+        // Agrégation complète en PHP : tout sur une page (comme type=pages)
+        $total = count($data);
+        $totalPages = 1;
+        $limit = max(1, $total);
+        $offset = 0;
     } else {
         $countryJoin = '';
         $countryFilter = '';

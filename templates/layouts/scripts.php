@@ -25,6 +25,8 @@
 
 <!-- Scripts de base -->
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<!-- DIAGNOSTIC TEMPORAIRE : disparition de --surface-green (~5s). À retirer après résolution. -->
+<script src="/assets/js/core/css-watch.js?v=<?= @filemtime(__DIR__ . '/../../public/assets/js/core/css-watch.js') ?: 1 ?>"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <?php if (!defined('PLF_LEAFLET_CDN_EMITTED')) { define('PLF_LEAFLET_CDN_EMITTED', true); ?>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -40,10 +42,12 @@
 <script src="/assets/js/home/calendar.js"></script>
 <script src="/assets/js/home/filters.js"></script>
 <script src="/assets/js/home/distance.js?v=<?= @filemtime(__DIR__ . '/../../public/assets/js/home/distance.js') ?: 1 ?>"></script>
-<script src="/assets/js/core/modals.js?v=2"></script>
+<script src="/assets/js/home/sponsor-rotate.js?v=<?= @filemtime(__DIR__ . '/../../public/assets/js/home/sponsor-rotate.js') ?: 1 ?>"></script>
+<script src="/assets/js/core/modals.js?v=3"></script>
 <script src="/assets/js/core/auth.js?v=6"></script>
 <script src="/assets/js/core/header.js?v=2"></script>
 <script src="/assets/js/core/contact.js?v=1"></script>
 <script src="/assets/js/core/subscribers.js"></script>
+<script src="/assets/js/core/guide.js?v=3"></script>
 <script src="/assets/js/core/manage-link.js"></script>
 <script src="/assets/js/core/init.js"></script>

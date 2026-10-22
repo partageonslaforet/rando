@@ -232,63 +232,104 @@ try {
         );
     }
 
-    // 4. Gérer les images
-    if (isset($_FILES['images'])) {
-        // Récupérer les anciennes images
-        $stmt = $db->prepare("SELECT * FROM event_images WHERE event_id = ?");
-        $stmt->execute([$eventId]);
-        $oldImages = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        
-        // Traiter les nouvelles images
-        $newImages = [];
-        
-        foreach ($_FILES['images']['tmp_name'] as $key => $tmp_name) {
-            if ($_FILES['images']['error'][$key] === UPLOAD_ERR_OK) {
-                $filename = uniqid() . '_' . $_FILES['images']['name'][$key];
-                $uploadFile = Storage::getStoragePath('events', $filename);
-                Storage::ensureDirectoryExists(dirname($uploadFile));
-                
-                if (move_uploaded_file($tmp_name, $uploadFile)) {
-                    $newImages[] = [
-                        'path' => Storage::getPublicUrl('events', $filename),
-                        'is_main' => isset($_POST['main_image']) && $_POST['main_image'] == $key ? 1 : 0
+    // 4. Gérer les images — le formulaire envoie main_image (fichier seul)
+    // et secondary_images[] (multi). Remplacement ciblé par groupe :
+    // main_image ne remplace que la principale, les secondaires que les secondaires.
+    $uploadGroups = ['main' => [], 'secondary' => []];
+
+    if (!empty($_FILES['main_image']) && ($_FILES['main_image']['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_NO_FILE) {
+        $uploadGroups['main'][] = ['file' => $_FILES['main_image']];
+    }
+    foreach (['secondary_images', 'images'] as $fileField) {
+        if (!empty($_FILES[$fileField]) && is_array($_FILES[$fileField]['name'])) {
+            foreach ($_FILES[$fileField]['name'] as $k => $n) {
+                if (($_FILES[$fileField]['error'][$k] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_NO_FILE) {
+                    $uploadGroups['secondary'][] = [
+                        'file' => [
+                            'name' => $_FILES[$fileField]['name'][$k],
+                            'tmp_name' => $_FILES[$fileField]['tmp_name'][$k],
+                            'error' => $_FILES[$fileField]['error'][$k],
+                        ]
                     ];
                 }
             }
         }
-        
-        if (!empty($newImages)) {
-            // Supprimer les anciennes images qui ne sont plus utilisées
+    }
+
+    if (!empty($uploadGroups['main']) || !empty($uploadGroups['secondary'])) {
+        // Récupérer les anciennes images
+        $stmt = $db->prepare("SELECT * FROM event_images WHERE event_id = ?");
+        $stmt->execute([$eventId]);
+        $oldImages = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $allNewImages = [];
+
+        foreach (['main' => 1, 'secondary' => 0] as $group => $isMain) {
+            if (empty($uploadGroups[$group])) {
+                continue;
+            }
+
+            $newImages = [];
+            foreach ($uploadGroups[$group] as $u) {
+                $f = $u['file'];
+                if ($f['error'] !== UPLOAD_ERR_OK) {
+                    logError('api/events/update.php', 'Upload image refusé', [
+                        'event_id' => $eventId,
+                        'file' => $f['name'] ?? '',
+                        'error_code' => $f['error']
+                    ]);
+                    continue;
+                }
+                $filename = uniqid() . '_' . basename($f['name']);
+                $uploadFile = Storage::getStoragePath('events', $filename);
+                Storage::ensureDirectoryExists(dirname($uploadFile));
+
+                if (move_uploaded_file($f['tmp_name'], $uploadFile)) {
+                    $newImages[] = [
+                        'path' => Storage::getPublicUrl('events', $filename),
+                        'is_main' => $isMain
+                    ];
+                } else {
+                    logError('api/events/update.php', 'move_uploaded_file échoué', [
+                        'event_id' => $eventId,
+                        'dest' => $uploadFile,
+                        'writable' => is_writable(dirname($uploadFile))
+                    ]);
+                }
+            }
+
+            if (empty($newImages)) {
+                continue;
+            }
+
+            // Supprimer uniquement les images du groupe concerné (fichiers + DB)
             foreach ($oldImages as $oldImage) {
+                if ((int)($oldImage['is_main'] ?? 0) !== $isMain) {
+                    continue;
+                }
                 $oldFile = Storage::getStoragePath('events', basename($oldImage['image_path']));
                 if (file_exists($oldFile)) {
                     unlink($oldFile);
                 }
             }
-            
-            // Supprimer les anciennes entrées dans la base
-            $stmt = $db->prepare("DELETE FROM event_images WHERE event_id = ?");
-            $stmt->execute([$eventId]);
-            
-            // Insérer les nouvelles images
-            $stmt = $db->prepare("
-                INSERT INTO event_images (
-                    event_id, 
-                    image_path, 
-                    is_main
-                ) VALUES (?, ?, ?)
-            ");
+            $stmt = $db->prepare("DELETE FROM event_images WHERE event_id = ? AND COALESCE(is_main, 0) = ?");
+            $stmt->execute([$eventId, $isMain]);
+
+            $stmt = $db->prepare("INSERT INTO event_images (event_id, image_path, is_main) VALUES (?, ?, ?)");
             foreach ($newImages as $image) {
                 $stmt->execute([$eventId, $image['path'], $image['is_main']]);
             }
-            
+            $allNewImages = array_merge($allNewImages, $newImages);
+        }
+
+        if (!empty($allNewImages)) {
             // Logger les modifications des images
             logEventModification(
-                $db, 
-                $eventId, 
-                'images', 
-                json_encode($oldImages), 
-                json_encode($newImages), 
+                $db,
+                $eventId,
+                'images',
+                json_encode($oldImages),
+                json_encode($allNewImages),
                 $_SESSION['user_id']
             );
 
@@ -327,6 +368,8 @@ try {
     }
 
     // Après mise à jour, notifier l'admin pour validation (cas publication depuis l'édition)
+    // — sauf si c'est l'admin lui-même qui modifie l'événement
+    if (!$isAdmin) {
     try {
         require_once __DIR__ . '/../../includes/mailer.php';
         require_once __DIR__ . '/../../logs/error.log.php';
@@ -372,6 +415,7 @@ try {
                 'exception' => $e->getMessage()
             ]);
         }
+    }
     }
 
     echo json_encode([

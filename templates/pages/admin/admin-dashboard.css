@@ -1,0 +1,392 @@
+/* Styles du tableau de bord administrateur. */
+
+/* Hero */
+.dash-hero {
+  background: var(--primary-color);
+  border: 1px solid var(--border-green);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 8px 24px color-mix(in srgb, #000 8%, transparent);
+  margin: 3rem 0;
+  text-align: center;
+  text-transform: uppercase;
+}
+.dash-hero h1 {
+  font-size: 1.8rem;
+  margin: 0;
+  color: var(--surface);
+  font-weight: bold;
+}
+
+.dash-hero .hero-actions .btn {
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+/* KPIs */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 24px;
+}
+.kpi-card {
+    background: var(--light-text);
+    border: 2px solid color-mix(in srgb, var(--primary-color) 30%, var(--border-green));
+    border-radius: 16px;
+    box-shadow: 0 8px 24px color-mix(in srgb, #000 8%, transparent);
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.kpi-card[data-kpi-modal] { cursor: pointer; transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease; }
+.kpi-card[data-kpi-modal]:hover { transform: translateY(-2px); box-shadow: 0 12px 28px color-mix(in srgb, #000 12%, transparent); border-color: var(--primary-color); }
+.sort-icon { margin-left: 4px; }
+#statsModal .btn-group[aria-label="Période"] { flex-wrap: wrap; gap: 4px; }
+#statsModal .btn-group[aria-label="Période"] .btn { white-space: nowrap; font-size: .75rem; padding: .25rem .5rem; }
+#statsModal .btn-group[aria-label="Période"] .btn[data-stat-period="1"] { white-space: normal; line-height: 1.2; min-width: 62px; }
+.kpi-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    color: var(--light-text);
+    font-size: 16px;
+}
+
+.kpi-icon.users { background: color-mix(in srgb, var(--primary-color) 50%, transparent); }
+.kpi-icon.events { background: color-mix(in srgb, var(--primary-color) 50%, transparent); }
+.kpi-icon.pending { background: color-mix(in srgb, var(--primary-color) 50%, transparent); color: var(--light-text); }
+.kpi-icon.active { background: color-mix(in srgb, var(--primary-color) 50%, transparent); }
+.kpi-icon.categories { background: color-mix(in srgb, var(--primary-color) 50%, transparent); }
+.kpi-card > div:last-child { min-width: 0; }
+.kpi-label { font-size: .75rem; color: var(--text-muted); letter-spacing: .06em; overflow-wrap: anywhere; }
+.kpi-value { font-weight: 800; font-size: 1.1rem; line-height: 1.1; }
+
+/* Summary tiles */
+.summary-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 24px;border-bottom: 1px solid var(--text-muted); padding-bottom: 2rem; }
+.summary-card { background: var(--light-text); border: 2px solid color-mix(in srgb, var(--primary-color) 30%, var(--border-green)); border-radius: 16px; box-shadow: 0 8px 24px color-mix(in srgb, #000 8%, transparent); padding: 24px; display: flex; align-items: center; gap: 16px; min-width: 0; }
+.summary-card > div:last-child { min-width: 0; }
+.summary-card[data-stat-modal] { cursor: pointer; transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease; }
+.summary-card[data-stat-modal]:hover { transform: translateY(-2px); box-shadow: 0 12px 28px color-mix(in srgb, #000 12%, transparent); border-color: var(--primary-color); }
+.summary-icon { width: 56px; height: 56px; border-radius: 14px; display: grid; place-items: center; color: var(--light-text); font-size: 24px; flex-shrink: 0; }
+.summary-icon.users { background: color-mix(in srgb, var(--primary-color) 50%, transparent); }
+.summary-icon.orgs { background: var(--primary-color); }
+.summary-icon.views { background: color-mix(in srgb, var(--primary-color) 50%, transparent); }
+.summary-label { font-size: .85rem; color: var(--text-muted); letter-spacing: .07em; text-transform: uppercase; word-break: break-word; overflow-wrap: break-word; line-height: 1.35; }
+.summary-value { font-weight: 800; font-size: 1.75rem; line-height: 1.1; color: var(--text-color); }
+
+/* Toolbar */
+.dash-toolbar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin: 14px 0 10px; }
+.pills { display: flex; flex-wrap: wrap; gap: 8px; }
+.pill { border-radius: 999px; padding: 6px 12px; border: 1px solid var(--border-green); background: var(--light-text); font-weight: 600; cursor: pointer; white-space: nowrap; }
+.pill.active { background: var(--primary-color); color: var(--light-text); border-color: var(--primary-color); }
+.pill .pill-count {
+  display: inline-block;
+  min-width: 1.5em;
+  padding: 0 .45em;
+  margin-left: .35em;
+  border-radius: 999px;
+  font-size: .75rem;
+  font-weight: 700;
+  background: color-mix(in srgb, var(--primary-color) 12%, transparent);
+  color: var(--primary-color);
+}
+.pill.active .pill-count {
+  background: color-mix(in srgb, var(--light-text) 25%, transparent);
+  color: var(--light-text);
+}
+.dash-toolbar .search { width: 100%; max-width: 300px; }
+.dash-toolbar .search input { width: 100%; }
+
+/* Table */
+.card { background: var(--light-text); border-radius: 16px; box-shadow: 0 8px 24px color-mix(in srgb, #000 8%, transparent); border: 1px solid var(--border-green); }
+.table thead th { color: var(--text-muted); font-size: .85rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; background: var(--border-green); border-bottom: 1px solid var(--border-green) !important; }
+.table tbody td { vertical-align: middle; padding: 12px 10px; border-color: var(--border-green); color: var(--text-color); }
+
+/* KPI modal tables helpers */
+.col-nowrap { white-space: nowrap; }
+/* En-têtes triables générés en JS (data-sort) */
+th[data-sort] { cursor: pointer; white-space: nowrap; }
+.ip-location-map { height: 220px; }
+.col-events-narrow { width: 90px; }
+
+/* Table associations (desktop) : colonne téléphone à largeur fixe.
+   Scopée sur .kpi-table-orgs pour ne pas impacter les autres tables KPI,
+   et désactivée sous 768px où le tableau reste fluide. */
+@media (min-width: 769px) {
+  .kpi-table-orgs {
+    table-layout: fixed;
+    width: 100%;
+  }
+  .kpi-table-orgs th:nth-child(4),
+  .kpi-table-orgs td:nth-child(4) {
+    min-width: 340px !important;
+    max-width: 340px !important;
+    width: 340px !important;
+    white-space: nowrap !important;
+    font-size: 1rem;
+  }
+  .kpi-table-orgs .kpi-col-phone { width: 340px; }
+  .kpi-table-orgs td.col-phone-wide,
+  .kpi-table-orgs th.col-phone-wide {
+    min-width: 320px !important;
+    white-space: nowrap !important;
+    font-size: 1rem;
+  }
+}
+td.col-phone-nowrap { white-space: nowrap; }
+
+/* Make sure we keep 7 columns on most desktops */
+@media (max-width: 1600px) {
+  .kpi-grid { grid-template-columns: repeat(7, minmax(0,1fr)); }
+}
+
+/* Badges */
+.status-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; font-weight: 700; font-size: .85rem; }
+.status-approved { background: color-mix(in srgb, var(--primary-color) 11%, transparent); color: var(--primary-color); }
+.status-pending  { background: color-mix(in srgb, var(--primary-color) 8%, transparent); color: var(--primary-color); }
+.status-rejected { background: color-mix(in srgb, var(--danger-color) 11%, transparent); color: var(--danger-color); }
+.status-expired  { background: color-mix(in srgb, var(--text-muted) 15%, transparent); color: var(--text-muted); }
+
+/* Actions */
+.btn-pill { border-radius: 999px !important; padding: 6px 12px !important; font-weight: 600 !important; white-space: nowrap; }
+.btn-view { background: var(--border-green); color: var(--primary-color); border: 1px solid var(--border-green); }
+.btn-delete { background: var(--danger-color); color: var(--light-text); border: 0; }
+.btn-delete:hover { background: var(--danger-hover); }
+.btn-view:hover { filter: brightness(.97); }
+
+th.actions-col,
+td.actions-cell {
+    white-space: nowrap;
+    text-align: left;
+}
+
+th.actions-col { width: 1%; }
+
+td.actions-cell .btn + .btn {
+    margin-left: .5rem;
+}
+
+td.actions-cell .btn {
+    display: inline-block;
+    white-space: nowrap;
+}
+
+/* Responsive */
+@media (max-width: 1400px) { .kpi-grid { grid-template-columns: repeat(5, minmax(0,1fr)); } }
+@media (max-width: 1200px) { .kpi-grid { grid-template-columns: repeat(3, minmax(0,1fr)); } }
+
+/* Sidenav : ligne horizontale scrollable sous lg */
+@media (max-width: 992px) {
+  .dash-sidenav { padding: 8px; }
+  .dash-sidenav .nav { flex-direction: row !important; flex-wrap: nowrap; overflow-x: auto; gap: 6px; }
+  .dash-sidenav .nav-link { white-space: nowrap; }
+}
+
+@media (max-width: 768px)  {
+  .kpi-grid { grid-template-columns: repeat(2, minmax(0,1fr)); overflow-x: visible; }
+  .kpi-card { min-width: 0; padding: 12px; }
+  .dash-toolbar { flex-direction: column; gap: 10px; align-items: stretch; }
+  .dash-toolbar .search { max-width: none; }
+  .dash-hero { padding: 16px; }
+  .summary-tiles { grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr)); }
+  .summary-card { padding: 16px; }
+  .summary-icon { width: 44px; height: 44px; font-size: 20px; }
+  .summary-value { font-size: 1.4rem; }
+  .stats-date-input { min-width: 0; flex: 1 1 auto; }
+  .stats-pager { flex-wrap: wrap; }
+  .stats-pager-info { min-width: 0; }
+}
+
+@media (max-width: 400px) {
+  .kpi-label { font-size: .65rem; letter-spacing: .04em; }
+  .kpi-icon { width: 34px; height: 34px; font-size: 14px; }
+}
+
+/* Sidebar */
+.dash-sidenav {
+  background: var(--border-green);
+  border: 1px solid var(--border-green);
+  border-radius: 16px;
+  box-shadow: 0 8px 24px color-mix(in srgb, #000 8%, transparent);
+  padding: 12px;
+}
+
+.dash-sidenav .nav-link {
+  border-radius: 12px;
+  font-weight: 700;
+  color: var(--text-color);
+  padding: 10px 12px;
+}
+
+.dash-sidenav .nav-link.active {
+  background: var(--primary-color);
+  color: var(--light-text);
+}
+
+/* Sous-menus sidebar (ex. Sponsors → Gestion / Statistiques) */
+.dash-sidenav .nav-parent {
+  border-radius: 12px;
+  font-weight: 700;
+  color: var(--text-color);
+  padding: 10px 12px 4px;
+}
+
+.dash-sidenav .nav-sub {
+  padding-left: 28px;
+  font-weight: 600;
+  font-size: .92rem;
+}
+
+/* Tables triables (stats sponsors) : colonnes cliquables */
+.sortable-table th[data-sort] {
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.sortable-table th[data-sort]:hover {
+  color: var(--primary-color);
+}
+
+/* === Modale stats : tableaux unifiés === */
+
+/* Largeur de la modale adaptée au contenu (remplace modal-xl fixe) */
+.modal-fit.modal-dialog {
+  width: fit-content;
+  max-width: 95vw;
+  min-width: min(30rem, 95vw);
+}
+.modal-fit .modal-content {
+  min-width: 0;
+}
+/* Les tables larges défilent horizontalement dans le body sans casser le sticky thead */
+.modal-fit .modal-body {
+  overflow-x: auto;
+}
+/* Le header (titre + filtres + date) passe en lignes sur petit écran */
+#statsModal .modal-header {
+  flex-wrap: wrap;
+  gap: .5rem;
+}
+
+/* Largeur adaptée au contenu : pas de vide latéral quand peu de colonnes */
+.stats-table {
+  width: auto;
+  max-width: 100%;
+  margin: 0 auto;
+  font-size: .9rem;
+}
+.stats-table th,
+.stats-table td {
+  padding: .5rem 1rem;
+  white-space: nowrap;
+}
+/* Les libellés longs (URL, titres) peuvent revenir à la ligne */
+.stats-table td {
+  white-space: normal;
+  word-break: break-word;
+  vertical-align: middle;
+}
+
+/* En-tête collant : le titre des colonnes reste visible au scroll */
+.stats-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: var(--surface-green);
+  color: var(--green-dark);
+  font-size: .75rem;
+  font-weight: 700;
+  letter-spacing: .04em;
+  border-bottom: 2px solid var(--border-green);
+  cursor: pointer;
+  user-select: none;
+}
+
+/* Lignes zébrées pour la lisibilité */
+.stats-table tbody tr:nth-of-type(even) td {
+  background-color: color-mix(in srgb, var(--primary-color) 15%, var(--light-text));
+}
+.stats-table tbody tr:hover td {
+  background-color: color-mix(in srgb, var(--primary-color) 20%, var(--light-text));
+}
+
+/* Footer de modale : pagination centrée, bouton Fermer à droite */
+#statsModal .modal-footer {
+  align-items: center;
+}
+#statsModalFooter {
+  display: flex;
+  justify-content: center;
+}
+.stats-pager .btn {
+  border-radius: 999px;
+}
+.stats-pager-info {
+  min-width: 9rem;
+  text-align: center;
+}
+
+/* Pagination de la liste des contacts mailing */
+.mailing-pager {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.mailing-pager-info {
+  font-size: .85rem;
+  color: var(--text-muted);
+}
+.mailing-pager-pages {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.mailing-pager-pages .pg {
+  border-radius: 999px;
+  border: 1px solid var(--border-green);
+  background: var(--light-text);
+  color: var(--text-color);
+  font-weight: 600;
+  font-size: .85rem;
+  padding: 4px 12px;
+  min-width: 34px;
+  cursor: pointer;
+}
+.mailing-pager-pages .pg:hover:not(:disabled):not(.active) {
+  background: color-mix(in srgb, var(--primary-color) 12%, transparent);
+  color: var(--primary-color);
+}
+.mailing-pager-pages .pg.active {
+  background: var(--primary-color);
+  color: var(--light-text);
+  border-color: var(--primary-color);
+}
+.mailing-pager-pages .pg:disabled {
+  opacity: .45;
+  cursor: default;
+}
+.mailing-pager-pages .pg-dots {
+  color: var(--text-muted);
+  padding: 4px 2px;
+  font-weight: 600;
+}
+
+/* --- Tri des colonnes (Événements récents) --- */
+th.sortable {
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+}
+th.sortable .sort-icon { font-size: .75rem; opacity: .35; margin-left: 4px; }
+th.sortable:hover .sort-icon { opacity: .8; }
+th.sortable.sorted .sort-icon { opacity: 1; color: var(--primary-color); }
+
+/* --- Icône « publié sur Facebook » --- */
+.fb-posted { color: #1877F2; margin-left: 6px; font-size: .9rem; }

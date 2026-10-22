@@ -264,6 +264,19 @@ async function handleMainImageUpload(event) {
         return;
     }
 
+    // Aperçu local immédiat (avant le retour serveur)
+    const mainPreview = document.getElementById('mainImagePreview');
+    const mainImageContainer = document.querySelector('.main-image-container');
+    if (mainPreview && mainImageContainer) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            mainPreview.src = e.target.result;
+            mainPreview.style.display = 'block';
+            mainImageContainer.classList.add('has-image');
+        };
+        reader.readAsDataURL(file);
+    }
+
     const form = document.getElementById('createEventForm');
     const formData = form ? new FormData(form) : new FormData();
     formData.set('mainImage', file);
@@ -285,6 +298,13 @@ async function handleMainImageUpload(event) {
         updateSecondaryImagesPreview(result);
 
         event.target.value = '';
+
+        // Si l'aperçu (étape 3) est déjà affiché, le recharger maintenant que
+        // l'image est persistée — évite le fallback rendu avant la fin de l'upload
+        const step3 = document.getElementById('step3');
+        if (step3 && !step3.classList.contains('d-none') && typeof showPreview === 'function') {
+            showPreview();
+        }
 
     } catch (error) {
         console.error('❌ Erreur:', error);
@@ -337,6 +357,13 @@ async function handleSecondaryImagesUpload(event) {
         updateSecondaryImagesPreview(result);
 
         event.target.value = '';
+
+        // Si l'aperçu (étape 3) est déjà affiché, le recharger — les images
+        // secondaires viennent d'être persistées dans draft_images
+        const step3 = document.getElementById('step3');
+        if (step3 && !step3.classList.contains('d-none') && typeof showPreview === 'function') {
+            showPreview();
+        }
 
     } catch (error) {
         console.error('❌ Erreur:', error);
@@ -423,11 +450,46 @@ document.addEventListener('DOMContentLoaded', async function() {
     if (mainImageInput) {
         mainImageInput.addEventListener('change', handleMainImageUpload);
     }
-    
+
     // Gestionnaire pour les images secondaires
     const secondaryImagesInput = document.getElementById('secondaryImages');
     if (secondaryImagesInput) {
         secondaryImagesInput.addEventListener('change', handleSecondaryImagesUpload);
+    }
+});
+
+// Glisser-déposer sur les zones d'upload d'images (couverture + galerie secondaire)
+// Délégation : le drop injecte les fichiers dans l'input puis déclenche 'change',
+// ce qui réutilise handleMainImageUpload / handleSecondaryImagesUpload.
+document.addEventListener('dragover', (e) => {
+    const zone = e.target.closest('.main-image-container, .secondary-images-add');
+    if (!zone) return;
+    e.preventDefault();
+    zone.classList.add('dragover');
+});
+
+document.addEventListener('dragleave', (e) => {
+    const zone = e.target.closest('.main-image-container, .secondary-images-add');
+    if (zone) zone.classList.remove('dragover');
+});
+
+document.addEventListener('drop', (e) => {
+    const zone = e.target.closest('.main-image-container, .secondary-images-add');
+    if (!zone) return;
+    e.preventDefault();
+    zone.classList.remove('dragover');
+
+    const input = zone.querySelector('input[type="file"]');
+    const files = e.dataTransfer && e.dataTransfer.files;
+    if (!input || !files || !files.length) return;
+
+    try {
+        const dt = new DataTransfer();
+        Array.from(files).forEach(file => dt.items.add(file));
+        input.files = dt.files;
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+    } catch (err) {
+        console.error('Drop image impossible :', err);
     }
 });
 

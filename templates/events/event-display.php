@@ -13,6 +13,14 @@ if (!isset($event) || !is_array($event)) {
 
 $mode = $mode ?? 'published';
 $isPreview = $mode === 'draft';
+// Les brouillons ne stockent que les heures d'inscription ; à la publication,
+// publish.php les copie dans start_time/end_time — on reproduit ce mapping pour l'aperçu.
+if (empty($event['start_time'])) {
+    $event['start_time'] = $event['registration_opens'] ?? null;
+}
+if (empty($event['end_time'])) {
+    $event['end_time'] = $event['registration_closes'] ?? null;
+}
 $mainImage = $event['main_image'] ?? '/assets/images/events/default-event.jpg';
 $categoryList = $event['categories'] ?? [];
 $routes = $event['routes'] ?? [];
@@ -289,9 +297,9 @@ function attrValue(mixed $value): string
                                                 <?php endif; ?>
                                                 <?php if ($gpx): ?>
                                                     <?php if (!empty($route['gpx_downloadable'])): ?>
-                                                        <span class="gpx-badge"><i class="bi bi-download"></i> GPX</span>
+                                                        <!-- <span class="gpx-badge"><i class="bi bi-download"></i> GPX</span> -->
                                                     <?php else: ?>
-                                                        <span class="gpx-badge"><i class="bi bi-geo-alt"></i> GPX</span>
+                                                        <!-- <span class="gpx-badge"><i class="bi bi-geo-alt"></i> GPX</span> -->
                                                     <?php endif; ?>
                                                 <?php endif; ?>
                                             </div>
@@ -305,7 +313,7 @@ function attrValue(mixed $value): string
                                                             <i class="bi bi-download"></i> GPX
                                                         </a>
                                                     <?php endif; ?>
-                                                    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="showTrackOnMap('<?= displayValue($gpx) ?>')">
+                                                    <button type="button" class="btn btn-sm btn-outline-primary" onclick="showTrackOnMap('<?= displayValue($gpx) ?>')">
                                                         <i class="bi bi-eye"></i> Voir
                                                     </button>
                                                 </div>
@@ -484,7 +492,7 @@ function attrValue(mixed $value): string
                         <div class="sponsor-list">
                             <?php foreach ($sponsors as $ad): ?>
                                 <?php if (!empty($ad['link_url'])): ?>
-                                    <a href="<?= displayValue($ad['link_url']) ?>" target="_blank" rel="noopener sponsored" class="sponsor-item">
+                                    <a href="/api/sponsors/click.php?id=<?= (int) $ad['id'] ?>&ctx=event&eid=<?= (int) $event['id'] ?>" target="_blank" rel="noopener sponsored" class="sponsor-item">
                                         <img src="<?= displayValue($ad['image_path']) ?>" alt="<?= displayValue($ad['alt_text'] ?: $ad['name']) ?>" loading="lazy">
                                     </a>
                                 <?php else: ?>

@@ -63,8 +63,12 @@ try {
     error_log("❌ Trace : " . $e->getTraceAsString());
     
     http_response_code(500);
-    die("Une erreur est survenue lors de la connexion à la base de données.");
+    die("Une erreur est survenue lors de la connexion à la base de données.");                                                 
 }
+
+// Protection anti-scan : bloque les requêtes d'IP bannies (404 répétés)
+require_once __DIR__ . '/ip_ban.php';
+enforceIpBan($db);
 
 // Charger la vérification d'authentification
 require_once __DIR__ . '/auth_check.php';

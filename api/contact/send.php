@@ -76,7 +76,7 @@ try {
     }
 
     $subjectLine = '[Contact] ' . $subject;
-    $sent = $mailer->sendHtml($toEmail, $subjectLine, $body);
+    $sent = $mailer->sendHtml($toEmail, $subjectLine, $body, '', 'contact');
     $method = $transport; // 'smtp' | 'mail' | 'unknown'
 
     if (!$sent) {
@@ -96,6 +96,7 @@ try {
             $sent = @mail($toName . ' <' . $toEmail . '>', $subjectLine, $body, implode("\r\n", $headers));
         }
         $method = 'mail-fallback';
+        Mailer::recordSentEmail($toEmail, $subjectLine, $body, 'contact', $sent, $sent ? null : 'mail() fallback a échoué');
     }
 
     if (!$sent) {
@@ -136,7 +137,7 @@ try {
 
         try {
             $copyMailer = new Mailer();
-            $copyResult = $copyMailer->sendHtml($email, $copySubject, $copyBody);
+            $copyResult = $copyMailer->sendHtml($email, $copySubject, $copyBody, '', 'contact_copy');
         } catch (Throwable $e) {
             $copyResult = false;
         }
@@ -154,6 +155,7 @@ try {
             } else {
                 $copyResult = @mail($name . ' <' . $email . '>', $copySubject, $copyBody, implode("\r\n", $headers));
             }
+            Mailer::recordSentEmail($email, $copySubject, $copyBody, 'contact_copy', (bool) $copyResult, $copyResult ? null : 'mail() fallback a échoué');
         }
 
         if ($copyResult) {

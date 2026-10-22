@@ -230,7 +230,7 @@ if (!empty($draft['meeting_coordinates'])) {
 <!-- Dépendances JavaScript -->
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="https://npmcdn.com/flatpickr/dist/l10n/fr.js"></script>
-<script src="/assets/js/events/event-images.js"></script>
+<script src="/assets/js/events/event-images.js?v=<?= @filemtime((defined('ROOT_PATH') ? ROOT_PATH : dirname(__DIR__, 2)) . '/public/assets/js/events/event-images.js') ?: 1 ?>"></script>
 
 
 <script>
@@ -318,7 +318,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <a class="step active" data-step="1" data-title="L'événement" href="#step1">
                         <span class="step-button">1</span>
                     </a>
-                    <a class="step" data-step="2" data-title="Lieu et parcours" href="#step2">
+                    <a class="step" data-step="2" data-title="Parcours" href="#step2">
                         <span class="step-button">2</span>
                     </a>
                     <a class="step" data-step="3" data-title="Photos et aperçu" href="#step3">
@@ -356,8 +356,8 @@ document.addEventListener('DOMContentLoaded', function() {
                                 </div>
 
                                 <div class="mb-3">
-                                    <label for="description" class="form-label">Description</label>
-                                    <textarea class="form-control" id="description" name="description" rows="4" placeholder="Présentez brièvement l'activité, le public visé et les informations importantes..." required><?= htmlspecialchars($draft['description'] ?? '') ?></textarea>
+                                    <label for="description" class="form-label">Description <span class="text-muted fw-normal">(optionnelle)</span></label>
+                                    <textarea class="form-control" id="description" name="description" rows="4" placeholder="Présentez brièvement l'activité, le public visé et les informations importantes..."><?= htmlspecialchars($draft['description'] ?? '') ?></textarea>
                                 </div>
 
                                 <div class="row g-3 mb-3">
@@ -434,70 +434,84 @@ document.addEventListener('DOMContentLoaded', function() {
                                         $routeCategoryId = (int) ($route['category_id'] ?? 0);
                                         $routeDownloadable = !empty($route['gpx_downloadable']);
                                     ?>
-                                    <div class="mb-4">
-                                        <div class="d-flex justify-content-between align-items-center mb-2">
-                                            <h5 class="mb-0">Parcours <?= (int) $index + 1 ?></h5>
-                                            <button type="button" class="btn btn-outline-danger btn-sm" onclick="removeRoute(this)" data-route-index="<?= (int) $index ?>">
+                                    <div class="route-item<?= $index === 0 ? ' open' : '' ?>">
+                                        <div class="route-header" onclick="toggleRoute(this)">
+                                            <i class="bi bi-geo-alt route-header-icon"></i>
+                                            <div class="route-header-text">
+                                                <span class="route-title">Parcours <?= (int) $index + 1 ?></span>
+                                                <span class="route-meta"><?php
+                                                    $metaParts = [];
+                                                    if ($routeName !== '') { $metaParts[] = $routeName; }
+                                                    if ($routeDistance !== '') { $metaParts[] = $routeDistance . ' km'; }
+                                                    echo !empty($metaParts) ? implode(' · ', $metaParts) : 'Détails à compléter';
+                                                ?></span>
+                                            </div>
+                                            <button type="button" class="btn btn-outline-danger btn-sm route-delete-btn" onclick="event.stopPropagation(); removeRoute(this)" data-route-index="<?= (int) $index ?>">
                                                 <i class="bi bi-trash"></i>
                                             </button>
+                                            <i class="bi bi-chevron-down route-chevron"></i>
                                         </div>
-                                        <div class="mb-2">
-                                            <label class="form-label">Nom du parcours</label>
-                                            <input type="text" class="form-control" name="routes[<?= (int) $index ?>][name]" value="<?= $routeName ?>">
-                                        </div>
-                                        <div class="mb-2">
-                                            <label class="form-label required-field">Catégorie du parcours</label>
-                                            <select class="form-select" name="routes[<?= (int) $index ?>][category_id]" required>
-                                                <option value="">Choisir une catégorie</option>
-                                                <?php foreach ($categories as $cat): ?>
-                                                    <option value="<?= (int) $cat['id'] ?>" <?= $routeCategoryId === (int) $cat['id'] ? 'selected' : '' ?>><?= htmlspecialchars($cat['name']) ?></option>
-                                                <?php endforeach; ?>
-                                            </select>
-                                        </div>
-                                        <div class="row">
+                                        <div class="route-body">
+                                            <div class="row g-3 mb-2">
+                                                <div class="col-md-6">
+                                                    <label class="form-label">Nom du parcours</label>
+                                                    <input type="text" class="form-control" name="routes[<?= (int) $index ?>][name]" value="<?= $routeName ?>">
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="form-label required-field">Catégorie du parcours</label>
+                                                    <select class="form-select" name="routes[<?= (int) $index ?>][category_id]" required>
+                                                        <option value="">Choisir une catégorie</option>
+                                                        <?php foreach ($categories as $cat): ?>
+                                                            <option value="<?= (int) $cat['id'] ?>" <?= $routeCategoryId === (int) $cat['id'] ? 'selected' : '' ?>><?= htmlspecialchars($cat['name']) ?></option>
+                                                        <?php endforeach; ?>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="row g-3 parcours">
+                                                <div class="col-12">
+                                                    <label class="form-label">GPX <small class="form-text text-muted">(Importer un GPX rempli automatiquement la distance et le dénivelé)</small></label>
+                                                </div>
+                                                <div class="col-md-6 gpx-col">
+                                                    <div class="gpx-dropzone">
+                                                        <span class="gpx-dropzone-title">Charger un fichier GPX</span>
+                                                        <i class="bi bi-cloud-arrow-up"></i>
+                                                        <span class="gpx-dropzone-hint">Glisser-déposer<br>ou</span>
+                                                        <span class="gpx-dropzone-browse">Parcourir</span>
+                                                        <input type="file" class="gpx-dropzone-input" name="routes[<?= (int) $index ?>][gpx]" accept=".gpx" onchange="handleGpxUpload(this, <?= (int) $index ?>)">
+                                                    </div>
+                                                    <input type="hidden" name="routes[<?= (int) $index ?>][gpx_file]" value="<?= htmlspecialchars($route['gpx_file'] ?? '') ?>">
+                                                    <div class="gpx-file-row">
+                                                        <div class="gpx-file-label" id="gpxFileLabel<?= (int) $index ?>"><?php if (!empty($route['gpx_file'])): ?>Fichier : <?= htmlspecialchars(basename($route['gpx_file'])) ?><?php endif; ?></div>
+                                                        <button type="button" class="btn btn-sm btn-outline-danger gpx-remove-btn" onclick="removeGpx(<?= (int) $index ?>)" title="Supprimer le GPX">
+                                                            <i class="bi bi-trash"></i>
+                                                        </button>
+                                                    </div>
+                                                    <div class="form-check gpx-downloadable-check">
+                                                        <input type="checkbox" class="form-check-input" id="gpxDownloadable<?= (int) $index ?>" name="routes[<?= (int) $index ?>][gpx_downloadable]" value="1" <?= $routeDownloadable ? 'checked' : '' ?>>
+                                                        <label class="form-check-label" for="gpxDownloadable<?= (int) $index ?>">Autoriser le téléchargement du GPX</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="row g-3">
+                                                        <div class="col-12">
+                                                            <label class="form-label required-field">Distance (km)</label>
+                                                            <input type="number" step="0.1" class="form-control" name="routes[<?= (int) $index ?>][distance]" value="<?= $routeDistance ?>" required>
+                                                        </div>
+                                                        <div class="col-12">
+                                                            <label class="form-label">Dénivelé (m)</label>
+                                                            <input type="number" class="form-control" name="routes[<?= (int) $index ?>][elevation]" value="<?= $routeElevation ?>">
+                                                        </div>
+                                                        <div class="col-12">
+                                                            <label class="form-label">Prix (€)</label>
+                                                            <input type="number" step="0.01" class="form-control" name="routes[<?= (int) $index ?>][price]" value="<?= $routePrice ?>">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                             <div class="mb-2">
-                                                <label class="form-label">GPX <small class="form-text text-muted">(Importer un GPX rempli automatiquement la distance et le dénivelé)</small></label>
-                                                <div class="input-group">
-                                                    <input type="file" class="form-control" name="routes[<?= (int) $index ?>][gpx]" accept=".gpx" onchange="handleGpxUpload(this, <?= (int) $index ?>)">
-                                                    <button type="button" class="btn btn-outline-danger" onclick="removeGpx(<?= (int) $index ?>)" title="Supprimer le GPX">
-                                                        <i class="bi bi-trash"></i>
-                                                    </button>
-                                                </div>
-                                                <input type="hidden" name="routes[<?= (int) $index ?>][gpx_file]" value="<?= htmlspecialchars($route['gpx_file'] ?? '') ?>">
-                                                <div class="gpx-file-label" id="gpxFileLabel<?= (int) $index ?>">
-                                                    <?php if (!empty($route['gpx_file'])): ?>
-                                                        Fichier : <?= htmlspecialchars(basename($route['gpx_file'])) ?>
-                                                    <?php endif; ?>
-                                                </div>
+                                                <label class="form-label">Description du parcours</label>
+                                                <textarea class="form-control" name="routes[<?= (int) $index ?>][description]" rows="3"><?= $routeDesc ?></textarea>
                                             </div>
-                                            <div class="mb-2">
-                                                <div class="form-check">
-                                                    <input type="checkbox" class="form-check-input" id="gpx_downloadable_<?= (int) $index ?>" name="routes[<?= (int) $index ?>][gpx_downloadable]" value="1" <?= $routeDownloadable ? 'checked' : '' ?>>
-                                                    <label class="form-check-label" for="gpx_downloadable_<?= (int) $index ?>">Autoriser le téléchargement du GPX</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="mb-2">
-                                                    <label class="form-label required-field">Distance (km)</label>
-                                                    <input type="number" step="0.1" class="form-control" name="routes[<?= (int) $index ?>][distance]" value="<?= $routeDistance ?>" required>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="mb-2">
-                                                    <label class="form-label">Dénivelé (m)</label>
-                                                    <input type="number" class="form-control" name="routes[<?= (int) $index ?>][elevation]" value="<?= $routeElevation ?>">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="mb-2">
-                                                    <label class="form-label">Prix (€)</label>
-                                                    <input type="number" step="0.01" class="form-control" name="routes[<?= (int) $index ?>][price]" value="<?= $routePrice ?>">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="mb-2">
-                                            <label class="form-label">Description du parcours</label>
-                                            <textarea class="form-control" name="routes[<?= (int) $index ?>][description]" rows="3"><?= $routeDesc ?></textarea>
                                         </div>
                                     </div>
                                     <?php endforeach; ?>
@@ -535,8 +549,9 @@ document.addEventListener('DOMContentLoaded', function() {
                                         <div class="main-image-container">
                                             <img id="mainImagePreview" class="main-image-preview is-hidden">
                                             <label class="image-upload-button">
-                                                <i class="bi bi-upload"></i>
-                                                <span>Choisir l'image</span>
+                                                <i class="bi bi-cloud-arrow-up"></i>
+                                                <span class="image-dropzone-hint">Glisser-déposer<br>ou</span>
+                                                <span class="image-dropzone-browse">Parcourir</span>
                                                 <input type="file"
                                                        id="mainImage"
                                                        name="mainImage"

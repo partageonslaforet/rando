@@ -205,7 +205,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const catHeader = headers.find(h => /Gestion des catégories/i.test(h.textContent || ''));
         const hasButton = !!(catHeader && catHeader.querySelector('[data-bs-target="#categoryModal"]'));
         const hasModal = !!document.getElementById('categoryModal');
-        console.debug('[Catégories][Diag] header trouvé:', !!catHeader, '| bouton présent:', hasButton, '| modal présent:', hasModal, '| url:', window.location.pathname + window.location.search);
+        //console.debug('[Catégories][Diag] header trouvé:', !!catHeader, '| bouton présent:', hasButton, '| modal présent:', hasModal, '| url:', window.location.pathname + window.location.search);
     } catch (e) {
         console.warn('[Catégories][Diag] échec détection bouton/modal', e);
     }

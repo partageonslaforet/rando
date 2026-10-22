@@ -155,7 +155,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $state === 'claimable') {
 }
 
 $pageTitle = 'Revendiquer un événement';
-$additionalStyles = '<link rel="stylesheet" href="/assets/css/pages/claim-event.css">';
+$additionalStyles = '<link rel="stylesheet" href="/assets/css/pages/claim-event.css?v=' . (@filemtime($rootPath . '/public/assets/css/pages/claim-event.css') ?: 1) . '">';
 render_header();
 
 // Arrière-plan : la vraie home page (hero, filtres, calendrier, carte, événements)
@@ -168,8 +168,18 @@ require $rootPath . '/templates/home.php';
 // Succès (done) : backdrop statique, pas de croix → l'utilisateur choisit une action.
 $isDone      = ($state === 'done');
 $isClaimable = ($state === 'claimable');
-$reportMail  = 'mailto:rando@partageonslaforet.be?subject='
-             . ($event ? rawurlencode('Signalement événement #' . $event['id'] . ' — ' . $event['title']) : 'Signalement%20revendication');
+$reportSubject = $event
+    ? 'Signalement événement #' . (int)$event['id'] . ' — ' . $event['title']
+    : 'Signalement revendication';
+$reportBody = "Bonjour,\n\nJe signale un problème concernant cet événement :\n"
+    . ($event
+        ? "- Titre : " . $event['title'] . "\n"
+        . "- ID : #" . (int)$event['id'] . "\n"
+        . "- Lien : " . getFullUrl('/event/' . (int)$event['id']) . "\n"
+        : '')
+    . "\nDécrivez le problème :\n";
+$reportMail = 'mailto:rando@partageonslaforet.be?subject=' . rawurlencode($reportSubject)
+            . '&body=' . rawurlencode($reportBody);
 ?>
 <div class="modal fade" id="claimResultModal" tabindex="-1"<?= $isDone ? ' data-bs-backdrop="static" data-bs-keyboard="false"' : '' ?> aria-labelledby="claimResultTitle">
   <div class="modal-dialog modal-dialog-centered">
@@ -195,9 +205,9 @@ $reportMail  = 'mailto:rando@partageonslaforet.be?subject='
           <div class="border rounded p-3 mb-3 bg-light">
             <div class="fw-bold"><?= htmlspecialchars($event['title']) ?></div>
             <div class="text-muted small">
-              📅 <?= date('d/m/Y', strtotime($event['date'])) ?>
+              <i class="bi bi-calendar3 claim-meta-icon"></i><?= date('d/m/Y', strtotime($event['date'])) ?>
               <?php if (!empty($event['start_time'])): ?> à <?= substr($event['start_time'], 0, 5) ?><?php endif; ?>
-              <?php if (!empty($event['location'])): ?> · 📍 <?= htmlspecialchars($event['location']) ?><?php endif; ?>
+              <?php if (!empty($event['location'])): ?> · <i class="bi bi-geo-alt-fill claim-meta-icon"></i><?= htmlspecialchars($event['location']) ?><?php endif; ?>
             </div>
           </div>
         <?php endif; ?>

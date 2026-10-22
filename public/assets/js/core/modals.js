@@ -89,6 +89,10 @@ document.addEventListener('DOMContentLoaded', function() {
         if (url.searchParams.get('reset') === '1') {
             window.showResetPasswordModal();
         }
+        if (url.searchParams.get('register') === '1') {
+            console.debug('[modals] param register=1 détecté → ouverture de la modale d\'inscription');
+            window.showRegisterModal();
+        }
         if (url.searchParams.get('error') === 'admin_required' && typeof showToast === 'function') {
             showToast('Accès réservé aux administrateurs — connectez-vous avec un compte administrateur.', 'danger');
         }

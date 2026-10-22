@@ -389,7 +389,7 @@ function validateStep1() {
     const latitude = document.getElementById('latitude').value;
     const longitude = document.getElementById('longitude').value;
     
-    if (!title || !description || !startDate || !endDate || !address || !latitude || !longitude) {
+    if (!title || !startDate || !endDate || !address || !latitude || !longitude) {
         showToast('Veuillez remplir tous les champs obligatoires', 'error');
         return false;
     }
@@ -1028,7 +1028,7 @@ function validateStep1() {
     const latitude = document.getElementById('latitude').value;
     const longitude = document.getElementById('longitude').value;
     
-    if (!title || !description || !startDate || !endDate || !address || !latitude || !longitude) {
+    if (!title || !startDate || !endDate || !address || !latitude || !longitude) {
         showToast('Veuillez remplir tous les champs obligatoires', 'error');
         return false;
     }

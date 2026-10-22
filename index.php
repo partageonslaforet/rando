@@ -39,6 +39,8 @@ try {
     // 3. Chargement des dépendances essentielles
     debug_log('Chargement des dépendances');
     require_once __DIR__ . '/config/database.php';
+    require_once __DIR__ . '/includes/ip_ban.php';
+    enforceIpBan($pdo);
     require_once __DIR__ . '/src/Models/Event.php';
     require_once __DIR__ . '/templates/components/header/header.php';
     require_once __DIR__ . '/templates/components/footer/footer.php'; 
@@ -71,7 +73,15 @@ try {
     // 7. Routage AVANT d'afficher le layout : la page détail gère son propre header/footer
     debug_log('🎯 Chargement du template');
     $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+    // Normaliser : ignorer le slash final (évite un faux 404 sur /events/)
+    $uri = ($uri !== '/' && $uri !== null) ? (rtrim($uri, '/') ?: '/') : '/';
     debug_log('URI analysée: ' . $uri);
+
+    // Sitemap XML dynamique
+    if ($uri === '/sitemap.xml') {
+        require_once __DIR__ . '/seo/sitemap.php';
+        return;
+    }
 
     // Route propre /event/{id} -> /event avec $_GET['id']
     if (preg_match('#^/event/(\d+)$#', $uri, $m)) {
@@ -82,6 +92,17 @@ try {
     if ($uri === '/event') {
         debug_log('🎯 Chargement de la page détail événement');
         require_once __DIR__ . '/templates/events/event-detail.php';
+        return;
+    }
+
+    // Routes connues servies par ce contrôleur ; tout le reste est un vrai 404
+    $knownRoutes = ['/', '/index.php', '/events'];
+    if (!in_array($uri, $knownRoutes, true)) {
+        http_response_code(404);
+        if (!isBenign404Path($uri)) {
+            recordNotFound($pdo, $_SERVER['REQUEST_URI'] ?? $uri);
+        }
+        require_once __DIR__ . '/templates/pages/404.php';
         return;
     }
 

@@ -203,6 +203,11 @@ include __DIR__ . '/../../templates/layouts/header.php';
                         <button class="btn btn-admin btn-delete" onclick="deleteEvent(<?php echo $event['id']; ?>)">
                             <i class="bi bi-trash me-1"></i> Supprimer
                         </button>
+                        <?php if (($event['status'] ?? '') === 'approved'): ?>
+                        <button class="btn btn-admin btn-approve" onclick="postToFacebook(<?php echo $event['id']; ?>)">
+                            <i class="bi bi-facebook me-1"></i> Publier sur Facebook
+                        </button>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
@@ -379,7 +384,7 @@ function editViaModal(eventId) {
 <div class="toast-container position-fixed bottom-0 end-0 p-3" id="adminToastContainer"></div>
 
 <!-- Actions admin (confirmations et toasts) -->
-<script src="/assets/js/admin/admin-actions.js"></script>
+<script src="/assets/js/admin/admin-actions.js?v=3"></script>
 
 <?php
 include __DIR__ . '/../../templates/layouts/footer.php';

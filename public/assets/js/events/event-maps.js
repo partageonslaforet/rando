@@ -69,6 +69,16 @@ if (!window.eventPinIcon) {
         popupAnchor: [0, -38]
     });
 }
+if (!window.eventPinIconOutside) {
+    // Variante grisée : événement hors du périmètre du filtre distance
+    window.eventPinIconOutside = L.divIcon({
+        className: 'event-pin event-pin-outside',
+        html: '<i class="bi bi-geo-alt-fill" aria-hidden="true"></i>',
+        iconSize: [30, 42],
+        iconAnchor: [15, 42],
+        popupAnchor: [0, -38]
+    });
+}
 if (typeof window.eventClusterIcon !== 'function') {
     window.eventClusterIcon = function (cluster) {
         return L.divIcon({
@@ -212,8 +222,15 @@ async function updateMapMarkers(events) {
             return;
         }
 
-        if (!window.markersLayer) {
-            window.markersLayer = window.createMarkersLayer().addTo(window.mainMap);
+        // Filtre distance actif → couche simple (grisage visible) ; sinon cluster
+        const distanceActive = !!(window.currentFilters && window.currentFilters.distance);
+        const isCluster = typeof L.MarkerClusterGroup === 'function'
+            && window.markersLayer instanceof L.MarkerClusterGroup;
+        if (!window.markersLayer || (distanceActive === isCluster)) {
+            if (window.markersLayer && window.mainMap) {
+                window.mainMap.removeLayer(window.markersLayer);
+            }
+            window.markersLayer = window.createMarkersLayer(distanceActive).addTo(window.mainMap);
         }
         
         window.markersLayer.clearLayers();
@@ -261,20 +278,30 @@ async function updateMapMarkers(events) {
                             </div>
                         </a>`;
 
+                    // Pin grisé si l'événement est hors du périmètre du filtre distance
+                    const outsideRadius = window.distanceFilter
+                        && typeof window.distanceFilter.eventOutsideRadius === 'function'
+                        && window.distanceFilter.eventOutsideRadius(event, (window.currentFilters || {}).distance);
+
                     const marker = L.marker([coordinates.lat, coordinates.lng], {
-                        icon: window.eventPinIcon,
+                        icon: outsideRadius ? window.eventPinIconOutside : window.eventPinIcon,
                         title: "Cliquez pour plus d'informations"
                     }).bindPopup(popupContent);
                     
                     marker.addTo(window.markersLayer);
-                    bounds.extend([coordinates.lat, coordinates.lng]);
+                    // Filtre distance actif : seuls les événements dans le rayon
+                    // participent au cadrage (le cercle fixe déjà la vue)
+                    if (!distanceActive || !outsideRadius) {
+                        bounds.extend([coordinates.lat, coordinates.lng]);
+                    }
                 }
             } catch (error) {
                 console.error(`Erreur lors du traitement de l'événement:`, error);
             }
         }
 
-        if (bounds.isValid()) {
+        // Filtre distance actif : renderRadius cadre déjà le cercle
+        if (bounds.isValid() && !distanceActive) {
             window.mainMap.fitBounds(bounds, { padding: [50, 50] });
         }
     } catch (error) {

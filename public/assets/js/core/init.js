@@ -13,7 +13,14 @@ document.addEventListener('DOMContentLoaded', function() {
     dropdowns.forEach(function(dropdown) {
         new bootstrap.Dropdown(dropdown);
     });
-    
+
+    // Tooltips Bootstrap sur les icônes de la navbar (guide, abonnements, contact)
+    if (typeof bootstrap !== 'undefined' && bootstrap.Tooltip) {
+        document.querySelectorAll('.navbar .nav-link[title]').forEach(function(el) {
+            new bootstrap.Tooltip(el, { placement: 'bottom', trigger: 'hover' });
+        });
+    }
+
     // S'assurer que EventsAPI est défini
     if (typeof EventsAPI === 'undefined') {
         console.error('EventsAPI n\'est pas défini');

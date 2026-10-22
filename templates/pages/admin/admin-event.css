@@ -1,0 +1,153 @@
+/* Styles de la page d'administration d'un événement. */
+#adminToastContainer { z-index: 1080; }
+
+.admin-actions .card-title {
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.admin-actions .btn-admin {
+  display: block;
+  width: 100%;
+  border-radius: 16px !important;
+  padding: 16px 20px !important;
+  font-weight: 700 !important;
+  font-size: 1.1rem !important;
+  margin-bottom: 14px;
+  box-shadow: 0 2px 4px color-mix(in srgb, #000 6%, transparent);
+}
+
+/* Bandeau de debug visuel temporaire pour confirmer que le CSS est chargé */
+.admin-actions {
+  padding-top: 6px;
+}
+
+/* Mettre à jour chemins (warning) */
+.admin-actions .btn-update {
+  background-color: var(--warning) !important;
+  border-color: var(--warning) !important;
+  color: var(--text-color) !important;
+}
+
+/* Approuver (vert) */
+.admin-actions .btn-approve {
+  background-color: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+  color: var(--light-text) !important;
+}
+.admin-actions .btn-approve:hover {
+  background-color: var(--primary-hover) !important;
+  border-color: var(--primary-hover) !important;
+}
+
+/* Rejeter (rouge) */
+.admin-actions .btn-reject {
+  background-color: var(--danger-color) !important;
+  border-color: var(--danger-color) !important;
+  color: var(--light-text) !important;
+}
+.admin-actions .btn-reject:hover {
+  background-color: var(--danger-color) !important;
+  border-color: var(--danger-color) !important;
+}
+
+/* Supprimer (rouge foncé) */
+.admin-actions .btn-delete {
+  background-color: var(--gray-dark) !important;
+  border-color: var(--gray-dark) !important;
+  color: var(--light-text) !important;
+}
+.admin-actions .btn-delete:hover {
+  background-color: var(--gray-dark) !important;
+  border-color: var(--gray-dark) !important;
+}
+
+/* Bouton Modifier */
+.admin-actions .btn-edit {
+  background-color: color-mix(in srgb, var(--warning) 80%, var(--light-text)) !important;
+  border-color: color-mix(in srgb, var(--warning) 15%, var(--light-text)) !important;
+  color: var(--light-text) !important;
+}
+.admin-actions .btn-edit:hover {
+  background-color: color-mix(in srgb, var(--warning) 80%, var(--light-text)) !important;
+  border-color: color-mix(in srgb, var(--warning) 15%, var(--light-text)) !important;
+}
+
+/* Modal brandé (refus) */
+.modal-brand .modal-content {
+  border-radius: 16px;
+  border: 1px solid var(--border-green);
+}
+.modal-brand .modal-header {
+  border-bottom: 0;
+  padding-bottom: 0.25rem;
+}
+.modal-brand .modal-title {
+  font-weight: 800;
+  color: var(--danger-color);
+}
+.modal-brand .modal-body .form-label {
+  font-weight: 700;
+  color: var(--primary-color);
+}
+.modal-brand .form-control {
+  border-radius: 12px;
+  border-color: var(--border-green);
+}
+.btn-brand-cancel {
+  background: var(--text-muted);
+  border-color: var(--text-muted);
+  color: var(--light-text);
+}
+.btn-brand-cancel:hover { filter: brightness(0.92); }
+.btn-brand-reject {
+  background: var(--danger-color);
+  border-color: var(--danger-color);
+  color: var(--light-text);
+  font-weight: 700;
+}
+.btn-brand-reject:hover {
+  background: var(--danger-color);
+  border-color: var(--danger-color);
+}
+
+/* --- Modale de confirmation (brand) --- */
+.modal-confirm .modal-header { border-bottom: 0; }
+.modal-confirm .modal-title { font-weight: 800; color: var(--danger-color); }
+.modal-confirm .modal-body p { 
+    margin: 0;
+    color: var(--text-color);
+    padding-left: 1.5rem;
+  }
+.modal-confirm .btn-confirm-approve { background: var(--primary-color); border-color: var(--primary-color); color: var(--light-text); font-weight: 700; }
+.modal-confirm .btn-confirm-approve:hover { background: var(--primary-hover); border-color: var(--primary-hover); }
+.modal-confirm .btn-confirm-reject { background: var(--danger-color); border-color: var(--danger-color); color: var(--light-text); font-weight: 700; }
+.modal-confirm .btn-confirm-reject:hover { background: var(--danger-color); border-color: var(--danger-color); }
+.modal-confirm .btn-cancel { background: var(--text-muted); border-color: var(--text-muted); color: var(--light-text); }
+
+/* --- Toast admin --- */
+#adminToastContainer {
+    position: fixed !important;
+    z-index: 2000 !important;
+    top: 1rem !important;
+    right: 1rem !important;
+    left: auto !important;
+    bottom: auto !important;
+    transform: none !important;
+    width: auto !important;
+    max-width: calc(100% - 2rem) !important;
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+    align-items: flex-end;
+}
+#adminToastContainer .toast {
+    border-radius: 12px;
+    box-shadow: 0 6px 20px color-mix(in srgb, #000 18%, transparent);
+    width: max-content;
+    max-width: 90vw;
+    text-align: left;
+}
+#adminToastContainer .toast-header { font-weight: 700; }
+.toast-success { border-left: 5px solid var(--primary-color); }
+.toast-error { border-left: 5px solid var(--danger-color); }

@@ -152,7 +152,7 @@ class Mailer {
         }
     }
 
-    public function sendHtml(string $to, string $subject, string $body, string $altBody = ''): bool {
+    public function sendHtml(string $to, string $subject, string $body, string $altBody = '', string $type = 'generic'): bool {
         try {
             $this->mailer->clearAddresses();
             $this->mailer->addAddress($to);
@@ -197,11 +197,39 @@ class Mailer {
                     'transport' => $this->mailer->Mailer,
                 ]);
             }
+            self::recordSentEmail($to, $subject, $body, $type, $result, $result ? null : $this->mailer->ErrorInfo);
             return $result;
         } catch (\Exception $e) {
             require_once __DIR__ . '/../logs/error.log.php';
             logError('includes/mailer.php', 'Envoi e-mail échoué', ['exception' => $e->getMessage()]);
+            self::recordSentEmail($to, $subject, $body, $type, false, $e->getMessage());
             return false;
+        }
+    }
+
+    /**
+     * Enregistre un email envoyé dans la table sent_emails.
+     * Statique : utilisable aussi pour les envois ne passant pas par Mailer
+     * (PHPMailer instancié directement, fallback mail()).
+     * Silencieux : jamais d'exception si la table est absente ou la DB indisponible.
+     */
+    public static function recordSentEmail(string $to, string $subject, string $body, string $type, bool $ok, ?string $error = null): void {
+        try {
+            require_once __DIR__ . '/../config/database.php';
+            $db = getConnection();
+            $db->prepare('INSERT INTO sent_emails (recipient, subject, body_html, type, status, error) VALUES (?, ?, ?, ?, ?, ?)')
+               ->execute([
+                   mb_substr($to, 0, 190),
+                   mb_substr($subject, 0, 255),
+                   $body,
+                   mb_substr($type, 0, 50) ?: 'generic',
+                   $ok ? 'ok' : 'error',
+                   $error !== null ? mb_substr($error, 0, 1000) : null,
+               ]);
+        } catch (\Throwable $e) {
+            if (function_exists('logError')) {
+                logError('includes/mailer.php', 'Échec écriture sent_emails', ['error' => $e->getMessage()]);
+            }
         }
     }
 
@@ -219,7 +247,7 @@ class Mailer {
         include __DIR__ . '/../templates/emails/verification.php';
         $body = ob_get_clean();
 
-        return $this->sendHtml($to, $subject, $body);
+        return $this->sendHtml($to, $subject, $body, '', 'verification');
     }
 
     public function sendPasswordResetEmail(string $to, string $name, string $token): bool {
@@ -236,7 +264,7 @@ class Mailer {
         include __DIR__ . '/../templates/emails/reset.php';
         $body = ob_get_clean();
 
-        return $this->sendHtml($to, $subject, $body);
+        return $this->sendHtml($to, $subject, $body, '', 'password_reset');
     }
 
     public function sendEventPublishedEmail(string $to, array $eventData): bool {
@@ -259,7 +287,7 @@ class Mailer {
         include __DIR__ . '/../templates/emails/event_published_user.php';
         $body = ob_get_clean();
 
-        return $this->sendHtml($to, $subject, $body);
+        return $this->sendHtml($to, $subject, $body, '', 'event_pending');
     }
 
     public function sendAdminEventPendingEmail(string $to, array $event): bool {
@@ -306,7 +334,7 @@ class Mailer {
         $body = ob_get_clean();
 
         $subject = 'Nouvel Evenement à valider';
-        return $this->sendHtml($to, $subject, $body);
+        return $this->sendHtml($to, $subject, $body, '', 'event_pending_admin');
     }
 
     public function sendEventApprovedEmail(string $to, array $event): bool {
@@ -329,7 +357,7 @@ class Mailer {
         $body = ob_get_clean();
 
         $subject = 'Votre événement a été approuvé - ' . APP_NAME;
-        return $this->sendHtml($to, $subject, $body);
+        return $this->sendHtml($to, $subject, $body, '', 'event_approved');
     }
 
     public function sendEventRejectedEmail(string $to, array $event): bool {
@@ -353,7 +381,7 @@ class Mailer {
         $body = ob_get_clean();
 
         $subject = 'Votre événement a été refusé - ' . APP_NAME;
-        return $this->sendHtml($to, $subject, $body);
+        return $this->sendHtml($to, $subject, $body, '', 'event_rejected');
     }
 
     /**
@@ -387,7 +415,8 @@ class Mailer {
             'cancelled' => 'Événement annulé : ',
         ];
         $subject = ($subjects[$type] ?? $subjects['new']) . $title . ' - ' . APP_NAME;
-        return $this->sendHtml($to, $subject, $body);
+        $mailType = 'event_notification_' . (isset($subjects[$type]) ? $type : 'new');
+        return $this->sendHtml($to, $subject, $body, '', $mailType);
     }
 
     /**
@@ -423,7 +452,7 @@ class Mailer {
         $body = ob_get_clean();
 
         $subject = 'Votre événement « ' . ($event['title'] ?? '') . ' » est en ligne sur rando.partageonslaforet.be';
-        return $this->sendHtml($to, $subject, $body);
+        return $this->sendHtml($to, $subject, $body, '', 'organizer_online');
     }
 
     /**
@@ -441,6 +470,6 @@ class Mailer {
         include __DIR__ . '/../templates/emails/password-change-confirm.php';
         $body = ob_get_clean();
 
-        return $this->sendHtml($to, $subject, $body);
+        return $this->sendHtml($to, $subject, $body, '', 'password_change');
     }
 }

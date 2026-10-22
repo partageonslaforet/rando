@@ -39,13 +39,26 @@
     color: var(--light-text);
 }
 
-/* Action tertiaire — simple lien discret */
+/* Icônes du récap événement (date / lieu) — vert charte */
+#claimResultModal .claim-meta-icon {
+    color: var(--primary-color);
+    margin-right: 0.35rem;
+}
+
+/* Action tertiaire — bouton danger "Signaler une erreur" */
 #claimResultModal .btn-claim-link {
-    color: var(--text-muted);
+    display: inline-block;
+    background-color: var(--danger-color);
+    border: none;
+    color: var(--light-text);
+    border-radius: 10px;
     font-weight: 500;
     text-decoration: none;
-    padding: 0.6rem 1rem;
+    padding: 0.6rem 1.6rem;
+    transition: background-color 0.3s ease;
 }
-#claimResultModal .btn-claim-link:hover {
-    color: var(--danger-color);
+#claimResultModal .btn-claim-link:hover,
+#claimResultModal .btn-claim-link:focus {
+    background-color: var(--danger-hover);
+    color: var(--light-text);
 }

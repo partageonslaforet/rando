@@ -29,7 +29,7 @@
       else btn.classList.add('btn-primary');
 
       const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
-      const onClick = () => { cleanup(); resolve(true); };
+      const onClick = () => { cleanup(); modal.hide(); resolve(true); };
       const onHidden = () => { cleanup(); resolve(false); };
       function cleanup() {
         btn.removeEventListener('click', onClick);
@@ -103,6 +103,30 @@
     } catch (e) {
       console.error(e);
       showToast({ title: 'Erreur', message: e.message || 'Action impossible', variant: 'error' });
+    }
+  };
+
+  window.postToFacebook = async function (eventId) {
+    const ok = await showConfirm({
+      title: 'Publier sur Facebook',
+      message: 'Publier cet événement sur la Page Facebook ? Un post avec lien sera créé.',
+      confirmText: 'Publier',
+      variant: 'approve'
+    });
+    if (!ok) return;
+
+    try {
+      const res = await fetch('/api/admin/events/facebook_post.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({ event_id: parseInt(eventId, 10) })
+      });
+      const json = await res.json();
+      if (!res.ok || !json.success) throw new Error(json.message || 'Erreur serveur');
+      showToast({ title: 'Facebook', message: 'Post publié sur la Page.', variant: 'success' });
+    } catch (e) {
+      console.error(e);
+      showToast({ title: 'Erreur', message: e.message || 'Publication impossible', variant: 'error' });
     }
   };
 

@@ -1,0 +1,12 @@
+/* Style des cases cochées pour la page Gérer mes abonnements */
+/* Styles de la page de gestion des abonnements */
+#catCount { font-weight: 400; }
+#manageForm .form-check-input:checked {
+  background-color: color-mix(in srgb, var(--primary-color) 50%, transparent);
+  border-color: color-mix(in srgb, var(--primary-color) 50%, transparent);
+}
+
+/* Met en évidence les radios cochées */
+#manageForm .form-check-input[type="radio"]:checked {
+  box-shadow: 0 0 0 0.1rem color-mix(in srgb, var(--primary-color) 25%, transparent);
+}

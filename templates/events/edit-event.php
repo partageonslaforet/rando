@@ -500,8 +500,8 @@ require_once ROOT_PATH . '/templates/layouts/header-solid.php';
                                 </div>
 
                                 <div class="mb-3">
-                                    <label for="description" class="form-label required-field">Description</label>
-                                    <textarea class="form-control" id="description" name="description" rows="5" required><?= htmlspecialchars($event['description']) ?></textarea>
+                                    <label for="description" class="form-label">Description <span class="text-muted fw-normal">(optionnelle)</span></label>
+                                    <textarea class="form-control" id="description" name="description" rows="5"><?= htmlspecialchars($event['description']) ?></textarea>
                                 </div>
 
                                 <div class="row">

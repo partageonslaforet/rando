@@ -51,6 +51,14 @@ define('APP_URL', $_ENV['APP_URL'] ?? ($isProduction ? 'https://rando.partageons
 define('APP_NAME', $_ENV['APP_NAME'] ?? 'Partageons La Forêt');
 define('DEBUG', filter_var($_ENV['DEBUG'] ?? !$isProduction, FILTER_VALIDATE_BOOLEAN));
 
+// Matomo (analytics self-hosted) — actif en prod uniquement ; MATOMO_URL vide = tracking désactivé
+define('MATOMO_URL', $_ENV['MATOMO_URL'] ?? ($isProduction ? 'https://matomorando.partageonslaforet.be/' : ''));
+define('MATOMO_SITE_ID', (int) ($_ENV['MATOMO_SITE_ID'] ?? 1));
+
+// Facebook Page — auto-post à l'approbation d'événement ; FB_PAGE_TOKEN vide = désactivé
+define('FB_PAGE_ID', $_ENV['FB_PAGE_ID'] ?? '');
+define('FB_PAGE_TOKEN', $_ENV['FB_PAGE_TOKEN'] ?? '');
+
 // Construction du DSN
 function getDsn() {
     return "mysql:host=" . DB_HOST . ";port=" . DB_PORT . ";dbname=" . DB_NAME . ";charset=utf8mb4";

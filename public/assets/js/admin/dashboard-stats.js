@@ -148,7 +148,8 @@
       pages: 'Pages les plus visitées',
       recent: 'Dernières visites',
       countries: 'Visites par pays',
-      sources: 'Visites référées'
+      sources: 'Visites référées',
+      utm: 'Campagnes (liens trackés)'
     };
     const titleEl = document.getElementById('statsModalTitle');
     if (!titleEl) return;
@@ -199,6 +200,27 @@
     return html;
   }
 
+  function renderUtm(rows) {
+    const sorted = sort.field ? sortRows(rows, sort.field, sort.asc) : sortRows(rows, 'visits', false);
+    let html = '<table class="table stats-table align-middle"><thead><tr>';
+    html += th('SOURCE', 'utm_source');
+    html += th('CAMPAGNE', 'utm_campaign');
+    html += th('VISITES', 'visits', 'end');
+    html += th('SESSIONS', 'sessions', 'end');
+    html += th('VISITEURS UNIQUES (IP)', 'unique_ips', 'end');
+    html += th('DERNIÈRE VISITE', 'last_visit');
+    html += '</tr></thead><tbody>';
+    if (!sorted || !sorted.length) {
+      html += '<tr><td colspan="6" class="text-center text-muted py-4">Aucune visite trackée — envoyez une campagne avec les liens UTM automatiques</td></tr>';
+    } else {
+      sorted.forEach(function (r) {
+        html += '<tr><td>' + escapeHtml(r.utm_source || '-') + '</td><td>' + escapeHtml(r.utm_campaign || '—') + '</td><td class="text-end">' + parseInt(r.visits, 10) + '</td><td class="text-end">' + parseInt(r.sessions, 10) + '</td><td class="text-end">' + parseInt(r.unique_ips, 10) + '</td><td>' + formatDateTime(r.last_visit) + '</td></tr>';
+      });
+    }
+    html += '</tbody></table>';
+    return html;
+  }
+
   function renderCountries(rows) {
     const sorted = sortRows(rows, sort.field || 'visits', sort.asc);
     let html = '<table class="table stats-table align-middle"><thead><tr>';
@@ -225,6 +247,7 @@
     else if (currentType === 'pages') html = renderPages(currentData);
     else if (currentType === 'countries') html = renderCountries(currentData);
     else if (currentType === 'sources') html = renderSources(currentData);
+    else if (currentType === 'utm') html = renderUtm(currentData);
     else {
       if (currentBack === 'countries') {
         html += '<div class="mb-2"><a href="#" data-back class="small"><i class="bi bi-arrow-left"></i> Retour aux pays</a> <span class="badge bg-secondary">' + escapeHtml(currentCountry || 'Inconnu') + '</span></div>';

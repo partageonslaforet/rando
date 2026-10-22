@@ -112,7 +112,9 @@ try {
         // Version texte simple (fallback)
         $mail->AltBody = "Bonjour,\n\nConfirmez votre abonnement en ouvrant ce lien :\n" . $verificationUrl . "\n\nSi vous n'êtes pas à l'origine de cette demande, ignorez cet email.";
 
-        if (!$mail->send()) {
+        $subVerifySent = $mail->send();
+        Mailer::recordSentEmail($email, $mail->Subject, $emailBody, 'subscriber_verify', $subVerifySent, $subVerifySent ? null : $mail->ErrorInfo);
+        if (!$subVerifySent) {
             logError('subscribers/register.php', 'Erreur envoi email', ['error' => $mail->ErrorInfo]);
             // Continuer même si l'email échoue
         }

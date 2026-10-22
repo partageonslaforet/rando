@@ -81,7 +81,7 @@ async function filterEvents() {
         filteredEvents = filteredEvents.filter(event => applyFilters(event, currentFilters));
         
         // 5. Pour la carte : mêmes événements mais SANS le critère distance
-        //    (les marqueurs hors rayon restent visibles et cliquables)
+        //    (les marqueurs hors rayon restent visibles, grisés par map.js)
         const filtersNoDistance = Object.assign({}, currentFilters, { distance: null });
         const eventsForMap = events.filter(event => applyFilters(event, filtersNoDistance));
         
@@ -218,7 +218,7 @@ function updateCounters(allEvents) {
 }
 
 // Mise à jour de l'interface
-// eventsForMap : événements pour la carte (sans critère distance — marqueurs actifs)
+// eventsForMap : événements pour la carte (sans critère distance — hors rayon grisés)
 async function updateUI(filteredEvents, eventsForMap) {
     
     if (window.mapFunctions && window.mapFunctions.updateMapMarkers) {

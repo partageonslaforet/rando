@@ -116,11 +116,12 @@ if (!function_exists('render_events_list')) {
 
         function formatDay(dateString) {
             const date = new Date(dateString);
-            return date.toLocaleDateString('fr-FR', {
+            const label = date.toLocaleDateString('fr-FR', {
                 weekday: 'long',
                 day: 'numeric',
                 month: 'long'
             });
+            return label.charAt(0).toUpperCase() + label.slice(1);
         }
 
         function formatTime(timeString) {

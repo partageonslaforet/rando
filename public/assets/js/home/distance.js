@@ -2,7 +2,7 @@
  * Fichier: /assets/js/home/distance.js
  * Rôle: Filtre distance — lieu de référence (saisie, géoloc, clic carte) + rayon 5-100 km.
  *       Dessine un cercle Leaflet autour du lieu; la liste des événements est filtrée
- *       via window.currentFilters.distance, les marqueurs hors rayon restent actifs.
+ *       via window.currentFilters.distance, les marqueurs hors rayon sont grisés.
  * Dépendances: Leaflet, window.mainMap, window.currentFilters (filters.js),
  *              geocodeAddress/reverseGeocode/getCoordinates (map.js ou event-maps.js).
  */
@@ -29,13 +29,47 @@
         return 2 * R * Math.asin(Math.sqrt(a));
     }
 
+    // Extraction locale des coordonnées — autonome, ne dépend pas de map.js.
+    // Ordre: champ "lat,lng", puis champs séparés, puis getCoordinates() si dispo.
+    function eventCoords(event) {
+        if (!event) return null;
+        if (event.coordinates) {
+            const parts = String(event.coordinates).split(',');
+            const lat = parseFloat(parts[0]);
+            const lng = parseFloat(parts[1]);
+            if (!isNaN(lat) && !isNaN(lng)) return { lat, lng };
+        }
+        const flat = parseFloat(event.lat ?? event.latitude);
+        const flng = parseFloat(event.lng ?? event.longitude);
+        if (!isNaN(flat) && !isNaN(flng)) return { lat: flat, lng: flng };
+        if (typeof getCoordinates === 'function') {
+            try { return getCoordinates(event); } catch (e) { /* ignore */ }
+        }
+        return null;
+    }
+
+    function distanceToOriginKm(event, distanceFilter) {
+        if (!distanceFilter || !distanceFilter.origin) return null;
+        const coords = eventCoords(event);
+        if (!coords) return null;
+        return haversineKm(distanceFilter.origin.lat, distanceFilter.origin.lng, coords.lat, coords.lng);
+    }
+
     // Test de filtre appelé par filters.js : l'événement est-il dans le rayon ?
+    // Un événement sans coordonnées n'est pas mesurable : on le conserve dans la liste.
     function eventWithinRadius(event, distanceFilter) {
         if (!distanceFilter || !distanceFilter.origin) return true;
-        const coords = (typeof getCoordinates === 'function') ? getCoordinates(event) : null;
-        if (!coords || !coords.lat || !coords.lng) return false;
-        const km = haversineKm(distanceFilter.origin.lat, distanceFilter.origin.lng, coords.lat, coords.lng);
+        const km = distanceToOriginKm(event, distanceFilter);
+        if (km === null) return true;
         return km <= distanceFilter.radius;
+    }
+
+    // Marqueur carte : l'événement est-il explicitement HORS du rayon ?
+    // (utilisé pour griser le pin ; les événements sans coords ne sont pas grisés)
+    function eventOutsideRadius(event, distanceFilter) {
+        const km = distanceToOriginKm(event, distanceFilter);
+        if (km === null) return false;
+        return km > distanceFilter.radius;
     }
 
     function els() {
@@ -228,6 +262,6 @@
         setTimeout(() => clearInterval(waitMap), 15000);
     });
 
-    // Exposé pour filters.js
-    window.distanceFilter = { eventWithinRadius, haversineKm };
+    // Exposé pour filters.js et map.js
+    window.distanceFilter = { eventWithinRadius, eventOutsideRadius, haversineKm, eventCoords };
 })();

@@ -54,6 +54,62 @@
     if (emptyRow) emptyRow.classList.toggle('d-none', visible > 0);
   }
 
+  // Tri des colonnes du tableau « Événements récents »
+  function sortEventsTable(th) {
+    const key = th.getAttribute('data-sort');
+    if (!key) return;
+    const dir = th.getAttribute('data-sort-dir') === 'desc' ? 'asc' : 'desc';
+    th.setAttribute('data-sort-dir', dir);
+
+    // Indicateur visuel : une seule colonne active à la fois
+    document.querySelectorAll('th.sortable').forEach(h => {
+      h.classList.remove('sorted');
+      const icon = h.querySelector('.sort-icon');
+      if (icon) icon.className = 'bi bi-arrow-down-up sort-icon';
+    });
+    th.classList.add('sorted');
+    const icon = th.querySelector('.sort-icon');
+    if (icon) icon.className = 'bi sort-icon ' + (dir === 'asc' ? 'bi-sort-down' : 'bi-sort-up');
+
+    const tbody = th.closest('table').querySelector('tbody');
+    if (!tbody) return;
+
+    const getters = {
+      date:   r => parseInt(r.getAttribute('data-date') || '0', 10),
+      title:  r => (r.getAttribute('data-title') || '').toLowerCase(),
+      org:    r => (r.getAttribute('data-org') || '').toLowerCase(),
+      status: r => (r.getAttribute('data-status') || ''),
+      fb:     r => parseInt(r.getAttribute('data-fb') || '0', 10)
+    };
+    const get = getters[key];
+    if (!get) return;
+
+    const rows = Array.from(tbody.querySelectorAll('tr[data-status]'));
+    rows.sort((a, b) => {
+      const va = get(a), vb = get(b);
+      const cmp = (typeof va === 'number') ? va - vb : String(va).localeCompare(String(vb), 'fr');
+      return dir === 'asc' ? cmp : -cmp;
+    });
+    // Ré-insérer dans l'ordre — les lignes spéciales (vide/filtre) restent en queue
+    rows.forEach(r => tbody.appendChild(r));
+  }
+
+  // Filtrage combiné type + recherche pour « Emails envoyés »
+  function applySentEmailsFilter() {
+    const table = document.getElementById('sentEmailsTable');
+    if (!table) return;
+    const typeSel = document.getElementById('sentEmailsTypeFilter');
+    const searchInp = document.getElementById('sentEmailsSearch');
+    const type = typeSel ? typeSel.value : '';
+    const q = ((searchInp && searchInp.value) || '').trim().toLowerCase();
+
+    table.querySelectorAll('tbody tr[data-type]').forEach(row => {
+      const matchType = type === '' || row.getAttribute('data-type') === type;
+      const matchSearch = q === '' || (row.getAttribute('data-search') || '').includes(q);
+      row.style.display = (matchType && matchSearch) ? '' : 'none';
+    });
+  }
+
   // Sidebar: bascule entre sections
   function activateSection(targetId) {
     document.querySelectorAll('[data-section]').forEach(sec => sec.classList.add('d-none'));
@@ -74,6 +130,17 @@
     // Recherche
     const search = document.getElementById('dashSearch');
     if (search) search.addEventListener('input', () => applySearch(search.value || ''));
+
+    // Tri des colonnes
+    document.querySelectorAll('th.sortable[data-sort]').forEach(th => {
+      th.addEventListener('click', () => sortEventsTable(th));
+    });
+
+    // Filtres « Emails envoyés »
+    const sentTypeFilter = document.getElementById('sentEmailsTypeFilter');
+    if (sentTypeFilter) sentTypeFilter.addEventListener('change', applySentEmailsFilter);
+    const sentSearch = document.getElementById('sentEmailsSearch');
+    if (sentSearch) sentSearch.addEventListener('input', applySentEmailsFilter);
 
     // Sidebar
     document.querySelectorAll('.dash-sidenav .nav-link[data-target]').forEach(link => {

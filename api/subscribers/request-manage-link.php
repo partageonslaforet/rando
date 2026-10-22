@@ -61,6 +61,7 @@ try {
         $mail->isHTML(true); $mail->msgHTML($emailBody);
         $mail->AltBody = "Gérez vos abonnements :\n$manageUrl\n\nCe lien expire dans 24 heures.";
         $sent = $mail->send();
+        Mailer::recordSentEmail($email, $mail->Subject, $emailBody, 'subscriber_manage', $sent, $sent ? null : $mail->ErrorInfo);
         logError('subscribers/request-manage-link', 'Mailer result', [ 'sent' => $sent, 'error' => $sent ? null : $mail->ErrorInfo ]);
     } else {
         // Log le fait que soit non trouvé soit non vérifié

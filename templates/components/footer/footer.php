@@ -47,7 +47,7 @@ function render_footer(bool $showSponsors = false) {
                     <div class="footer-sponsors-row">
                         <?php foreach ($footerSponsors as $ad): ?>
                             <?php if (!empty($ad['link_url'])): ?>
-                                <a href="<?= htmlspecialchars($ad['link_url']) ?>" target="_blank" rel="noopener sponsored" class="footer-sponsor-item" title="<?= htmlspecialchars($ad['name']) ?>">
+                                <a href="/api/sponsors/click.php?id=<?= (int) $ad['id'] ?>&ctx=footer" target="_blank" rel="noopener sponsored" class="footer-sponsor-item" title="<?= htmlspecialchars($ad['name']) ?>">
                                     <img src="<?= htmlspecialchars($ad['image_path']) ?>" alt="<?= htmlspecialchars($ad['alt_text'] ?: $ad['name']) ?>" loading="lazy">
                                 </a>
                             <?php else: ?>
@@ -78,6 +78,7 @@ function render_footer(bool $showSponsors = false) {
             <!-- Copyright intégré au footer -->
             <div class="footer-bottom">
                 <small>&copy; <?= date('Y') ?> Partageons La Forêt. Tous droits réservés.</small>
+                <a href="https://www.facebook.com/profile.php?id=1417442544778292" target="_blank" rel="noopener noreferrer" class="footer-fb-link" title="Suivez-nous sur Facebook" aria-label="Page Facebook de Partageons la Forêt"><i class="bi bi-facebook"></i></a>
             </div>
         </div>
     </footer>

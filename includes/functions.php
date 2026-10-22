@@ -429,10 +429,12 @@ if (!function_exists('resolveImagePublicUrl')) {
     function resolveImagePublicUrl(?string $imagePath, ?string $storagePath) {
         $docRoot = realpath($_SERVER['DOCUMENT_ROOT'] ?? '');
 
-        // 1) Si storage_path existe physiquement, on l'utilise
+        // 1) Si storage_path existe physiquement, on l'utilise.
+        // realpath() canonise les chemins stockés contenant '../' (ex. config/../public/uploads)
         if (!empty($storagePath) && file_exists($storagePath)) {
-            if ($docRoot && strpos($storagePath, $docRoot) === 0) {
-                return getFullUrl(substr($storagePath, strlen($docRoot)));
+            $realStoragePath = realpath($storagePath) ?: $storagePath;
+            if ($docRoot && strpos($realStoragePath, $docRoot) === 0) {
+                return getFullUrl(substr($realStoragePath, strlen($docRoot)));
             }
             return $storagePath;
         }
@@ -506,6 +508,87 @@ if (!function_exists('userHasOrganizerProfile')) {
             }
             return true; // Ne pas afficher la pastille en cas d'erreur
         }
+    }
+}
+
+// Publication d'un événement sur la Page Facebook (Graph API /feed).
+// Retourne l'ID du post FB en cas de succès, null sinon. Ne lève jamais
+// d'exception : les erreurs sont loguées dans error.log.
+// Si $pdo est fourni, l'ID du post est persisté dans events.fb_post_id
+// (échec silencieux si la colonne n'existe pas encore — migration 2026_10_15).
+function postEventToFacebook(array $eventData, int $eventId, ?PDO $pdo = null): ?string {
+    if (!defined('FB_PAGE_TOKEN') || FB_PAGE_TOKEN === ''
+        || !defined('FB_PAGE_ID') || FB_PAGE_ID === '') {
+        return null; // fonction désactivée
+    }
+    try {
+        $fbMessage = ($eventData['title'] ?? 'Nouvel événement') . "\n\n";
+        if (!empty($eventData['date'])) {
+            $fbMessage .= "📅 " . date('d/m/Y', strtotime($eventData['date'])) . "\n";
+        }
+        if (!empty($eventData['location'])) {
+            $fbMessage .= "📍 " . $eventData['location'] . "\n";
+        }
+        $fbMessage .= "\nDétails et inscription ↓";
+
+        $ch = curl_init('https://graph.facebook.com/v21.0/' . FB_PAGE_ID . '/feed');
+        curl_setopt_array($ch, [
+            CURLOPT_POST => true,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_TIMEOUT => 10,
+            CURLOPT_POSTFIELDS => http_build_query([
+                'message' => $fbMessage,
+                'link' => APP_URL . '/event/' . $eventId . '?utm_source=facebook&utm_medium=social&utm_campaign=page_auto',
+                'access_token' => FB_PAGE_TOKEN,
+            ]),
+        ]);
+        $fbResp = curl_exec($ch);
+        $fbErr = curl_error($ch);
+        curl_close($ch);
+
+        $fbData = json_decode((string) $fbResp, true);
+        if ($fbErr || empty($fbData['id'])) {
+            if (function_exists('logError')) {
+                logError('includes/functions.php', 'Échec post Facebook', [
+                    'event_id' => $eventId,
+                    'curl_error' => $fbErr,
+                    // Diag : préfixe + longueur du token chargé (jamais le secret complet)
+                    'token_preview' => substr(FB_PAGE_TOKEN, 0, 12) . '…(len=' . strlen(FB_PAGE_TOKEN) . ')',
+                    'response' => substr((string) $fbResp, 0, 500)
+                ]);
+            }
+            return null;
+        }
+        if (function_exists('logError')) {
+            logError('includes/functions.php', 'Post Facebook publié', [
+                'event_id' => $eventId,
+                'fb_post_id' => $fbData['id']
+            ]);
+        }
+        // Persister l'ID du post (affichage icône FB dans l'admin)
+        if ($pdo instanceof PDO) {
+            try {
+                $upd = $pdo->prepare('UPDATE events SET fb_post_id = ? WHERE id = ?');
+                $upd->execute([$fbData['id'], $eventId]);
+            } catch (Throwable $e) {
+                // Colonne absente (migration non jouée) — non bloquant, le post existe
+                if (function_exists('logError')) {
+                    logError('includes/functions.php', 'Persistance fb_post_id impossible', [
+                        'event_id' => $eventId,
+                        'exception' => $e->getMessage()
+                    ]);
+                }
+            }
+        }
+        return $fbData['id'];
+    } catch (Throwable $e) {
+        if (function_exists('logError')) {
+            logError('includes/functions.php', 'Exception post Facebook', [
+                'event_id' => $eventId,
+                'exception' => $e->getMessage()
+            ]);
+        }
+        return null;
     }
 }
 

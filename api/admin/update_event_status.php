@@ -60,6 +60,11 @@ try {
         exit();
     }
 
+    // Statut actuel avant mise à jour (utile pour l'anti-doublon du post FB)
+    $prevStmt = $pdo->prepare('SELECT status FROM events WHERE id = ?');
+    $prevStmt->execute([$eventId]);
+    $prevStatus = $prevStmt->fetchColumn() ?: '';
+
     // Mettre à jour le statut
     $stmt = $pdo->prepare('UPDATE events SET status = ?, updated_at = NOW() WHERE id = ?');
     $success = $stmt->execute([$status, $eventId]);
@@ -120,6 +125,17 @@ try {
                         'exception' => $e->getMessage()
                     ]);
                 }
+            }
+
+            // Post automatique sur la Page Facebook — uniquement pour une NOUVELLE
+            // mise en ligne (pas de re-post sur republication de brouillon 'update'
+            // ni si l'événement était déjà approuvé). Non bloquant.
+            if (($notifContext ?? 'auto') !== 'update' && $prevStatus !== 'approved') {
+                require_once __DIR__ . '/../../includes/functions.php';
+                $fbPostId = postEventToFacebook($eventInfo ?: [], $eventId, $pdo);
+                logMessage('FB post: ' . ($fbPostId ? "publié ($fbPostId)" : 'ignoré ou échoué (voir error.log)'));
+            } else {
+                logMessage('FB: pas de post (republication ou déjà approuvé)');
             }
         }
 

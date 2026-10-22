@@ -1,6 +1,6 @@
 /* Section liste d'événements */
 .events-list {
-    background: var(--surface-green);
+    background: var(--border-green);
     border-radius: 16px;
     margin: 20px 0;
 }
@@ -27,16 +27,16 @@
 .events-list-count {
     font-size: 1rem;
     font-weight: 600;
-    color: var(--primary-color);
+    color: var(--green-dark);
 }
 
 /* Titre de section par jour */
 .events-day-title {
-    background-color: color-mix(in srgb, var(--primary-color) 12%, transparent);
+   background: linear-gradient(90deg, rgba(46, 107, 56, 0.95), rgba(78, 152, 89, 0.95));
     padding: 0.7rem;
     border-radius: 10px;
     font-size: 1.3rem;
-    color: var(--primary-color);
+    color: var(--border-green);
 }
 
 /* Grille de cartes */
@@ -148,7 +148,7 @@
 
 /* Titre : 2 lignes max */
 .summary-card-title {
-    font-size: 1rem;
+    font-size: 1.2rem;
     font-weight: 700;
     line-height: 1.25;
     color: var(--green-dark);
@@ -195,7 +195,7 @@
     flex-wrap: wrap;
     gap: 0.25rem 0.75rem;
     color: var(--text-muted);
-    font-size: 0.85rem;
+    font-size: 1rem;
     margin-bottom: 0.35rem;
 }
 
@@ -219,9 +219,8 @@
 
 .summary-card-footer .meta-category {
     padding: 0.2rem 0.6rem;
-    border: 1px solid var(--border-green);
     border-radius: 999px;
-    background: var(--light-text);
+    background: var(--border-green);
     color: var(--green-dark);
     line-height: 1.1;
 }
@@ -269,7 +268,7 @@
     text-align: right;
     margin-top: 0.5rem;
     padding-top: 0.4rem;
-    color: var(--primary-color);
+    color: var(--green-dark);
     font-weight: 600;
     font-size: 0.95rem;
     text-decoration: none;
@@ -323,6 +322,7 @@
     width: auto;
     display: inline-block;
     height:auto;
+    border-color: var(--border-subtle);
 }
 
 #events-pagination .page-item.active .page-link {

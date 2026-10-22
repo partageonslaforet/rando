@@ -265,9 +265,11 @@ try {
     // Totaux pour les tuiles de fréquentation (toutes périodes, sauf dernières visites)
     $totalVisits = 0;
     $totalPages = 0;
+    $totalUtmVisits = 0;
     try {
         $totalVisits = (int) $pdo->query("SELECT COUNT(*) FROM site_visits")->fetchColumn();
         $totalPages = (int) $pdo->query("SELECT COUNT(DISTINCT url) FROM site_visits")->fetchColumn();
+        $totalUtmVisits = (int) $pdo->query("SELECT COUNT(*) FROM site_visits WHERE url LIKE '%utm_source=%'")->fetchColumn();
     } catch (PDOException $e) {
         error_log("Erreur totaux tuiles fréquentation : " . $e->getMessage());
     }
@@ -280,7 +282,7 @@ try {
             FROM events e 
             JOIN users u ON e.user_id = u.id 
             LEFT JOIN event_categories c ON e.category_id = c.id
-            ORDER BY e.created_at DESC
+            ORDER BY e.date DESC
         ")->fetchAll();
     } catch (PDOException $e) {
         error_log("Erreur lors de la récupération des événements récents : " . $e->getMessage());
@@ -305,6 +307,124 @@ try {
         error_log("Erreur récupération sponsors : " . $e->getMessage());
         $sponsors = [];
     }
+
+    // Stats de clics par sponsor (tolérant si sponsor_clicks n'est pas encore déployé)
+    $sponsorClickStats = [];
+    $sponsorVisitors = [];
+    $sponsorLastClick = [];
+    $sponsorClicksPerDay = [];
+    $recentClicks = [];
+    $sponsorKpis = ['total' => 0, 'today' => 0, 'unique_ips' => 0, 'sessions' => 0, 'non_humans' => 0];
+    try {
+        foreach ($pdo->query('SELECT sponsor_id, context, COUNT(*) AS c FROM sponsor_clicks GROUP BY sponsor_id, context') as $r) {
+            $sponsorClickStats[(int) $r['sponsor_id']][$r['context']] = (int) $r['c'];
+        }
+        // Visiteurs par sponsor : IP et sessions distinctes, bots, dernier clic
+        foreach ($pdo->query('SELECT sponsor_id, COUNT(DISTINCT ip_address) AS uniq_ips, COUNT(DISTINCT session_id) AS uniq_sessions, SUM(is_human = 0) AS non_humans, MAX(clicked_at) AS last_click FROM sponsor_clicks GROUP BY sponsor_id') as $r) {
+            $sponsorVisitors[(int) $r['sponsor_id']] = [
+                'uniq_ips' => (int) $r['uniq_ips'],
+                'uniq_sessions' => (int) $r['uniq_sessions'],
+                'non_humans' => (int) $r['non_humans'],
+            ];
+            $sponsorLastClick[(int) $r['sponsor_id']] = $r['last_click'];
+        }
+        $sponsorKpis = [
+            'total' => (int) $pdo->query('SELECT COUNT(*) FROM sponsor_clicks')->fetchColumn(),
+            'today' => (int) $pdo->query('SELECT COUNT(*) FROM sponsor_clicks WHERE DATE(clicked_at) = CURDATE()')->fetchColumn(),
+            'unique_ips' => (int) $pdo->query('SELECT COUNT(DISTINCT ip_address) FROM sponsor_clicks WHERE is_human = 1')->fetchColumn(),
+            'sessions' => (int) $pdo->query('SELECT COUNT(DISTINCT session_id) FROM sponsor_clicks')->fetchColumn(),
+            'non_humans' => (int) $pdo->query('SELECT COUNT(*) FROM sponsor_clicks WHERE is_human = 0')->fetchColumn(),
+        ];
+        $sponsorClicksPerDay = $pdo->query("SELECT DATE(clicked_at) AS day, COUNT(*) AS clics,
+            COUNT(DISTINCT session_id) AS sessions, COUNT(DISTINCT ip_address) AS unique_ips,
+            SUM(is_human = 0) AS non_humans
+            FROM sponsor_clicks
+            GROUP BY DATE(clicked_at) ORDER BY day DESC")->fetchAll();
+        $recentClicks = $pdo->query(
+            "SELECT c.context, c.event_id, c.ip_address, c.is_human, c.clicked_at,
+                    s.name AS sponsor_name, e.title AS event_title
+             FROM sponsor_clicks c
+             LEFT JOIN sponsors s ON s.id = c.sponsor_id
+             LEFT JOIN events e ON e.id = c.event_id
+             ORDER BY c.clicked_at DESC LIMIT 30")->fetchAll();
+        // Résolution géo (avec cache) — même mécanisme que les visites
+        $clickIpCache = [];
+        foreach ($recentClicks as &$click) {
+            $cip = (string) ($click['ip_address'] ?? '');
+            if (!isset($clickIpCache[$cip])) {
+                $clickIpCache[$cip] = resolveIpLocation($cip);
+            }
+            $click['country'] = $clickIpCache[$cip]['country'];
+            $click['city'] = $clickIpCache[$cip]['city'];
+        }
+        unset($click);
+    } catch (PDOException $e) {
+        logError('pages/admin/dashboard.php', 'sponsor click stats unavailable', ['error' => $e->getMessage()]);
+    }
+
+    // Contacts de publipostage (tolérant si la table n'est pas encore déployée)
+    $mailingContacts = [];
+    try {
+        $mailingContacts = $pdo->query('SELECT id, club, contact_name, email, phone, lieu, type, status FROM mailing_contacts ORDER BY club ASC, email ASC')->fetchAll();
+    } catch (PDOException $e) {
+        logError('pages/admin/dashboard.php', 'mailing_contacts unavailable', ['error' => $e->getMessage()]);
+    }
+    $mailingActiveCount = count(array_filter($mailingContacts, fn($c) => !empty($c['status'])));
+
+    // Historique des envois (tolérant si la table n'est pas encore déployée)
+    $mailingLogs = [];
+    try {
+        $mailingLogs = $pdo->query('SELECT l.*, c.club FROM mailing_logs l LEFT JOIN mailing_contacts c ON c.id = l.contact_id ORDER BY l.sent_at DESC, l.id DESC LIMIT 500')->fetchAll();
+    } catch (PDOException $e) {
+        logError('pages/admin/dashboard.php', 'mailing_logs unavailable', ['error' => $e->getMessage()]);
+    }
+
+    $mailingCampaigns = [];
+    try {
+        $mailingCampaigns = $pdo->query('SELECT id, subject, body, updated_at, created_at FROM mailing_campaigns ORDER BY updated_at DESC, created_at DESC')->fetchAll();
+    } catch (PDOException $e) {
+        logError('pages/admin/dashboard.php', 'mailing_campaigns unavailable', ['error' => $e->getMessage()]);
+    }
+
+    // Tous les emails sortants (tolérant si la table n'est pas encore déployée)
+    $sentEmails = [];
+    try {
+        $sentEmails = $pdo->query('SELECT id, recipient, subject, type, status, error, sent_at FROM sent_emails ORDER BY sent_at DESC, id DESC LIMIT 500')->fetchAll();
+    } catch (PDOException $e) {
+        logError('pages/admin/dashboard.php', 'sent_emails unavailable', ['error' => $e->getMessage()]);
+    }
+
+    // Regroupe les logs en « campagnes menées » : même campaign_id + même type (test/réel),
+    // envois consécutifs espacés de ≤ 120 s (l'envoi réel fait ~0,5 s/email).
+    $campaignSubjects = [];
+    foreach ($mailingCampaigns as $cp) {
+        $campaignSubjects[(int) $cp['id']] = $cp['subject'];
+    }
+    $mailingRuns = [];
+    foreach (array_reverse($mailingLogs) as $lg) { // ordre chronologique
+        $ts   = strtotime((string) $lg['sent_at']) ?: 0;
+        $i    = count($mailingRuns) - 1;
+        $last = $i >= 0 ? $mailingRuns[$i] : null;
+        if ($last !== null
+            && (int) $last['campaign_id'] === (int) $lg['campaign_id']
+            && (int) $last['is_test'] === (int) $lg['is_test']
+            && $ts - $last['last_ts'] <= 120) {
+            $mailingRuns[$i]['items'][]  = $lg;
+            $mailingRuns[$i]['last_ts']  = $ts;
+            $mailingRuns[$i][$lg['status'] === 'ok' ? 'ok' : 'failed']++;
+        } else {
+            $mailingRuns[] = [
+                'campaign_id' => (int) $lg['campaign_id'],
+                'is_test'     => (int) $lg['is_test'],
+                'first_ts'    => $ts,
+                'last_ts'     => $ts,
+                'ok'          => $lg['status'] === 'ok' ? 1 : 0,
+                'failed'      => $lg['status'] === 'ok' ? 0 : 1,
+                'items'       => [$lg],
+            ];
+        }
+    }
+    $mailingRuns = array_reverse($mailingRuns); // plus récent en premier
 
     // Récupérer toutes les catégories
     $categoryManager = new EventCategory($pdo);
@@ -376,6 +496,13 @@ include __DIR__ . '/../../templates/layouts/header-solid.php';
       <div>
         <div class="summary-label">VISITES RÉFÉRÉES</div>
         <div class="summary-value"><?= (int)$totalReferred ?></div>
+      </div>
+    </div>
+    <div class="summary-card" data-stat-modal="utm" role="button" tabindex="0">
+      <div class="summary-icon views"><i class="bi bi-megaphone"></i></div>
+      <div>
+        <div class="summary-label">CAMPAGNES (UTM)</div>
+        <div class="summary-value"><?= (int)$totalUtmVisits ?></div>
       </div>
     </div>
   </div>
@@ -451,7 +578,14 @@ include __DIR__ . '/../../templates/layouts/header-solid.php';
         <nav class="nav flex-column">
           <a href="#" class="nav-link active" data-target="section-events"><i class="bi bi-calendar-event me-1"></i> Événements</a>
           <a href="#" class="nav-link" data-target="section-categories"><i class="bi bi-tags-fill me-1"></i> Catégories</a>
-          <a href="#section-sponsors" class="nav-link" data-target="section-sponsors"><i class="bi bi-megaphone me-1"></i> Sponsors</a>
+          <div class="nav-parent"><i class="bi bi-megaphone me-1"></i> Sponsors</div>
+          <a href="#" class="nav-link nav-sub" data-target="section-sponsors"><i class="bi bi-pencil-square me-1"></i> Gestion</a>
+          <a href="#" class="nav-link nav-sub" data-target="section-sponsors-stats"><i class="bi bi-graph-up me-1"></i> Statistiques</a>
+          <div class="nav-parent"><i class="bi bi-envelope me-1"></i> Mailing</div>
+          <a href="#" class="nav-link nav-sub" data-target="section-mailing-contacts"><i class="bi bi-people me-1"></i> Contacts</a>
+          <a href="#" class="nav-link nav-sub" data-target="section-mailing-campaign"><i class="bi bi-send me-1"></i> Campagne</a>
+          <a href="#" class="nav-link nav-sub" data-target="section-mailing-history"><i class="bi bi-clock-history me-1"></i> Historique</a>
+          <a href="#" class="nav-link nav-sub" data-target="section-sent-emails"><i class="bi bi-envelope-paper me-1"></i> Emails envoyés</a>
         </nav>
       </div>
     </aside>
@@ -467,10 +601,10 @@ include __DIR__ . '/../../templates/layouts/header-solid.php';
               <table class="table align-middle">
                 <thead>
                   <tr>
-                    <th>DATE</th>
-                    <th>TITRE</th>
-                    <th>ORGANISATEUR</th>
-                    <th>STATUT</th>
+                    <th class="sortable sorted" data-sort="date" data-sort-dir="desc" role="button" title="Trier par date">DATE <i class="bi bi-sort-up sort-icon"></i></th>
+                    <th class="sortable" data-sort="title" data-sort-dir="asc" role="button" title="Trier par titre">TITRE <i class="bi bi-arrow-down-up sort-icon"></i></th>
+                    <th class="sortable" data-sort="org" data-sort-dir="asc" role="button" title="Trier par organisateur">ORGANISATEUR <i class="bi bi-arrow-down-up sort-icon"></i></th>
+                    <th class="sortable" data-sort="status" data-sort-dir="asc" role="button" title="Trier par statut">STATUT <i class="bi bi-arrow-down-up sort-icon"></i></th>
                     <th class="text-end actions-col">ACTIONS</th>
                   </tr>
                 </thead>
@@ -485,10 +619,13 @@ include __DIR__ . '/../../templates/layouts/header-solid.php';
                   $titleTxt = h($event['title'] ?? 'Sans titre');
                   $orgTxt = h($event['organizer_name'] ?? '-');
                 ?>
-                  <tr data-status="<?= $status ?>" data-title="<?= $titleTxt ?>" data-org="<?= $orgTxt ?>" data-expired="<?= $isExpired ? '1' : '0' ?>">
+                  <tr data-status="<?= $status ?>" data-title="<?= $titleTxt ?>" data-org="<?= $orgTxt ?>" data-expired="<?= $isExpired ? '1' : '0' ?>" data-date="<?= !empty($event['date']) ? (int)strtotime($event['date']) : 0 ?>" data-fb="<?= !empty($event['fb_post_id']) ? '1' : '0' ?>">
                     <td><?= $dateTxt ?></td>
                     <td>
-                      <?= $titleTxt ?><br>
+                      <?= $titleTxt ?>
+                      <?php if (!empty($event['fb_post_id'])): ?>
+                        <i class="bi bi-facebook fb-posted" title="Publié sur la Page Facebook"></i>
+                      <?php endif; ?><br>
                       <small class="text-muted">
                         <?php
                           $rawIcon = $event['category_icon'] ?? '';
@@ -684,6 +821,490 @@ include __DIR__ . '/../../templates/layouts/header-solid.php';
           </div>
         </div>
       </section>
+
+      <!-- Section Statistiques sponsors -->
+      <section id="section-sponsors-stats" class="d-none" data-section>
+        <div class="kpi-grid mb-3">
+          <div class="kpi-card">
+            <div class="kpi-icon categories"><i class="bi bi-cursor-fill"></i></div>
+            <div>
+              <div class="kpi-label">CLICS TOTAL</div>
+              <div class="kpi-value"><?= (int) $sponsorKpis['total'] ?></div>
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon active"><i class="bi bi-calendar-check"></i></div>
+            <div>
+              <div class="kpi-label">CLICS AUJOURD'HUI</div>
+              <div class="kpi-value"><?= (int) $sponsorKpis['today'] ?></div>
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon events"><i class="bi bi-globe"></i></div>
+            <div>
+              <div class="kpi-label">IP UNIQUES</div>
+              <div class="kpi-value"><?= (int) $sponsorKpis['unique_ips'] ?></div>
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon pending"><i class="bi bi-people"></i></div>
+            <div>
+              <div class="kpi-label">SESSIONS</div>
+              <div class="kpi-value"><?= (int) $sponsorKpis['sessions'] ?></div>
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon users"><i class="bi bi-robot"></i></div>
+            <div>
+              <div class="kpi-label">NON-HUMAINS</div>
+              <div class="kpi-value"><?= (int) $sponsorKpis['non_humans'] ?></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card mb-3">
+          <div class="card-header bg-white py-3">
+            <h5 class="mb-0"><i class="bi bi-megaphone"></i> Clics par sponsor</h5>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table align-middle sortable-table">
+                <thead>
+                  <tr>
+                    <th data-sort>Sponsor <i class="bi bi-caret-up sort-icon text-muted"></i></th>
+                    <th data-sort>Total <i class="bi bi-caret-up sort-icon text-muted"></i></th>
+                    <th data-sort>IP uniques <i class="bi bi-caret-up sort-icon text-muted"></i></th>
+                    <th data-sort>Sessions <i class="bi bi-caret-up sort-icon text-muted"></i></th>
+                    <th data-sort>Footer <i class="bi bi-caret-up sort-icon text-muted"></i></th>
+                    <th data-sort>Événement <i class="bi bi-caret-up sort-icon text-muted"></i></th>
+                    <th data-sort>Non-humains <i class="bi bi-caret-up sort-icon text-muted"></i></th>
+                    <th data-sort>Dernier clic <i class="bi bi-caret-up sort-icon text-muted"></i></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <?php foreach ($sponsors as $s): $sid = (int) $s['id']; $sc = $sponsorClickStats[$sid] ?? []; $sv = $sponsorVisitors[$sid] ?? null; ?>
+                    <tr>
+                      <td data-sort-value="<?= htmlspecialchars($s['name']) ?>"><?= htmlspecialchars($s['name']) ?></td>
+                      <td data-sort-value="<?= (int) ($s['click_count'] ?? 0) ?>"><span class="badge text-bg-light border"><?= (int) ($s['click_count'] ?? 0) ?></span></td>
+                      <td data-sort-value="<?= (int) ($sv['uniq_ips'] ?? 0) ?>"><?= (int) ($sv['uniq_ips'] ?? 0) ?></td>
+                      <td data-sort-value="<?= (int) ($sv['uniq_sessions'] ?? 0) ?>"><?= (int) ($sv['uniq_sessions'] ?? 0) ?></td>
+                      <td data-sort-value="<?= (int) ($sc['footer'] ?? 0) ?>"><?= (int) ($sc['footer'] ?? 0) ?></td>
+                      <td data-sort-value="<?= (int) ($sc['event'] ?? 0) ?>"><?= (int) ($sc['event'] ?? 0) ?></td>
+                      <td data-sort-value="<?= (int) ($sv['non_humans'] ?? 0) ?>"><?= (int) ($sv['non_humans'] ?? 0) ?></td>
+                      <td data-sort-value="<?= !empty($sponsorLastClick[$sid]) ? strtotime($sponsorLastClick[$sid]) : 0 ?>"><?= !empty($sponsorLastClick[$sid]) ? htmlspecialchars(date('d/m/Y H:i', strtotime($sponsorLastClick[$sid]))) : '—' ?></td>
+                    </tr>
+                  <?php endforeach; ?>
+                  <?php if (empty($sponsors)): ?>
+                    <tr><td colspan="8" class="text-center text-muted py-4">Aucun sponsor.</td></tr>
+                  <?php endif; ?>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="card mb-3">
+          <div class="card-header bg-white py-3">
+            <h5 class="mb-0"><i class="bi bi-clock-history"></i> Derniers clics (IP &amp; localisation)</h5>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table align-middle sortable-table">
+                <thead>
+                  <tr>
+                    <th data-sort>Sponsor <i class="bi bi-caret-up sort-icon text-muted"></i></th>
+                    <th data-sort>Date <i class="bi bi-caret-up sort-icon text-muted"></i></th>
+                    <th data-sort>Heure <i class="bi bi-caret-up sort-icon text-muted"></i></th>
+                    <th data-sort>Emplacement <i class="bi bi-caret-up sort-icon text-muted"></i></th>
+                    <th data-sort>IP <i class="bi bi-caret-up sort-icon text-muted"></i></th>
+                    <th data-sort>Localisation <i class="bi bi-caret-up sort-icon text-muted"></i></th>
+                    <th data-sort>Humain <i class="bi bi-caret-up sort-icon text-muted"></i></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <?php foreach ($recentClicks as $click): ?>
+                    <?php $loc = trim((string) ($click['country'] ?? '') . (!empty($click['city']) ? ' / ' . $click['city'] : '')); ?>
+                    <tr>
+                      <td data-sort-value="<?= htmlspecialchars($click['sponsor_name'] ?? '') ?>"><?= htmlspecialchars($click['sponsor_name'] ?? '—') ?></td>
+                      <td data-sort-value="<?= strtotime($click['clicked_at']) ?>"><?= htmlspecialchars(date('d/m/Y', strtotime($click['clicked_at']))) ?></td>
+                      <td data-sort-value="<?= strtotime($click['clicked_at']) ?>"><?= htmlspecialchars(date('H:i:s', strtotime($click['clicked_at']))) ?></td>
+                      <td data-sort-value="<?= htmlspecialchars($click['context'] === 'event' ? ($click['event_title'] ?? 'Événement') : 'Footer') ?>">
+                        <?php if ($click['context'] === 'event' && !empty($click['event_title'])): ?>
+                          <a href="/event/<?= (int) $click['event_id'] ?>" class="d-inline-block text-truncate" style="max-width:220px"
+                             title="Événement : <?= htmlspecialchars($click['event_title']) ?>">
+                            <i class="bi bi-calendar-event"></i> <?= htmlspecialchars($click['event_title']) ?>
+                          </a>
+                        <?php else: ?>
+                          <?= $click['context'] === 'footer' ? 'Footer' : ($click['context'] === 'event' ? 'Événement' : htmlspecialchars($click['context'])) ?>
+                        <?php endif; ?>
+                      </td>
+                      <td data-sort-value="<?= htmlspecialchars($click['ip_address'] ?? '') ?>"><?= htmlspecialchars($click['ip_address'] ?? '—') ?></td>
+                      <td data-sort-value="<?= htmlspecialchars($loc) ?>"><?= $loc !== '' ? htmlspecialchars($loc) : '—' ?></td>
+                      <td data-sort-value="<?= (int) ($click['is_human'] ?? 1) ?>">
+                        <?php if (empty($click['is_human'])): ?>
+                          <span class="badge bg-warning text-dark">Non-humain</span>
+                        <?php else: ?>
+                          <span class="badge bg-success">Humain</span>
+                        <?php endif; ?>
+                      </td>
+                    </tr>
+                  <?php endforeach; ?>
+                  <?php if (empty($recentClicks)): ?>
+                    <tr><td colspan="7" class="text-center text-muted py-4">Aucun clic enregistré.</td></tr>
+                  <?php endif; ?>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header bg-white py-3">
+            <h5 class="mb-0"><i class="bi bi-calendar3"></i> Clics par jour</h5>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table align-middle sortable-table">
+                <thead>
+                  <tr>
+                    <th data-sort>Jour <i class="bi bi-caret-up sort-icon text-muted"></i></th>
+                    <th data-sort>Clics <i class="bi bi-caret-up sort-icon text-muted"></i></th>
+                    <th data-sort>Sessions <i class="bi bi-caret-up sort-icon text-muted"></i></th>
+                    <th data-sort>IP uniques <i class="bi bi-caret-up sort-icon text-muted"></i></th>
+                    <th data-sort>Non-humains <i class="bi bi-caret-up sort-icon text-muted"></i></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <?php foreach ($sponsorClicksPerDay as $row): ?>
+                    <tr>
+                      <td data-sort-value="<?= strtotime($row['day']) ?>"><?= htmlspecialchars(date('d/m/Y', strtotime($row['day']))) ?></td>
+                      <td data-sort-value="<?= (int) $row['clics'] ?>"><?= (int) $row['clics'] ?></td>
+                      <td data-sort-value="<?= (int) $row['sessions'] ?>"><?= (int) $row['sessions'] ?></td>
+                      <td data-sort-value="<?= (int) $row['unique_ips'] ?>"><?= (int) $row['unique_ips'] ?></td>
+                      <td data-sort-value="<?= (int) $row['non_humans'] ?>"><?= (int) $row['non_humans'] ?></td>
+                    </tr>
+                  <?php endforeach; ?>
+                  <?php if (empty($sponsorClicksPerDay)): ?>
+                    <tr><td colspan="5" class="text-center text-muted py-4">Aucun clic enregistré.</td></tr>
+                  <?php endif; ?>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section Contacts mailing -->
+      <section id="section-mailing-contacts" class="d-none" data-section>
+        <div class="card mb-3">
+          <div class="card-header bg-white py-3">
+            <h5 class="mb-0"><i class="bi bi-file-earmark-spreadsheet"></i> Importer un fichier CSV</h5>
+          </div>
+          <div class="card-body">
+            <div class="d-flex gap-2 align-items-center flex-wrap">
+              <input type="file" id="mailingCsvFile" accept=".csv,text/csv" class="form-control" style="max-width:340px">
+              <button type="button" id="mailingAnalyzeBtn" class="btn btn-primary"><i class="bi bi-search"></i> Analyser</button>
+            </div>
+            <div class="form-text mt-1">Format attendu : <code>Statut;Date;Lieu;Type;Club;Responsable;Téléphone;Adresse / e-mail</code> (séparateur <code>;</code>).</div>
+
+            <div id="mailingPreview" class="d-none mt-3">
+              <div class="alert alert-info py-2" id="mailingPreviewStats"></div>
+              <div class="table-responsive" style="max-height:320px;overflow:auto">
+                <table class="table table-sm align-middle">
+                  <thead>
+                    <tr><th style="width:32px"><input type="checkbox" class="form-check-input" id="importCheckAll" checked title="Tout sélectionner / désélectionner"></th><th>Ligne</th><th>Club</th><th>Responsable</th><th>Lieu</th><th>Type</th><th>Email</th><th>Statut</th></tr>
+                  </thead>
+                  <tbody></tbody>
+                </table>
+              </div>
+              <button type="button" id="mailingImportBtn" class="btn btn-success mt-2"><i class="bi bi-upload"></i> Importer</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+            <h5 class="mb-0"><i class="bi bi-people"></i> Contacts (<?= count($mailingContacts) ?> — <?= (int) $mailingActiveCount ?> abonnés)</h5>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table align-middle sortable-table">
+                <thead>
+                  <tr>
+                    <th style="width:32px" title="Cocher pour utiliser ce contact dans l'aperçu"><i class="bi bi-eye"></i></th>
+                    <th data-sort>Club <i class="bi bi-caret-up sort-icon text-muted"></i></th>
+                    <th data-sort>Responsable <i class="bi bi-caret-up sort-icon text-muted"></i></th>
+                    <th data-sort>Email <i class="bi bi-caret-up sort-icon text-muted"></i></th>
+                    <th data-sort>Téléphone <i class="bi bi-caret-up sort-icon text-muted"></i></th>
+                    <th data-sort>Lieu <i class="bi bi-caret-up sort-icon text-muted"></i></th>
+                    <th data-sort>Type <i class="bi bi-caret-up sort-icon text-muted"></i></th>
+                    <th data-sort><input type="checkbox" id="checkAllAbonne" class="form-check-input me-1" title="Tout cocher/décocher la page affichée">Abonné <i class="bi bi-caret-up sort-icon text-muted"></i></th>
+                    <th class="actions-col">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="mailingContactsBody">
+                  <?php foreach ($mailingContacts as $mc): ?>
+                    <tr>
+                      <td class="text-center"><input type="radio" name="previewContact" class="form-check-input preview-contact" data-id="<?= (int) $mc['id'] ?>" title="Utiliser ce contact pour l'aperçu"></td>
+                      <td data-sort-value="<?= htmlspecialchars($mc['club']) ?>"><?= htmlspecialchars($mc['club']) ?></td>
+                      <td data-sort-value="<?= htmlspecialchars($mc['contact_name'] ?? '') ?>"><?= htmlspecialchars($mc['contact_name'] ?? '—') ?></td>
+                      <td data-sort-value="<?= htmlspecialchars($mc['email']) ?>"><?= htmlspecialchars($mc['email']) ?></td>
+                      <td data-sort-value="<?= htmlspecialchars($mc['phone'] ?? '') ?>"><?= htmlspecialchars($mc['phone'] ?? '—') ?></td>
+                      <td data-sort-value="<?= htmlspecialchars($mc['lieu'] ?? '') ?>"><?= htmlspecialchars($mc['lieu'] ?? '—') ?></td>
+                      <td data-sort-value="<?= htmlspecialchars($mc['type'] ?? '') ?>"><?= htmlspecialchars($mc['type'] ?? '—') ?></td>
+                      <td data-sort-value="<?= (int) $mc['status'] ?>">
+                        <div class="form-check form-switch">
+                          <input type="checkbox" class="form-check-input toggle-mailing" data-id="<?= (int) $mc['id'] ?>" <?= $mc['status'] ? 'checked' : '' ?>>
+                        </div>
+                      </td>
+                      <td class="actions-cell">
+                        <button type="button" class="btn btn-sm btn-outline-primary email-mailing" data-id="<?= (int) $mc['id'] ?>" data-email="<?= htmlspecialchars($mc['email']) ?>" title="Envoyer un email">
+                          <i class="bi bi-envelope"></i>
+                        </button>
+                        <button type="button" class="btn btn-sm btn-outline-danger delete-mailing" data-id="<?= (int) $mc['id'] ?>">
+                          <i class="bi bi-trash"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  <?php endforeach; ?>
+                  <?php if (empty($mailingContacts)): ?>
+                    <tr><td colspan="9" class="text-center text-muted py-4">Aucun contact — importez un CSV ci-dessus.</td></tr>
+                  <?php endif; ?>
+                </tbody>
+              </table>
+            </div>
+            <nav id="mailingContactsPager" class="mt-2" aria-label="Pagination des contacts"></nav>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section Campagne mailing -->
+      <section id="section-mailing-campaign" class="d-none" data-section>
+        <div class="card">
+          <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+            <h5 class="mb-0"><i class="bi bi-send"></i> Campagnes</h5>
+            <button type="button" id="campaignNewBtn" class="btn btn-sm btn-outline-secondary"><i class="bi bi-plus-lg"></i> Nouvelle</button>
+          </div>
+          <div class="card-body">
+            <?php if (!empty($mailingCampaigns)): ?>
+              <div class="mb-3">
+                <label class="form-label fw-semibold">Campagnes enregistrées</label>
+                <ul class="list-group">
+                  <?php foreach ($mailingCampaigns as $cp): ?>
+                    <li class="list-group-item d-flex justify-content-between align-items-center gap-2">
+                      <span class="text-truncate"><?= htmlspecialchars($cp['subject']) ?></span>
+                      <span class="btn-group btn-group-sm flex-shrink-0">
+                        <button type="button" class="btn btn-outline-secondary campaign-edit" data-id="<?= (int) $cp['id'] ?>" title="Charger pour modifier"><i class="bi bi-pencil"></i></button>
+                        <button type="button" class="btn btn-outline-success campaign-send" data-id="<?= (int) $cp['id'] ?>" title="Envoyer à tous les abonnés"><i class="bi bi-send"></i></button>
+                        <button type="button" class="btn btn-outline-danger campaign-delete" data-id="<?= (int) $cp['id'] ?>" title="Supprimer"><i class="bi bi-trash"></i></button>
+                      </span>
+                    </li>
+                  <?php endforeach; ?>
+                </ul>
+            <?php else: ?>
+              <p class="text-muted mb-0">Aucune campagne enregistrée — cliquez sur « Nouvelle » pour en créer une.</p>
+            <?php endif; ?>
+            <div id="campaignResults" class="alert d-none mt-3"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section Campagnes menées (historique des envois mailing) -->
+      <section id="section-mailing-history" class="d-none" data-section>
+        <div class="card">
+          <div class="card-header bg-white py-3">
+            <h5 class="mb-0"><i class="bi bi-clock-history"></i> Campagnes menées <?= !empty($mailingRuns) ? '(' . count($mailingRuns) . ')' : '' ?></h5>
+          </div>
+          <div class="card-body">
+            <?php foreach ($mailingRuns as $run):
+                $runSubject = $campaignSubjects[$run['campaign_id']] ?? ($run['items'][0]['subject'] ?? '—');
+            ?>
+              <details class="mailing-run">
+                <summary>
+                  <span class="mailing-run-title">
+                    <i class="bi <?= $run['is_test'] ? 'bi-flask' : 'bi-megaphone' ?>"></i>
+                    <?= htmlspecialchars($runSubject) ?>
+                    <?php if ($run['is_test']): ?><span class="badge bg-secondary">Test</span><?php endif; ?>
+                  </span>
+                  <span class="mailing-run-meta">
+                    <?= date('d/m/Y H:i', $run['first_ts']) ?> ·
+                    <span class="badge bg-success"><?= $run['ok'] ?> envoyé<?= $run['ok'] > 1 ? 's' : '' ?></span>
+                    <?php if ($run['failed']): ?><span class="badge bg-danger"><?= $run['failed'] ?> échec<?= $run['failed'] > 1 ? 's' : '' ?></span><?php endif; ?>
+                  </span>
+                </summary>
+                <div class="mailing-run-list">
+                  <?php foreach ($run['items'] as $lg): ?>
+                    <div class="mailing-run-item <?= $lg['status'] === 'ok' ? '' : 'is-error' ?>" <?= $lg['status'] !== 'ok' ? 'title="' . htmlspecialchars($lg['error'] ?? 'Échec') . '"' : '' ?>>
+                      <strong><?= htmlspecialchars($lg['club'] ?? '—') ?></strong>
+                      <span class="text-muted"><?= htmlspecialchars($lg['email']) ?></span>
+                      <?php if ($lg['status'] !== 'ok'): ?><span class="badge bg-danger">Échec</span><?php endif; ?>
+                    </div>
+                  <?php endforeach; ?>
+                </div>
+              </details>
+            <?php endforeach; ?>
+            <?php if (empty($mailingRuns)): ?>
+              <p class="text-muted text-center py-4 mb-0">Aucune campagne envoyée pour le moment.</p>
+            <?php endif; ?>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section Emails envoyés (tous les emails sortants) -->
+      <section id="section-sent-emails" class="d-none" data-section>
+        <div class="card">
+          <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <h5 class="mb-0"><i class="bi bi-envelope-paper"></i> Emails envoyés <?= !empty($sentEmails) ? '(' . count($sentEmails) . ')' : '' ?></h5>
+            <div class="d-flex gap-2">
+              <select id="sentEmailsTypeFilter" class="form-select form-select-sm" style="width:auto">
+                <option value="">Tous les types</option>
+                <?php foreach (array_unique(array_column($sentEmails, 'type')) as $t): ?>
+                  <option value="<?= htmlspecialchars($t) ?>"><?= htmlspecialchars($t) ?></option>
+                <?php endforeach; ?>
+              </select>
+              <input type="search" id="sentEmailsSearch" class="form-control form-control-sm" placeholder="Destinataire ou objet…" style="max-width:240px">
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table align-middle sortable-table" id="sentEmailsTable">
+                <thead>
+                  <tr>
+                    <th data-sort data-dir="desc" role="button" title="Trier par date">Date <i class="bi bi-caret-down-fill sort-icon"></i></th>
+                    <th data-sort role="button" title="Trier par destinataire">Destinataire <i class="bi bi-caret-up sort-icon text-muted"></i></th>
+                    <th data-sort role="button" title="Trier par objet">Objet <i class="bi bi-caret-up sort-icon text-muted"></i></th>
+                    <th data-sort role="button" title="Trier par type">Type <i class="bi bi-caret-up sort-icon text-muted"></i></th>
+                    <th data-sort role="button" title="Trier par statut">Statut <i class="bi bi-caret-up sort-icon text-muted"></i></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <?php foreach ($sentEmails as $m): ?>
+                    <tr data-type="<?= htmlspecialchars($m['type']) ?>"
+                        data-search="<?= htmlspecialchars(mb_strtolower(($m['recipient'] ?? '') . ' ' . ($m['subject'] ?? ''))) ?>">
+                      <td class="text-nowrap text-muted" data-sort-value="<?= strtotime($m['sent_at']) ?>"><?= htmlspecialchars(date('d/m/Y H:i', strtotime($m['sent_at']))) ?></td>
+                      <td data-sort-value="<?= htmlspecialchars($m['recipient']) ?>"><?= htmlspecialchars($m['recipient']) ?></td>
+                      <td data-sort-value="<?= htmlspecialchars($m['subject']) ?>"><?= htmlspecialchars($m['subject']) ?></td>
+                      <td data-sort-value="<?= htmlspecialchars($m['type']) ?>"><span class="badge bg-secondary"><?= htmlspecialchars($m['type']) ?></span></td>
+                      <td data-sort-value="<?= $m['status'] === 'ok' ? 1 : 0 ?>">
+                        <?php if ($m['status'] === 'ok'): ?>
+                          <span class="badge bg-success">Envoyé</span>
+                        <?php else: ?>
+                          <span class="badge bg-danger" title="<?= htmlspecialchars($m['error'] ?? 'Échec') ?>">Échec</span>
+                        <?php endif; ?>
+                      </td>
+                    </tr>
+                  <?php endforeach; ?>
+                </tbody>
+              </table>
+            </div>
+            <?php if (empty($sentEmails)): ?>
+              <p class="text-muted text-center py-4 mb-0">Aucun email enregistré pour le moment.</p>
+            <?php endif; ?>
+          </div>
+        </div>
+      </section>
+
+      <!-- Modale : confirmation d'envoi d'une campagne -->
+      <div id="mailingSendModal" class="d-none" style="position:fixed;inset:0;z-index:1050;background:rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;padding:1rem">
+        <div class="card" style="max-width:480px;width:100%">
+          <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+            <h5 class="mb-0"><i class="bi bi-send"></i> Envoyer la campagne</h5>
+            <button type="button" id="mailingSendClose" class="btn-close" aria-label="Fermer"></button>
+          </div>
+          <div class="card-body">
+            <p class="mb-2">Vous allez envoyer l'email <strong id="mailingSendSubject"></strong> à <strong><span id="mailingSendCount">0</span> abonné(s)</strong>.</p>
+            <p class="text-muted mb-0" style="font-size:.9rem">Chaque destinataire recevra un email personnalisé ({club}, {contact}, {lieu}, {type}). Un délai de 0,5 s est appliqué entre les envois.</p>
+          </div>
+          <div class="card-footer bg-white py-3 d-flex justify-content-end gap-2">
+            <button type="button" id="mailingSendCancel" class="btn btn-outline-secondary">Annuler</button>
+            <button type="button" id="mailingSendConfirm" class="btn btn-success"><i class="bi bi-send"></i> Envoyer</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modale : envoi d'email à un contact -->
+      <div id="contactMailModal" class="d-none" style="position:fixed;inset:0;z-index:1050;background:rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;padding:1rem">
+        <div class="card" style="max-width:640px;width:100%;max-height:90vh;overflow:auto">
+          <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+            <h5 class="mb-0"><i class="bi bi-envelope"></i> Email à <span id="contactMailTo"></span></h5>
+            <button type="button" id="contactMailClose" class="btn-close" aria-label="Fermer"></button>
+          </div>
+          <div class="card-body">
+            <input type="hidden" id="contactMailId" value="">
+            <div class="mb-3">
+              <label for="contactMailCampaign" class="form-label fw-semibold">Pré-remplir depuis une campagne</label>
+              <select id="contactMailCampaign" class="form-select">
+                <option value="">— Email libre —</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="contactMailSubject" class="form-label fw-semibold">Objet</label>
+              <input type="text" id="contactMailSubject" class="form-control" maxlength="255">
+            </div>
+            <div class="mb-3">
+              <label for="contactMailBody" class="form-label fw-semibold">Message</label>
+              <textarea id="contactMailBody" class="form-control" rows="8"></textarea>
+              <div class="form-text">Placeholders : <code>{club}</code> <code>{contact}</code> <code>{lieu}</code> <code>{type}</code></div>
+            </div>
+            <div class="d-flex gap-2">
+              <button type="button" id="contactMailSend" class="btn btn-success"><i class="bi bi-send"></i> Envoyer</button>
+              <button type="button" id="contactMailPreview" class="btn btn-outline-primary"><i class="bi bi-eye"></i> Aperçu</button>
+              <button type="button" id="contactMailCancel" class="btn btn-outline-secondary">Annuler</button>
+            </div>
+            <div id="contactMailResult" class="alert d-none mt-3 mb-0"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modale : nouvelle campagne -->
+      <div id="campaignModal" class="d-none" style="position:fixed;inset:0;z-index:1050;background:rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;padding:1rem">
+        <div class="card" style="max-width:640px;width:100%;max-height:90vh;overflow:auto">
+          <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+            <h5 class="mb-0"><i class="bi bi-envelope-paper"></i> <span id="campaignModalTitle">Nouvelle campagne</span></h5>
+            <button type="button" id="campaignModalClose" class="btn-close" aria-label="Fermer"></button>
+          </div>
+          <div class="card-body">
+            <input type="hidden" id="campaignModalId" value="0">
+            <div class="mb-3">
+              <label for="campaignModalSubject" class="form-label fw-semibold">Objet</label>
+              <input type="text" id="campaignModalSubject" class="form-control" maxlength="255">
+            </div>
+            <div class="mb-3">
+              <label for="campaignModalBody" class="form-label fw-semibold">Message</label>
+              <textarea id="campaignModalBody" class="form-control" rows="8"></textarea>
+              <div class="form-text">Placeholders : <code>{club}</code> <code>{contact}</code> <code>{lieu}</code> <code>{type}</code></div>
+            </div>
+            <div class="row g-2 align-items-end mb-3">
+              <div class="col-md-7">
+                <label for="campaignModalTestTo" class="form-label fw-semibold">Adresse de test</label>
+                <input type="email" id="campaignModalTestTo" class="form-control" placeholder="vous@exemple.be">
+              </div>
+              <div class="col-md-auto">
+                <button type="button" id="campaignModalTestBtn" class="btn btn-outline-primary"><i class="bi bi-envelope-check"></i> Envoyer un test</button>
+              </div>
+            </div>
+            <div class="d-flex gap-2">
+              <button type="button" id="campaignModalSave" class="btn btn-success"><i class="bi bi-save"></i> Enregistrer</button>
+              <button type="button" id="campaignModalPreview" class="btn btn-outline-primary"><i class="bi bi-eye"></i> Aperçu</button>
+              <button type="button" id="campaignModalCancel" class="btn btn-outline-secondary">Annuler</button>
+            </div>
+            <div id="campaignModalResult" class="alert d-none mt-3 mb-0"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modale : aperçu de l'email rendu (iframe) -->
+      <div id="mailingPreviewModal" class="d-none" style="position:fixed;inset:0;z-index:1060;background:rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;padding:1rem">
+        <div class="card" style="max-width:760px;width:100%;height:90vh;display:flex;flex-direction:column">
+          <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+            <h5 class="mb-0"><i class="bi bi-eye"></i> Aperçu de l'email <span id="mailingPreviewInfo" class="text-muted fs-6 fw-normal ms-2"></span></h5>
+            <button type="button" id="mailingPreviewClose" class="btn-close" aria-label="Fermer"></button>
+          </div>
+          <div class="card-body p-0" style="flex:1;min-height:0">
+            <iframe id="mailingPreviewFrame" title="Aperçu email" style="border:0;width:100%;height:100%"></iframe>
+          </div>
+        </div>
+      </div>
 
       <!-- Section Statistiques -->
       <section id="section-stats" class="d-none" data-section>
@@ -1041,7 +1662,14 @@ include __DIR__ . '/../../templates/layouts/header-solid.php';
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js"></script>
     <script src="/assets/js/admin/categories.js"></script>
     <script src="/assets/js/admin/sponsors.js"></script>
-    <script src="/assets/js/admin/admin-dashboard.js"></script>
+    <script src="/assets/js/admin/sponsor-stats.js"></script>
+    <script>
+      // Campagnes enregistrées — utilisées par mailing.js (select de la modale + envoi direct).
+      window.MAILING_CAMPAIGNS = <?= json_encode($mailingCampaigns, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG) ?>;
+      window.MAILING_ACTIVE_COUNT = <?= (int) $mailingActiveCount ?>;
+    </script>
+    <script src="/assets/js/admin/mailing.js?v=<?= filemtime(__DIR__ . '/../../public/assets/js/admin/mailing.js') ?>"></script>
+    <script src="/assets/js/admin/admin-dashboard.js?v=2"></script>
     <script src="/assets/js/admin/dashboard-stats.js"></script>
     <script src="/assets/js/admin/dashboard-kpis.js"></script>
     <script src="/assets/js/admin/notify-organizer.js"></script>

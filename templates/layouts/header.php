@@ -40,6 +40,7 @@ displayFlashMessages();
     <link rel="stylesheet" href="/assets/css/style.css">
     <link rel="stylesheet" href="/assets/css/layout/header.css">
     <link rel="stylesheet" href="/assets/css/components/calendar-custom.css">
+    <link rel="stylesheet" href="/assets/css/components/sponsors.css?v=1">
     <link rel="stylesheet" href="/assets/css/components/contact-modal.css">
     <link rel="stylesheet" href="/assets/css/layout/footer.css">
     
@@ -145,7 +146,12 @@ displayFlashMessages();
                         </li>
                     <?php endif; ?>
                     <li class="nav-item">
-                        <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#contactModal">
+                        <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#guideModal" title="Guide de démarrage">
+                            <i class="bi bi-question-circle"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#contactModal" title="Nous contacter">
                             <i class="bi bi-envelope"></i>
                         </a>
                     </li>

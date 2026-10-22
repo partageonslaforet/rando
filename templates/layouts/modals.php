@@ -14,7 +14,8 @@ $modalFiles = [
     'reset-password' => __DIR__ . '/../modals/reset-password.php',
     'subscribers' => __DIR__ . '/../modals/subscribers.php',
     'manage-subscribers' => __DIR__ . '/../modals/manage-subscribers.php',
-    'subscriber-verified' => __DIR__ . '/../modals/subscriber-verified.php'
+    'subscriber-verified' => __DIR__ . '/../modals/subscriber-verified.php',
+    'guide' => __DIR__ . '/../modals/guide.php'
 ];
 
 foreach ($modalFiles as $name => $file) {

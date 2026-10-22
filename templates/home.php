@@ -31,12 +31,16 @@ include __DIR__ . '/components/filters/distance.php';
 include __DIR__ . '/components/calendar/calendar.php';
 include __DIR__ . '/components/map/leaflet-map.php';
 include __DIR__ . '/components/events/events-list.php';
+include __DIR__ . '/components/sponsors/sponsor-strip.php';
 ?>
     <!-- Hero Section -->
     <?php render_hero_section(); ?>
-    
+
     <!-- Conteneur principal -->
     <div class="container mx-auto px-4 mt-4">
+        <!-- Bandeau partenaire : même cadre que les cartes filtres -->
+        <?php render_sponsor_strip(); ?>
+
         <!-- Section des filtres -->
         <div class="row mb-4">
             <!-- Colonne 60% : carte filtres + carte distance séparées -->
