@@ -9,7 +9,6 @@
 if (ob_get_level() > 0) {
     ob_clean();
 }
-error_log("=== DÉBUT DU SCRIPT events.php ===");
 // Activation des erreurs pour le débogage
 ini_set('display_errors', 0);
 error_reporting(E_ALL);
@@ -38,8 +37,6 @@ try {
     if (isset($_GET['count'])) {
         // ... code existant pour le compteur ...
     } else {
-        error_log("=== DÉBUT DU TRAITEMENT DE LA REQUÊTE ===");
-        
         // Construction de la requête de base
         $baseQuery = "FROM events e LEFT JOIN event_categories c ON e.category_id = c.id WHERE 1=1";
         $params = [];
@@ -55,15 +52,6 @@ try {
         $search = $_GET['search'] ?? '';
         $month = isset($_GET['month']) ? intval($_GET['month']) : null;
         $year = isset($_GET['year']) ? intval($_GET['year']) : null;
-
-        error_log("=== PARAMÈTRES REÇUS ===");
-        error_log("Type: " . $type);
-        error_log("Period: " . $period);
-        error_log("Category: " . $category); // Log de la catégorie
-        error_log("Calendar: " . ($calendar ? 'true' : 'false'));
-        error_log("Search: " . $search);
-        error_log("Month: " . ($month ?? 'null'));
-        error_log("Year: " . ($year ?? 'null'));
 
         // Filtre par type
         if ($type && $type !== 'all') {
@@ -133,10 +121,6 @@ try {
             $params[':start_date'] = $start_date;
             $params[':end_date'] = $end_date;
         }
-
-        error_log("=== DEBUG SQL ===");
-        error_log("Base Query: " . $baseQuery);
-        error_log("Params: " . print_r($params, true));
 
         // Pagination (Option B) uniquement si demandé
         $paginate = isset($_GET['page']) || isset($_GET['limit']);
@@ -297,22 +281,9 @@ try {
                     }
 
                     $event['main_image_path'] = $publicUrl ?: $categoryFallback;
-
-                    // Log si aucune image réelle trouvée (debug uniquement)
-                    if (!$publicUrl && defined('DEBUG') && DEBUG) {
-                        logError('api/events-counts', 'Image principale non résolue', [
-                            'event_id' => $eid,
-                            'title' => $event['title'] ?? null,
-                            'category' => $event['category'] ?? null,
-                            'category_name' => $event['category_name'] ?? null,
-                            'fallback_used' => $categoryFallback
-                        ]);
-                    }
                 }
                 unset($event);
             }
-
-            error_log("Nombre d'événements trouvés: " . count($events));
 
             // Log clair si la recherche ne renvoie aucun résultat
             if (!empty($search)) {
@@ -350,17 +321,6 @@ try {
 
             $totalStmt = $pdo->query("SELECT COUNT(*) FROM events WHERE status = 'approved'");
             $counts['all'] = (int)$totalStmt->fetchColumn();
-
-            // Log de diagnostic des événements annulés
-            $cancelledEvents = array_filter($events, fn($e) => (int)($e['is_cancelled'] ?? 0) === 1);
-            if (!empty($cancelledEvents) && defined('DEBUG') && DEBUG) {
-                logError('api/events-counts', 'Evénements annulés retournés', [
-                    'ids' => array_column($cancelledEvents, 'id'),
-                    'titles' => array_column($cancelledEvents, 'title'),
-                    'count' => count($events),
-                    'params' => $params
-                ]);
-            }
 
             // Préparation de la réponse
             $response = [

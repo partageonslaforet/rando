@@ -53,7 +53,7 @@
 }
 
 .btn-primary.active {
-    background-color: var(--primary-color) !important;
+    background: linear-gradient(90deg, rgba(46, 107, 56, 0.95), rgba(78, 152, 89, 0.85));
     border-color: var(--primary-color) !important;
     color: var(--light-text) !important;
     border-radius: 20px;

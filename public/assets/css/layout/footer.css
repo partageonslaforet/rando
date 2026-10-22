@@ -1,6 +1,6 @@
 /* Footer top styles (palette existante) */
 .footer-top {
-  background: linear-gradient(90deg, rgba(46, 107, 56, 0.95), rgba(78, 152, 89, 0.95));
+  background: linear-gradient(90deg, rgba(46, 107, 56, 0.95), rgba(78, 152, 89, 0.85));
   color: var(--green-dark);
   border-top: 1px solid var(--border-color);
   padding-top: 2rem !important;

@@ -187,19 +187,30 @@ try {
                     elevation_gain,
                     price,
                     gpx_file,
-                    gpx_downloadable
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                    gpx_downloadable,
+                    registration_opens,
+                    registration_closes,
+                    departure_time,
+                    departure_flexible
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ");
             foreach ($parcours as $p) {
+                $toTime = static function ($v) {
+                    return !empty($v) ? date('H:i:s', strtotime($v)) : null;
+                };
                 $stmt->execute([
                     $eventId,
                     $p['name'],
                     !empty($p['category_id']) ? (int)$p['category_id'] : null,
                     $p['distance'],
                     $p['elevation'],
-                    $p['price'],
+                    is_numeric($p['price'] ?? null) ? $p['price'] : null,
                     $p['gpx'],
-                    !empty($p['gpx_downloadable']) ? 1 : 0
+                    !empty($p['gpx_downloadable']) ? 1 : 0,
+                    $toTime($p['registration_opens'] ?? null),
+                    $toTime($p['registration_closes'] ?? null),
+                    $toTime($p['departure_time'] ?? null),
+                    !empty($p['departure_flexible']) ? 1 : 0
                 ]);
             }
         }

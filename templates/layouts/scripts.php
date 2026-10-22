@@ -25,8 +25,6 @@
 
 <!-- Scripts de base -->
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<!-- DIAGNOSTIC TEMPORAIRE : disparition de --surface-green (~5s). À retirer après résolution. -->
-<script src="/assets/js/core/css-watch.js?v=<?= @filemtime(__DIR__ . '/../../public/assets/js/core/css-watch.js') ?: 1 ?>"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <?php if (!defined('PLF_LEAFLET_CDN_EMITTED')) { define('PLF_LEAFLET_CDN_EMITTED', true); ?>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>

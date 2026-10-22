@@ -513,23 +513,29 @@ require_once ROOT_PATH . '/templates/layouts/header-solid.php';
                                                data-date="<?= isset($event['date']) ? $event['date'] : '' ?>"
                                                required>
                                     </div>
-                                    <div class="col-md-4">
-                                        <label class="form-label required-field">Heure de début</label>
-                                        <input type="text" 
-                                               class="form-control time-picker-input" 
-                                               name="start_time" 
-                                               value="<?= $event['start_time'] ? date('H:i', strtotime($event['start_time'])) : '' ?>" 
-                                               placeholder="HH:MM" 
-                                               required>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label class="form-label required-field">Heure de fin</label>
-                                        <input type="text" 
-                                               class="form-control time-picker-input" 
-                                               name="end_time" 
-                                               value="<?= $event['end_time'] ? date('H:i', strtotime($event['end_time'])) : '' ?>" 
-                                               placeholder="HH:MM" 
-                                               required>
+                                    <div class="col-md-8">
+                                        <label class="form-label required-field">Horaire</label>
+                                        <div class="row g-3">
+                                            <div class="col-md-6">
+                                                <label class="form-label">Heure de début</label>
+                                                <input type="text" 
+                                                       class="form-control time-picker-input" 
+                                                       id="eventStartTime"
+                                                       name="start_time" 
+                                                       value="<?= $event['start_time'] ? date('H:i', strtotime($event['start_time'])) : '' ?>" 
+                                                       placeholder="HH:MM" 
+                                                       required>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label">Heure de fin</label>
+                                                <input type="text" 
+                                                       class="form-control time-picker-input" 
+                                                       name="end_time" 
+                                                       value="<?= $event['end_time'] ? date('H:i', strtotime($event['end_time'])) : '' ?>" 
+                                                       placeholder="HH:MM" 
+                                                       required>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -628,6 +634,26 @@ require_once ROOT_PATH . '/templates/layouts/header-solid.php';
                                                 <label class="form-check-label" for="gpx_downloadable_<?= $index ?>">
                                                     Autoriser le téléchargement du GPX
                                                 </label>
+                                            </div>
+                                            <div class="row g-3 route-times">
+                                                <div class="col-6">
+                                                    <label class="form-label">Début des inscriptions</label>
+                                                    <input type="text" class="form-control route-time-input" name="routes[<?= $index ?>][registration_opens]" value="<?= !empty($parcours['registration_opens']) ? substr($parcours['registration_opens'], 0, 5) : '' ?>" placeholder="HH:MM">
+                                                </div>
+                                                <div class="col-6">
+                                                    <label class="form-label">Fin des inscriptions</label>
+                                                    <input type="text" class="form-control route-time-input" name="routes[<?= $index ?>][registration_closes]" value="<?= !empty($parcours['registration_closes']) ? substr($parcours['registration_closes'], 0, 5) : '' ?>" placeholder="HH:MM">
+                                                </div>
+                                                <div class="col-6">
+                                                    <label class="form-label route-departure-label"><?= !empty($parcours['departure_flexible']) ? "Départ libre jusqu'à" : 'Heure de départ' ?></label>
+                                                    <input type="text" class="form-control route-time-input" name="routes[<?= $index ?>][departure_time]" value="<?= !empty($parcours['departure_time']) ? substr($parcours['departure_time'], 0, 5) : '' ?>" placeholder="HH:MM">
+                                                </div>
+                                                <div class="col-6 d-flex align-items-end">
+                                                    <div class="form-check mb-2">
+                                                        <input class="form-check-input route-departure-flexible" type="checkbox" id="depFlex<?= $index ?>" name="routes[<?= $index ?>][departure_flexible]" value="1" <?= !empty($parcours['departure_flexible']) ? 'checked' : '' ?>>
+                                                        <label class="form-check-label" for="depFlex<?= $index ?>">Départ libre (jusqu'à l'heure indiquée)</label>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     <?php endforeach; ?>
@@ -817,17 +843,42 @@ document.addEventListener('DOMContentLoaded', function() {
         fp.setDate(date, true);
     }
 
-    // Initialiser les sélecteurs d'heure
-    document.querySelectorAll('.time-picker-input').forEach(input => {
-        flatpickr(input, {
-            enableTime: true,
-            noCalendar: true,
-            dateFormat: 'H:i',
-            time_24hr: true,
-            locale: 'fr',
-            defaultDate: input.value
+    const editTimeConfig = {
+        enableTime: true,
+        noCalendar: true,
+        dateFormat: 'H:i',
+        time_24hr: true,
+        locale: 'fr'
+    };
+
+    // Sélecteurs d'heure : activité + parcours (réutilisé par addRoute())
+    window.initRouteTimePickers = function(root) {
+        (root || document).querySelectorAll('.time-picker-input, .route-time-input').forEach(function(input) {
+            if (!input._flatpickr) {
+                flatpickr(input, Object.assign({}, editTimeConfig, { defaultDate: input.value }));
+            }
         });
-    });
+    };
+    window.initRouteTimePickers(document);
+
+    const editRoutesContainer = document.getElementById('routes-container');
+
+    // "Départ libre" : le champ heure devient une heure limite ("jusqu'à")
+    function syncDepartureLabel(checkbox) {
+        const scope = checkbox.closest('.mb-4, .route-container, .route-item') || document;
+        const label = scope.querySelector('.route-departure-label');
+        if (label) {
+            label.textContent = checkbox.checked ? "Départ libre jusqu'à" : 'Heure de départ';
+        }
+    }
+    if (editRoutesContainer) {
+        editRoutesContainer.addEventListener('change', function(e) {
+            if (e.target && e.target.matches('.route-departure-flexible')) {
+                syncDepartureLabel(e.target);
+            }
+        });
+        editRoutesContainer.querySelectorAll('.route-departure-flexible').forEach(syncDepartureLabel);
+    }
 });
 </script>
 

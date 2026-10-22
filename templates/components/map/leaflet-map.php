@@ -51,13 +51,6 @@ function render_map(PDO $pdo) {
 
         $event['main_image_path'] = $raw ?: '/assets/images/events/default-event.jpg';
         unset($event['event_image_path'], $event['image_path'], $event['storage_path'], $event['main_image']);
-
-        if ($event['main_image_path'] === '/assets/images/events/default-event.jpg' && defined('DEBUG') && DEBUG) {
-            logError('leaflet-map', 'Image principale non résolue', [
-                'event_id' => $event['id'],
-                'title' => $event['title']
-            ]);
-        }
     }
     unset($event);
     ?>

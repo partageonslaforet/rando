@@ -54,11 +54,13 @@ try {
 
     // Créer le brouillon à partir des champs principaux connus
     $ins = $db->prepare("INSERT INTO draft_events (
-        user_id, title, description, date, registration_opens, registration_closes,
+        user_id, title, description, date, start_time, end_time,
+        registration_opens, registration_closes,
         location, venue, coordinates, meeting_name, meeting_address, meeting_coordinates,
         organisation, organizer_id, created_at, updated_at
     ) VALUES (
-        :user_id, :title, :description, :date, :registration_opens, :registration_closes,
+        :user_id, :title, :description, :date, :start_time, :end_time,
+        :registration_opens, :registration_closes,
         :location, :venue, :coordinates, :meeting_name, :meeting_address, :meeting_coordinates,
         :organisation, :organizer_id, NOW(), NOW()
     )");
@@ -69,6 +71,8 @@ try {
         ':title' => $event['title'] ?? null,
         ':description' => $event['description'] ?? null,
         ':date' => $event['date'] ?? null,
+        ':start_time' => !empty($event['start_time']) ? $event['start_time'] : ($event['registration_opens'] ?? null),
+        ':end_time' => !empty($event['end_time']) ? $event['end_time'] : ($event['registration_closes'] ?? null),
         ':registration_opens' => $event['registration_opens'] ?? null,
         ':registration_closes' => $event['registration_closes'] ?? null,
         ':location' => $event['location'] ?? null,
@@ -152,11 +156,11 @@ try {
 
     // Copier les parcours si disponibles
     try {
-        $parSel = $db->prepare('SELECT name, category_id, distance, elevation_gain, description, gpx_file, gpx_downloadable, price FROM event_parcours WHERE event_id = ? ORDER BY id');
+        $parSel = $db->prepare('SELECT name, category_id, distance, elevation_gain, description, gpx_file, gpx_downloadable, price, registration_opens, registration_closes, departure_time, departure_flexible FROM event_parcours WHERE event_id = ? ORDER BY id');
         $parSel->execute([$eventId]);
         $routes = $parSel->fetchAll(PDO::FETCH_ASSOC);
         if ($routes) {
-            $parIns = $db->prepare('INSERT INTO draft_parcours (event_id, name, category_id, distance, elevation_gain, description, gpx_file, gpx_downloadable, price) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)');
+            $parIns = $db->prepare('INSERT INTO draft_parcours (event_id, name, category_id, distance, elevation_gain, description, gpx_file, gpx_downloadable, price, registration_opens, registration_closes, departure_time, departure_flexible) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
             foreach ($routes as $r) {
                 $parIns->execute([
                     $draftId,
@@ -168,6 +172,10 @@ try {
                     $r['gpx_file'] ?? null,
                     isset($r['gpx_downloadable']) ? (int)$r['gpx_downloadable'] : 0,
                     $r['price'] ?? null,
+                    $r['registration_opens'] ?? null,
+                    $r['registration_closes'] ?? null,
+                    $r['departure_time'] ?? null,
+                    isset($r['departure_flexible']) ? (int)$r['departure_flexible'] : 0,
                 ]);
             }
         }

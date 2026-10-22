@@ -324,7 +324,7 @@ input[type="time"]:focus {
 }
 
 .btn-primary:hover {
-    background: var(--primary-color);
+    background: var(--primary-color-background);
     transform: translateY(-2px);
     box-shadow: 0 6px 8px color-mix(in srgb, var(--info) 30%, transparent);
     color: var(--light-text)
@@ -1615,20 +1615,26 @@ input[type="time"]:focus {
     margin: 0.25rem 0;
 }
 
-.category-checkboxes .form-check-input {
+.category-checkboxes .form-check-input,
+.form-check-input.route-departure-flexible {
     border: 2px solid var(--text-muted);
     margin-right: 0.5rem;
 }
 
-.category-checkboxes .form-check-input:checked {
+.category-checkboxes .form-check-input:checked,
+.form-check-input.route-departure-flexible:checked {
     background-color: var(--primary-color);
     border-color: var(--primary-color);
 }
 
-body.dark-theme .category-checkboxes .form-check-input {
+body.dark-theme .category-checkboxes .form-check-input,
+body.dark-theme .form-check-input.route-departure-flexible {
     background-color: var(--gray-dark);
     border-color: var(--gray-dark);
 }
+
+
+
 
 /* Bloc GPX */
 .gpx-file-label {
@@ -1760,6 +1766,21 @@ body.dark-theme .category-checkboxes .form-check-input {
     border-bottom: var(--border-subtle);
     margin: 1rem 0;
     padding-bottom: 1rem;
+}
+
+.route-body .row.route-times {
+    border-top: var(--border-subtle);
+    margin: 1rem 0;
+    padding-bottom: 1rem;
+}
+
+/* Encart « Horaire de l'activité » (étape 1) */
+.row.g-3.activity-times {
+    border: var(--border-subtle);
+    border-radius: 12px;
+    padding: 0.35rem 0.75rem 0.5rem;
+    margin: 0.5rem 0 0.25rem;
+    --bs-gutter-y: 0.5rem;
 }
 
 /* Libellé GPX sur une seule ligne (pleine largeur) */

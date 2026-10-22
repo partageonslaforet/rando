@@ -117,6 +117,10 @@ function buildEnrichedFormData(includeFiles = true) {
             const gpxInput = div.querySelector('input[type="file"][name$="[gpx]"]');
             const gpxFileInput = div.querySelector('input[type="hidden"][name$="[gpx_file]"]');
             const downloadable = div.querySelector('input[type="checkbox"][name$="[gpx_downloadable]"]')?.checked || false;
+            const registration_opens = div.querySelector('input[name$="[registration_opens]"]')?.value || '';
+            const registration_closes = div.querySelector('input[name$="[registration_closes]"]')?.value || '';
+            const departure_time = div.querySelector('input[name$="[departure_time]"]')?.value || '';
+            const departure_flexible = div.querySelector('input[type="checkbox"][name$="[departure_flexible]"]')?.checked || false;
             if (name || distance || elevation || (gpxFileInput && gpxFileInput.value) || (gpxInput && gpxInput.files[0])) {
                 routes.push({
                     name,
@@ -126,7 +130,11 @@ function buildEnrichedFormData(includeFiles = true) {
                     price,
                     description,
                     gpx_file: gpxFileInput ? gpxFileInput.value : '',
-                    gpx_downloadable: downloadable
+                    gpx_downloadable: downloadable,
+                    registration_opens,
+                    registration_closes,
+                    departure_time,
+                    departure_flexible
                 });
             }
         });
@@ -816,9 +824,33 @@ function addRoute() {
                 <label class="form-label">Description du parcours</label>
                 <textarea class="form-control" name="routes[${newIndex}][description]" rows="3"></textarea>
             </div>
+            <div class="row g-3 route-times">
+                <div class="col-6">
+                    <label class="form-label">Début des inscriptions</label>
+                    <input type="text" class="form-control route-time-input" name="routes[${newIndex}][registration_opens]" placeholder="00:00">
+                </div>
+                <div class="col-6">
+                    <label class="form-label">Fin des inscriptions</label>
+                    <input type="text" class="form-control route-time-input" name="routes[${newIndex}][registration_closes]" placeholder="00:00">
+                </div>
+                <div class="col-6">
+                    <label class="form-label route-departure-label">Heure de départ</label>
+                    <input type="text" class="form-control route-time-input" name="routes[${newIndex}][departure_time]" placeholder="00:00">
+                </div>
+                <div class="col-6 d-flex align-items-end">
+                    <div class="form-check mb-2">
+                        <input class="form-check-input route-departure-flexible" type="checkbox" id="depFlex${newIndex}" name="routes[${newIndex}][departure_flexible]" value="1">
+                        <label class="form-check-label" for="depFlex${newIndex}">Départ libre (jusqu'à l'heure indiquée)</label>
+                    </div>
+                </div>
+            </div>
         </div>`;
 
     container.appendChild(newRoute);
+    // Initialiser les sélecteurs d'heure et le préremplissage du nouveau parcours
+    if (typeof window.initRouteTimePickers === 'function') {
+        window.initRouteTimePickers(newRoute);
+    }
     updateGpxDownloadable(newIndex, false);
 }
 
@@ -1967,7 +1999,14 @@ async function submitEvent() {
                 body: formData
             });
 
-            const data = await response.json();
+            const responseText = await response.text();
+            let data;
+            try {
+                data = JSON.parse(responseText);
+            } catch (parseError) {
+                console.error('Réponse non-JSON reçue (update.php):', responseText.slice(0, 500));
+                throw new Error('Réponse serveur invalide (HTTP ' + response.status + ')');
+            }
 
             if (!data.success) {
                 throw new Error(data.message || 'Erreur lors de la mise à jour de l\'événement');
@@ -2001,7 +2040,14 @@ async function submitEvent() {
             body: formData
         });
 
-        const data = await response.json();
+        const responseText = await response.text();
+        let data;
+        try {
+            data = JSON.parse(responseText);
+        } catch (parseError) {
+            console.error('Réponse non-JSON reçue (publish.php):', responseText.slice(0, 500));
+            throw new Error('Réponse serveur invalide (HTTP ' + response.status + ')');
+        }
 
         if (!data.success) {
             throw new Error(data.message || 'Erreur lors de la publication de l\'événement');

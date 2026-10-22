@@ -806,9 +806,23 @@
 .aside-actions .btn-share i,
 .aside-actions .btn-ics i { color: var(--primary-color); font-size:1.15rem; }
 
-.aside-actions .btn-subscribe { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.25rem; border:none; background:var(--primary-color); color:var(--light-text); border-radius:14px; padding:.6rem .25rem; font-weight:700; font-size:.72rem; transition:.2s; overflow:hidden; }
+.aside-actions .btn-subscribe { 
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:.25rem; border:none;
+    background: linear-gradient(90deg, rgba(46, 107, 56, 0.95), rgba(78, 152, 89, 0.85));
+    color:var(--light-text);
+    border-radius:14px;
+    padding:.6rem .25rem;
+    font-weight:700;
+    font-size:.72rem;
+    transition:.2s;
+    overflow:hidden;
+}
 .aside-actions .btn-subscribe span { white-space:nowrap; }
-.aside-actions .btn-subscribe:hover { background:var(--green-dark); }
+.aside-actions .btn-subscribe:hover { background:var(--green-dark-background); }
 .aside-actions .btn-subscribe i { color: var(--light-text); font-size:1.15rem; }
 
 /* Mini-galerie dans l’aside */
@@ -960,7 +974,7 @@ body.event-detail-page {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  background: linear-gradient(90deg, rgba(46, 107, 56, 0.95), rgba(78, 152, 89, 0.95));
+  background: linear-gradient(90deg, rgba(46, 107, 56, 0.95), rgba(78, 152, 89, 0.85));
   border-radius: 0.25rem;
   padding: 0.25rem 0.5rem;
 }

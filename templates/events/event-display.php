@@ -13,8 +13,8 @@ if (!isset($event) || !is_array($event)) {
 
 $mode = $mode ?? 'published';
 $isPreview = $mode === 'draft';
-// Les brouillons ne stockent que les heures d'inscription ; à la publication,
-// publish.php les copie dans start_time/end_time — on reproduit ce mapping pour l'aperçu.
+// Compatibilité : les anciens brouillons/événements n'ont pas de start_time/end_time
+// (les horaires d'activité étaient stockés dans registration_*). On les utilise en fallback.
 if (empty($event['start_time'])) {
     $event['start_time'] = $event['registration_opens'] ?? null;
 }
@@ -224,7 +224,7 @@ function attrValue(mixed $value): string
                       </div>
                     <?php endif; ?>
 
-                    <?php if (!empty($event['start_time']) || (!empty($event['end_time']) && $event['end_time'] !== '00:00:00')): ?>
+                    <?php if (!empty($event['start_time']) || (!empty($event['end_time']) && $event['end_time'] !== '00:00:00') || !empty($event['registration_opens']) || !empty($event['departure_time'])): ?>
                       <div class="info-times">
                         <?php if (!empty($event['start_time'])): ?>
                           <div class="info-item">
@@ -242,6 +242,34 @@ function attrValue(mixed $value): string
                             <div>
                               <div class="label">Fin</div>
                               <div class="value"><?= substr($event['end_time'], 0, 5) ?></div>
+                            </div>
+                          </div>
+                        <?php endif; ?>
+
+                        <?php
+                        // Fenêtre d'inscriptions : affichée seulement si renseignée
+                        // et différente des horaires de l'activité
+                        $regOpen = $event['registration_opens'] ?? null;
+                        $regClose = $event['registration_closes'] ?? null;
+                        $sameAsActivity = ($regOpen === ($event['start_time'] ?? null))
+                            && ($regClose === ($event['end_time'] ?? null));
+                        if (!empty($regOpen) && !$sameAsActivity):
+                        ?>
+                          <div class="info-item">
+                            <i class="bi bi-person-plus"></i>
+                            <div>
+                              <div class="label">Inscriptions</div>
+                              <div class="value"><?= substr($regOpen, 0, 5) ?><?php if (!empty($regClose) && $regClose !== '00:00:00'): ?> – <?= substr($regClose, 0, 5) ?><?php endif; ?></div>
+                            </div>
+                          </div>
+                        <?php endif; ?>
+
+                        <?php if (!empty($event['departure_time'])): ?>
+                          <div class="info-item">
+                            <i class="bi bi-flag"></i>
+                            <div>
+                              <div class="label">Départ</div>
+                              <div class="value"><?= !empty($event['departure_flexible']) ? "Libre jusqu'à " : '' ?><?= substr($event['departure_time'], 0, 5) ?></div>
                             </div>
                           </div>
                         <?php endif; ?>
@@ -271,7 +299,10 @@ function attrValue(mixed $value): string
                                         $elevationValue = isset($route['elevation']) && $route['elevation'] !== '' ? (int) $route['elevation'] : null;
                                         $elevation = $elevationValue !== null && $elevationValue !== 0 ? $elevationValue . ' m D+' : null;
                                         $priceValue = isset($route['price']) && $route['price'] !== '' ? (float) $route['price'] : null;
-                                        $price = $priceValue !== null && $priceValue > 0 ? number_format($priceValue, 2, ',', ' ') . ' €' : null;
+                                        $price = null;
+                                        if ($priceValue !== null) {
+                                            $price = $priceValue > 0 ? number_format($priceValue, 2, ',', ' ') . ' €' : 'Gratuit';
+                                        }
                                         $gpx = $route['gpx_file'] ?? null;
 
                                         if (!empty($route['name'])) {
@@ -282,6 +313,11 @@ function attrValue(mixed $value): string
                                             $routeName = displayValue('Parcours');
                                         }
                                         $routeDesc = displayValue($route['description'] ?? '');
+                                        // Horaires du parcours : affichés uniquement si renseignés
+                                        $routeRegOpen = !empty($route['registration_opens']) ? substr($route['registration_opens'], 0, 5) : null;
+                                        $routeRegClose = !empty($route['registration_closes']) ? substr($route['registration_closes'], 0, 5) : null;
+                                        $routeDeparture = !empty($route['departure_time']) ? substr($route['departure_time'], 0, 5) : null;
+                                        $routeDepFlex = !empty($route['departure_flexible']);
                                     ?>
                                         <div class="route-card">
                                             <h3><?= $routeName ?></h3>
@@ -294,6 +330,12 @@ function attrValue(mixed $value): string
                                                 <?php endif; ?>
                                                 <?php if ($price): ?>
                                                     <span><i class="bi bi-tag"></i> <?= $price ?></span>
+                                                <?php endif; ?>
+                                                <?php if ($routeRegOpen || $routeRegClose): ?>
+                                                    <span><i class="bi bi-person-check"></i> Inscriptions : <?= $routeRegOpen ?: '…' ?><?= $routeRegClose ? ' – ' . $routeRegClose : '' ?></span>
+                                                <?php endif; ?>
+                                                <?php if ($routeDeparture): ?>
+                                                    <span><i class="bi bi-flag"></i> <?= $routeDepFlex ? "Départ libre jusqu'à " : 'Départ ' ?><?= $routeDeparture ?></span>
                                                 <?php endif; ?>
                                                 <?php if ($gpx): ?>
                                                     <?php if (!empty($route['gpx_downloadable'])): ?>

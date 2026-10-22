@@ -1009,12 +1009,35 @@ function addRoute() {
                             <input type="number" id="route-elevation-${routeIndex}" name="routes[${routeIndex}][elevation]" class="form-control" readonly>
                         </div>
                     </div>
+                    <div class="row g-3 route-times mt-2">
+                        <div class="col-6">
+                            <label class="form-label">Début des inscriptions</label>
+                            <input type="text" class="form-control route-time-input" name="routes[${routeIndex}][registration_opens]" placeholder="HH:MM">
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label">Fin des inscriptions</label>
+                            <input type="text" class="form-control route-time-input" name="routes[${routeIndex}][registration_closes]" placeholder="HH:MM">
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label route-departure-label">Heure de départ</label>
+                            <input type="text" class="form-control route-time-input" name="routes[${routeIndex}][departure_time]" placeholder="HH:MM">
+                        </div>
+                        <div class="col-6 d-flex align-items-end">
+                            <div class="form-check mb-2">
+                                <input class="form-check-input route-departure-flexible" type="checkbox" id="depFlex${routeIndex}" name="routes[${routeIndex}][departure_flexible]" value="1">
+                                <label class="form-check-label" for="depFlex${routeIndex}">Départ libre (jusqu'à l'heure indiquée)</label>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     `;
     
     routesContainer.insertAdjacentHTML('beforeend', routeHtml);
+    if (typeof window.initRouteTimePickers === 'function') {
+        window.initRouteTimePickers(routesContainer.lastElementChild);
+    }
     initializeRouteFieldListeners(routesContainer.lastElementChild);
 }
 
@@ -1484,12 +1507,35 @@ function addRoute() {
                             <input type="number" id="route-elevation-${routeIndex}" name="routes[${routeIndex}][elevation]" class="form-control" readonly>
                         </div>
                     </div>
+                    <div class="row g-3 route-times mt-2">
+                        <div class="col-6">
+                            <label class="form-label">Début des inscriptions</label>
+                            <input type="text" class="form-control route-time-input" name="routes[${routeIndex}][registration_opens]" placeholder="HH:MM">
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label">Fin des inscriptions</label>
+                            <input type="text" class="form-control route-time-input" name="routes[${routeIndex}][registration_closes]" placeholder="HH:MM">
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label route-departure-label">Heure de départ</label>
+                            <input type="text" class="form-control route-time-input" name="routes[${routeIndex}][departure_time]" placeholder="HH:MM">
+                        </div>
+                        <div class="col-6 d-flex align-items-end">
+                            <div class="form-check mb-2">
+                                <input class="form-check-input route-departure-flexible" type="checkbox" id="depFlex${routeIndex}" name="routes[${routeIndex}][departure_flexible]" value="1">
+                                <label class="form-check-label" for="depFlex${routeIndex}">Départ libre (jusqu'à l'heure indiquée)</label>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     `;
     
     routesContainer.insertAdjacentHTML('beforeend', routeHtml);
+    if (typeof window.initRouteTimePickers === 'function') {
+        window.initRouteTimePickers(routesContainer.lastElementChild);
+    }
     initializeRouteFieldListeners(routesContainer.lastElementChild);
 }
 

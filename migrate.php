@@ -106,6 +106,25 @@ try {
         }
     }
 
+    // --- parcours : horaires d'inscriptions et de départ (par parcours) ---
+    foreach (['event_parcours', 'draft_parcours'] as $ptable) {
+        if (!tableExists($pdo, $ptable)) {
+            continue;
+        }
+        if (!columnExists($pdo, $ptable, 'registration_opens')) {
+            execOrLog($pdo, "ALTER TABLE `{$ptable}` ADD COLUMN `registration_opens` TIME DEFAULT NULL");
+        }
+        if (!columnExists($pdo, $ptable, 'registration_closes')) {
+            execOrLog($pdo, "ALTER TABLE `{$ptable}` ADD COLUMN `registration_closes` TIME DEFAULT NULL");
+        }
+        if (!columnExists($pdo, $ptable, 'departure_time')) {
+            execOrLog($pdo, "ALTER TABLE `{$ptable}` ADD COLUMN `departure_time` TIME DEFAULT NULL");
+        }
+        if (!columnExists($pdo, $ptable, 'departure_flexible')) {
+            execOrLog($pdo, "ALTER TABLE `{$ptable}` ADD COLUMN `departure_flexible` TINYINT(1) NOT NULL DEFAULT 0");
+        }
+    }
+
     // --- events.status : ajouter 'expired' a l'enum ---
     $statusType = columnType($pdo, 'events', 'status');
     if ($statusType === '') {
@@ -287,6 +306,10 @@ try {
             `gpx_file` VARCHAR(255) DEFAULT NULL,
             `gpx_downloadable` TINYINT DEFAULT 0,
             `price` DECIMAL(10,2) DEFAULT 0.00,
+            `registration_opens` TIME DEFAULT NULL,
+            `registration_closes` TIME DEFAULT NULL,
+            `departure_time` TIME DEFAULT NULL,
+            `departure_flexible` TINYINT(1) NOT NULL DEFAULT 0,
             `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
             `updated_at` TIMESTAMP NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
             PRIMARY KEY (`id`),

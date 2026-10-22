@@ -15,6 +15,7 @@
     /* ── Charte : vert forêt = marque ── */
     --primary-color: #3A8A3D;
     --primary-hover: #2d6c2f;
+    --primary-color-background: linear-gradient(90deg, rgba(46, 107, 56, 0.95), rgba(78, 152, 89, 0.85));
     
     /* ── Danger : magenta ── */
     --danger-color: #990047;
@@ -22,6 +23,7 @@
 
     /* ── Vert foncé : titres / textes de marque ── */
     --green-dark: #2c3e2d;
+    --green-dark-background: linear-gradient(90deg, rgba(44, 62, 45, 0.95), rgba(46, 107, 56, 0.85));
 
     /* ── Accents ── */
     --warning: #f0b323;

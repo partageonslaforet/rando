@@ -267,9 +267,36 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     };
 
-    // Initialisation des sélecteurs d'heure d'inscription
+    // Sélecteurs d'heure de l'activité (étape 1)
     flatpickr("#registrationOpens", timeConfig);
     flatpickr("#registrationCloses", timeConfig);
+
+    // Sélecteurs d'heure des parcours (étape 2) — fonction réutilisée par addRoute()
+    window.initRouteTimePickers = function(root) {
+        (root || document).querySelectorAll('.route-time-input').forEach(function(input) {
+            if (!input._flatpickr) flatpickr(input, timeConfig);
+        });
+    };
+    window.initRouteTimePickers(document);
+
+    const routesContainerEl = document.getElementById('routes-container');
+
+    // "Départ libre" : le champ heure devient une heure limite ("jusqu'à")
+    function syncDepartureLabel(checkbox) {
+        const item = checkbox.closest('.route-item');
+        const label = item ? item.querySelector('.route-departure-label') : null;
+        if (label) {
+            label.textContent = checkbox.checked ? "Départ libre jusqu'à" : 'Heure de départ';
+        }
+    }
+    if (routesContainerEl) {
+        routesContainerEl.addEventListener('change', function(e) {
+            if (e.target && e.target.matches('.route-departure-flexible')) {
+                syncDepartureLabel(e.target);
+            }
+        });
+        routesContainerEl.querySelectorAll('.route-departure-flexible').forEach(syncDepartureLabel);
+    }
 
     // NOTE : la gestion de l'upload/suppression des images (principale et secondaires)
     // est centralisée dans /assets/js/event-images.js (une seule source, un seul listener
@@ -378,14 +405,17 @@ document.addEventListener('DOMContentLoaded', function() {
                                             <label for="date" class="form-label required-field">Date</label>
                                             <input type="text" class="form-control flatpickr-date" id="date" name="date" value="<?= !empty($draft['date']) ? date('d/m/Y', strtotime($draft['date'])) : '' ?>" placeholder="jj / mm / aaaa" required>
                                         </div>
-                                        <div class="row g-3">
-                                            <div class="col-6">
-                                                <label for="registrationOpens" class="form-label">Ouverture des inscriptions</label>
-                                                <input type="text" class="form-control time-picker-input" id="registrationOpens" name="registrationOpens" value="<?= !empty($draft['registration_opens']) ? substr($draft['registration_opens'], 0, 5) : '' ?>" placeholder="00:00" required>
+                                        <div class="row g-3 activity-times">
+                                            <div class="col-12">
+                                                <label class="form-label required-field mb-0">Horaire de l'activité</label>
                                             </div>
                                             <div class="col-6">
-                                                <label for="registrationCloses" class="form-label">Fermeture des inscriptions</label>
-                                                <input type="text" class="form-control time-picker-input" id="registrationCloses" name="registrationCloses" value="<?= !empty($draft['registration_closes']) ? substr($draft['registration_closes'], 0, 5) : '' ?>" placeholder="00:00" required>
+                                                <label for="registrationOpens" class="form-label">Heure de début</label>
+                                                <input type="text" class="form-control time-picker-input" id="registrationOpens" name="registrationOpens" value="<?= !empty($draft['start_time']) ? substr($draft['start_time'], 0, 5) : (!empty($draft['registration_opens']) ? substr($draft['registration_opens'], 0, 5) : '') ?>" placeholder="00:00" required>
+                                            </div>
+                                            <div class="col-6">
+                                                <label for="registrationCloses" class="form-label">Heure de fin</label>
+                                                <input type="text" class="form-control time-picker-input" id="registrationCloses" name="registrationCloses" value="<?= !empty($draft['end_time']) ? substr($draft['end_time'], 0, 5) : (!empty($draft['registration_closes']) ? substr($draft['registration_closes'], 0, 5) : '') ?>" placeholder="00:00" required>
                                             </div>
                                         </div>
                                     </div>
@@ -433,6 +463,10 @@ document.addEventListener('DOMContentLoaded', function() {
                                         $routeDesc = htmlspecialchars($route['description'] ?? '');
                                         $routeCategoryId = (int) ($route['category_id'] ?? 0);
                                         $routeDownloadable = !empty($route['gpx_downloadable']);
+                                        $routeRegOpens = !empty($route['registration_opens']) ? substr($route['registration_opens'], 0, 5) : '';
+                                        $routeRegCloses = !empty($route['registration_closes']) ? substr($route['registration_closes'], 0, 5) : '';
+                                        $routeDepTime = !empty($route['departure_time']) ? substr($route['departure_time'], 0, 5) : '';
+                                        $routeDepFlex = !empty($route['departure_flexible']);
                                     ?>
                                     <div class="route-item<?= $index === 0 ? ' open' : '' ?>">
                                         <div class="route-header" onclick="toggleRoute(this)">
@@ -465,6 +499,26 @@ document.addEventListener('DOMContentLoaded', function() {
                                                             <option value="<?= (int) $cat['id'] ?>" <?= $routeCategoryId === (int) $cat['id'] ? 'selected' : '' ?>><?= htmlspecialchars($cat['name']) ?></option>
                                                         <?php endforeach; ?>
                                                     </select>
+                                                </div>
+                                            </div>
+                                            <div class="row g-3 route-times">
+                                                <div class="col-6">
+                                                    <label class="form-label">Début des inscriptions</label>
+                                                    <input type="text" class="form-control route-time-input" name="routes[<?= (int) $index ?>][registration_opens]" value="<?= $routeRegOpens ?>" placeholder="00:00">
+                                                </div>
+                                                <div class="col-6">
+                                                    <label class="form-label">Fin des inscriptions</label>
+                                                    <input type="text" class="form-control route-time-input" name="routes[<?= (int) $index ?>][registration_closes]" value="<?= $routeRegCloses ?>" placeholder="00:00">
+                                                </div>
+                                                <div class="col-6">
+                                                    <label class="form-label route-departure-label"><?= $routeDepFlex ? "Départ libre jusqu'à" : 'Heure de départ' ?></label>
+                                                    <input type="text" class="form-control route-time-input" name="routes[<?= (int) $index ?>][departure_time]" value="<?= $routeDepTime ?>" placeholder="00:00">
+                                                </div>
+                                                <div class="col-6 d-flex align-items-end">
+                                                    <div class="form-check mb-2">
+                                                        <input class="form-check-input route-departure-flexible" type="checkbox" id="depFlex<?= (int) $index ?>" name="routes[<?= (int) $index ?>][departure_flexible]" value="1" <?= $routeDepFlex ? 'checked' : '' ?>>
+                                                        <label class="form-check-label" for="depFlex<?= (int) $index ?>">Départ libre (jusqu'à l'heure indiquée)</label>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div class="row g-3 parcours">
@@ -512,6 +566,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                                 <label class="form-label">Description du parcours</label>
                                                 <textarea class="form-control" name="routes[<?= (int) $index ?>][description]" rows="3"><?= $routeDesc ?></textarea>
                                             </div>
+                                            
                                         </div>
                                     </div>
                                     <?php endforeach; ?>

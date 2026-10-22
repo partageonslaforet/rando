@@ -17,6 +17,10 @@ error_reporting(E_ALL);
 $logFile = __DIR__ . '/save_draft.log';
 
 // Fonction de log unifiée
+/**
+ * @param string $message
+ * @param bool $isError
+ */
 function customLog($message, $isError = false) {
     global $logFile;
     $timestamp = date('Y-m-d H:i:s');
@@ -65,9 +69,10 @@ if (session_status() === PHP_SESSION_NONE) {
 const MAX_SECONDARY_IMAGES = 3;
 
 try {
-    customLog(" Début de l'enregistrement du brouillon");
-    customLog("POST data: " . print_r($_POST, true));
-    customLog("FILES data: " . print_r($_FILES, true));
+    // Résumé compact : les dumps complets POST/FILES inondaient le log à chaque auto-save
+    $summaryRoutes = isset($_POST['routes']) ? (is_string($_POST['routes']) ? (json_decode($_POST['routes'], true) ?: []) : $_POST['routes']) : [];
+    $summaryFiles = count(array_filter($_FILES ?: [], static fn($f) => !empty($f['name']) && ($f['error'] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_OK));
+    customLog(" Début de l'enregistrement du brouillon (draftId=" . ($_POST['draftId'] ?? 'new') . ", parcours=" . count($summaryRoutes) . ", fichiers=$summaryFiles)");
 
     // Démarrer la transaction
     $pdo = getConnection();
@@ -134,6 +139,10 @@ try {
     }
 
     // Helper pour parser les dates du formulaire jj/mm/aaaa
+    /**
+     * @param string|null $value
+     * @return string|null
+     */
     function parseFormDate($value) {
         if (empty($value)) return null;
         $dt = DateTime::createFromFormat('d/m/Y', $value);
@@ -141,6 +150,10 @@ try {
     }
 
     // Helper pour parser les heures du formulaire HH:MM
+    /**
+     * @param string|null $value
+     * @return string|null
+     */
     function parseFormTime($value) {
         if (empty($value)) return null;
         $dt = DateTime::createFromFormat('H:i', $value);
@@ -151,6 +164,10 @@ try {
     }
 
     // Helper pour extraire la ville depuis une adresse textuelle
+    /**
+     * @param string|null $address
+     * @return string|null
+     */
     function extractCityFromAddress($address) {
         if (empty($address)) return null;
         if (preg_match('/\b\d{4,5}\s+(.+)$/', trim($address), $m)) {
@@ -181,8 +198,9 @@ try {
         'title' => $_POST['title'] ?? null,
         'description' => $_POST['description'] ?? null,
         'date' => parseFormDate($_POST['date'] ?? null),
-        'registration_opens' => parseFormTime($_POST['registrationOpens'] ?? null),
-        'registration_closes' => parseFormTime($_POST['registrationCloses'] ?? null),
+        // Horaire de l'activité (les inscriptions/départ sont par parcours)
+        'start_time' => parseFormTime($_POST['registrationOpens'] ?? null),
+        'end_time' => parseFormTime($_POST['registrationCloses'] ?? null),
         // location/venue/coordinates alimentés avec fallback depuis meeting_*
         'location' => $locationName !== null && $locationName !== '' ? $locationName : ($meetingName ?: null),
         'venue' => $addressGeneric !== null && $addressGeneric !== '' ? $addressGeneric : ($meetingAddress ?: null),
@@ -236,10 +254,6 @@ try {
     }
 
     customLog("🧩 Organizer result - organizer_id=" . var_export($eventFields['organizer_id'] ?? 'NOT_SET', true) . " | organisation=" . var_export($eventFields['organisation'] ?? 'NOT_SET', true));
-customLog("📝 Champs de l'événement:");
-    foreach ($eventFields as $field => $value) {
-        customLog("$field: $value");
-    }
 
     // L'organisateur est désormais géré dans Mon compte > Organisateur
     customLog("ℹ️ Aucun organisateur reçu depuis le formulaire événement");
@@ -258,9 +272,6 @@ customLog("📝 Champs de l'événement:");
         $updateParams[] = $draftId;
 
         $sql = "UPDATE draft_events SET " . implode(', ', $updateFields) . " WHERE id = ?";
-        customLog("Requête SQL: " . $sql);
-        customLog("Paramètres: " . print_r($updateParams, true));
-
         $stmt = $pdo->prepare($sql);
         
         if (!$stmt->execute($updateParams)) {
@@ -468,8 +479,9 @@ customLog("📝 Champs de l'événement:");
                 $stmt = $pdo->prepare("
                     INSERT INTO draft_parcours (
                         event_id, name, category_id, distance, elevation_gain, description,
-                        gpx_file, gpx_downloadable, price
-                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                        gpx_file, gpx_downloadable, price,
+                        registration_opens, registration_closes, departure_time, departure_flexible
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 ");
 
                 foreach ($routes as $index => $route) {
@@ -509,7 +521,7 @@ customLog("📝 Champs de l'événement:");
                         }
 
                         $elevation = is_numeric($route['elevation'] ?? null) ? (int) $route['elevation'] : null;
-                        $price = is_numeric($route['price'] ?? null) ? $route['price'] : 0.00;
+                        $price = is_numeric($route['price'] ?? null) ? $route['price'] : null;
 
                         if ($gpxPath && $downloadable === 0 && !isset($route['gpx_downloadable'])) {
                             $downloadable = 1;
@@ -524,7 +536,11 @@ customLog("📝 Champs de l'événement:");
                             $route['description'] ?? '',
                             $gpxPath,
                             $downloadable,
-                            $price
+                            $price,
+                            parseFormTime($route['registration_opens'] ?? null),
+                            parseFormTime($route['registration_closes'] ?? null),
+                            parseFormTime($route['departure_time'] ?? null),
+                            !empty($route['departure_flexible']) ? 1 : 0
                         ]);
 
                         $response['routes'][] = [

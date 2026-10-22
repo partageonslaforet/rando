@@ -205,9 +205,25 @@
         left: 0.75rem;
         width: auto;
     }
-}
-        bottom: 0.75rem;
-        left: 0.75rem;
-        width: auto;
+
+    /* Footer : compteur seul en haut, boutons en dessous */
+    #guideModal .guide-footer {
+        flex-wrap: wrap;
+        justify-content: space-between !important;
+        gap: 0.5rem;
+    }
+
+    #guideModal .guide-counter {
+        order: -1;
+        width: 100%;
+        text-align: center;
+        margin-bottom: 0.25rem;
+    }
+
+    /* Boutons un peu plus compacts */
+    #guideModal .guide-footer .btn {
+        padding: 0.4rem 0.7rem !important;
+        min-height: 38px !important;
+        font-size: 0.85rem;
     }
 }

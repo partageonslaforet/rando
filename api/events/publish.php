@@ -18,6 +18,10 @@ require_once __DIR__ . '/../../src/Services/Storage.php';
 
 // Logs
 $logFile = __DIR__ . '/publish.log';
+/**
+ * @param string $msg
+ * @param bool $error
+ */
 function log_message($msg, $error = false) {
     global $logFile;
     $date = date('Y-m-d H:i:s');
@@ -43,9 +47,8 @@ if (headers_sent($filename, $linenum)) {
 header('Content-Type: application/json');
 
 log_message("=== Début de la requête ===");
-log_message("📝 POST data: " . print_r($_POST, true));
-log_message("📝 SESSION data: " . print_r($_SESSION, true));
-log_message("📝 SERVER data: " . print_r($_SERVER, true));
+// Résumé compact : les dumps POST/SESSION/SERVER inondaient le log et exposaient des données sensibles
+log_message("📝 draftId=" . ($_POST['draftId'] ?? '?'));
 
 try {
     // Vérifier si l'utilisateur est connecté
@@ -115,8 +118,8 @@ try {
                 title = :title,
                 description = :description,
                 date = :date,
-                registration_opens = :reg_open,
-                registration_closes = :reg_close,
+                start_time = :start_time,
+                end_time = :end_time,
                 location = :location,
                 venue = :venue,
                 coordinates = :coordinates,
@@ -132,8 +135,9 @@ try {
                 ':title' => $draftData['title'] ?? null,
                 ':description' => $draftData['description'] ?? null,
                 ':date' => $draftData['date'] ?? null,
-                ':reg_open' => $draftData['registration_opens'] ?? null,
-                ':reg_close' => $draftData['registration_closes'] ?? null,
+                // Fallback registration_* : anciens brouillons sans start/end_time
+                ':start_time' => !empty($draftData['start_time']) ? $draftData['start_time'] : ($draftData['registration_opens'] ?? null),
+                ':end_time' => !empty($draftData['end_time']) ? $draftData['end_time'] : ($draftData['registration_closes'] ?? null),
                 ':location' => $draftData['location'] ?? null,
                 ':venue' => $draftData['venue'] ?? null,
                 ':coordinates' => $draftData['coordinates'] ?? null,
@@ -152,15 +156,15 @@ try {
                 INSERT INTO events (
                     user_id, title, description, date,
                     start_time, end_time,
-                    registration_opens, registration_closes,
                     location, venue, coordinates,
                     meeting_name, meeting_address, meeting_city, meeting_coordinates,
                     organizer_id, status, organisation
                 )
                 SELECT
                     user_id, title, description, date,
-                    registration_opens, registration_closes,
-                    registration_opens, registration_closes,
+                    -- Fallback registration_* : anciens brouillons sans start/end_time
+                    COALESCE(start_time, registration_opens),
+                    COALESCE(end_time, registration_closes),
                     location, venue, coordinates,
                     meeting_name, meeting_address, meeting_city, meeting_coordinates,
                     ?, 'pending', organisation
@@ -253,11 +257,15 @@ try {
             $stmt = $pdo->prepare("
                 INSERT INTO event_parcours (
                     event_id, name, category_id, distance, elevation_gain, description,
-                    gpx_file, gpx_downloadable, price, created_at, updated_at
+                    gpx_file, gpx_downloadable, price,
+                    registration_opens, registration_closes, departure_time, departure_flexible,
+                    created_at, updated_at
                 )
                 SELECT 
                     ?, name, category_id, distance, elevation_gain, description,
-                    gpx_file, gpx_downloadable, price, NOW(), NOW()
+                    gpx_file, gpx_downloadable, price,
+                    registration_opens, registration_closes, departure_time, departure_flexible,
+                    NOW(), NOW()
                 FROM draft_parcours WHERE event_id = ?
             ");
             $stmt->execute([$eventId, $draftId]);
@@ -322,6 +330,18 @@ try {
         log_message("✅ Transaction validée avec succès");
 
         $response = ['success' => true, 'eventId' => $eventId, 'isUpdate' => (bool)$origId];
+
+        // Répondre au client AVANT l'envoi des e-mails : un SMTP lent ou bloqué
+        // ne doit pas casser la réponse (sinon JSON.parse échoue côté front).
+        echo json_encode($response, JSON_PRETTY_PRINT);
+        if (function_exists('fastcgi_finish_request')) {
+            fastcgi_finish_request();
+        } else {
+            if (ob_get_level()) {
+                @ob_end_flush();
+            }
+            flush();
+        }
 
         // Envoyer l'email de confirmation (sauf si admin connecté)
         try {
@@ -393,8 +413,7 @@ try {
             $response['emailTrace'] = $e->getTraceAsString();
         }
 
-        // Renvoyer une réponse détaillée
-        echo json_encode($response, JSON_PRETTY_PRINT);
+        // La réponse JSON a déjà été envoyée au client avant les e-mails
 
     } catch (Exception $e) {
         $pdo->rollBack();
